@@ -1,13 +1,13 @@
 import * as hapi from "hapi";
-import BannerRepository from "../../data/socialnews/SocialNewsInMemoryRepository";
-import GetBannersUseCase from "../../domain/socialnews/usecases/GetSocialNewsUseCase";
+import SocialNewsRepository from "../../data/socialnews/SocialNewsTwitterRepository";
+import GetSocialNewsUseCase from "../../domain/socialnews/usecases/GetSocialNewsUseCase";
+import SocialNewsController from "../socialnews/SocialNewsController";
 import jwtAuthentication from "../users/JwtAuthentication";
-import SocialNewsController from "./SocialNewsController";
 
 export default function(): hapi.ServerRoute[] {
-  const bannerRepository = new BannerRepository();
-  const getBannersUseCase = new GetBannersUseCase(bannerRepository);
-  const socialNewsController = new SocialNewsController(getBannersUseCase);
+  const socialNewsRepository = new SocialNewsRepository();
+  const getSocialNewsUseCase = new GetSocialNewsUseCase(socialNewsRepository);
+  const socialNewsController = new SocialNewsController(getSocialNewsUseCase);
 
   return [
     {

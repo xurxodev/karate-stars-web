@@ -18,9 +18,11 @@
   },
   "dependencies": {
     "@hapi/boom": "^7.4.3",
+    "@types/twit": "^2.2.23",
     "dotenv": "^8.1.0",
     "hapi": "^18.1.0",
-    "hapi-auth-jwt2": "^8.6.2"
+    "hapi-auth-jwt2": "^8.6.2",
+    "twit": "^2.2.11"
   },
   "devDependencies": {
     "@types/hapi": "^18.0.2",
