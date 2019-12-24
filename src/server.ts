@@ -3,13 +3,11 @@ import socialNewsRoutes from "./api/socialnews/SocialNewsRoutes";
 import jwtAuthentication from "./api/users/JwtAuthentication";
 import userRoutes from "./api/users/UserRoutes";
 
-// create a server with a host and port
 const server: hapi.Server = new hapi.Server({
   host: "0.0.0.0",
   port: process.env.PORT || 8000
 });
 
-// start the server
 async function start() {
   try {
     await server.register(require("hapi-auth-jwt2"));
@@ -52,5 +50,4 @@ async function start() {
   console.log("Server running at:", server.info.uri);
 }
 
-// don't forget to call start
 start();
