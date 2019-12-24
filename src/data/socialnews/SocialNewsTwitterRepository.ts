@@ -1,6 +1,7 @@
+import fetch from "node-fetch";
 import Twit = require("twit");
 import SocialNewsRepository from "../../domain/socialnews/boundaries/SocialNewsRepository";
-import { SocialNews, SocialUser } from "../../domain/socialnews/entities/SocialNews";
+import { SocialNews } from "../../domain/socialnews/entities/SocialNews";
 
 export default class SocialNewsTwitterRepository implements SocialNewsRepository {
   public twitterApiClient = new Twit({
@@ -15,24 +16,39 @@ export default class SocialNewsTwitterRepository implements SocialNewsRepository
 
   public get(): Promise<SocialNews[]> {
     return new Promise((resolve, reject) => {
-      this.getSocialNewsFromList()
-        .then((listResult) => {
-          // `result` is an Object with keys "data" and "resp".
-          // `data` and `resp` are the same objects as the ones passed
-          // to the callback.
-          // See https://github.com/ttezel/twit#tgetpath-params-callback
-          // for details.
+      Promise.all([
+        this.getSocialNewsFromList(),
+        this.getSocialNewsFromSearch()
+      ])
+        .then(async ([listResult, searchResult]) => {
+          const listTweets: any = listResult.data;
+          const searchResponse: any = searchResult.data;
+          const searchTweets: any = searchResponse.statuses;
 
-          const tweets: any = listResult.data;
+          const socialNewsList = listTweets.map((tweet: any) => this.mapTweet(tweet));
+          const socialNewsSearch = searchTweets.map((tweet: any) => this.mapTweet(tweet));
 
-          const socialNewsList = tweets.map((tweet: any) => this.mapTweet(tweet));
+          const sumSocialNews = [...socialNewsList, ...socialNewsSearch];
 
-          resolve(socialNewsList);
+          const uniqueSocialNews = this.removeDuplicates(sumSocialNews);
+
+          uniqueSocialNews.sort((a: SocialNews, b: SocialNews) =>
+            Date.parse(a.summary.date) - Date.parse(b.summary.date));
+
+          resolve(uniqueSocialNews);
         })
         .catch((err) => {
-          console.log("caught error", err.stack);
+          reject(err);
+          console.log(err);
         });
     });
+
+  }
+  public removeDuplicates(sumSocialNews: SocialNews[]): SocialNews[] {
+    return Array.from(new Set(sumSocialNews.map((a) => a.summary.link)))
+      .map((link) => {
+        return sumSocialNews.find((a) => a.summary.link === link);
+      });
   }
 
   private mapTweet(tweet: any) {
@@ -83,7 +99,7 @@ export default class SocialNewsTwitterRepository implements SocialNewsRepository
 
       if (videoMedia && videoMedia.video_info && videoMedia.video_info.variants) {
         const videoVariant = videoMedia.video_info.variants
-          .sort((variant) => variant.bitrate)
+          .sort((a, b) => b.bitrate - a.bitrate)
           .find((variant) => variant.content_type === "video/mp4");
         video = videoVariant.url;
       }
@@ -94,9 +110,19 @@ export default class SocialNewsTwitterRepository implements SocialNewsRepository
 
   private getSocialNewsFromList(): Promise<Twit.PromiseResponse> {
     return this.twitterApiClient.get("lists/statuses",
-      { slug: "karate-stars-news", owner_screen_name: "karatestarsapp", include_rts: false })
+      { slug: "karate-stars-news", owner_screen_name: "karatestarsapp", include_rts: false, count: 100 })
       // this.twitterApiClient.get("search/tweets", { q: "#Karate1Madrid", count: 100,
       // include_entities: true, result_type: "popular" })
       ;
+  }
+
+  private async getSocialNewsFromSearch(): Promise<Twit.PromiseResponse> {
+    const response = await fetch("http://www.karatestarsapp.com/api/v1/socialnewsconfig.json");
+
+    const socialNewsConfig = await response.json();
+
+    return this.twitterApiClient.get("search/tweets", {
+      q: socialNewsConfig.socialSearch, count: 100, include_entities: true, result_type: "popular"
+    });
   }
 }

@@ -18,16 +18,18 @@
   },
   "dependencies": {
     "@hapi/boom": "^7.4.3",
-    "@types/twit": "^2.2.23",
     "dotenv": "^8.1.0",
     "hapi": "^18.1.0",
     "hapi-auth-jwt2": "^8.6.2",
+    "node-fetch": "^2.6.0",
     "twit": "^2.2.11"
   },
   "devDependencies": {
     "@types/hapi": "^18.0.2",
     "@types/hapi__boom": "^7.4.1",
     "@types/node": "^12.7.2",
+    "@types/node-fetch": "^2.5.4",
+    "@types/twit": "^2.2.23",
     "nodemon": "^1.19.1",
     "tslint": "^5.19.0",
     "typescript": "^3.6.2"
