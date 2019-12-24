@@ -58,7 +58,7 @@ export default class SocialNewsTwitterRepository implements SocialNewsRepository
       name: tweet.user.name,
       userName: tweet.user.screen_name,
       image: tweet.user.profile_image_url,
-      url: tweet.user.url
+      url: tweet.user.url ?? `https://twitter.com/${tweet.user.screen_name}`
     };
 
     const image = this.getImage(tweet);
