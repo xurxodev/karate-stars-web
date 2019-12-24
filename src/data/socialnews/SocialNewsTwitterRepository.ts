@@ -23,8 +23,6 @@ export default class SocialNewsTwitterRepository implements SocialNewsRepository
           // See https://github.com/ttezel/twit#tgetpath-params-callback
           // for details.
 
-          console.log("data", listResult);
-
           const tweets: any = listResult.data;
 
           const socialNewsList = tweets.map((tweet: any) => this.mapTweet(tweet));
