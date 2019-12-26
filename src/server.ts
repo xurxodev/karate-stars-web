@@ -1,4 +1,5 @@
 import * as hapi from "hapi";
+import currentNewsRoutes from "./api/currentnews/CurrentNewsRoutes";
 import socialNewsRoutes from "./api/socialnews/SocialNewsRoutes";
 import jwtAuthentication from "./api/users/JwtAuthentication";
 import userRoutes from "./api/users/UserRoutes";
@@ -39,6 +40,11 @@ async function start() {
 
     // initialize social news routes
     socialNewsRoutes().forEach((route: hapi.ServerRoute) => {
+      server.route(route);
+    });
+
+    // initialize current news routes
+    currentNewsRoutes().forEach((route: hapi.ServerRoute) => {
       server.route(route);
     });
 
