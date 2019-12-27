@@ -1,6 +1,6 @@
 import * as hapi from "hapi";
 
-import CurrentNewsRepository from "../../data/currentnews/CurrentNewsInMemoryRepository";
+import CurrentNewsRepository from "../../data/currentnews/CurrentNewsRSSRepository";
 import GetCurrentNewsUseCase from "../../domain/currentnews/usecases/GetCurrentNewsUseCase";
 import jwtAuthentication from "../users/JwtAuthentication";
 import CurrentNewsController from "./CurrentNewsController";

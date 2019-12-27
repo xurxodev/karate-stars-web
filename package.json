@@ -22,6 +22,7 @@
     "hapi": "^18.1.0",
     "hapi-auth-jwt2": "^8.6.2",
     "node-fetch": "^2.6.0",
+    "rss-parser": "^3.7.3",
     "twit": "^2.2.11"
   },
   "devDependencies": {
