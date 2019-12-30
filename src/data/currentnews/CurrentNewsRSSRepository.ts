@@ -3,7 +3,7 @@ import Parser from "rss-parser";
 import CurrentNewsRepository from "../../domain/currentnews/boundaries/CurrentNewsRepository";
 import { CurrentNews, NewsSource } from "../../domain/currentnews/entities/CurrentNews";
 
-export default class CurrentNewsNetworkRepository implements CurrentNewsRepository {
+export default class CurrentNewsRSSRepository implements CurrentNewsRepository {
 
   public parser = new Parser();
 
