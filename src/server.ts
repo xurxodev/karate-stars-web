@@ -1,8 +1,6 @@
 import * as hapi from "hapi";
-import currentNewsRoutes from "./api/currentnews/CurrentNewsRoutes";
-import socialNewsRoutes from "./api/socialnews/SocialNewsRoutes";
 import jwtAuthentication from "./api/users/JwtAuthentication";
-import userRoutes from "./api/users/UserRoutes";
+import initializeRoutes from "./routes";
 
 const server: hapi.Server = new hapi.Server({
   host: "0.0.0.0",
@@ -22,31 +20,7 @@ async function start() {
 
     server.auth.default(jwtAuthentication.name);
 
-    server.route([
-      {
-        method: "GET",
-        path: "/",
-        options: { auth: false },
-        handler: async (req, res) => {
-          return "Welcome to Karate Stars API!!";
-        }
-      }
-    ]);
-
-    // initialize users routes
-    userRoutes().forEach((route: hapi.ServerRoute) => {
-      server.route(route);
-    });
-
-    // initialize social news routes
-    socialNewsRoutes().forEach((route: hapi.ServerRoute) => {
-      server.route(route);
-    });
-
-    // initialize current news routes
-    currentNewsRoutes().forEach((route: hapi.ServerRoute) => {
-      server.route(route);
-    });
+    initializeRoutes(server);
 
     await server.start();
   } catch (err) {
