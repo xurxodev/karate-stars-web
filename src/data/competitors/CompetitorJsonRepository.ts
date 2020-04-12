@@ -10,7 +10,7 @@ export default class CompetitorJsonRepository implements CompetitorRepository {
   public get(): Promise<Competitor[]> {
     return new Promise((resolve, reject) => {
       this.getCompetitors()
-        .then((competitors: any) => resolve(competitors))
+        .then((competitors: Competitor[]) => resolve(competitors))
         .catch((err) => {
           reject(err);
           console.log(err);
