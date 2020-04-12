@@ -5,6 +5,7 @@ import userRoutes from "./api/users/UserRoutes";
 import competitorRoutes from "./api/competitors/CompetitorRoutes";
 import countryRoutes from "./api/countries/CountryRoutes";
 import categoryRoutes from "./api/categories/CategoryRoutes";
+import videoRoutes from "./api/videos/VideoRoutes";
 
 const initializeRoutes = (server: hapi.Server) => {
     const allRoutes = [{
@@ -20,7 +21,8 @@ const initializeRoutes = (server: hapi.Server) => {
     ...currentNewsRoutes(),
     ...competitorRoutes(),
     ...countryRoutes(),
-    ...categoryRoutes()];
+    ...categoryRoutes(),
+    ...videoRoutes()];
 
     allRoutes.forEach((route: hapi.ServerRoute) => {
         server.route(route);
