@@ -9,7 +9,7 @@ export default class CompetitorJsonRepository implements CompetitorRepository {
 
   public get(): Promise<Competitor[]> {
     return new Promise((resolve, reject) => {
-      this.getCurrentNewsSources()
+      this.getCompetitors()
         .then((competitors: any) => resolve(competitors))
         .catch((err) => {
           reject(err);
@@ -18,7 +18,7 @@ export default class CompetitorJsonRepository implements CompetitorRepository {
     });
   }
 
-  private async getCurrentNewsSources(): Promise<any[]> {
+  private async getCompetitors(): Promise<Competitor[]> {
     const response = await fetch("http://www.karatestarsapp.com/api/v1/competitors.json");
 
     return await response.json();
