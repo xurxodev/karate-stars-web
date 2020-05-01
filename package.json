@@ -2,6 +2,7 @@
   "private": true,
   "name": "karate-stars-web",
   "version": "0.1.0",
+  "main": "packages/server/build/server.js",
   "description": "Official Karate Stars Web packages.",
   "workspaces": [
     "packages/*"
@@ -13,6 +14,7 @@
     "server": "yarn workspace karate-stars-server"
   },
   "engines": {
-    "node": "14.x"
+    "node": "14.x",
+    "yarn": "1.x"
   }
 }
