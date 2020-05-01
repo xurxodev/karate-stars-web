@@ -1,41 +1,15 @@
 {
-  "name": "karate-stars-api",
-  "version": "0.0.1",
-  "description": "Karate stars API is a API Rest to retrieve info and news about Karate Stars. Developed using TypeScript in Node.js and using hapijs framework.",
-  "main": "build/server.js",
-  "repository": "https://github.com/xurxodev/karate-stars-api",
-  "author": "Jorge Sánchez <xurxosf@gmail.com>",
-  "license": "GPL-3.0-or-later",
+  "private": true,
+  "name": "karate-stars-web",
+  "version": "0.1.0",
+  "description": "Official Karate Stars Web packages.",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "start": "yarn build && node ./build/server.js",
-    "build": "yarn clean && yarn tsc",
-    "start-dev": "./node_modules/nodemon/bin/nodemon.js -e ts  --exec \"yarn build-dev\"",
-    "build-dev": "yarn build && yarn lint && node ./build/server.js",
-    "tsc": "tsc",
-    "clean": "rm -rf build",
-    "lint": "tslint -c tslint.json -p tsconfig.json --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "@hapi/boom": "^7.4.3",
-    "dotenv": "^8.1.0",
-    "hapi": "^18.1.0",
-    "hapi-auth-jwt2": "^8.6.2",
-    "node-fetch": "^2.6.0",
-    "rss-parser": "^3.7.3",
-    "twit": "^2.2.11"
-  },
-  "devDependencies": {
-    "@types/hapi": "^18.0.2",
-    "@types/hapi__boom": "^7.4.1",
-    "@types/node": "^12.7.2",
-    "@types/node-fetch": "^2.5.4",
-    "@types/twit": "^2.2.23",
-    "nodemon": "^1.19.1",
-    "tslint": "^5.19.0",
-    "typescript": "^3.6.2"
-  },
-  "engines": {
-    "node": "10.x"
+    "start": "yarn admin build && yarn server start",
+    "core": "yarn workspace karate-stars-core",
+    "admin": "yarn workspace karate-stars-admin",
+    "server": "yarn workspace karate-stars-server"
   }
 }

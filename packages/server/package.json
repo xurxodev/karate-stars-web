@@ -1,0 +1,42 @@
+{
+  "name": "karate-stars-server",
+  "version": "0.1.0",
+  "description": "Karate stars Server. Developed using TypeScript in Node.js and using hapijs framework.",
+  "main": "build/server.js",
+  "repository": "https://github.com/xurxodev/karate-stars-api",
+  "author": "Jorge Sánchez <xurxosf@gmail.com>",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "start": "yarn build && node ./build/server.js",
+    "build": "yarn clean && yarn tsc",
+    "start-dev": "./node_modules/nodemon/bin/nodemon.js -e ts  --exec \"yarn build-dev\"",
+    "build-dev": "yarn build && yarn lint && node ./build/server.js",
+    "tsc": "tsc --build",
+    "clean": "rm -rf build",
+    "lint": "tslint -c tslint.json -p tsconfig.json --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@hapi/boom": "^9.0.1",
+    "@hapi/hapi": "^19.1.1",
+    "@hapi/inert": "^6.0.1",
+    "dotenv": "^8.1.0",
+    "hapi-auth-jwt2": "^8.6.2",
+    "node-fetch": "^2.6.0",
+    "rss-parser": "^3.7.3",
+    "twit": "^2.2.11"
+  },
+  "devDependencies": {
+    "@types/hapi__boom": "^9.0.1",
+    "@types/hapi__hapi": "^19.0.3",
+    "@types/node": "^12.7.2",
+    "@types/node-fetch": "^2.5.4",
+    "@types/twit": "^2.2.23",
+    "nodemon": "^1.19.1",
+    "tslint": "^5.19.0",
+    "typescript": "^3.7.2"
+  },
+  "engines": {
+    "node": "14.x"
+  }
+}
