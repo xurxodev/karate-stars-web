@@ -11,5 +11,8 @@
     "core": "yarn workspace karate-stars-core",
     "admin": "yarn workspace karate-stars-admin",
     "server": "yarn workspace karate-stars-server"
+  },
+  "engines": {
+    "node": "14.x"
   }
 }
