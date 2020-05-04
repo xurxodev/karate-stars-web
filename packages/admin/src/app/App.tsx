@@ -1,12 +1,22 @@
 import React from "react";
-import { Button } from "@material-ui/core";
+import { Router } from "react-router-dom";
+import { createBrowserHistory } from "history";
+import Routes from "./Routes";
+import "./App.css";
+import { ThemeProvider, CssBaseline } from "@material-ui/core";
+import theme from "./theme";
 
-function App() {
+const App: React.FC = () => {
+    const browserHistory = createBrowserHistory();
+
     return (
-        <div className="App">
-            <Button>{"Karate Stars Admin"}</Button>
-        </div>
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Router history={browserHistory}>
+                <Routes />
+            </Router>
+        </ThemeProvider>
     );
-}
+};
 
 export default App;
