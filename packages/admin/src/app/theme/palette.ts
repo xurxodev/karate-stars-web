@@ -20,9 +20,9 @@ const palette: Palette = createPalette({
   },
   secondary: {
     contrastText: white,
-    dark: colors.blue[900],
-    main: colors.blue['A400'],
-    light: colors.blue['A400']
+    dark: colors.blue['A700'],
+    main: colors.blue['A200'],
+    light: colors.blue['A200']
   },
   success: {
     contrastText: white,
