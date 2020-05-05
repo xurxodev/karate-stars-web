@@ -1,28 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Link as RouterLink, useHistory } from "react-router-dom";
-//import validate from "validate.js";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/styles";
 import { Grid, Button, Typography, Theme, TextField } from "@material-ui/core";
 import * as colors from "@material-ui/core/colors";
-import background from "./login.png";
-
-//import { Facebook as FacebookIcon, Google as GoogleIcon } from "icons";
-
-const schema = {
-    email: {
-        presence: { allowEmpty: false, message: "is required" },
-        email: true,
-        length: {
-            maximum: 64,
-        },
-    },
-    password: {
-        presence: { allowEmpty: false, message: "is required" },
-        length: {
-            maximum: 128,
-        },
-    },
-};
+import background from "./images/login.png";
+import LoginBloc from "./LoginBloc";
+import { LoginState, LoginFormState } from "./LoginState";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -102,56 +85,41 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 }));
 
+const loginBloc = new LoginBloc();
+
 const LoginPage: React.FC = () => {
+    const classes = useStyles();
     const history = useHistory();
 
-    const classes = useStyles();
+    const [state, setState] = useState<LoginState>(loginBloc.getState);
 
-    // const [formState, setFormState] = useState({
-    //     isValid: false,
-    //     values: {},
-    //     touched: {},
-    //     errors: {},
-    // });
+    loginBloc.subscribe((state) => {
+        switch (state.kind) {
+            case "loginForm":
+                return setState(state);
+            case "loginOk":
+                return history.push("admin/home");
+        }
+    });
 
-    // useEffect(() => {
-    //     const errors = validate(formState.values, schema);
+    const handleEmailChange = (event: any) => {
+        event.persist();
 
-    //     setFormState((formState) => ({
-    //         ...formState,
-    //         isValid: errors ? false : true,
-    //         errors: errors || {},
-    //     }));
-    // }, [formState.values]);
+        loginBloc.changeEmail(event.target.value);
+    };
 
-    // const handleBack = () => {
-    //     history.goBack();
-    // };
+    const handlePaswwordChange = (event: any) => {
+        event.persist();
 
-    // const handleChange = (event: any) => {
-    //     event.persist();
-
-    //     setFormState((formState) => ({
-    //         ...formState,
-    //         values: {
-    //             ...formState.values,
-    //             [event.target.name]:
-    //                 event.target.type === "checkbox" ? event.target.checked : event.target.value,
-    //         },
-    //         touched: {
-    //             ...formState.touched,
-    //             [event.target.name]: true,
-    //         },
-    //     }));
-    // };
+        loginBloc.changePassword(event.target.value);
+    };
 
     const handleSignIn = (event: any) => {
         event.preventDefault();
-        //history.push("/");
+        loginBloc.login();
     };
 
-    //const hasError = (field:any) =>
-    // formState.touched[field] && formState.errors[field] ? true : false;
+    const stateForm = state as LoginFormState;
 
     return (
         <div className={classes.root}>
@@ -183,34 +151,32 @@ const LoginPage: React.FC = () => {
                             </Typography>
                             <TextField
                                 className={classes.textField}
-                                //error={hasError("email")}
+                                error={stateForm.email.error ? true : false}
                                 fullWidth
-                                //helperText={hasError("email") ? formState.errors.email[0] : null}
+                                helperText={stateForm.email.error}
                                 label="Email address"
                                 name="email"
-                                //onChange={handleChange}
+                                onChange={handleEmailChange}
                                 type="text"
-                                //value={formState.values.email || ""}
+                                value={stateForm?.email.value || ""}
                                 variant="outlined"
                             />
                             <TextField
                                 className={classes.textField}
-                                //error={hasError("password")}
+                                error={stateForm.password.error ? true : false}
                                 fullWidth
-                                // helperText={
-                                //     hasError("password") ? formState.errors.password[0] : null
-                                // }
+                                helperText={stateForm?.password.error}
                                 label="Password"
                                 name="password"
-                                //onChange={handleChange}
+                                onChange={handlePaswwordChange}
                                 type="password"
-                                //value={formState.values.password || ""}
+                                value={stateForm?.password.value || ""}
                                 variant="outlined"
                             />
                             <Button
                                 className={classes.signInButton}
                                 color="primary"
-                                //disabled={!formState.isValid}
+                                disabled={!stateForm.isValid}
                                 fullWidth
                                 size="large"
                                 type="submit"
@@ -223,10 +189,6 @@ const LoginPage: React.FC = () => {
                 </Grid>
             </Grid>
         </div>
-
-        //     <Grid className={classes.grid} container>
-
-        //     </Grid>
     );
 };
 
