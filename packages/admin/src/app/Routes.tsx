@@ -1,20 +1,24 @@
 import React from "react";
-import { Switch, Redirect, Route } from "react-router-dom";
-import MinimalLayout from "../common/layouts/minimal/MinimalLayout";
+import { Switch, Redirect, Route, BrowserRouter } from "react-router-dom";
 import LoginPage from "../user/presentation/LoginPage";
+import HomePage from "../home/presentation/HomePage";
 
 const Routes: React.FC = () => {
     return (
-        <Switch>
-            <Redirect exact from="/admin" to="/login" />
-            <Route path="/login">
-                <MinimalLayout>
+        <BrowserRouter basename="/admin">
+            <Switch>
+                <Redirect exact from="/" to="/login" />
+                <Route path="/login">
                     <LoginPage />
-                </MinimalLayout>
-            </Route>
+                </Route>
 
-            <Redirect to="/not-found" />
-        </Switch>
+                <Route path="/home">
+                    <HomePage />
+                </Route>
+
+                <Redirect to="/not-found" />
+            </Switch>
+        </BrowserRouter>
     );
 };
 

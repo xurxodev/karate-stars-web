@@ -28,31 +28,29 @@ class LoginBloc extends Bloc<LoginState>{
         this.changeState(state);
     }
 
-    login() {
+    async login() {
         const formState = this.getState as LoginFormState
 
         if (formState.isValid) {
             const emailResult = Email.create(formState.email.value ?? "");
             const passwordResult = Password.create(formState.password.value ?? "");
 
-            this.loginUseCase.execute(emailResult.value as Email, passwordResult.value as Password)
-                .then((result) => {
-                    result.fold(
-                        (error) => this.changeState(this.handleError(error)),
-                        (_) => this.changeState({} as LoginOkState))
-                })
+            const result = await this.loginUseCase.execute(emailResult.value as Email, passwordResult.value as Password);
+
+            result.fold(
+                (error) => this.changeState(this.handleError(error)),
+                (_) => this.changeState({ kind: "loginOk" }));
         } else {
             this.changeState(formState);
         }
     }
 
     private handleError(error: UserError): LoginState {
-        debugger;
         const formState = this.getState as LoginFormState
 
         switch (error.kind) {
-            case "ApiError": return { ...formState, error: `An error has ocurred making login: ${error.message}` };
-            case "InvalidCredentials": return { ...formState, error: "Invalid credentials" };
+            case "ApiError": return { ...formState, error: `${error.error}: ${error.message}` };
+            case "UnexpectedError": return { ...formState, error: `An unexpected error has ocurred: ${error.message}` };
         }
     }
 

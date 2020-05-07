@@ -1,5 +1,4 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
 import Routes from "./Routes";
 import "./App.css";
 import { ThemeProvider, CssBaseline } from "@material-ui/core";
@@ -9,9 +8,7 @@ const App: React.FC = () => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <BrowserRouter>
-                <Routes />
-            </BrowserRouter>
+            <Routes />
         </ThemeProvider>
     );
 };

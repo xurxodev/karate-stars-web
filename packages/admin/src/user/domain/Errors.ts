@@ -1,10 +1,13 @@
 export interface ApiError {
     kind: "ApiError";
-    message: string
+    error: string
+    statusCode: number;
+    message: string;
 }
 
-export interface InvalidCredentials {
-    kind: "InvalidCredentials";
+export interface UnexpectedError {
+    kind: "UnexpectedError";
+    message: Error
 }
 
-export type UserError = InvalidCredentials | ApiError
+export type UserError = ApiError | UnexpectedError

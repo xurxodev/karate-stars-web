@@ -9,6 +9,8 @@ import { LoginState, LoginFormState } from "./LoginState";
 import { useHistory } from "react-router-dom";
 import LoginUseCase from "../domain/LoginUseCase";
 import UserApiRepository from "../data/UserApiRepository";
+import axios from "axios";
+import MinimalLayout from "../../common/layouts/minimal/MinimalLayout";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -25,7 +27,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         },
     },
     quote: {
-        //backgroundColor: theme.palette.neutral,
         height: "100%",
         display: "flex",
         justifyContent: "center",
@@ -93,7 +94,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 //TODO: move to context
-const loginRepository = new UserApiRepository();
+const axiosInstance = axios.create({
+    baseURL: "/api/v1/",
+});
+const loginRepository = new UserApiRepository(axiosInstance);
 const loginUseCase = new LoginUseCase(loginRepository);
 const loginBloc = new LoginBloc(loginUseCase);
 
@@ -108,7 +112,7 @@ const LoginPage: React.FC = () => {
             case "loginForm":
                 return setState(state);
             case "loginOk":
-                return history.push("admin/home");
+                return history.push("/home");
         }
     });
 
@@ -132,80 +136,82 @@ const LoginPage: React.FC = () => {
     const stateForm = state as LoginFormState;
 
     return (
-        <div className={classes.root}>
-            <Grid className={classes.grid} container>
-                <Grid className={classes.quoteContainer} item lg={5}>
-                    <div className={classes.quote}>
-                        <div className={classes.quoteInner}>
-                            <Typography className={classes.quoteText} variant="h1">
-                                Karate aims to build character, improve human behavior, and
-                                cultivate modesty; it does not, however, guarantee it.
-                            </Typography>
-                            <div>
-                                <Typography className={classes.name} variant="body1">
-                                    Yasuhiro Konishi
+        <MinimalLayout>
+            <div className={classes.root}>
+                <Grid className={classes.grid} container>
+                    <Grid className={classes.quoteContainer} item lg={5}>
+                        <div className={classes.quote}>
+                            <div className={classes.quoteInner}>
+                                <Typography className={classes.quoteText} variant="h1">
+                                    Karate aims to build character, improve human behavior, and
+                                    cultivate modesty; it does not, however, guarantee it.
                                 </Typography>
-                                <Typography className={classes.bio} variant="body2">
-                                    Founder of Shindo Jinen-ryu
-                                </Typography>
+                                <div>
+                                    <Typography className={classes.name} variant="body1">
+                                        Yasuhiro Konishi
+                                    </Typography>
+                                    <Typography className={classes.bio} variant="body2">
+                                        Founder of Shindo Jinen-ryu
+                                    </Typography>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </Grid>
+                    </Grid>
 
-                <Grid className={classes.contentContainer} item lg={7} xs={12}>
-                    <div className={classes.content}>
-                        <form className={classes.form} onSubmit={handleSignIn}>
-                            <Typography className={classes.title} variant="h2">
-                                Login
-                            </Typography>
-                            {stateForm.error && (
-                                <Alert className={classes.formError} severity="error">
-                                    {stateForm.error}
-                                </Alert>
-                            )}
-                            <TextField
-                                className={classes.textField}
-                                error={stateForm.email.error ? true : false}
-                                fullWidth
-                                helperText={stateForm.email.error}
-                                label="Email"
-                                name="email"
-                                onChange={handleEmailChange}
-                                type="text"
-                                value={stateForm?.email.value || ""}
-                                variant="outlined"
-                                autoComplete="username"
-                            />
-                            <TextField
-                                className={classes.textField}
-                                error={stateForm.password.error ? true : false}
-                                fullWidth
-                                helperText={stateForm?.password.error}
-                                label="Password"
-                                name="password"
-                                onChange={handlePaswwordChange}
-                                type="password"
-                                value={stateForm?.password.value || ""}
-                                variant="outlined"
-                                autoComplete="current-password"
-                            />
-                            <Button
-                                className={classes.signInButton}
-                                color="primary"
-                                disabled={!stateForm.isValid}
-                                fullWidth
-                                size="large"
-                                type="submit"
-                                variant="contained"
-                            >
-                                Sign in now
-                            </Button>
-                        </form>
-                    </div>
+                    <Grid className={classes.contentContainer} item lg={7} xs={12}>
+                        <div className={classes.content}>
+                            <form className={classes.form} onSubmit={handleSignIn}>
+                                <Typography className={classes.title} variant="h2">
+                                    Login
+                                </Typography>
+                                {stateForm.error && (
+                                    <Alert className={classes.formError} severity="error">
+                                        {stateForm.error}
+                                    </Alert>
+                                )}
+                                <TextField
+                                    className={classes.textField}
+                                    error={stateForm.email.error ? true : false}
+                                    fullWidth
+                                    helperText={stateForm.email.error}
+                                    label="Email"
+                                    name="email"
+                                    onChange={handleEmailChange}
+                                    type="text"
+                                    value={stateForm?.email.value || ""}
+                                    variant="outlined"
+                                    autoComplete="username"
+                                />
+                                <TextField
+                                    className={classes.textField}
+                                    error={stateForm.password.error ? true : false}
+                                    fullWidth
+                                    helperText={stateForm?.password.error}
+                                    label="Password"
+                                    name="password"
+                                    onChange={handlePaswwordChange}
+                                    type="password"
+                                    value={stateForm?.password.value || ""}
+                                    variant="outlined"
+                                    autoComplete="current-password"
+                                />
+                                <Button
+                                    className={classes.signInButton}
+                                    color="primary"
+                                    disabled={!stateForm.isValid}
+                                    fullWidth
+                                    size="large"
+                                    type="submit"
+                                    variant="contained"
+                                >
+                                    Sign in now
+                                </Button>
+                            </form>
+                        </div>
+                    </Grid>
                 </Grid>
-            </Grid>
-        </div>
+            </div>
+        </MinimalLayout>
     );
 };
 
