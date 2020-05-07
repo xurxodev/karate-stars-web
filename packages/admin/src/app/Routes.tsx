@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Redirect, Route } from "react-router-dom";
 import MinimalLayout from "../common/layouts/minimal/MinimalLayout";
-import LoginPage from "../login/presentation/LoginPage";
+import LoginPage from "../user/presentation/LoginPage";
 
 const Routes: React.FC = () => {
     return (

@@ -1,9 +1,10 @@
-import UserRepository from "./LoginRepository";
+
 import { UserError } from "./Errors";
-import { Email } from "./Email";
-import { Password } from "./Password";
+import { Email } from "./entities/Email";
+import { Password } from "./entities/Password";
 import { Either } from "../../common/domain/Either";
-import User from "./User";
+import User from "./entities/User";
+import UserRepository from "./Boundaries";
 
 export default class LoginUseCase {
     private userRepository: UserRepository;

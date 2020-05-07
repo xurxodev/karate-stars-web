@@ -1,9 +1,9 @@
 import Bloc from "../../common/bloc";
 import { LoginState, LoginOkState, LoginFormState, FormFieldState } from "./LoginState";
-import { Email, EmailError } from "../domain/Email";
+import { Email, EmailError } from "../domain/entities/Email";
 import LoginUseCase from "../domain/LoginUseCase";
 import { UserError } from "../domain/Errors";
-import { Password } from "../domain/Password";
+import { Password } from "../domain/entities/Password";
 
 class LoginBloc extends Bloc<LoginState>{
 

@@ -1,5 +1,5 @@
-import { ValueObject } from "../../common/domain/ValueObject";
-import { Either } from "../../common/domain/Either";
+import { ValueObject } from "../../../common/domain/ValueObject";
+import { Either } from "../../../common/domain/Either";
 
 export interface PasswordProps {
   value: string;
