@@ -8,7 +8,8 @@
     "packages/*"
   ],
   "scripts": {
-    "start": "yarn admin build && yarn server start",
+    "build": "yarn admin build && yarn server build",
+    "start": "yarn server start",
     "core": "yarn workspace karate-stars-core",
     "admin": "yarn workspace karate-stars-admin",
     "server": "yarn workspace karate-stars-server"

@@ -7,7 +7,7 @@
   "author": "Jorge Sánchez <xurxosf@gmail.com>",
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "start": "yarn build && node ./build/server.js",
+    "start": "node ./build/server.js",
     "build": "yarn clean && yarn tsc",
     "start-dev": "./node_modules/nodemon/bin/nodemon.js -e ts  --exec \"yarn build-dev\"",
     "build-dev": "yarn build && yarn lint && node ./build/server.js",
