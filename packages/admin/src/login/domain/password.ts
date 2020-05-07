@@ -1,5 +1,5 @@
 import { ValueObject } from "../../common/domain/ValueObject";
-import { Either, Left, Right } from "../../common/domain/Either";
+import { Either } from "../../common/domain/Either";
 
 export interface PasswordProps {
   value: string;
@@ -26,9 +26,9 @@ export class Password extends ValueObject<PasswordProps> {
 
   public static create(value: string): Either<PaswordError, Password> {
     if (!value) {
-      return Left<PaswordError>("InvalidEmptyPassword");
+      return Either.left("InvalidEmptyPassword");
     } else {
-      return Right<Password>(new Password({
+      return Either.right(new Password({
         value: value
       }));
     }

@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/styles";
 import { Grid, Button, Typography, Theme, TextField } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import * as colors from "@material-ui/core/colors";
 import background from "./images/login.png";
 import LoginBloc from "./LoginBloc";
 import { LoginState, LoginFormState } from "./LoginState";
 import { useHistory } from "react-router-dom";
+import LoginUseCase from "../domain/LoginUseCase";
+import UserApiRepository from "../data/UserApiRepository";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -64,6 +67,10 @@ const useStyles = makeStyles((theme: Theme) => ({
             justifyContent: "center",
         },
     },
+    formError: {
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1),
+    },
     form: {
         paddingLeft: 100,
         paddingRight: 100,
@@ -85,7 +92,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 }));
 
-const loginBloc = new LoginBloc();
+//TODO: move to context
+const loginRepository = new UserApiRepository();
+const loginUseCase = new LoginUseCase(loginRepository);
+const loginBloc = new LoginBloc(loginUseCase);
 
 const LoginPage: React.FC = () => {
     const classes = useStyles();
@@ -149,17 +159,23 @@ const LoginPage: React.FC = () => {
                             <Typography className={classes.title} variant="h2">
                                 Login
                             </Typography>
+                            {stateForm.error && (
+                                <Alert className={classes.formError} severity="error">
+                                    {stateForm.error}
+                                </Alert>
+                            )}
                             <TextField
                                 className={classes.textField}
                                 error={stateForm.email.error ? true : false}
                                 fullWidth
                                 helperText={stateForm.email.error}
-                                label="Email address"
+                                label="Email"
                                 name="email"
                                 onChange={handleEmailChange}
                                 type="text"
                                 value={stateForm?.email.value || ""}
                                 variant="outlined"
+                                autoComplete="username"
                             />
                             <TextField
                                 className={classes.textField}
@@ -172,6 +188,7 @@ const LoginPage: React.FC = () => {
                                 type="password"
                                 value={stateForm?.password.value || ""}
                                 variant="outlined"
+                                autoComplete="current-password"
                             />
                             <Button
                                 className={classes.signInButton}
