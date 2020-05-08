@@ -2,17 +2,15 @@ import React from "react";
 import { Switch, Redirect, Route, BrowserRouter } from "react-router-dom";
 import LoginPage from "../user/presentation/LoginPage";
 import HomePage from "../home/presentation/HomePage";
-import { LoginBlocProvider } from "../user/presentation/LoginBlocProvider";
 
 const Routes: React.FC = () => {
     return (
         <BrowserRouter basename="/admin">
             <Switch>
                 <Redirect exact from="/" to="/login" />
+
                 <Route path="/login">
-                    <LoginBlocProvider>
-                        <LoginPage />
-                    </LoginBlocProvider>
+                    <LoginPage />
                 </Route>
 
                 <Route path="/home">
