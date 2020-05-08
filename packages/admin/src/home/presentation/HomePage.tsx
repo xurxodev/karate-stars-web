@@ -1,5 +1,5 @@
 import React from "react";
-import MinimalLayout from "../../common/layouts/minimal/MinimalLayout";
+import MinimalLayout from "../../common/presentation/layouts/minimal/MinimalLayout";
 
 const HomePage: React.FC = () => {
     return (

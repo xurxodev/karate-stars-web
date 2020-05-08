@@ -1,16 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { makeStyles } from "@material-ui/styles";
 import { Grid, Button, Typography, Theme, TextField } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import * as colors from "@material-ui/core/colors";
 import background from "./images/login.png";
-import LoginBloc from "./LoginBloc";
+
 import { LoginState, LoginFormState } from "./LoginState";
 import { useHistory } from "react-router-dom";
-import LoginUseCase from "../domain/LoginUseCase";
-import UserApiRepository from "../data/UserApiRepository";
-import axios from "axios";
-import MinimalLayout from "../../common/layouts/minimal/MinimalLayout";
+import MinimalLayout from "../../common/presentation/layouts/minimal/MinimalLayout";
+import { LoginBlocContext } from "./LoginBlocProvider";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -93,17 +91,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 }));
 
-//TODO: move to context
-const axiosInstance = axios.create({
-    baseURL: "/api/v1/",
-});
-const loginRepository = new UserApiRepository(axiosInstance);
-const loginUseCase = new LoginUseCase(loginRepository);
-const loginBloc = new LoginBloc(loginUseCase);
-
 const LoginPage: React.FC = () => {
     const classes = useStyles();
     const history = useHistory();
+    const loginBloc = useContext(LoginBlocContext);
 
     const [state, setState] = useState<LoginState>(loginBloc.getState);
 

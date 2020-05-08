@@ -18,7 +18,7 @@ export default class UserApiRepository implements UserRepository {
 
             return Either.right(response.data);
         } catch (error) {
-            if (error.response) {
+            if (error.response?.data?.statusCode) {
                 return Either.left(
                     {
                         kind: "ApiError",
@@ -26,7 +26,10 @@ export default class UserApiRepository implements UserRepository {
                         statusCode: error.response.data.statusCode,
                         message: error.response.data.message
                     });
-            } else {
+            } else if (typeof error.response?.data === "string") {
+                return Either.left({ kind: "UnexpectedError", message: error.response.data })
+            }
+            else {
                 return Either.left({ kind: "UnexpectedError", message: error.message });
             }
         }

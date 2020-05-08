@@ -24,6 +24,11 @@ abstract class Bloc<T> {
     subscribe(listener: Subscription<T>) {
         this.listener = listener;
     }
+
+    protected dispose() {
+        //Override on derivated  vaclass dispose if 
+        //you need clear subscriptions for example
+    }
 }
 
 export default Bloc;

@@ -2,6 +2,7 @@ import React from "react";
 import { Switch, Redirect, Route, BrowserRouter } from "react-router-dom";
 import LoginPage from "../user/presentation/LoginPage";
 import HomePage from "../home/presentation/HomePage";
+import { LoginBlocProvider } from "../user/presentation/LoginBlocProvider";
 
 const Routes: React.FC = () => {
     return (
@@ -9,7 +10,9 @@ const Routes: React.FC = () => {
             <Switch>
                 <Redirect exact from="/" to="/login" />
                 <Route path="/login">
-                    <LoginPage />
+                    <LoginBlocProvider>
+                        <LoginPage />
+                    </LoginBlocProvider>
                 </Route>
 
                 <Route path="/home">
