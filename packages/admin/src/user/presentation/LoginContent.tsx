@@ -8,7 +8,7 @@ import background from "./images/login.png";
 import { LoginState, LoginFormState } from "./LoginState";
 import { useHistory } from "react-router-dom";
 import { useLoginBloc } from "./LoginPage";
-import { paths } from "../../app/Routes";
+import { pages } from "../../app/Routes";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -103,7 +103,7 @@ const LoginContent: React.FC = () => {
             case "loginForm":
                 return setState(state);
             case "loginOk":
-                return history.push(paths.dashboard);
+                return history.push(pages.dashboard.path);
         }
     });
 

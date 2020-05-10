@@ -9,6 +9,7 @@ import VideoLibrary from "@material-ui/icons/VideoLibrary";
 
 import SidebarNav from "./SidebarNav";
 import Profile from "./Profile";
+import { pages } from "../../../../app/Routes";
 
 const useStyles = makeStyles((theme: Theme) => ({
     drawer: {
@@ -44,33 +45,27 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
 
     const menus = [
         {
-            title: "Dashboard",
-            href: "/dashboard",
+            ...pages.dashboard,
             icon: <DashboardIcon />,
         },
         {
-            title: "Competitors",
-            href: "/competitors",
+            ...pages.competitors,
             icon: <PeopleIcon />,
         },
         {
-            title: "Videos",
-            href: "/videos",
+            ...pages.videos,
             icon: <VideoLibrary />,
         },
         {
-            title: "Current news",
-            href: "/current-news-settings",
+            ...pages.currentNewsSettings,
             icon: <SettingsIcon />,
         },
         {
-            title: "Social news",
-            href: "/social-news-settings",
+            ...pages.socialNewsSettings,
             icon: <SettingsIcon />,
         },
         {
-            title: "Send push notification",
-            href: "/send-push-notification",
+            ...pages.sendPushNotification,
             icon: <Notifications />,
         },
     ];

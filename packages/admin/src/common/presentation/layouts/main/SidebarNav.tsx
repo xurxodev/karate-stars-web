@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface menu {
     title: string;
-    href: string;
+    path: string;
     icon: any;
 }
 
@@ -71,7 +71,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({ menus, className }) => {
                         activeClassName={classes.active}
                         className={classes.button}
                         component={NavLink}
-                        to={menu.href}
+                        to={menu.path}
                     >
                         <div className={classes.icon}>{menu.icon}</div>
                         {menu.title}

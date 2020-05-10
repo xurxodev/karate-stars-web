@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingLeft: 240,
     },
     content: {
+        padding: theme.spacing(2),
         height: "100%",
     },
 }));

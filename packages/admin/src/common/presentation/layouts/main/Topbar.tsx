@@ -5,7 +5,7 @@ import { AppBar, Toolbar, Badge, Hidden, IconButton, Theme } from "@material-ui/
 import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/NotificationsOutlined";
 import InputIcon from "@material-ui/icons/Input";
-import { paths } from "../../../../app/Routes";
+import { pages } from "../../../../app/Routes";
 import logo from "../logo.png";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -32,7 +32,7 @@ const Topbar: React.FC<TopbarProps> = ({ onSidebarOpen }) => {
     return (
         <AppBar className={classes.root}>
             <Toolbar>
-                <Link to={paths.dashboard}>
+                <Link to={pages.dashboard.path}>
                     <img alt="Logo" src={logo} height={50} />
                 </Link>
                 <div className={classes.flexGrow} />

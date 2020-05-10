@@ -1,12 +1,12 @@
 import React from "react";
 import MainLayout from "../../common/presentation/layouts/main/MainLayout";
 
-const DashboardPage: React.FC = () => {
+const SendPushNotificationPage: React.FC = () => {
     return (
         <MainLayout>
-            <h1>Dashboard!!!</h1>
+            <h1>Send push notifications!!!</h1>
         </MainLayout>
     );
 };
 
-export default DashboardPage;
+export default SendPushNotificationPage;

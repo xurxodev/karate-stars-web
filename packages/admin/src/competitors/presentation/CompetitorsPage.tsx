@@ -1,12 +1,12 @@
 import React from "react";
 import MainLayout from "../../common/presentation/layouts/main/MainLayout";
 
-const DashboardPage: React.FC = () => {
+const CompetitorsPage: React.FC = () => {
     return (
         <MainLayout>
-            <h1>Dashboard!!!</h1>
+            <h1>Competitors!!!</h1>
         </MainLayout>
     );
 };
 
-export default DashboardPage;
+export default CompetitorsPage;
