@@ -1,26 +1,31 @@
 import React from "react";
 import { Switch, Redirect, Route, BrowserRouter } from "react-router-dom";
 import LoginPage from "../user/presentation/LoginPage";
-import HomePage from "../home/presentation/HomePage";
+import DashboardPage from "../dashboard/presentation/DashboardPage";
 
-const Routes: React.FC = () => {
+export const paths = {
+    base: "/admin",
+    login: "/login",
+    dashboard: "/dashboard",
+    notFound: "/not-found",
+};
+
+export const Routes: React.FC = () => {
     return (
-        <BrowserRouter basename="/admin">
+        <BrowserRouter basename={paths.base}>
             <Switch>
-                <Redirect exact from="/" to="/login" />
+                <Redirect exact from="/" to={paths.login} />
 
-                <Route path="/login">
+                <Route path={paths.login}>
                     <LoginPage />
                 </Route>
 
-                <Route path="/home">
-                    <HomePage />
+                <Route path={paths.dashboard}>
+                    <DashboardPage />
                 </Route>
 
-                <Redirect to="/not-found" />
+                <Redirect to={paths.notFound} />
             </Switch>
         </BrowserRouter>
     );
 };
-
-export default Routes;
