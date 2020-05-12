@@ -39,8 +39,6 @@ export default class ProductController {
 
         const userId = jwtAuthentication.decodeToken(token.replace("Bearer ", "")).userId;
 
-        console.log({ userId });
-
         return this.getUserByIdUseCase.execute(userId)
             .then((user) => {
                 if (user) {
