@@ -7,8 +7,9 @@ import background from "./images/login.png";
 
 import { LoginState, LoginFormState } from "./LoginState";
 import { useHistory } from "react-router-dom";
-import { useLoginBloc } from "./LoginPage";
-import { pages } from "../../app/Routes";
+import { useLoginBloc as useLoginBlocContext } from "./LoginPage";
+import { pages } from "../../app/AppRoutes";
+import { useAppBlocContext } from "../../app/AppContext";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -94,16 +95,20 @@ const useStyles = makeStyles((theme: Theme) => ({
 const LoginContent: React.FC = () => {
     const classes = useStyles();
     const history = useHistory();
-    const loginBloc = useLoginBloc();
+    const loginBloc = useLoginBlocContext();
+    const appBloc = useAppBlocContext();
 
     const [state, setState] = useState<LoginState>(loginBloc.getState);
 
     loginBloc.subscribe((state: LoginState) => {
         switch (state.kind) {
-            case "loginForm":
+            case "loginForm": {
                 return setState(state);
-            case "loginOk":
+            }
+            case "loginOk": {
+                appBloc.refresh();
                 return history.push(pages.dashboard.path);
+            }
         }
     });
 

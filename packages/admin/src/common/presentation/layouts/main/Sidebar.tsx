@@ -9,7 +9,7 @@ import VideoLibrary from "@material-ui/icons/VideoLibrary";
 
 import SidebarNav from "./SidebarNav";
 import Profile from "./Profile";
-import { pages } from "../../../../app/Routes";
+import { pages } from "../../../../app/AppRoutes";
 
 const useStyles = makeStyles((theme: Theme) => ({
     drawer: {

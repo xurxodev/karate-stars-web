@@ -6,4 +6,6 @@ import { Password } from "./entities/Password";
 
 export default interface UserRepository {
     getByEmailAndPassword(email: Email, password: Password): Promise<Either<UserError, User>>;
+    getCurrent(): Promise<Either<UserError, User>>;
+    removeCurrent(): Promise<void>;
 }

@@ -8,6 +8,7 @@ import CurrentNewsSettingsPage from "../settings/current-news/presentation/Curre
 import SocialNewsSettingsPage from "../settings/social-news/presentation/SocialNewsSettingsPage";
 import SendPushNotificationPage from "../notifications/presentation/SendPushNotificationPage";
 import NotFoundPage from "../common/presentation/pages/NotFoundPage";
+import PrivateRoute from "../common/presentation/components/PrivateRoute";
 
 export const pages = {
     base: { title: "base", path: "/admin" },
@@ -21,19 +22,25 @@ export const pages = {
     notFound: { title: "Not found", path: "/not-found" },
 };
 
-export const Routes: React.FC = () => {
+export const AppRoutes: React.FC = () => {
     return (
         <BrowserRouter basename={pages.base.path}>
             <Switch>
                 <Redirect exact from="/" to={pages.dashboard.path} />
 
                 <Route path={pages.login.path} component={LoginPage} />
-                <Route path={pages.dashboard.path} component={DashboardPage} />
-                <Route path={pages.competitors.path} component={CompetitorsPage} />
-                <Route path={pages.videos.path} component={VideosPage} />
-                <Route path={pages.currentNewsSettings.path} component={CurrentNewsSettingsPage} />
-                <Route path={pages.socialNewsSettings.path} component={SocialNewsSettingsPage} />
-                <Route
+                <PrivateRoute path={pages.dashboard.path} component={DashboardPage} />
+                <PrivateRoute path={pages.competitors.path} component={CompetitorsPage} />
+                <PrivateRoute path={pages.videos.path} component={VideosPage} />
+                <PrivateRoute
+                    path={pages.currentNewsSettings.path}
+                    component={CurrentNewsSettingsPage}
+                />
+                <PrivateRoute
+                    path={pages.socialNewsSettings.path}
+                    component={SocialNewsSettingsPage}
+                />
+                <PrivateRoute
                     path={pages.sendPushNotification.path}
                     component={SendPushNotificationPage}
                 />

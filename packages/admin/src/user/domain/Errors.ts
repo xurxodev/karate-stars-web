@@ -10,4 +10,8 @@ export interface UnexpectedError {
     message: Error
 }
 
-export type UserError = ApiError | UnexpectedError
+export interface Unauthorized {
+    kind: "Unauthorized";
+}
+
+export type UserError = ApiError | UnexpectedError | Unauthorized

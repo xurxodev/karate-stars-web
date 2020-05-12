@@ -34,6 +34,6 @@ export abstract class Either<L, R> {
 }
 
 
-class Left<L> extends Either<L, never> { }
+export class Left<L> extends Either<L, never> { }
 
-class Right<R> extends Either<never, R> { }
+export class Right<R> extends Either<never, R> { }

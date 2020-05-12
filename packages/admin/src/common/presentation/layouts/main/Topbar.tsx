@@ -5,8 +5,9 @@ import { AppBar, Toolbar, Badge, Hidden, IconButton, Theme } from "@material-ui/
 import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/NotificationsOutlined";
 import InputIcon from "@material-ui/icons/Input";
-import { pages } from "../../../../app/Routes";
+import { pages } from "../../../../app/AppRoutes";
 import logo from "../logo.png";
+import { useAppBlocContext } from "../../../../app/AppContext";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -15,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: {
         flexGrow: 1,
     },
-    signOutButton: {
+    logoutButton: {
         marginLeft: theme.spacing(1),
     },
 }));
@@ -26,8 +27,11 @@ interface TopbarProps {
 
 const Topbar: React.FC<TopbarProps> = ({ onSidebarOpen }) => {
     const classes = useStyles();
+    const appBloc = useAppBlocContext();
 
     const [notifications] = useState([]);
+
+    const handleLogout = () => appBloc.logout();
 
     return (
         <AppBar className={classes.root}>
@@ -42,7 +46,11 @@ const Topbar: React.FC<TopbarProps> = ({ onSidebarOpen }) => {
                             <NotificationsIcon />
                         </Badge>
                     </IconButton>
-                    <IconButton className={classes.signOutButton} color="inherit">
+                    <IconButton
+                        className={classes.logoutButton}
+                        color="inherit"
+                        onClick={handleLogout}
+                    >
                         <InputIcon />
                     </IconButton>
                 </Hidden>

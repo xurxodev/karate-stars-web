@@ -49,6 +49,7 @@ class LoginBloc extends Bloc<LoginState>{
         const formState = this.getState as LoginFormState
 
         switch (error.kind) {
+            case "Unauthorized": return { ...formState, error: `Invalid credentials` };
             case "ApiError": return { ...formState, error: `${error.error}: ${error.message}` };
             case "UnexpectedError": return { ...formState, error: `An unexpected error has ocurred: ${error.message}` };
         }
