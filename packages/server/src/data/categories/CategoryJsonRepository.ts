@@ -1,13 +1,13 @@
 import fetch from "node-fetch";
-import { Category } from "../../domain/categories/entities/Category";
 import CategoryRepository from "../../domain/categories/boundaries/CategoryRepository";
+import { Category } from "../../domain/categories/entities/Category";
 
 export default class CategoryJsonRepository implements CategoryRepository {
   public get(): Promise<Category[]> {
     return new Promise((resolve, reject) => {
       this.getCatgories()
         .then((categories: Category[]) => {
-          resolve(categories)
+          resolve(categories);
         })
         .catch((err) => {
           reject(err);

@@ -6,7 +6,7 @@ import GetCategoriesUseCase from "../../domain/categories/usecases/GetCategories
 import jwtAuthentication from "../users/JwtAuthentication";
 import CategoryController from "./CategoryController";
 
-export default function (apiPrefix: string): hapi.ServerRoute[] {
+export default function(apiPrefix: string): hapi.ServerRoute[] {
   const categoryRepository = new CategoryRepository();
   const getCategoriesUseCase = new GetCategoriesUseCase(categoryRepository);
   const categoryController = new CategoryController(getCategoriesUseCase);

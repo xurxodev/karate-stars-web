@@ -5,7 +5,7 @@ import GetCompetitorsUseCase from "../../domain/competitors/usecases/GetCompetit
 import jwtAuthentication from "../users/JwtAuthentication";
 import CompetitorController from "./CompetitorController";
 
-export default function (apiPrefix: string): hapi.ServerRoute[] {
+export default function(apiPrefix: string): hapi.ServerRoute[] {
   const competitorsRepository = new CompetitorsRepository();
   const getCompetitorsUseCase = new GetCompetitorsUseCase(competitorsRepository);
   const competitorController = new CompetitorController(getCompetitorsUseCase);

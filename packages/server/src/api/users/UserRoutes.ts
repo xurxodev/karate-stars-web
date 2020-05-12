@@ -1,17 +1,20 @@
-import * as dotenv from "dotenv";
 import * as hapi from "@hapi/hapi";
+import * as dotenv from "dotenv";
 
 import UserRepository from "../../data/users/UserEnvRepository";
+import GetUserByIdUseCase from "../../domain/users/usecases/GetUserByIdUseCase";
 import GetUserByUsernameUseCase from "../../domain/users/usecases/GetUserByUsernameUseCase";
+import jwtAuthentication from "./JwtAuthentication";
 import UserController from "./UserController";
 
-export default function (apiPrefix: string): hapi.ServerRoute[] {
+export default function(apiPrefix: string): hapi.ServerRoute[] {
 
   dotenv.config();
 
   const userRespository = new UserRepository();
-  const getProductByIdUseCase = new GetUserByUsernameUseCase(userRespository);
-  const userController = new UserController(getProductByIdUseCase);
+  const getUserByUsernameUseCase = new GetUserByUsernameUseCase(userRespository);
+  const getUserByIdUseCase = new GetUserByIdUseCase(userRespository);
+  const userController = new UserController(getUserByUsernameUseCase, getUserByIdUseCase);
 
   return [
     {
@@ -20,6 +23,16 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
       options: { auth: false },
       handler: (request: hapi.Request, h: hapi.ResponseToolkit) => {
         return userController.login(request, h);
+      }
+    },
+    {
+      method: "GET",
+      path: `${apiPrefix}/me`,
+      options: {
+        auth: jwtAuthentication.name
+      },
+      handler: (request: hapi.Request, h: hapi.ResponseToolkit) => {
+        return userController.getCurrentUser(request, h);
       }
     }
   ];

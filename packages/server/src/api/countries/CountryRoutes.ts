@@ -6,7 +6,7 @@ import GetCountriesUseCase from "../../domain/countries/usecases/GetCountriesUse
 import jwtAuthentication from "../users/JwtAuthentication";
 import CountryController from "./CountryController";
 
-export default function (apiPrefix: string): hapi.ServerRoute[] {
+export default function(apiPrefix: string): hapi.ServerRoute[] {
   const countryRepository = new CountryRepository();
   const getCountriesUseCase = new GetCountriesUseCase(countryRepository);
   const countryController = new CountryController(getCountriesUseCase);

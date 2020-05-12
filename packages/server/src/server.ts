@@ -10,7 +10,7 @@ const server: hapi.Server = new hapi.Server({
 async function start() {
   try {
     await server.register(require("hapi-auth-jwt2"));
-    await server.register(require('@hapi/inert'));
+    await server.register(require("@hapi/inert"));
 
     const validate = jwtAuthentication.validateHandler;
     const secretKey = jwtAuthentication.secretKey;

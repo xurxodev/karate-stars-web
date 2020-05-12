@@ -2,11 +2,11 @@
 import * as hapi from "@hapi/hapi";
 
 import VideoRepository from "../../data/videos/VideosJsonRepository";
-import jwtAuthentication from "../users/JwtAuthentication";
 import GetVideosUseCase from "../../domain/videos/usecases/GetVideosUseCase";
+import jwtAuthentication from "../users/JwtAuthentication";
 import VideoController from "./VideoController";
 
-export default function (apiPrefix: string): hapi.ServerRoute[] {
+export default function(apiPrefix: string): hapi.ServerRoute[] {
   const videoRepository = new VideoRepository();
   const getVideosUseCase = new GetVideosUseCase(videoRepository);
   const videoController = new VideoController(getVideosUseCase);

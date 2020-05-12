@@ -1,5 +1,5 @@
-import * as dotenv from "dotenv";
 import * as hapi from "@hapi/hapi";
+import * as dotenv from "dotenv";
 import * as jwt from "jsonwebtoken";
 import UserRepository from "../../data/users/UserEnvRepository";
 import User from "../../domain/users/entities/User";
@@ -28,6 +28,9 @@ const jwtAutentication = {
         return jwt.sign({
             userId: user.userId
         }, jwtSecretKey, { expiresIn: "24h" });
+    },
+    decodeToken: (token: string): { userId: string } => {
+        return jwt.verify(token, jwtSecretKey);
     }
 };
 

@@ -7,7 +7,7 @@ export default class CountryJsonRepository implements CountryRepository {
     return new Promise((resolve, reject) => {
       this.getCountries()
         .then((countries: any) => {
-          resolve(countries)
+          resolve(countries);
         })
         .catch((err) => {
           reject(err);

@@ -5,7 +5,7 @@ import GetCurrentNewsUseCase from "../../domain/currentnews/usecases/GetCurrentN
 import jwtAuthentication from "../users/JwtAuthentication";
 import CurrentNewsController from "./CurrentNewsController";
 
-export default function (apiPrefix: string): hapi.ServerRoute[] {
+export default function(apiPrefix: string): hapi.ServerRoute[] {
   const currentNewsRepository = new CurrentNewsRepository();
   const getCurrentNewsUseCase = new GetCurrentNewsUseCase(currentNewsRepository);
   const currentNewsController = new CurrentNewsController(getCurrentNewsUseCase);

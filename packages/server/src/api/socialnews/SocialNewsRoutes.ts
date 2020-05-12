@@ -4,7 +4,7 @@ import GetSocialNewsUseCase from "../../domain/socialnews/usecases/GetSocialNews
 import SocialNewsController from "../socialnews/SocialNewsController";
 import jwtAuthentication from "../users/JwtAuthentication";
 
-export default function (apiPrefix: string): hapi.ServerRoute[] {
+export default function(apiPrefix: string): hapi.ServerRoute[] {
   const socialNewsRepository = new SocialNewsRepository();
   const getSocialNewsUseCase = new GetSocialNewsUseCase(socialNewsRepository);
   const socialNewsController = new SocialNewsController(getSocialNewsUseCase);

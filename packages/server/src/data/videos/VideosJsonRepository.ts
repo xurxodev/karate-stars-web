@@ -7,7 +7,7 @@ export default class VideosJsonRepository implements VideoRepository {
     return new Promise((resolve, reject) => {
       this.getCatgories()
         .then((videos: Video[]) => {
-          resolve(videos)
+          resolve(videos);
         })
         .catch((err) => {
           reject(err);
