@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Redirect, Route, BrowserRouter } from "react-router-dom";
+import { Switch, Redirect, Route, HashRouter } from "react-router-dom";
 import LoginPage from "../user/presentation/LoginPage";
 import DashboardPage from "../dashboard/presentation/DashboardPage";
 import CompetitorsPage from "../competitors/presentation/CompetitorsPage";
@@ -24,7 +24,7 @@ export const pages = {
 
 export const AppRoutes: React.FC = () => {
     return (
-        <BrowserRouter basename={pages.base.path}>
+        <HashRouter>
             <Switch>
                 <Redirect exact from="/" to={pages.dashboard.path} />
 
@@ -48,6 +48,6 @@ export const AppRoutes: React.FC = () => {
 
                 <Redirect to={pages.notFound.path} />
             </Switch>
-        </BrowserRouter>
+        </HashRouter>
     );
 };
