@@ -6,6 +6,7 @@ import { TokenLocalStorage } from "./common/data/TokenLocalStorage";
 import GetCurrentUserUseCase from "./user/domain/GetCurrentUserUseCase";
 import AppBloc from "./app/AppBloc";
 import RemoveCurrentUserUseCase from "./user/domain/RemoveCurrentUserUseCase";
+import SendPushNotificationBloc from "./notifications/presentation/SendPushNotificationBloc";
 
 export default class CompositionRoot {
     private static instance: CompositionRoot;
@@ -45,5 +46,11 @@ export default class CompositionRoot {
         const loginBloc = new LoginBloc(loginUseCase);
 
         return loginBloc
+    }
+
+    provideSendPushNotificationBloc(): SendPushNotificationBloc {
+        const bloc = new SendPushNotificationBloc();
+
+        return bloc
     }
 }

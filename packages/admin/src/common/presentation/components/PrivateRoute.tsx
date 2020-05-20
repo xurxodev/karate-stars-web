@@ -33,7 +33,6 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ path, component }) => {
         }
     });
 
-    debugger;
     if (state.isAuthenticated === undefined) {
         return (
             <div className={classes.loading}>

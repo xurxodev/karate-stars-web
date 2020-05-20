@@ -1,14 +1,11 @@
 
 import GetCurrentUserUseCase from "../user/domain/GetCurrentUserUseCase";
 import RemoveCurrentUserUseCase from "../user/domain/RemoveCurrentUserUseCase";
-import Bloc from "../common/presentation/bloc";
+import { Bloc } from "../common/presentation/bloc";
 import AppState from "./AppState"
 import { UserError } from "../user/domain/Errors";
 
-
 class AppBloc extends Bloc<AppState>{
-
-
     constructor(
         private getCurrentUserUseCase: GetCurrentUserUseCase,
         private removeCurrentUserUseCase: RemoveCurrentUserUseCase) {
