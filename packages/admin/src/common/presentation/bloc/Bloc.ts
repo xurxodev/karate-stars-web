@@ -1,9 +1,8 @@
 type Subscription<S> = (state: S) => void;
 
 abstract class Bloc<S> {
-
     private state: S;
-    private listener?: Subscription<S>;
+    private listeners: Subscription<S>[] = [];
 
     constructor(initalState: S) {
         this.state = initalState;
@@ -16,17 +15,25 @@ abstract class Bloc<S> {
     changeState(state: S) {
         this.state = state;
 
-        if (this.listener) {
-            this.listener(this.state);
+        if (this.listeners.length > 0) {
+            this.listeners.forEach(listener => listener(this.state));
         }
     }
 
     subscribe(listener: Subscription<S>) {
-        this.listener = listener;
+        this.listeners.push(listener);
+    }
+
+    unsubscribe(listener: Subscription<S>) {
+        debugger;
+        const index = this.listeners.indexOf(listener);
+        if (index > -1) {
+            this.listeners.splice(index, 1);
+        }
     }
 
     protected dispose() {
-        //Override on derivated  vaclass dispose if 
+        //Override on derivated  vaclass dispose if
         //you need clear subscriptions for example
     }
 }
