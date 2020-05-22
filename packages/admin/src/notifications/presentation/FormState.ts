@@ -5,15 +5,21 @@ export interface FormResultError {
 
 export interface FormResultSuccess {
     kind: "FormResultSuccess";
+    message: string;
 }
 
 export type FormResult = FormResultError | FormResultSuccess;
+
+export interface SelectOption {
+    id: string,
+    name: string
+}
 
 export interface FormFieldState {
     name: string;
     errors?: string[];
     value?: string;
-    options?: string[]
+    selectOptions?: SelectOption[]
 }
 
 export type FieldsDicctionary = { [name: string]: FormFieldState }

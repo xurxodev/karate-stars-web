@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Grid,
     makeStyles,
@@ -10,8 +10,9 @@ import {
     CardActions,
     Button,
     TextField,
+    Snackbar,
 } from "@material-ui/core";
-import { FormState } from "./FormState";
+import { FormState, SelectOption } from "./FormState";
 import MainLayout from "../../common/presentation/layouts/main/MainLayout";
 import CompositionRoot from "../../CompositionRoot";
 import { BlocBuilder } from "../../common/presentation/bloc";
@@ -38,71 +39,114 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SendPushNotificationContent: React.FC = () => {
     const classes = useStyles();
     const bloc = CompositionRoot.getInstance().provideSendPushNotificationBloc();
-
+    const [resultState, setResultState] = useState<{ open: boolean; message: string }>({
+        open: false,
+        message: "",
+    });
     const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.persist();
 
         bloc.onFieldChanged(event.target.name, event.target.value);
     };
 
+    const handleSignIn = (event: any) => {
+        event.preventDefault();
+        bloc.submit();
+    };
+
     return (
         <MainLayout>
             <div className={classes.root}>
-                <Card>
-                    <form autoComplete="off">
-                        <CardHeader title="Send push notification" />
-                        <Divider />
-                        <CardContent>
-                            <BlocBuilder
-                                bloc={bloc}
-                                builder={(state: FormState) => {
-                                    return (
+                <BlocBuilder
+                    bloc={bloc}
+                    builder={(state: FormState) => {
+                        return (
+                            <Card>
+                                <form autoComplete="off" noValidate onSubmit={handleSignIn}>
+                                    <CardHeader title="Send push notification" />
+                                    <Divider />
+                                    <CardContent>
                                         <Grid container spacing={1}>
                                             <Grid item md={4} xs={12}>
                                                 <TextField
                                                     className={classes.textField}
-                                                    select={true}
+                                                    error={
+                                                        state.fields["type"].errors &&
+                                                        state.fields["type"].errors.length > 0
+                                                    }
+                                                    select={
+                                                        state.fields["type"].selectOptions
+                                                            ? true
+                                                            : false
+                                                    }
                                                     fullWidth={true}
-                                                    required={true}
                                                     label="Type"
                                                     name="type"
-                                                    //value={currency}
-                                                    //onChange={handleChange}
+                                                    value={state.fields["type"].value || ""}
+                                                    onChange={handleFieldChange}
                                                     SelectProps={{ native: true }}
-                                                    //helperText="Error helper"
+                                                    helperText={
+                                                        state.fields["type"].errors
+                                                            ? state.fields["type"].errors.join("/n")
+                                                            : ""
+                                                    }
                                                     variant="outlined"
                                                 >
-                                                    <option key={0} value={0}>
-                                                        News
-                                                    </option>
-                                                    <option key={1} value={1}>
-                                                        Competitors
-                                                    </option>
-                                                    <option key={2} value={2}>
-                                                        Videos
-                                                    </option>
+                                                    {state.fields["type"].selectOptions &&
+                                                        state.fields["type"].selectOptions.map(
+                                                            (
+                                                                option: SelectOption,
+                                                                index: number
+                                                            ) => {
+                                                                return (
+                                                                    <option
+                                                                        key={index}
+                                                                        value={option.id}
+                                                                    >
+                                                                        {option.name}
+                                                                    </option>
+                                                                );
+                                                            }
+                                                        )}
                                                 </TextField>
                                             </Grid>
                                             <Grid item md={4} xs={12}>
                                                 <TextField
                                                     className={classes.textField}
-                                                    select={true}
+                                                    select={
+                                                        state.fields["mode"].selectOptions
+                                                            ? true
+                                                            : false
+                                                    }
                                                     fullWidth={true}
-                                                    required={true}
                                                     label="Mode"
                                                     name="mode"
-                                                    //value={currency}
-                                                    //onChange={handleChange}
+                                                    value={state.fields["mode"].value || ""}
+                                                    onChange={handleFieldChange}
                                                     SelectProps={{ native: true }}
-                                                    //helperText="Error helper"
+                                                    helperText={
+                                                        state.fields["mode"].errors
+                                                            ? state.fields["mode"].errors.join("/n")
+                                                            : ""
+                                                    }
                                                     variant="outlined"
                                                 >
-                                                    <option key={0} value={0}>
-                                                        Debug
-                                                    </option>
-                                                    <option key={1} value={1}>
-                                                        Real
-                                                    </option>
+                                                    {state.fields["mode"].selectOptions &&
+                                                        state.fields["mode"].selectOptions.map(
+                                                            (
+                                                                option: SelectOption,
+                                                                index: number
+                                                            ) => {
+                                                                return (
+                                                                    <option
+                                                                        key={index}
+                                                                        value={option.id}
+                                                                    >
+                                                                        {option.name}
+                                                                    </option>
+                                                                );
+                                                            }
+                                                        )}
                                                 </TextField>
                                             </Grid>
                                             <Grid item xs={12}>
@@ -113,7 +157,6 @@ const SendPushNotificationContent: React.FC = () => {
                                                         state.fields["url"].errors.length > 0
                                                     }
                                                     fullWidth={true}
-                                                    required={true}
                                                     helperText={
                                                         state.fields["url"].errors
                                                             ? state.fields["url"].errors.join("/n")
@@ -130,15 +173,23 @@ const SendPushNotificationContent: React.FC = () => {
                                             <Grid item xs={12}>
                                                 <TextField
                                                     className={classes.textField}
-                                                    //error={stateForm.email.error ? true : false}
+                                                    error={
+                                                        state.fields["title"].errors &&
+                                                        state.fields["title"].errors.length > 0
+                                                    }
                                                     fullWidth={true}
-                                                    required={true}
-                                                    //helperText={stateForm.email.error}
+                                                    helperText={
+                                                        state.fields["title"].errors
+                                                            ? state.fields["title"].errors.join(
+                                                                  "/n"
+                                                              )
+                                                            : ""
+                                                    }
                                                     label="Title"
                                                     name="title"
-                                                    //onChange={handleEmailChange}
+                                                    onChange={handleFieldChange}
                                                     type="text"
-                                                    //value={stateForm?.email.value || ""}
+                                                    value={state.fields["title"].value || ""}
                                                     variant="outlined"
                                                 />
                                             </Grid>
@@ -146,30 +197,53 @@ const SendPushNotificationContent: React.FC = () => {
                                                 <TextField
                                                     className={classes.textField}
                                                     fullWidth={true}
-                                                    required={true}
                                                     rows={5}
-                                                    //error={stateForm.email.error ? true : false}
-                                                    //helperText={stateForm.email.error}
+                                                    error={
+                                                        state.fields["description"].errors &&
+                                                        state.fields["description"].errors.length >
+                                                            0
+                                                    }
+                                                    helperText={
+                                                        state.fields["description"].errors
+                                                            ? state.fields[
+                                                                  "description"
+                                                              ].errors.join("/n")
+                                                            : ""
+                                                    }
                                                     label="Description"
                                                     name="description"
-                                                    //onChange={handleEmailChange}
+                                                    onChange={handleFieldChange}
                                                     type="text"
-                                                    //value={stateForm?.email.value || ""}
+                                                    value={state.fields["description"].value || ""}
                                                     variant="outlined"
                                                 />
                                             </Grid>
                                         </Grid>
-                                    );
-                                }}
-                            />
-                        </CardContent>
-                        <CardActions>
-                            <Button color="primary" variant="contained" type="submit">
-                                Send
-                            </Button>
-                        </CardActions>
-                    </form>
-                </Card>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button
+                                            color="primary"
+                                            variant="contained"
+                                            type="submit"
+                                            disabled={!state.isValid}
+                                        >
+                                            Send
+                                        </Button>
+                                    </CardActions>
+                                </form>
+                                <Snackbar
+                                    message={
+                                        state.result && state.result.kind === "FormResultSuccess"
+                                            ? state.result.message
+                                            : ""
+                                    }
+                                    open={state.result && state.result.kind === "FormResultSuccess"}
+                                    autoHideDuration={2000}
+                                />
+                            </Card>
+                        );
+                    }}
+                />
             </div>
         </MainLayout>
     );
