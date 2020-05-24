@@ -1,5 +1,5 @@
 
-import { UserError } from "./Errors";
+import { GetUserError } from "./Errors";
 import { Email } from "./entities/Email";
 import { Password } from "./entities/Password";
 import { Either } from "../../common/domain/Either";
@@ -13,7 +13,7 @@ export default class LoginUseCase {
         this.userRepository = userRepository;
     }
 
-    execute(email: Email, password: Password): Promise<Either<UserError, User>> {
+    execute(email: Email, password: Password): Promise<Either<GetUserError, User>> {
         return this.userRepository.getByEmailAndPassword(email, password);
     }
 }

@@ -1,7 +1,7 @@
 import { Email } from "../domain/entities/Email";
 import { Password } from "../domain/entities/Password";
 import { Either, Left } from "../../common/domain/Either";
-import { UserError } from "../domain/Errors";
+import { GetUserError } from "../domain/Errors";
 import User from "../domain/entities/User";
 import UserRepository from "../domain/Boundaries";
 import { AxiosInstance } from "axios";
@@ -10,7 +10,7 @@ import { TokenStorage } from "../../common/data/TokenLocalStorage";
 export default class UserApiRepository implements UserRepository {
     constructor(private axiosInstance: AxiosInstance, private tokenStorage: TokenStorage) { }
 
-    async getByEmailAndPassword(email: Email, password: Password): Promise<Either<UserError, User>> {
+    async getByEmailAndPassword(email: Email, password: Password): Promise<Either<GetUserError, User>> {
         try {
             const response = await this.axiosInstance.post<User>("/login", {
                 username: email.value,
@@ -26,7 +26,7 @@ export default class UserApiRepository implements UserRepository {
         }
     }
 
-    async getCurrent(): Promise<Either<UserError, User>> {
+    async getCurrent(): Promise<Either<GetUserError, User>> {
         try {
 
             const token = this.tokenStorage.get();
@@ -49,7 +49,7 @@ export default class UserApiRepository implements UserRepository {
         this.tokenStorage.save("");
     }
 
-    private handleError(error: any): Left<UserError> {
+    private handleError(error: any): Left<GetUserError> {
         if (error.response?.data?.statusCode) {
             return error.response.data.statusCode === 401 ? Either.left({ kind: "Unauthorized" })
                 : Either.left(

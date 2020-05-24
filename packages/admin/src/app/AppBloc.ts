@@ -3,7 +3,7 @@ import GetCurrentUserUseCase from "../user/domain/GetCurrentUserUseCase";
 import RemoveCurrentUserUseCase from "../user/domain/RemoveCurrentUserUseCase";
 import { Bloc } from "../common/presentation/bloc";
 import AppState from "./AppState"
-import { UserError } from "../user/domain/Errors";
+import { GetUserError } from "../user/domain/Errors";
 
 class AppBloc extends Bloc<AppState>{
     constructor(
@@ -35,7 +35,7 @@ class AppBloc extends Bloc<AppState>{
     }
 
     //TODO- Review this
-    private handleError(error: UserError): AppState {
+    private handleError(error: GetUserError): AppState {
         switch (error.kind) {
             case "Unauthorized": return { ...this.getState, currentUserId: undefined, isAuthenticated: false };
             case "ApiError": return { ...this.getState, currentUserId: undefined, isAuthenticated: false };

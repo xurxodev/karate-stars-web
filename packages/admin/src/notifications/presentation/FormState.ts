@@ -1,12 +1,14 @@
 export interface FormResultError {
     kind: "FormResultError";
-    errors: string[];
+    message: string;
 }
 
 export interface FormResultSuccess {
     kind: "FormResultSuccess";
     message: string;
 }
+
+export type GridSize = 'auto' | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
 export type FormResult = FormResultError | FormResultSuccess;
 
@@ -16,15 +18,22 @@ export interface SelectOption {
 }
 
 export interface FormFieldState {
+    label: string
     name: string;
     errors?: string[];
     value?: string;
-    selectOptions?: SelectOption[]
+    selectOptions?: SelectOption[];
+    xs?: GridSize;
+    sm?: GridSize;
+    md?: GridSize;
+    lg?: GridSize;
+    xl?: GridSize;
 }
 
 export type FieldsDicctionary = { [name: string]: FormFieldState }
 
 export interface FormState {
+    title: string;
     isValid: boolean;
     fields: FieldsDicctionary
     result?: FormResult;

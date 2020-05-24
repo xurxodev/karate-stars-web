@@ -1,5 +1,5 @@
 
-import { UserError } from "./Errors";
+import { GetUserError } from "./Errors";
 import { Either } from "../../common/domain/Either";
 import User from "./entities/User";
 import UserRepository from "./Boundaries";
@@ -11,7 +11,7 @@ export default class GetCurrentUserUseCase {
         this.userRepository = userRepository;
     }
 
-    execute(): Promise<Either<UserError, User>> {
+    execute(): Promise<Either<GetUserError, User>> {
         return this.userRepository.getCurrent();
     }
 }

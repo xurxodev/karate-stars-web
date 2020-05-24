@@ -1,31 +1,39 @@
 import { Bloc } from "../../common/presentation/bloc";
 import { FormState, FieldsDicctionary, FormFieldState } from "./FormState";
-import UrlNotification, { NotificationErrors } from "../domain/Notification";
+import { NotificationErrors } from "../domain/entities/PushNotification";
 import { Either } from "../../common/domain/Either";
+import { UrlNotification } from "../domain/entities/UrlNotification";
+import SendPushNotificationUseCase from "../domain/SendPushNotificationUseCase";
+import { SendPushNotificationError } from "../domain/Errors";
 
-const initialFieldsState = {
+const initialFieldsState: FieldsDicctionary = {
     type: {
+        label: "Type",
         name: "type", value: "news",
         selectOptions: [
             { id: "news", name: "News" },
             { id: "competitors", name: "Competitors" },
-            { id: "videos", name: "Videos" }]
+            { id: "videos", name: "Videos" }],
+        md: 4, xs: 12
     },
     mode: {
+        label: "Mode",
         name: "mode", value: "debug",
         selectOptions: [
             { id: "real", name: "Real" },
-            { id: "debug", name: "Debug" }]
+            { id: "debug", name: "Debug" }],
+        md: 4, xs: 12
     },
-    url: { name: "url" },
-    title: { name: "title" },
-    description: { name: "description" }
+    url: { label: "Url", name: "url", xs: 12 },
+    title: { label: "Title", name: "title", xs: 12 },
+    description: { label: "Description", name: "description", xs: 12 }
 };
 
 class SendPushNotificationBloc extends Bloc<FormState>{
 
-    constructor() {
+    constructor(private sendPushNotificationUseCase: SendPushNotificationUseCase) {
         super({
+            title: "Send push notification",
             isValid: false,
             fields: initialFieldsState
         })
@@ -46,7 +54,6 @@ class SendPushNotificationBloc extends Bloc<FormState>{
 
         const errors = result.isLeft() ? result.value as NotificationErrors : {};
 
-        debugger;
         const statePostToValidation = {
             ...state,
             fields: {
@@ -60,12 +67,42 @@ class SendPushNotificationBloc extends Bloc<FormState>{
         this.changeState(finalState);
     }
 
-    submit() {
-        const result = this.createNotification(this.getState);
+    async submit() {
 
-        const state = JSON.stringify(this.getState);
+        if (this.getState.isValid) {
+            const creationResult = this.createNotification(this.getState);
 
-        this.changeState({ ...this.getState, result: { kind: "FormResultSuccess", message: state } })
+            const sendResult = await this.sendPushNotificationUseCase.execute(
+                creationResult.value as unknown as UrlNotification);
+
+            sendResult.fold(
+                error => this.changeState(this.handleError(error)),
+                () => this.changeState({
+                    ...this.getState,
+                    result: { kind: "FormResultSuccess", message: "Push notification sent successfully" }
+                })
+            );
+
+        } else {
+            this.changeState({ ...this.getState })
+        }
+    }
+
+    private handleError(error: SendPushNotificationError): FormState {
+        switch (error.kind) {
+            case "Unauthorized": return {
+                ...this.getState,
+                result: { kind: "FormResultError", message: "Invalid credentials" }
+            };
+            case "ApiError": return {
+                ...this.getState,
+                result: { kind: "FormResultError", message: `${error.error}: ${error.message}` }
+            };
+            case "UnexpectedError": return {
+                ...this.getState,
+                result: { kind: "FormResultError", message: `An unexpected error has ocurred: ${error.message}` }
+            };
+        }
     }
 
     private createNotification(state: FormState): Either<NotificationErrors, UrlNotification> {

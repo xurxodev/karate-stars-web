@@ -7,6 +7,8 @@ import GetCurrentUserUseCase from "./user/domain/GetCurrentUserUseCase";
 import AppBloc from "./app/AppBloc";
 import RemoveCurrentUserUseCase from "./user/domain/RemoveCurrentUserUseCase";
 import SendPushNotificationBloc from "./notifications/presentation/SendPushNotificationBloc";
+import FcmPushNotificationRepository from "./notifications/data/FcmPushNotificationRepository";
+import SendPushNotificationUseCase from "./notifications/domain/SendPushNotificationUseCase";
 
 export default class CompositionRoot {
     private static instance: CompositionRoot;
@@ -49,7 +51,12 @@ export default class CompositionRoot {
     }
 
     provideSendPushNotificationBloc(): SendPushNotificationBloc {
-        const bloc = new SendPushNotificationBloc();
+        const axiosInstance = axios.create({
+            baseURL: "https://fcm.googleapis.com/fcm",
+        });
+        const pushNotificationRepository = new FcmPushNotificationRepository(axiosInstance);
+        const sendPushNotificationUseCase = new SendPushNotificationUseCase(pushNotificationRepository);
+        const bloc = new SendPushNotificationBloc(sendPushNotificationUseCase);
 
         return bloc
     }

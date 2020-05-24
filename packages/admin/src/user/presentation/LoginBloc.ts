@@ -2,7 +2,7 @@ import { Bloc } from "../../common/presentation/bloc";
 import { LoginState, LoginFormState, FormFieldState } from "./LoginState";
 import { Email, EmailError } from "../domain/entities/Email";
 import LoginUseCase from "../domain/LoginUseCase";
-import { UserError } from "../domain/Errors";
+import { GetUserError } from "../domain/Errors";
 import { Password } from "../domain/entities/Password";
 
 class LoginBloc extends Bloc<LoginState>{
@@ -45,7 +45,7 @@ class LoginBloc extends Bloc<LoginState>{
         }
     }
 
-    private handleError(error: UserError): LoginState {
+    private handleError(error: GetUserError): LoginState {
         const formState = this.getState as LoginFormState
 
         switch (error.kind) {
