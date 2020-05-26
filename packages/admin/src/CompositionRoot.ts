@@ -54,7 +54,8 @@ export default class CompositionRoot {
         const axiosInstance = axios.create({
             baseURL: "https://fcm.googleapis.com/fcm",
         });
-        const pushNotificationRepository = new FcmPushNotificationRepository(axiosInstance);
+        const fcmApiToken = process.env.REACT_APP_FCM_API_TOKEN || "";
+        const pushNotificationRepository = new FcmPushNotificationRepository(axiosInstance, fcmApiToken);
         const sendPushNotificationUseCase = new SendPushNotificationUseCase(pushNotificationRepository);
         const bloc = new SendPushNotificationBloc(sendPushNotificationUseCase);
 

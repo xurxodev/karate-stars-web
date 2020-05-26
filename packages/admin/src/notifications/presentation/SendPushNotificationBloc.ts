@@ -1,6 +1,6 @@
 import { Bloc } from "../../common/presentation/bloc";
 import { FormState, FieldsDicctionary, FormFieldState } from "./FormState";
-import { NotificationErrors } from "../domain/entities/PushNotification";
+import { NotificationErrors, URL_NEWS_TOPIC, DEBUG_URL_NEWS_TOPIC } from "../domain/entities/PushNotification";
 import { Either } from "../../common/domain/Either";
 import { UrlNotification } from "../domain/entities/UrlNotification";
 import SendPushNotificationUseCase from "../domain/SendPushNotificationUseCase";
@@ -16,12 +16,12 @@ const initialFieldsState: FieldsDicctionary = {
             { id: "videos", name: "Videos" }],
         md: 4, xs: 12
     },
-    mode: {
-        label: "Mode",
-        name: "mode", value: "debug",
+    topic: {
+        label: "Topic",
+        name: "topic", value: DEBUG_URL_NEWS_TOPIC,
         selectOptions: [
-            { id: "real", name: "Real" },
-            { id: "debug", name: "Debug" }],
+            { id: DEBUG_URL_NEWS_TOPIC, name: "Debug" },
+            { id: URL_NEWS_TOPIC, name: "Real" }],
         md: 4, xs: 12
     },
     url: { label: "Url", name: "url", xs: 12 },
@@ -64,6 +64,7 @@ class SendPushNotificationBloc extends Bloc<FormState>{
 
         const finalState = { ...statePostToValidation, isValid: this.isFormValid(statePostToValidation.fields) };
 
+        debugger;
         this.changeState(finalState);
     }
 
@@ -107,7 +108,7 @@ class SendPushNotificationBloc extends Bloc<FormState>{
 
     private createNotification(state: FormState): Either<NotificationErrors, UrlNotification> {
         return UrlNotification.create({
-            mode: state.fields[initialFieldsState.mode.name].value ?? "",
+            topic: state.fields[initialFieldsState.topic.name].value ?? "",
             title: state.fields[initialFieldsState.title.name].value ?? "",
             description: state.fields[initialFieldsState.description.name].value ?? "",
             url: state.fields[initialFieldsState.url.name].value ?? "",

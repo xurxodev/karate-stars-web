@@ -5,7 +5,7 @@ import { AxiosInstance } from "axios";
 import { UrlNotification } from "../domain/entities/UrlNotification";
 
 class FcmPushNotificationRepository implements PushNotificationRepository {
-    constructor(private axiosInstance: AxiosInstance) { }
+    constructor(private axiosInstance: AxiosInstance, private fcmApiToken: string) { }
 
     async send(notification: UrlNotification): Promise<Either<SendPushNotificationError, SendPushNotificationSuccess>> {
         try {
@@ -20,8 +20,8 @@ class FcmPushNotificationRepository implements PushNotificationRepository {
                     notification_title: notification.title,
                     notification_text: notification.description,
                     url: notification.url.value
-                }
-            });
+                },
+            }, { headers: { "authorization": `key=${this.fcmApiToken}` } });
 
             return Either.right(true);
         } catch (error) {
