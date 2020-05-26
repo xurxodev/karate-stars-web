@@ -1,4 +1,4 @@
-import { NotificationErrors, PushNotification, DEBUG_URL_NEWS_TOPIC } from "./PushNotification";
+import { NotificationErrors, PushNotification } from "./PushNotification";
 import { Either } from "../../../common/domain/Either";
 import { Url } from "../../../common/domain/types/Url";
 
