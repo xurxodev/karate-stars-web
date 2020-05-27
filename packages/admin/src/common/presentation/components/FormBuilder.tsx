@@ -68,7 +68,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
                     )}
                     <Grid container spacing={1}>
                         {formState.fields &&
-                            Object.values(formState.fields).map((field: FormFieldState) => {
+                            formState.fields.map((field: FormFieldState) => {
                                 return (
                                     <FormFieldBuilder
                                         field={field}

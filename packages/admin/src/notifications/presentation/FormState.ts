@@ -30,11 +30,9 @@ export interface FormFieldState {
     xl?: GridSize;
 }
 
-export type FieldsDicctionary = { [name: string]: FormFieldState }
-
 export interface FormState {
     title: string;
     isValid: boolean;
-    fields: FieldsDicctionary
+    fields: FormFieldState[]
     result?: FormResult;
 }

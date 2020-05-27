@@ -2,7 +2,7 @@ import { NotificationErrors, PushNotification } from "./PushNotification";
 import { Either } from "../../../common/domain/Either";
 import { Url } from "../../../common/domain/types/Url";
 
-interface NotificationUrlData {
+export interface NotificationUrlData {
     topic: string;
     title: string;
     description: string;

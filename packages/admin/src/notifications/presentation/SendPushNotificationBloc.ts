@@ -1,13 +1,13 @@
 import { Bloc } from "../../common/presentation/bloc";
-import { FormState, FieldsDicctionary, FormFieldState } from "./FormState";
+import { FormState, FormFieldState } from "./FormState";
 import { NotificationErrors, URL_NEWS_TOPIC, DEBUG_URL_NEWS_TOPIC } from "../domain/entities/PushNotification";
 import { Either } from "../../common/domain/Either";
 import { UrlNotification } from "../domain/entities/UrlNotification";
 import SendPushNotificationUseCase from "../domain/SendPushNotificationUseCase";
 import { SendPushNotificationError } from "../domain/Errors";
 
-const initialFieldsState: FieldsDicctionary = {
-    type: {
+const initialFieldsState: FormFieldState[] = [
+    {
         label: "Type",
         name: "type", value: "news",
         selectOptions: [
@@ -16,7 +16,7 @@ const initialFieldsState: FieldsDicctionary = {
             { id: "videos", name: "Videos" }],
         md: 4, xs: 12
     },
-    topic: {
+    {
         label: "Topic",
         name: "topic", value: DEBUG_URL_NEWS_TOPIC,
         selectOptions: [
@@ -24,10 +24,10 @@ const initialFieldsState: FieldsDicctionary = {
             { id: URL_NEWS_TOPIC, name: "Real" }],
         md: 4, xs: 12
     },
-    url: { label: "Url", name: "url", xs: 12 },
-    title: { label: "Title", name: "title", xs: 12 },
-    description: { label: "Description", name: "description", xs: 12 }
-};
+    { label: "Url", name: "url", xs: 12 },
+    { label: "Title", name: "title", xs: 12 },
+    { label: "Description", name: "description", xs: 12 }
+];
 
 class SendPushNotificationBloc extends Bloc<FormState>{
 
@@ -44,10 +44,12 @@ class SendPushNotificationBloc extends Bloc<FormState>{
 
         const statePreviousToValidation = {
             ...state,
-            fields: {
-                ...state.fields,
-                [name]: { ...state.fields[name], value }
-            }
+            fields: state.fields.map(field => {
+                const newfield = field.name === name ? { ...field, value: value } : field;
+
+                return newfield;
+            })
+
         };
 
         const result = this.createNotification(statePreviousToValidation);
@@ -55,16 +57,15 @@ class SendPushNotificationBloc extends Bloc<FormState>{
         const errors = result.isLeft() ? result.value as NotificationErrors : {};
 
         const statePostToValidation = {
-            ...state,
-            fields: {
-                ...state.fields,
-                [name]: { ...state.fields[name], value, errors: errors ? errors[name] : undefined }
-            }
+            ...statePreviousToValidation,
+            fields: statePreviousToValidation.fields.map(field =>
+                field.name === name ?
+                    { ...field, errors: errors ? errors[name] : undefined } : field)
+
         };
 
         const finalState = { ...statePostToValidation, isValid: this.isFormValid(statePostToValidation.fields) };
 
-        debugger;
         this.changeState(finalState);
     }
 
@@ -107,15 +108,13 @@ class SendPushNotificationBloc extends Bloc<FormState>{
     }
 
     private createNotification(state: FormState): Either<NotificationErrors, UrlNotification> {
-        return UrlNotification.create({
-            topic: state.fields[initialFieldsState.topic.name].value ?? "",
-            title: state.fields[initialFieldsState.title.name].value ?? "",
-            description: state.fields[initialFieldsState.description.name].value ?? "",
-            url: state.fields[initialFieldsState.url.name].value ?? "",
-        });
+        const notificationDataFields = state.fields.map((field) => ({ [field.name]: field.value }));
+        const notificationData = Object.assign({}, ...notificationDataFields);
+
+        return UrlNotification.create(notificationData);
     }
 
-    private isFormValid(fields: FieldsDicctionary): boolean {
+    private isFormValid(fields: FormFieldState[]): boolean {
         const isFieldValid = (field: FormFieldState): boolean => {
             return field.errors === undefined && field.value !== undefined && field.value.length > 0;
         };
