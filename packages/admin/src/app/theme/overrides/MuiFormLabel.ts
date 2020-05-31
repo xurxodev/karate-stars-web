@@ -1,9 +1,9 @@
-import palette from '../palette';
+import palette from "../palette";
 
 export default {
-  root: {
-    '&$focused': {
-      color: palette.text.primary
-    }
-  }
-}
+    root: {
+        "&$focused": {
+            color: palette.text.primary,
+        },
+    },
+};

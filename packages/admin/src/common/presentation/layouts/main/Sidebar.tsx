@@ -101,8 +101,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
             classes={{ paper: classes.drawer }}
             onClose={onClose}
             open={open}
-            variant={variant}
-        >
+            variant={variant}>
             <div className={classes.root}>
                 <Profile />
                 <Divider className={classes.divider} />

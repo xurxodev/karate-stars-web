@@ -1,4 +1,3 @@
-import * as hapi from "@hapi/hapi";
 import * as dotenv from "dotenv";
 import * as jwt from "jsonwebtoken";
 import UserRepository from "../../data/users/UserEnvRepository";
@@ -15,7 +14,7 @@ const getUserByIdUseCase = new GetUserByIdUseCase(userRespository);
 const jwtAutentication = {
     name: "jwt Authentication",
     secretKey: jwtSecretKey,
-    validateHandler: async (decoded, request, h) => {
+    validateHandler: async (decoded, _request, _h) => {
         const user = await getUserByIdUseCase.execute(decoded.userId);
 
         if (user) {
@@ -25,13 +24,17 @@ const jwtAutentication = {
         }
     },
     generateToken: (user: User) => {
-        return jwt.sign({
-            userId: user.userId
-        }, jwtSecretKey, { expiresIn: "24h" });
+        return jwt.sign(
+            {
+                userId: user.userId,
+            },
+            jwtSecretKey,
+            { expiresIn: "24h" }
+        );
     },
     decodeToken: (token: string): { userId: string } => {
         return jwt.verify(token, jwtSecretKey);
-    }
+    },
 };
 
 export default jwtAutentication;

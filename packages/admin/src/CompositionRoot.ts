@@ -13,7 +13,7 @@ import SendPushNotificationUseCase from "./notifications/domain/SendPushNotifica
 export default class CompositionRoot {
     private static instance: CompositionRoot;
 
-    private constructor() { }
+    private constructor() {}
 
     static getInstance(): CompositionRoot {
         if (!CompositionRoot.instance) {
@@ -35,7 +35,7 @@ export default class CompositionRoot {
         const removeCurrentUserUseCase = new RemoveCurrentUserUseCase(userApiRepository);
         const appBloc = new AppBloc(getCurrentUserUseCase, removeCurrentUserUseCase);
 
-        return appBloc
+        return appBloc;
     }
 
     provideLogicBloc(): LoginBloc {
@@ -47,7 +47,7 @@ export default class CompositionRoot {
         const loginUseCase = new LoginUseCase(loginRepository);
         const loginBloc = new LoginBloc(loginUseCase);
 
-        return loginBloc
+        return loginBloc;
     }
 
     provideSendPushNotificationBloc(): SendPushNotificationBloc {
@@ -55,10 +55,15 @@ export default class CompositionRoot {
             baseURL: "https://fcm.googleapis.com/fcm",
         });
         const fcmApiToken = process.env.REACT_APP_FCM_API_TOKEN || "";
-        const pushNotificationRepository = new FcmPushNotificationRepository(axiosInstance, fcmApiToken);
-        const sendPushNotificationUseCase = new SendPushNotificationUseCase(pushNotificationRepository);
+        const pushNotificationRepository = new FcmPushNotificationRepository(
+            axiosInstance,
+            fcmApiToken
+        );
+        const sendPushNotificationUseCase = new SendPushNotificationUseCase(
+            pushNotificationRepository
+        );
         const bloc = new SendPushNotificationBloc(sendPushNotificationUseCase);
 
-        return bloc
+        return bloc;
     }
 }

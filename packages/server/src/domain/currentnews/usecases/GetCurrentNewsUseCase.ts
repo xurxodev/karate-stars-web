@@ -8,7 +8,7 @@ export default class GetCurrentNewsUseCase {
         this.repository = resository;
     }
 
-    public execute(): Promise<CurrentNews[]>  {
+    public execute(): Promise<CurrentNews[]> {
         return this.repository.get();
     }
 }

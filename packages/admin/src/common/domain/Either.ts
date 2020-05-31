@@ -5,13 +5,13 @@ export abstract class Either<L, R> {
 
     isLeft(): boolean {
         return this instanceof Left;
-    };
+    }
     isRight(): boolean {
         return this instanceof Right;
-    };
+    }
 
     map<T>(fn: (r: R) => T): Either<L, T> {
-        return this.flatMap((r) => new Right<T>(fn(r)))
+        return this.flatMap(r => new Right<T>(fn(r)));
     }
 
     flatMap<T>(fn: (right: R) => Either<L, T>): Either<L, T> {
@@ -19,9 +19,7 @@ export abstract class Either<L, R> {
     }
 
     fold<T>(leftFn: (left: L) => T, rightFn: (right: R) => T): T {
-        return this.isLeft() ?
-            leftFn(this.value as L) :
-            rightFn(this.value as R)
+        return this.isLeft() ? leftFn(this.value as L) : rightFn(this.value as R);
     }
 
     static left<L>(left: L) {
@@ -33,7 +31,6 @@ export abstract class Either<L, R> {
     }
 }
 
+export class Left<L> extends Either<L, never> {}
 
-export class Left<L> extends Either<L, never> { }
-
-export class Right<R> extends Either<never, R> { }
+export class Right<R> extends Either<never, R> {}

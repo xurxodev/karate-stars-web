@@ -1,10 +1,10 @@
-import palette from '../palette';
+import palette from "../palette";
 
 export default {
-  root: {
-    '&$focused $notchedOutline': {
-      borderColor: palette.text.primary,
-      borderWidth: 2,
+    root: {
+        "&$focused $notchedOutline": {
+            borderColor: palette.text.primary,
+            borderWidth: 2,
+        },
     },
-  },
-}
+};

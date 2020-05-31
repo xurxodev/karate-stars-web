@@ -48,8 +48,7 @@ const MainLayout: React.FC = ({ children }) => {
             className={clsx({
                 [classes.root]: true,
                 [classes.shiftContent]: isDesktop,
-            })}
-        >
+            })}>
             <Topbar onSidebarOpen={handleSidebarOpen} />
             <Sidebar
                 onClose={handleSidebarClose}
@@ -62,8 +61,7 @@ const MainLayout: React.FC = ({ children }) => {
                     display="flex"
                     justifyContent="space-between"
                     flexDirection="column"
-                    height="100%"
-                >
+                    height="100%">
                     {children}
                     <Footer />
                 </Box>

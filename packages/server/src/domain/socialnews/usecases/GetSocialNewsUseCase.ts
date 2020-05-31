@@ -1,5 +1,5 @@
 import SocialNewsRepository from "../boundaries/SocialNewsRepository";
-import {SocialNews} from "../entities/SocialNews";
+import { SocialNews } from "../entities/SocialNews";
 
 export default class GetSocialNewsUseCase {
     private repository: SocialNewsRepository;
@@ -8,7 +8,7 @@ export default class GetSocialNewsUseCase {
         this.repository = resository;
     }
 
-    public execute(): Promise<SocialNews[]>  {
+    public execute(): Promise<SocialNews[]> {
         return this.repository.get();
     }
 }

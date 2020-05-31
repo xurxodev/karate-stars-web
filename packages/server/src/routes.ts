@@ -16,42 +16,42 @@ const initializeRoutes = (server: hapi.Server) => {
         {
             method: "GET",
             path: "/",
-            options: { auth: false },
+            options: { auth: false as const },
             handler: (request: hapi.Request, h: hapi.ResponseToolkit) => {
                 return h.redirect("/landing");
-            }
+            },
         },
         {
             method: "GET",
             path: "/api",
-            options: { auth: false },
+            options: { auth: false as const },
             handler: () => {
                 return "Welcome to Karate Stars Api!!";
-            }
+            },
         },
         {
             method: "GET",
             path: "/landing/{path*}",
-            options: { auth: false },
+            options: { auth: false as const },
             handler: {
                 directory: {
                     path: Path.join(__dirname, "../../landing"),
                     listing: false,
-                    index: true
-                }
-            }
+                    index: true,
+                },
+            },
         },
         {
             method: "GET",
             path: "/admin/{path*}",
-            options: { auth: false },
+            options: { auth: false as const },
             handler: {
                 directory: {
                     path: Path.join(__dirname, "../../admin/build"),
                     listing: false,
-                    index: true
-                }
-            }
+                    index: true,
+                },
+            },
         },
         ...userRoutes(apiPrefix),
         ...socialNewsRoutes(apiPrefix),
@@ -59,10 +59,10 @@ const initializeRoutes = (server: hapi.Server) => {
         ...competitorRoutes(apiPrefix),
         ...countryRoutes(apiPrefix),
         ...categoryRoutes(apiPrefix),
-        ...videoRoutes(apiPrefix)
+        ...videoRoutes(apiPrefix),
     ];
 
-    allRoutes.forEach((route: hapi.ServerRoute) => {
+    allRoutes.forEach(route => {
         server.route(route);
     });
 };

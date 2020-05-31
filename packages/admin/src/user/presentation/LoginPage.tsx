@@ -157,19 +157,16 @@ const LoginContent: React.FC = () => {
                                             return (
                                                 <form
                                                     className={classes.form}
-                                                    onSubmit={handleSignIn}
-                                                >
+                                                    onSubmit={handleSignIn}>
                                                     <Typography
                                                         className={classes.title}
-                                                        variant="h2"
-                                                    >
+                                                        variant="h2">
                                                         Login
                                                     </Typography>
                                                     {stateForm.error && (
                                                         <Alert
                                                             className={classes.formError}
-                                                            severity="error"
-                                                        >
+                                                            severity="error">
                                                             {stateForm.error}
                                                         </Alert>
                                                     )}
@@ -208,8 +205,7 @@ const LoginContent: React.FC = () => {
                                                         fullWidth
                                                         size="large"
                                                         type="submit"
-                                                        variant="contained"
-                                                    >
+                                                        variant="contained">
                                                         Sign in now
                                                     </Button>
                                                 </form>

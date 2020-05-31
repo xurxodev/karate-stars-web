@@ -1,31 +1,35 @@
-
 import GetCurrentUserUseCase from "../user/domain/GetCurrentUserUseCase";
 import RemoveCurrentUserUseCase from "../user/domain/RemoveCurrentUserUseCase";
 import { Bloc } from "../common/presentation/bloc";
-import AppState from "./AppState"
+import AppState from "./AppState";
 import { GetUserError } from "../user/domain/Errors";
 
-class AppBloc extends Bloc<AppState>{
+class AppBloc extends Bloc<AppState> {
     constructor(
         private getCurrentUserUseCase: GetCurrentUserUseCase,
-        private removeCurrentUserUseCase: RemoveCurrentUserUseCase) {
-        super({ currentUserId: undefined, isAuthenticated: undefined })
+        private removeCurrentUserUseCase: RemoveCurrentUserUseCase
+    ) {
+        super({ currentUserId: undefined, isAuthenticated: undefined });
 
         this.loadState();
     }
 
     private async loadState() {
-
         const result = await this.getCurrentUserUseCase.execute();
 
         result.fold(
-            (error) => this.changeState(this.handleError(error)),
-            (user) => this.changeState({ currentUserId: user.userId, isAuthenticated: true }));
+            error => this.changeState(this.handleError(error)),
+            user => this.changeState({ currentUserId: user.userId, isAuthenticated: true })
+        );
     }
 
     refresh() {
-        this.changeState({ ...this.getState, currentUserId: undefined, isAuthenticated: undefined });
-        this.loadState()
+        this.changeState({
+            ...this.getState,
+            currentUserId: undefined,
+            isAuthenticated: undefined,
+        });
+        this.loadState();
     }
 
     async logout() {
@@ -37,10 +41,13 @@ class AppBloc extends Bloc<AppState>{
     //TODO- Review this
     private handleError(error: GetUserError): AppState {
         switch (error.kind) {
-            case "Unauthorized": return { ...this.getState, currentUserId: undefined, isAuthenticated: false };
-            case "ApiError": return { ...this.getState, currentUserId: undefined, isAuthenticated: false };
-            case "UnexpectedError": return { ...this.getState, currentUserId: undefined, isAuthenticated: false }
-        };
+            case "Unauthorized":
+                return { ...this.getState, currentUserId: undefined, isAuthenticated: false };
+            case "ApiError":
+                return { ...this.getState, currentUserId: undefined, isAuthenticated: false };
+            case "UnexpectedError":
+                return { ...this.getState, currentUserId: undefined, isAuthenticated: false };
+        }
     }
 }
 

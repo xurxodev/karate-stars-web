@@ -30,8 +30,7 @@ const FormFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handleFieldC
                 onChange={handleFieldChange}
                 SelectProps={{ native: true }}
                 helperText={field.errors ? field.errors.join("/n") : ""}
-                variant="outlined"
-            >
+                variant="outlined">
                 {field.selectOptions &&
                     field.selectOptions.map((option: SelectOption, index: number) => {
                         return (

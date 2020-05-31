@@ -61,8 +61,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
                             className={classes.formResult}
                             severity={
                                 formState.result.kind === "FormResultSuccess" ? "success" : "error"
-                            }
-                        >
+                            }>
                             {formState.result.message}
                         </Alert>
                     )}
@@ -71,6 +70,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
                             formState.fields.map((field: FormFieldState) => {
                                 return (
                                     <FormFieldBuilder
+                                        key={field.name}
                                         field={field}
                                         handleFieldChange={handleFieldChange}
                                     />
@@ -84,8 +84,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
                         variant="contained"
                         type="submit"
                         disabled={!formState.isValid}
-                        className={classes.submitButton}
-                    >
+                        className={classes.submitButton}>
                         Send
                     </Button>
                 </CardActions>

@@ -49,8 +49,7 @@ const Topbar: React.FC<TopbarProps> = ({ onSidebarOpen }) => {
                     <IconButton
                         className={classes.logoutButton}
                         color="inherit"
-                        onClick={handleLogout}
-                    >
+                        onClick={handleLogout}>
                         <InputIcon />
                     </IconButton>
                 </Hidden>

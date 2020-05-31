@@ -1,4 +1,4 @@
-export * from "./Bloc"
+export * from "./Bloc";
 
-export { default as Bloc } from './Bloc';
-export { default as BlocBuilder } from './BlocBuilder';
+export { default as Bloc } from "./Bloc";
+export { default as BlocBuilder } from "./BlocBuilder";

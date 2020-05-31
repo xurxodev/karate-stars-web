@@ -8,17 +8,17 @@ export interface FormResultSuccess {
     message: string;
 }
 
-export type GridSize = 'auto' | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+export type GridSize = "auto" | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
 export type FormResult = FormResultError | FormResultSuccess;
 
 export interface SelectOption {
-    id: string,
-    name: string
+    id: string;
+    name: string;
 }
 
 export interface FormFieldState {
-    label: string
+    label: string;
     name: string;
     errors?: string[];
     value?: string;
@@ -33,6 +33,6 @@ export interface FormFieldState {
 export interface FormState {
     title: string;
     isValid: boolean;
-    fields: FormFieldState[]
+    fields: FormFieldState[];
     result?: FormResult;
 }

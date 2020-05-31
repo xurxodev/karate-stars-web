@@ -10,10 +10,9 @@
     "start": "node ./build/server.js",
     "build": "yarn clean && yarn tsc",
     "start-dev": "./node_modules/nodemon/bin/nodemon.js -e ts  --exec \"yarn build-dev\"",
-    "build-dev": "yarn build && yarn lint && node ./build/server.js",
+    "build-dev": "yarn build && node ./build/server.js",
     "tsc": "tsc --build",
     "clean": "rm -rf build",
-    "lint": "tslint -c tslint.json -p tsconfig.json --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
@@ -29,12 +28,11 @@
   "devDependencies": {
     "@types/hapi__boom": "^9.0.1",
     "@types/hapi__hapi": "^19.0.3",
+    "@types/hapi__inert": "^5.2.0",
     "@types/node": "^12.7.2",
     "@types/node-fetch": "^2.5.4",
     "@types/twit": "^2.2.23",
-    "nodemon": "^1.19.1",
-    "tslint": "^5.19.0",
-    "typescript": "^3.7.2"
+    "nodemon": "^1.19.1"
   },
   "engines": {
     "node": "14.x"

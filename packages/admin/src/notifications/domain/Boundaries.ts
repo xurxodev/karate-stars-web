@@ -5,5 +5,7 @@ import { UrlNotification } from "./entities/UrlNotification";
 export type SendPushNotificationSuccess = true;
 
 export interface PushNotificationRepository {
-    send(notification: UrlNotification): Promise<Either<SendPushNotificationError, SendPushNotificationSuccess>>;
+    send(
+        notification: UrlNotification
+    ): Promise<Either<SendPushNotificationError, SendPushNotificationSuccess>>;
 }

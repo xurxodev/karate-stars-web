@@ -1,12 +1,11 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./build",
-    "allowJs": false,
-    "target": "es6",
     "sourceMap": true,
+    "noImplicitAny": false,
+    "esModuleInterop": true,
     "module": "commonjs",
-    "moduleResolution": "node",
-    "esModuleInterop": true
   },
   "include": [
     "./src/**/*"

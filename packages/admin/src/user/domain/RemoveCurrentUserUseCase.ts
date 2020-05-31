@@ -1,4 +1,3 @@
-
 import UserRepository from "./Boundaries";
 
 export default class RemoveCurrentUserUseCase {

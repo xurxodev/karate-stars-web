@@ -10,7 +10,9 @@ export default class SendPushNotificationUseCase {
         this.pushNotificationRepository = pushNotificationRepository;
     }
 
-    execute(notification: UrlNotification): Promise<Either<SendPushNotificationError, SendPushNotificationSuccess>> {
+    execute(
+        notification: UrlNotification
+    ): Promise<Either<SendPushNotificationError, SendPushNotificationSuccess>> {
         return this.pushNotificationRepository.send(notification);
     }
 }

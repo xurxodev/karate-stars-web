@@ -5,21 +5,24 @@ import GetCompetitorsUseCase from "../../domain/competitors/usecases/GetCompetit
 import jwtAuthentication from "../users/JwtAuthentication";
 import CompetitorController from "./CompetitorController";
 
-export default function(apiPrefix: string): hapi.ServerRoute[] {
-  const competitorsRepository = new CompetitorsRepository();
-  const getCompetitorsUseCase = new GetCompetitorsUseCase(competitorsRepository);
-  const competitorController = new CompetitorController(getCompetitorsUseCase);
+export default function (apiPrefix: string): hapi.ServerRoute[] {
+    const competitorsRepository = new CompetitorsRepository();
+    const getCompetitorsUseCase = new GetCompetitorsUseCase(competitorsRepository);
+    const competitorController = new CompetitorController(getCompetitorsUseCase);
 
-  return [
-    {
-      method: "GET",
-      path: `${apiPrefix}/competitors`,
-      options: {
-        auth: jwtAuthentication.name
-      },
-      handler: (request: hapi.Request, h: hapi.ResponseToolkit) => {
-        return competitorController.get(request, h);
-      }
-    }
-  ];
+    return [
+        {
+            method: "GET",
+            path: `${apiPrefix}/competitors`,
+            options: {
+                auth: jwtAuthentication.name,
+            },
+            handler: (
+                request: hapi.Request,
+                h: hapi.ResponseToolkit
+            ): hapi.Lifecycle.ReturnValue => {
+                return competitorController.get(request, h);
+            },
+        },
+    ];
 }

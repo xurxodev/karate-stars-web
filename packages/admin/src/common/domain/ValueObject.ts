@@ -1,4 +1,3 @@
-
 interface ValueObjectProps {
     [index: string]: any;
 }
@@ -7,9 +6,9 @@ export abstract class ValueObject<T extends ValueObjectProps> {
     protected props: T;
 
     constructor(props: T) {
-        let baseProps: any = {
+        const baseProps: any = {
             ...props,
-        }
+        };
 
         this.props = baseProps;
     }

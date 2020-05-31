@@ -20,12 +20,8 @@ export abstract class PushNotification {
     constructor(data: PushNotificationData) {
         this.title = data.title;
         this.description = data.description;
-        this.topic = data.topic
+        this.topic = data.topic;
     }
 }
 
 export type NotificationErrors = Record<string, string[]>;
-
-
-
-

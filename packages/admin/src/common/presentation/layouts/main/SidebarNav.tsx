@@ -65,14 +65,13 @@ const SidebarNav: React.FC<SidebarNavProps> = ({ menus, className }) => {
 
     return (
         <List className={clsx(classes.root, className)}>
-            {menus.map((menu) => (
+            {menus.map(menu => (
                 <ListItem className={classes.item} disableGutters key={menu.title}>
                     <Button
                         activeClassName={classes.active}
                         className={classes.button}
                         component={NavLink}
-                        to={menu.path}
-                    >
+                        to={menu.path}>
                         <div className={classes.icon}>{menu.icon}</div>
                         {menu.title}
                     </Button>

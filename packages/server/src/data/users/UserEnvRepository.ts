@@ -6,13 +6,13 @@ export default class UserEnvRepository implements UserRepository {
         {
             userId: "b17e09fc-d2da-4b0a-b34a-90ecb7e082ec",
             name: "Jorge Sánchez",
-            username: process.env.USERNAME,
-            password: process.env.USER_PASSWORD
-        }
+            username: process.env.USERNAME || "",
+            password: process.env.USER_PASSWORD || "",
+        },
     ];
 
     public getByUsername(username: string): Promise<User> {
-        const user = this.users.find((p) => p.username === username);
+        const user = this.users.find(p => p.username === username);
 
         return new Promise((resolve, reject) => {
             if (user) {
@@ -20,12 +20,11 @@ export default class UserEnvRepository implements UserRepository {
             } else {
                 reject(`Does not exist an user with username ${username}`);
             }
-
         });
     }
 
     public getByUserId(userId: string): Promise<User> {
-        const user = this.users.find((p) => p.userId === userId);
+        const user = this.users.find(p => p.userId === userId);
 
         return new Promise((resolve, reject) => {
             if (user) {
@@ -33,7 +32,6 @@ export default class UserEnvRepository implements UserRepository {
             } else {
                 reject(`Does not exist an user with userId ${userId}`);
             }
-
         });
     }
 }

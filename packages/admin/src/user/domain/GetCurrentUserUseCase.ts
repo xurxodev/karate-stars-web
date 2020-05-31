@@ -1,4 +1,3 @@
-
 import { GetUserError } from "./Errors";
 import { Either } from "../../common/domain/Either";
 import User from "./entities/User";
