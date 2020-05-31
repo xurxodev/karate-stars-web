@@ -18,7 +18,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "yarn lint && yarn jest"
+      "pre-push": "yarn lint && yarn admin test"
     }
   },
   "devDependencies": {
