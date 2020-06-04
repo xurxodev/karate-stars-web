@@ -1,5 +1,5 @@
 import { GetUserError } from "./Errors";
-import { Either } from "../../common/domain/Either";
+import { Either } from "karate-stars-core";
 import User from "./entities/User";
 import UserRepository from "./Boundaries";
 

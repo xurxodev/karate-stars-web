@@ -1,5 +1,5 @@
-import { ValueObject } from "../ValueObject";
-import { Either } from "../Either";
+import { ValueObject } from "./ValueObject";
+import { Either } from "../types/Either";
 
 export interface InvalidUrl {
     kind: "InvalidUrl";

@@ -11,6 +11,8 @@
     "jsx": "react"
   },
   "include": [
-    "src"
+    "src",
+    "../core/src/value-objects/Password.ts",
+    "../core/src/value-objects/Email.ts"
   ],
 }

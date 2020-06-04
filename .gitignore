@@ -64,3 +64,5 @@ typings/
 .next
 
 /.vscode/launch.json
+
+tsconfig.tsbuildinfo

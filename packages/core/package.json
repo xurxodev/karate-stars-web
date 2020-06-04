@@ -1,0 +1,15 @@
+{
+  "name": "karate-stars-core",
+  "version": "0.1.0",
+  "description": "Karate stars Core. Developed using TypeScript",
+  "main": "build/index.js",
+  "repository": "https://github.com/xurxodev/karate-stars-api",
+  "author": "Jorge Sánchez <xurxosf@gmail.com>",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "build": "tsc --build",
+    "start-dev": "tsc --watch"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

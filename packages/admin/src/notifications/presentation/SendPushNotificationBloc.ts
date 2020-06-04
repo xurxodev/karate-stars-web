@@ -5,10 +5,10 @@ import {
     URL_NEWS_TOPIC,
     DEBUG_URL_NEWS_TOPIC,
 } from "../domain/entities/PushNotification";
-import { Either } from "../../common/domain/Either";
 import { UrlNotification } from "../domain/entities/UrlNotification";
 import SendPushNotificationUseCase from "../domain/SendPushNotificationUseCase";
 import { SendPushNotificationError } from "../domain/Errors";
+import { Either } from "karate-stars-core";
 
 const initialFieldsState: FormFieldState[] = [
     {
@@ -90,7 +90,7 @@ class SendPushNotificationBloc extends Bloc<FormState> {
             );
 
             sendResult.fold(
-                error => this.changeState(this.handleError(error)),
+                (error: SendPushNotificationError) => this.changeState(this.handleError(error)),
                 () =>
                     this.changeState({
                         ...this.getState,

@@ -1,6 +1,6 @@
-import { Either } from "../../common/domain/Either";
 import { SendPushNotificationError } from "./Errors";
 import { UrlNotification } from "./entities/UrlNotification";
+import { Either } from "karate-stars-core";
 
 export type SendPushNotificationSuccess = true;
 

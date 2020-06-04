@@ -1,7 +1,7 @@
 import { PushNotificationRepository, SendPushNotificationSuccess } from "./Boundaries";
 import { SendPushNotificationError } from "./Errors";
-import { Either } from "../../common/domain/Either";
 import { UrlNotification } from "./entities/UrlNotification";
+import { Either } from "karate-stars-core";
 
 export default class SendPushNotificationUseCase {
     private pushNotificationRepository: PushNotificationRepository;

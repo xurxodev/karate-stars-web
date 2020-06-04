@@ -1,9 +1,8 @@
 import { Bloc } from "../../common/presentation/bloc";
 import { LoginState, LoginFormState, FormFieldState } from "./LoginState";
-import { Email, EmailError } from "../domain/entities/Email";
+import { Email, EmailError, Password } from "karate-stars-core";
 import LoginUseCase from "../domain/LoginUseCase";
 import { GetUserError } from "../domain/Errors";
-import { Password } from "../domain/entities/Password";
 
 class LoginBloc extends Bloc<LoginState> {
     constructor(private loginUseCase: LoginUseCase) {

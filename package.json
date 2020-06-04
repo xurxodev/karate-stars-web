@@ -8,13 +8,14 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "yarn admin build && yarn server build",
+    "build": "yarn core build && yarn admin build && yarn server build",
     "start": "yarn server start",
+    "start-dev": "concurrently --kill-others-on-fail \"yarn core start-dev\"  \"yarn server start-dev\" \"yarn admin start-dev\"",
+    "lint": "eslint packages/*/src --ext ts,tsx",
+    "prettify": "prettier \"{packages/*/src}/**/*.{js,jsx,json,css,ts,tsx}\" --write",
     "core": "yarn workspace karate-stars-core",
     "admin": "yarn workspace karate-stars-admin",
-    "server": "yarn workspace karate-stars-server",
-    "lint": "eslint packages/*/src --ext ts,tsx",
-    "lint:fix": "yarn lint --fix"
+    "server": "yarn workspace karate-stars-server"
   },
   "husky": {
     "hooks": {
@@ -36,7 +37,8 @@
     "eslint-config-prettier": "^6.11.0",
     "husky": "^4.2.5",
     "prettier": "^2.0.5",
-    "typescript": "^3.9.3"
+    "typescript": "^3.9.3",
+    "concurrently": "^5.2.0"
   },
   "engines": {
     "node": "14.x",

@@ -1,8 +1,8 @@
 import { PushNotificationRepository, SendPushNotificationSuccess } from "../domain/Boundaries";
-import { Either, Left } from "../../common/domain/Either";
 import { SendPushNotificationError } from "../domain/Errors";
 import { AxiosInstance } from "axios";
 import { UrlNotification } from "../domain/entities/UrlNotification";
+import { Either, Left } from "karate-stars-core";
 
 class FcmPushNotificationRepository implements PushNotificationRepository {
     constructor(private axiosInstance: AxiosInstance, private fcmApiToken: string) {}

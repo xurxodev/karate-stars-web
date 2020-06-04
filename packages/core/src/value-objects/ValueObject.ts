@@ -3,9 +3,7 @@ interface ValueObjectProps {
 }
 
 export abstract class ValueObject<T extends ValueObjectProps> {
-    protected props: T;
-
-    constructor(props: T) {
+    constructor(protected props: T) {
         const baseProps: any = {
             ...props,
         };
