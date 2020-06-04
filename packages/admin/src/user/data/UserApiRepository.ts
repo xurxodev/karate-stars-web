@@ -6,7 +6,7 @@ import { AxiosInstance } from "axios";
 import { TokenStorage } from "../../common/data/TokenLocalStorage";
 
 export default class UserApiRepository implements UserRepository {
-    constructor(private axiosInstance: AxiosInstance, private tokenStorage: TokenStorage) { }
+    constructor(private axiosInstance: AxiosInstance, private tokenStorage: TokenStorage) {}
 
     async getByEmailAndPassword(
         email: Email,
@@ -54,11 +54,11 @@ export default class UserApiRepository implements UserRepository {
             return error.response.data.statusCode === 401
                 ? Either.left({ kind: "Unauthorized" })
                 : Either.left({
-                    kind: "ApiError",
-                    error: error.response.data.error,
-                    statusCode: error.response.data.statusCode,
-                    message: error.response.data.message,
-                });
+                      kind: "ApiError",
+                      error: error.response.data.error,
+                      statusCode: error.response.data.statusCode,
+                      message: error.response.data.message,
+                  });
         } else if (typeof error.response?.data === "string") {
             return Either.left({ kind: "UnexpectedError", message: error.response.data });
         } else {
