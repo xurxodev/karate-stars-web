@@ -3,10 +3,9 @@ import { User } from "karate-stars-core";
 import * as MongoClient from "mongodb";
 
 export default class UserMongoRepository implements UserRepository {
-    constructor(private mongodbConecction: string) { }
+    constructor(private mongodbConecction: string) {}
 
     public async getByUsername(username: string): Promise<User> {
-
         const users = await this.getUsers();
 
         console.log(users);
@@ -40,11 +39,15 @@ export default class UserMongoRepository implements UserRepository {
 
     private getUsers(): Promise<User[]> {
         return new Promise((resolve, reject) => {
-            const mongoClient = new MongoClient.MongoClient(this.mongodbConecction, { useUnifiedTopology: true });
+            const mongoClient = new MongoClient.MongoClient(this.mongodbConecction, {
+                useUnifiedTopology: true,
+            });
 
             // Use connect method to connect to the Server
             mongoClient.connect(async (errCon, client) => {
-                if (errCon) { reject(errCon); }
+                if (errCon) {
+                    reject(errCon);
+                }
 
                 const cursor = client.db().collection("users").find<User>();
 
@@ -52,11 +55,10 @@ export default class UserMongoRepository implements UserRepository {
 
                 console.log({ cursor });
 
-                resolve(rows)
+                resolve(rows);
 
                 client.close();
             });
         });
     }
-
 }

@@ -4,12 +4,12 @@ import GetUserByIdUseCase from "./domain/users/usecases/GetUserByIdUseCase";
 import UserController from "./api/users/UserController";
 
 interface Type<T> {
-    new(...args: any[]): T;
+    new (...args: any[]): T;
 }
 
 export type NamedToken = "";
 
-type PrivateNamedToken = ""
+type PrivateNamedToken = "";
 
 type Token<T> = Type<T> | NamedToken | PrivateNamedToken;
 
