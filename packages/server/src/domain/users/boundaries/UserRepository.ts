@@ -1,4 +1,4 @@
-import User from "../entities/User";
+import { User } from "karate-stars-core";
 
 export default interface UserRepository<> {
     getByUsername(username: string): Promise<User>;

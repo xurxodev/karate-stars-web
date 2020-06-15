@@ -1,15 +1,14 @@
 import * as dotenv from "dotenv";
 import * as jwt from "jsonwebtoken";
-import UserRepository from "../../data/users/UserEnvRepository";
 import User from "../../domain/users/entities/User";
 import GetUserByIdUseCase from "../../domain/users/usecases/GetUserByIdUseCase";
+import CompositionRoot from "../../CompositionRoot";
 
 dotenv.config();
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
-const userRespository = new UserRepository();
-const getUserByIdUseCase = new GetUserByIdUseCase(userRespository);
+const getUserByIdUseCase = CompositionRoot.getInstance().get(GetUserByIdUseCase);
 
 const jwtAutentication = {
     name: "jwt Authentication",

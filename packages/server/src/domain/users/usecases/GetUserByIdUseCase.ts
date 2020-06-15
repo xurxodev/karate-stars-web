@@ -1,5 +1,5 @@
 import UserRepository from "../boundaries/UserRepository";
-import User from "../entities/User";
+import { User } from "karate-stars-core";
 
 export default class GetUserByIdUseCase {
     private repository: UserRepository;

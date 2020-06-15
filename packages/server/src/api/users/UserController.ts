@@ -5,11 +5,11 @@ import GetUserByUsernameUseCase from "../../domain/users/usecases/GetUserByUsern
 import jwtAuthentication from "./JwtAuthentication";
 import User from "../../domain/users/entities/User";
 
-export default class ProductController {
+export default class UserController {
     constructor(
         private getUserByUsernameUseCase: GetUserByUsernameUseCase,
         private getUserByIdUseCase: GetUserByIdUseCase
-    ) {}
+    ) { }
 
     public login(request: hapi.Request, h: hapi.ResponseToolkit): hapi.Lifecycle.ReturnValue {
         const credentials: any = request.payload;
