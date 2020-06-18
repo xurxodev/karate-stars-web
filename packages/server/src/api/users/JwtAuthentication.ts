@@ -1,8 +1,8 @@
 import * as dotenv from "dotenv";
 import * as jwt from "jsonwebtoken";
-import User from "../../domain/users/entities/User";
 import GetUserByIdUseCase from "../../domain/users/usecases/GetUserByIdUseCase";
 import CompositionRoot from "../../CompositionRoot";
+import { User } from "karate-stars-core";
 
 dotenv.config();
 

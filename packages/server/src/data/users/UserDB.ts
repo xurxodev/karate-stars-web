@@ -1,5 +1,5 @@
-export interface User {
-    userId: string;
+export interface UserDB {
+    _id: string;
     name: string;
     image: string;
     username: string;

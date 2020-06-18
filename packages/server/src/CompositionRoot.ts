@@ -1,5 +1,5 @@
 import UserMongoRepository from "./data/users/UserMongoRepository";
-import GetUserByUsernameUseCase from "./domain/users/usecases/GetUserByUsernameUseCase";
+import GetUserByUsernameAndPasswordUseCase from "./domain/users/usecases/GetUserByUsernameAndPasswordUseCase";
 import GetUserByIdUseCase from "./domain/users/usecases/GetUserByIdUseCase";
 import UserController from "./api/users/UserController";
 
@@ -49,7 +49,7 @@ class CompositionRoot {
 
     private initializeUser() {
         const userRespository = new UserMongoRepository(this.mongoConnection);
-        const getUserByUsernameUseCase = new GetUserByUsernameUseCase(userRespository);
+        const getUserByUsernameUseCase = new GetUserByUsernameAndPasswordUseCase(userRespository);
         const getUserByIdUseCase = new GetUserByIdUseCase(userRespository);
         const userController = new UserController(getUserByUsernameUseCase, getUserByIdUseCase);
 
