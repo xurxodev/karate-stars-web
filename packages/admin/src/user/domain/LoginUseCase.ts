@@ -1,6 +1,5 @@
 import { GetUserError } from "./Errors";
-import { Either, Email, Password } from "karate-stars-core";
-import User from "./entities/User";
+import { Either, Email, Password, User } from "karate-stars-core";
 import UserRepository from "./Boundaries";
 
 export default class LoginUseCase {

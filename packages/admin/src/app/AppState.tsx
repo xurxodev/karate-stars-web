@@ -1,4 +1,6 @@
+import { User } from "karate-stars-core";
+
 export default interface AppState {
-    currentUserId?: string;
+    currentUser?: User;
     isAuthenticated?: boolean;
 }

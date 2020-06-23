@@ -1,6 +1,9 @@
 import React from "react";
 import { makeStyles } from "@material-ui/styles";
 import { Avatar, Typography, Theme } from "@material-ui/core";
+import { useAppBlocContext } from "../../../../app/AppContext";
+import { BlocBuilder } from "../../bloc";
+import AppState from "../../../../app/AppState";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -20,21 +23,27 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Profile: React.FC = () => {
     const classes = useStyles();
-
-    const user = {
-        name: "Jorge Sánnchez",
-        avatar: "https://pbs.twimg.com/profile_images/1151113544362078209/chgA6VO9_400x400.jpg",
-        bio: "Admin",
-    };
+    const appBloc = useAppBlocContext();
 
     return (
-        <div className={classes.root}>
-            <Avatar alt="Person" className={classes.avatar} src={user.avatar} />
-            <Typography className={classes.name} variant="h4">
-                {user.name}
-            </Typography>
-            <Typography variant="body2">{user.bio}</Typography>
-        </div>
+        <BlocBuilder
+            bloc={appBloc}
+            builder={(state: AppState) => {
+                const { currentUser } = state;
+
+                return (
+                    <div className={classes.root}>
+                        <Avatar alt="Person" className={classes.avatar} src={currentUser?.image} />
+                        <Typography className={classes.name} variant="h4">
+                            {currentUser?.name}
+                        </Typography>
+                        <Typography variant="body2">
+                            {currentUser?.isAdmin ? "Admin" : ""}
+                        </Typography>
+                    </div>
+                );
+            }}
+        />
     );
 };
 

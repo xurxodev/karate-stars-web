@@ -9,7 +9,7 @@ class AppBloc extends Bloc<AppState> {
         private getCurrentUserUseCase: GetCurrentUserUseCase,
         private removeCurrentUserUseCase: RemoveCurrentUserUseCase
     ) {
-        super({ currentUserId: undefined, isAuthenticated: undefined });
+        super({ currentUser: undefined, isAuthenticated: undefined });
 
         this.loadState();
     }
@@ -19,14 +19,14 @@ class AppBloc extends Bloc<AppState> {
 
         result.fold(
             error => this.changeState(this.handleError(error)),
-            user => this.changeState({ currentUserId: user.userId, isAuthenticated: true })
+            user => this.changeState({ currentUser: user, isAuthenticated: true })
         );
     }
 
     refresh() {
         this.changeState({
             ...this.getState,
-            currentUserId: undefined,
+            currentUser: undefined,
             isAuthenticated: undefined,
         });
         this.loadState();
@@ -35,18 +35,18 @@ class AppBloc extends Bloc<AppState> {
     async logout() {
         await this.removeCurrentUserUseCase.execute();
 
-        this.changeState({ ...this.getState, currentUserId: undefined, isAuthenticated: false });
+        this.changeState({ ...this.getState, currentUser: undefined, isAuthenticated: false });
     }
 
     //TODO- Review this
     private handleError(error: GetUserError): AppState {
         switch (error.kind) {
             case "Unauthorized":
-                return { ...this.getState, currentUserId: undefined, isAuthenticated: false };
+                return { ...this.getState, currentUser: undefined, isAuthenticated: false };
             case "ApiError":
-                return { ...this.getState, currentUserId: undefined, isAuthenticated: false };
+                return { ...this.getState, currentUser: undefined, isAuthenticated: false };
             case "UnexpectedError":
-                return { ...this.getState, currentUserId: undefined, isAuthenticated: false };
+                return { ...this.getState, currentUser: undefined, isAuthenticated: false };
         }
     }
 }
