@@ -4,6 +4,7 @@ export * from "./types/Either";
 export * from "./types/Maybe";
 
 export * from "./value-objects/ValueObject";
+export * from "./value-objects/Id";
 export * from "./value-objects/Email";
 export * from "./value-objects/Password";
 export * from "./value-objects/Url";
