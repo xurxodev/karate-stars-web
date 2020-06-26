@@ -47,8 +47,7 @@ export class Id extends ValueObject<IdProps> {
             randomChars += ALLOWED_CHARS.charAt(randomWithMax(NUMBER_OF_CODEPOINTS));
         }
 
-        return new Id({ value: randomChars })
-
+        return new Id({ value: randomChars });
     }
 
     public static createExisted(id: string): Either<IdError, Id> {
@@ -83,7 +82,3 @@ export class Id extends ValueObject<IdProps> {
 function randomWithMax(max: number) {
     return Math.floor(Math.random() * max);
 }
-
-
-
-
