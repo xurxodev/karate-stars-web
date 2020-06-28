@@ -1,4 +1,3 @@
-import fetch from "node-fetch";
 import SocialNewsRepository from "../../domain/socialnews/boundaries/SocialNewsRepository";
 import { SocialNews } from "../../domain/socialnews/entities/SocialNews";
 import Twit from "twit";
@@ -14,9 +13,9 @@ export default class SocialNewsTwitterRepository implements SocialNewsRepository
         app_only_auth: true,
     });
 
-    public get(): Promise<SocialNews[]> {
+    public get(search: string): Promise<SocialNews[]> {
         return new Promise((resolve, reject) => {
-            Promise.all([this.getSocialNewsFromList(), this.getSocialNewsFromSearch()])
+            Promise.all([this.getSocialNewsFromList(), this.getSocialNewsFromSearch(search)])
                 .then(async ([listResult, searchResult]) => {
                     const listTweets: any = listResult.data;
                     const searchResponse: any = searchResult.data;
@@ -116,13 +115,9 @@ export default class SocialNewsTwitterRepository implements SocialNewsRepository
         // include_entities: true, result_type: "popular" })
     }
 
-    private async getSocialNewsFromSearch(): Promise<Twit.PromiseResponse> {
-        const response = await fetch("http://www.karatestarsapp.com/api/v1/socialnewsconfig.json");
-
-        const socialNewsConfig = await response.json();
-
+    private async getSocialNewsFromSearch(search: string): Promise<Twit.PromiseResponse> {
         return this.twitterApiClient.get("search/tweets", {
-            q: socialNewsConfig.socialSearch,
+            q: search,
             count: 100,
             include_entities: true,
             result_type: "popular",

@@ -1,17 +1,14 @@
-import fetch from "node-fetch";
 import Parser from "rss-parser";
 import CurrentNewsRepository from "../../domain/currentnews/boundaries/CurrentNewsRepository";
-import { CurrentNews, NewsSource } from "../../domain/currentnews/entities/CurrentNews";
+import { CurrentNews } from "../../domain/currentnews/entities/CurrentNews";
+import { NewsFeed } from "../../domain/settings/entities/Settings";
 
 export default class CurrentNewsRSSRepository implements CurrentNewsRepository {
     public parser = new Parser();
 
-    public get(): Promise<CurrentNews[]> {
+    public get(feeds: NewsFeed[]): Promise<CurrentNews[]> {
         return new Promise((resolve, reject) => {
-            this.getCurrentNewsSources()
-                .then((sources: any) => {
-                    return Promise.all(sources.feeds.map(s => this.getNewsFromFeed(s)));
-                })
+            Promise.all(feeds.map(feed => this.getNewsFromFeed(feed)))
                 .then((res: any[]) => {
                     const mergedSocialNews = [].concat(...res);
 
@@ -34,25 +31,19 @@ export default class CurrentNewsRSSRepository implements CurrentNewsRepository {
         return diffDays < 30;
     }
 
-    private async getCurrentNewsSources(): Promise<any[]> {
-        const response = await fetch("http://www.karatestarsapp.com/api/v1/currentnewsconfig.json");
-
-        return await response.json();
-    }
-
-    private async getNewsFromFeed(newsSource: NewsSource): Promise<any[]> {
+    private async getNewsFromFeed(feed: NewsFeed): Promise<any[]> {
         let rss: any;
         try {
-            rss = await this.parser.parseURL(newsSource.url);
+            rss = await this.parser.parseURL(feed.url.value);
 
             if (rss && rss.items) {
-                return rss?.items?.map((item: any) => this.mapItem(item, newsSource)) ?? [];
+                return rss?.items?.map((item: any) => this.mapItem(item, feed)) ?? [];
             } else {
-                console.log(`There are not rss items to parse in ${newsSource.url}`);
+                console.log(`There are not rss items to parse in ${feed.url}`);
                 return [];
             }
         } catch (error) {
-            console.log(`Error parsing url ${newsSource.url}`);
+            console.log(`Error parsing feed ${{ feed }}`);
             console.log({ rss });
             return [];
         }
@@ -86,14 +77,8 @@ export default class CurrentNewsRSSRepository implements CurrentNewsRepository {
         return image;
     }
 
-    private mapItem(item: any, newsSource: NewsSource): CurrentNews {
+    private mapItem(item: any, feed: NewsFeed): CurrentNews {
         const date = new Date(Date.parse(item.pubDate)).toISOString();
-
-        const source = {
-            name: newsSource.name,
-            image: newsSource.image,
-            url: newsSource.url,
-        };
 
         let image = "";
         try {
@@ -109,7 +94,11 @@ export default class CurrentNewsRSSRepository implements CurrentNewsRepository {
                 date,
                 link: item.link,
             },
-            source,
+            source: {
+                name: feed.name,
+                image: feed.image.value,
+                url: feed.url.value,
+            },
         };
     }
 }

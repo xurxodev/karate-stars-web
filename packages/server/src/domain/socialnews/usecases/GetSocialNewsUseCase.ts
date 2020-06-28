@@ -1,14 +1,16 @@
 import SocialNewsRepository from "../boundaries/SocialNewsRepository";
 import { SocialNews } from "../entities/SocialNews";
+import SettingsRepository from "../../settings/boundaries/SettingsRepository";
 
 export default class GetSocialNewsUseCase {
-    private repository: SocialNewsRepository;
+    constructor(
+        private socialNewsRepository: SocialNewsRepository,
+        private settingsRepository: SettingsRepository
+    ) {}
 
-    constructor(resository: SocialNewsRepository) {
-        this.repository = resository;
-    }
+    public async execute(): Promise<SocialNews[]> {
+        const settings = await this.settingsRepository.get();
 
-    public execute(): Promise<SocialNews[]> {
-        return this.repository.get();
+        return this.socialNewsRepository.get(settings.socialNews.search);
     }
 }

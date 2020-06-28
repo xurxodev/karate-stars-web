@@ -1,14 +1,11 @@
 import * as hapi from "@hapi/hapi";
 
-import CurrentNewsRepository from "../../data/currentnews/CurrentNewsRSSRepository";
-import GetCurrentNewsUseCase from "../../domain/currentnews/usecases/GetCurrentNewsUseCase";
 import jwtAuthentication from "../users/JwtAuthentication";
 import CurrentNewsController from "./CurrentNewsController";
+import CompositionRoot from "../../CompositionRoot";
 
 export default function (apiPrefix: string): hapi.ServerRoute[] {
-    const currentNewsRepository = new CurrentNewsRepository();
-    const getCurrentNewsUseCase = new GetCurrentNewsUseCase(currentNewsRepository);
-    const currentNewsController = new CurrentNewsController(getCurrentNewsUseCase);
+    const currentNewsController = CompositionRoot.getInstance().get(CurrentNewsController);
 
     return [
         {

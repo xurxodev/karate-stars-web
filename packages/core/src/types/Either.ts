@@ -22,6 +22,14 @@ export abstract class Either<L, R> {
         return this.isLeft() ? leftFn(this.value as L) : rightFn(this.value as R);
     }
 
+    getOrThrow<R>(errorMessage?: string): R {
+        if (this.isRight()) {
+            return (this.value as unknown) as R;
+        } else {
+            throw Error(errorMessage ? errorMessage : "An error has ocurred: " + this.value);
+        }
+    }
+
     static left<L>(left: L) {
         return new Left<L>(left);
     }

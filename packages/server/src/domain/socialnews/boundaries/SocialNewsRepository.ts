@@ -1,5 +1,5 @@
 import { SocialNews } from "../entities/SocialNews";
 
 export default interface SocialNewsRepository<> {
-    get(): Promise<SocialNews[]>;
+    get(search: string): Promise<SocialNews[]>;
 }

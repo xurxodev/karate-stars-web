@@ -1,14 +1,16 @@
 import CurrentNewsRepository from "../boundaries/CurrentNewsRepository";
 import { CurrentNews } from "../entities/CurrentNews";
+import SettingsRepository from "../../settings/boundaries/SettingsRepository";
 
 export default class GetCurrentNewsUseCase {
-    private repository: CurrentNewsRepository;
+    constructor(
+        private currentNewsRepository: CurrentNewsRepository,
+        private settingsRepository: SettingsRepository
+    ) {}
 
-    constructor(resository: CurrentNewsRepository) {
-        this.repository = resository;
-    }
+    public async execute(): Promise<CurrentNews[]> {
+        const settings = await this.settingsRepository.get();
 
-    public execute(): Promise<CurrentNews[]> {
-        return this.repository.get();
+        return this.currentNewsRepository.get(settings.currentNews.feeds);
     }
 }
