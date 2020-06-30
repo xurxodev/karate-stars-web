@@ -8,7 +8,6 @@
     "packages/*"
   ],
   "scripts": {
-    "prebuild": "yarn lint && yarn test",
     "build": "yarn core build && yarn admin build && yarn server build",
     "start": "yarn server start",
     "start-dev": "concurrently --kill-others-on-fail \"yarn core start-dev\"  \"yarn server start-dev\" \"yarn admin start-dev\"",

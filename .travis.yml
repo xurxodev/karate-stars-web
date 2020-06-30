@@ -8,12 +8,11 @@ addons:
         packages:
             - libgconf-2-4
 cache: yarn
-before_install:
-    - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.22.4
-    - export PATH="$HOME/.yarn/bin:$PATH"
 install:
     - yarn install --frozen-lockfile
     - yarn build
+    - yarn lint
+    - yarn test
     - yarn admin cy:verify
     - yarn start
 script:
