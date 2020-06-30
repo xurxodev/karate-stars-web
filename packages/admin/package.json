@@ -29,8 +29,9 @@
   "scripts": {
     "start": "react-scripts start",
     "start-dev": "react-scripts start",
+    "prebuild": "rm -rf build/",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject",
     "cy:verify": "cypress verify",
     "cy:open": "cypress open",

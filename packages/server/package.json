@@ -13,7 +13,7 @@
     "build-dev": "yarn build && node ./build/server.js",
     "tsc": "tsc --build",
     "clean": "rm -rf build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"no test specified\" && exit 0"
   },
   "dependencies": {
     "@hapi/boom": "^9.0.1",
