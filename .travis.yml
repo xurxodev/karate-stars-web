@@ -7,7 +7,9 @@ addons:
     apt:
         packages:
             - libgconf-2-4
-cache: yarn
+cache:
+    directories:
+        - "$HOME/.cache"
 install:
     - yarn install --frozen-lockfile
     - yarn build
@@ -18,3 +20,6 @@ install:
 script:
     - yarn wait-on http-get://0.0.0.0:8000
     - yarn cy:run
+    # after all tests finish running we need
+    # to kill all background jobs (like "npm start &")
+    - kill $(jobs -p) || true
