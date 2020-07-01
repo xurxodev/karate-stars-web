@@ -14,6 +14,7 @@ install:
     - yarn lint
     - yarn test
     - yarn admin cy:verify
+    - yarn start
 script:
-    - yarn start & wait-on http://0.0.0.0:8000
-    - yarn cy:e2e:run
+    - yarn wait-on http-get://0.0.0.0:8000
+    - yarn cy:run
