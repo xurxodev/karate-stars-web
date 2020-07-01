@@ -1,5 +1,3 @@
-if (process.env.NODE_ENV !== 'production') require('dotenv').config();
-
 import * as hapi from "@hapi/hapi";
 import jwtAuthentication from "./api/users/JwtAuthentication";
 import initializeRoutes from "./routes";
