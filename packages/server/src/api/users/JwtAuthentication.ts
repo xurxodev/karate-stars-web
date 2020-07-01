@@ -1,10 +1,7 @@
-import * as dotenv from "dotenv";
 import * as jwt from "jsonwebtoken";
 import GetUserByIdUseCase from "../../domain/users/usecases/GetUserByIdUseCase";
 import CompositionRoot from "../../CompositionRoot";
 import { User } from "karate-stars-core";
-
-dotenv.config();
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
