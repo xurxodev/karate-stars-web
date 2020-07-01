@@ -9,7 +9,7 @@ addons:
             - libgconf-2-4
 cache:
     directories:
-        - "$HOME/.cache"
+        - ~/.cache
 install:
     - yarn install --frozen-lockfile
     - yarn build
