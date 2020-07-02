@@ -18,8 +18,8 @@ install:
     - yarn build & yarn lint & yarn test
 script:
     - yarn start &
-    - yarn wait-on http-get://0.0.0.0:8000
-    - yarn admin cy:run
+    - yarn wait-on http-get://localhost:8000/admin
+    - CYPRESS_BASE_URL=http://localhost:8000/admin yarn admin cy:run
     # after all tests finish running we need
     # to kill all background jobs (like "npm start &")
     - kill $(jobs -p) || true
