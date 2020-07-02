@@ -14,7 +14,7 @@ cache:
         - ~/.cache
     override:
         - yarn install --frozen-lockfile
-        - npm run cy:verify
+        - yarn admin cy:verifys
 install:
     - yarn install --frozen-lockfile
     - yarn admin cy:verify
