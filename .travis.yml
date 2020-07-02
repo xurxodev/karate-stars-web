@@ -10,15 +10,13 @@ addons:
 cache:
     yarn: true
     directories:
-        - $HOME/.cache
-          # install dependencies and check that Cypress can run
-    override:
-        - yarn install --frozen-lockfile
-        - yarn admin cy:verify
+        # we also need to cache folder with Cypress binary
+        - ~/.cache
+install:
+    - yarn install --frozen-lockfile
+    - yarn admin cy:verify
+    - yarn build & yarn lint & yarn test
 script:
-    - yarn build
-    - yarn lint
-    - yarn test
     - yarn start &
     - yarn wait-on http-get://0.0.0.0:8000
     - yarn admin cy:run
