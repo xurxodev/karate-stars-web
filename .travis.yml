@@ -1,6 +1,7 @@
 language: node_js
 node_js:
     - 14
+dist: bionic
 # if using Ubuntu 16 need this library
 # https://github.com/cypress-io/cypress-documentation/pull/1647
 addons:
@@ -10,11 +11,7 @@ addons:
 cache:
     yarn: true
     directories:
-        # we also need to cache folder with Cypress binary
-        - ~/.cache
-    override:
-        - yarn install --frozen-lockfile
-        - yarn admin cy:verifys
+        - "$HOME/.cache"
 install:
     - yarn install --frozen-lockfile
     - yarn admin cy:verify
