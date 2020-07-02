@@ -7,16 +7,19 @@ addons:
     apt:
         packages:
             - libgconf-2-4
-cache: yarn
-install:
-    - yarn install --frozen-lockfile
+cache:
+    yarn: true
+    directories:
+        - $HOME/.cache
+          # install dependencies and check that Cypress can run
+    override:
+        - yarn install --frozen-lockfile
+        - yarn admin cy:verify
+script:
     - yarn build
     - yarn lint
     - yarn test
-    - yarn admin cy:verify
-script:
-    - yarn start &
-    - yarn wait-on http-get://0.0.0.0:8000
+    - yarn start & wait-on http-get://0.0.0.0:8000
     - yarn cy:run
     # after all tests finish running we need
     # to kill all background jobs (like "npm start &")
