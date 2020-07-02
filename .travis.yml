@@ -12,6 +12,9 @@ cache:
     directories:
         # we also need to cache folder with Cypress binary
         - ~/.cache
+    override:
+        - yarn install --frozen-lockfile
+        - npm run cy:verify
 install:
     - yarn install --frozen-lockfile
     - yarn admin cy:verify
