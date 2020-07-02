@@ -1,0 +1,27 @@
+language: node_js
+node_js:
+    - 14
+dist: bionic
+# if using Ubuntu 16 need this library
+# https://github.com/cypress-io/cypress-documentation/pull/1647
+addons:
+    apt:
+        packages:
+            - libgconf-2-4
+cache:
+    yarn: true
+    directories:
+        - "$HOME/.cache"
+install:
+    - yarn install --frozen-lockfile
+    - yarn admin cy:verify
+    - yarn build
+script:
+    - yarn lint
+    - yarn test
+    - yarn start &
+    - yarn wait-on http-get://localhost:8000/admin
+    - CYPRESS_BASE_URL=http://localhost:8000/admin yarn admin cy:run
+    # after all tests finish running we need
+    # to kill all background jobs (like "npm start &")
+    - kill $(jobs -p) || true
