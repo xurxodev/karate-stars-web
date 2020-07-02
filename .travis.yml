@@ -19,8 +19,9 @@ script:
     - yarn build
     - yarn lint
     - yarn test
-    - yarn start & wait-on http-get://0.0.0.0:8000
-    - yarn cy:run
+    - yarn start &
+    - yarn wait-on http-get://0.0.0.0:8000
+    - yarn admin cy:run
     # after all tests finish running we need
     # to kill all background jobs (like "npm start &")
     - kill $(jobs -p) || true
