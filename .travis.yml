@@ -15,8 +15,10 @@ cache:
 install:
     - yarn install --frozen-lockfile
     - yarn admin cy:verify
-    - yarn build & yarn lint & yarn test
+    - yarn build
 script:
+    - yarn lint
+    - yarn test
     - yarn start &
     - yarn wait-on http-get://localhost:8000/admin
     - CYPRESS_BASE_URL=http://localhost:8000/admin yarn admin cy:run
