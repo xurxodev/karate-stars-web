@@ -7,17 +7,15 @@ addons:
     apt:
         packages:
             - libgconf-2-4
-cache:
-    directories:
-        - ~/.cache
+cache: yarn
 install:
     - yarn install --frozen-lockfile
     - yarn build
     - yarn lint
     - yarn test
     - yarn admin cy:verify
-    - yarn start
 script:
+    - yarn start &
     - yarn wait-on http-get://0.0.0.0:8000
     - yarn cy:run
     # after all tests finish running we need
