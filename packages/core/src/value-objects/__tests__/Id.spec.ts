@@ -6,44 +6,44 @@ describe("Id", () => {
 
         expect(Id.isValid(id.value)).toBeTruthy();
     });
-    it("should return right creating from a valid existed id", () => {
+    it("should return success creating from a valid existed id", () => {
         const existedId = Id.generateId().value;
 
-        const id = Id.createExisted(existedId);
+        const idResult = Id.createExisted(existedId);
 
-        id.fold(
+        idResult.fold(
             error => fail(error),
             id => expect(id.value).toEqual(existedId)
         );
     });
-    it("should return InvalidEmptyId error if argument id is empty", () => {
-        const id = Id.createExisted("");
+    it("should return InvalidEmptyId error if value argument is empty", () => {
+        const idResult = Id.createExisted("");
 
-        id.fold(
+        idResult.fold(
             error => expect(error.kind).toBe("InvalidEmptyId"),
             () => fail("should be fail")
         );
     });
-    it("should return InvalidId error if argument id is invalid", () => {
-        const id = Id.createExisted("invalid");
+    it("should return InvalidId error if value argument is invalid", () => {
+        const idResult = Id.createExisted("invalid");
 
-        id.fold(
+        idResult.fold(
             error => expect(error.kind).toBe("InvalidId"),
             () => fail("should be fail")
         );
     });
-    it("should return InvalidId error if argument id starts with a number", () => {
-        const id = Id.createExisted("0kWynlWMjJR");
+    it("should return InvalidId error if value argument starts with a number", () => {
+        const idResult = Id.createExisted("0kWynlWMjJR");
 
-        id.fold(
+        idResult.fold(
             error => expect(error.kind).toBe("InvalidId"),
             () => fail("should be fail")
         );
     });
-    it("should return InvalidId error if argument id starts constains non-alphanumeric characters", () => {
-        const id = Id.createExisted("AkWy$lWMjJR");
+    it("should return InvalidId error if value argument constains non-alphanumeric characters", () => {
+        const idResult = Id.createExisted("AkWy$lWMjJR");
 
-        id.fold(
+        idResult.fold(
             error => expect(error.kind).toBe("InvalidId"),
             () => fail("should be fail")
         );
