@@ -5,11 +5,13 @@ export interface PasswordProps {
     value: string;
 }
 
-export type PaswordError = "InvalidEmptyPassword";
+export interface InvalidEmptyPassword {
+    kind: "InvalidEmptyPassword";
+}
+
+export type PasswordError = InvalidEmptyPassword;
 
 export class Password extends ValueObject<PasswordProps> {
-    public static minLength = 6;
-
     get value(): string {
         return this.props.value;
     }
@@ -18,13 +20,9 @@ export class Password extends ValueObject<PasswordProps> {
         super(props);
     }
 
-    private static isAppropriateLength(password: string): boolean {
-        return password.length >= this.minLength;
-    }
-
-    public static create(value: string): Either<PaswordError, Password> {
+    public static create(value: string): Either<PasswordError, Password> {
         if (!value) {
-            return Either.left("InvalidEmptyPassword");
+            return Either.left({ kind: "InvalidEmptyPassword" });
         } else {
             return Either.right(
                 new Password({

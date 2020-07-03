@@ -1,6 +1,6 @@
 import { Email } from "../Email";
 
-describe("Id", () => {
+describe("Email", () => {
     it("should return success reponse if email is valid", () => {
         const emailValue = "info@karatestarsapp.com";
         const emailResult = Email.create(emailValue);
@@ -11,17 +11,17 @@ describe("Id", () => {
         );
     });
     it("should return InvalidEmptyEmail error if value argument is empty", () => {
-        const id = Email.create("");
+        const emailResult = Email.create("");
 
-        id.fold(
+        emailResult.fold(
             error => expect(error.kind).toBe("InvalidEmptyEmail"),
             () => fail("should be fail")
         );
     });
     it("should return InvalidId error if value argument is invalid", () => {
-        const id = Email.create("infokaratestarsapp.com");
+        const emailResult = Email.create("infokaratestarsapp.com");
 
-        id.fold(
+        emailResult.fold(
             error => expect(error.kind).toBe("InvalidEmail"),
             () => fail("should be fail")
         );
