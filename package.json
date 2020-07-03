@@ -20,7 +20,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "yarn lint"
+      "pre-push": "yarn prettify && yarn lint && yarn jest"
     }
   },
   "devDependencies": {
