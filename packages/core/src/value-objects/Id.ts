@@ -70,7 +70,7 @@ export class Id extends ValueObject<IdProps> {
      * isValidUid('0kWynlWMjJR'); // false (Uid can not start with a number)
      * isValidUid('AkWy$lWMjJR'); // false (Uid can only contain alphanumeric characters.
      */
-    private static isValid(id: string): boolean {
+    public static isValid(id: string): boolean {
         if (id === null) {
             return false;
         }

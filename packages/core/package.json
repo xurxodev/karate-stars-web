@@ -9,8 +9,12 @@
   "scripts": {
     "build": "tsc --build",
     "start-dev": "tsc --watch",
-    "test": "echo \"no test specified\" && exit 0"
+    "test": "jest"
   },
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/jest": "24.0.0",
+    "jest": "24.9.0",
+    "ts-jest": "^24.3.0"
+  }
 }
