@@ -20,7 +20,7 @@ export class Maybe<T> {
         return new Maybe<T>(null);
     }
 
-    static fromValue<T>(value: T | undefined) {
+    static fromValue<T>(value: T | undefined | null) {
         return value ? Maybe.some(value) : Maybe.none<T>();
     }
 
