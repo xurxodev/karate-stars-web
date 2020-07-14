@@ -1,50 +1,73 @@
-export class Maybe<T> {
-    private constructor(private value: T | null) {}
+type None = { kind: "none" };
+type Some<Data> = { kind: "some"; someValue: Data };
 
-    static some<T>(value: T) {
-        if (!value) {
-            throw Error("Provided value must not be empty");
-        }
-        return new Maybe(value);
-    }
+type MaybeValue<Data> = None | Some<Data>;
+
+export class Maybe<Data> {
+    private constructor(private readonly value: MaybeValue<Data>) {}
 
     isDefined(): boolean {
-        return this.value !== null;
+        return this.value.kind === "some";
     }
 
     isEmpty(): boolean {
-        return this.value === null;
+        return this.value.kind === "none";
     }
 
-    static none<T>() {
-        return new Maybe<T>(null);
+    fold<T>(leftFn: () => T, rightFn: (someValue: Data) => T): T {
+        switch (this.value.kind) {
+            case "none":
+                return leftFn();
+            case "some":
+                return rightFn(this.value.someValue);
+        }
     }
 
-    static fromValue<T>(value: T | undefined | null) {
-        return value ? Maybe.some(value) : Maybe.none<T>();
-    }
-
-    get(): T {
+    get(): Data {
         return this.getOrThrow();
     }
 
-    getOrElse(defaultValue: T) {
-        return this.value === null ? defaultValue : this.value;
+    getOrElse(defaultValue: Data): Data {
+        return this.fold(
+            () => defaultValue,
+            someValue => someValue
+        );
     }
 
-    map<R>(f: (wrapped: T) => R): Maybe<R> {
-        if (this.value === null) {
-            return Maybe.none<R>();
-        } else {
-            return Maybe.fromValue(f(this.value));
-        }
+    flatMap<T>(f: (wrapped: Data) => Maybe<T>): Maybe<T> {
+        return this.fold(
+            () => Maybe.none(),
+            someValue => f(someValue)
+        );
     }
 
-    getOrThrow(errorMessage?: string): T {
-        if (!this.value) {
+    map<T>(f: (wrapped: Data) => T): Maybe<T> {
+        return this.flatMap(data => Maybe.fromValue(f(data)));
+    }
+
+    getOrThrow(errorMessage?: string): Data {
+        const throwFn = () => {
             throw Error(errorMessage ? errorMessage : "Value is empty");
-        }
+        };
 
-        return this.value;
+        return this.fold(
+            () => throwFn(),
+            someValue => someValue
+        );
+    }
+
+    static some<Data>(value: Data): Maybe<Data> {
+        if (!value) {
+            throw Error("Provided value must not be empty");
+        }
+        return new Maybe({ kind: "some", someValue: value });
+    }
+
+    static none<Data>(): Maybe<Data> {
+        return new Maybe({ kind: "none" });
+    }
+
+    static fromValue<Data>(value: Data | undefined | null): Maybe<Data> {
+        return !value ? Maybe.none() : Maybe.some(value);
     }
 }

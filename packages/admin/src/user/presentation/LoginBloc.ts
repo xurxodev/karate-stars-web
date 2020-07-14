@@ -30,13 +30,10 @@ class LoginBloc extends Bloc<LoginState> {
         const formState = this.getState as LoginFormState;
 
         if (formState.isValid) {
-            const emailResult = Email.create(formState.email.value ?? "");
-            const passwordResult = Password.create(formState.password.value ?? "");
+            const email = Email.create(formState.email.value ?? "").getOrThrow();
+            const password = Password.create(formState.password.value ?? "").getOrThrow();
 
-            const result = await this.loginUseCase.execute(
-                emailResult.value as Email,
-                passwordResult.value as Password
-            );
+            const result = await this.loginUseCase.execute(email, password);
 
             result.fold(
                 error => this.changeState(this.handleError(error)),

@@ -13,7 +13,7 @@ export class UrlNotification extends PushNotification {
 
     private constructor({ topic, title, description, url }: NotificationUrlData) {
         super({ title, description, topic });
-        this.url = Url.create(url).value as Url;
+        this.url = Url.create(url).getOrThrow();
     }
 
     public static create({

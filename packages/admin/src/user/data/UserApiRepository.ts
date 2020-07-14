@@ -1,4 +1,4 @@
-import { Either, Left, Email, Password, User } from "karate-stars-core";
+import { Either, Email, Password, User } from "karate-stars-core";
 import { GetUserError } from "../domain/Errors";
 import UserRepository from "../domain/Boundaries";
 import { AxiosInstance } from "axios";
@@ -48,7 +48,7 @@ export default class UserApiRepository implements UserRepository {
         this.tokenStorage.save("");
     }
 
-    private handleError(error: any): Left<GetUserError> {
+    private handleError(error: any): Either<GetUserError, User> {
         if (error.response?.data?.statusCode) {
             return error.response.data.statusCode === 401
                 ? Either.left({ kind: "Unauthorized" })

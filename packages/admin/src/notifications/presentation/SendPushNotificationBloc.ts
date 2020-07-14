@@ -62,7 +62,10 @@ class SendPushNotificationBloc extends Bloc<FormState> {
 
         const result = this.createNotification(statePreviousToValidation);
 
-        const errors = result.isLeft() ? (result.value as NotificationErrors) : {};
+        const errors = result.fold(
+            errors => errors,
+            () => ({})
+        );
 
         const statePostToValidation = {
             ...statePreviousToValidation,
@@ -86,7 +89,7 @@ class SendPushNotificationBloc extends Bloc<FormState> {
             const creationResult = this.createNotification(this.getState);
 
             const sendResult = await this.sendPushNotificationUseCase.execute(
-                (creationResult.value as unknown) as UrlNotification
+                creationResult.getOrThrow()
             );
 
             sendResult.fold(

@@ -2,7 +2,7 @@ import { PushNotificationRepository, SendPushNotificationSuccess } from "../doma
 import { SendPushNotificationError } from "../domain/Errors";
 import { AxiosInstance } from "axios";
 import { UrlNotification } from "../domain/entities/UrlNotification";
-import { Either, Left } from "karate-stars-core";
+import { Either } from "karate-stars-core";
 
 class FcmPushNotificationRepository implements PushNotificationRepository {
     constructor(private axiosInstance: AxiosInstance, private fcmApiToken: string) {}
@@ -12,8 +12,6 @@ class FcmPushNotificationRepository implements PushNotificationRepository {
     ): Promise<Either<SendPushNotificationError, SendPushNotificationSuccess>> {
         try {
             //const data = this.extractDataByType(notification);
-
-            debugger;
 
             await this.axiosInstance.post(
                 "/send",
@@ -34,7 +32,9 @@ class FcmPushNotificationRepository implements PushNotificationRepository {
         }
     }
 
-    private handleError(error: any): Left<SendPushNotificationError> {
+    private handleError(
+        error: any
+    ): Either<SendPushNotificationError, SendPushNotificationSuccess> {
         if (error.response?.data?.statusCode) {
             return error.response.data.statusCode === 401
                 ? Either.left({ kind: "Unauthorized" })
