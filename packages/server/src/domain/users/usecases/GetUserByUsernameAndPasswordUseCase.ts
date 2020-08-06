@@ -1,5 +1,5 @@
 import UserRepository from "../boundaries/UserRepository";
-import { User, Maybe } from "karate-stars-core";
+import { UserData, Maybe, Email, Password } from "karate-stars-core";
 
 export default class GetUserByUsernameAndPasswordUseCase {
     private repository: UserRepository;
@@ -8,7 +8,10 @@ export default class GetUserByUsernameAndPasswordUseCase {
         this.repository = resository;
     }
 
-    public execute(userName: string, password: string): Promise<Maybe<User>> {
-        return this.repository.getByUsernameAndPassword(userName, password);
+    public execute(email: string, password: string): Promise<Maybe<UserData>> {
+        return this.repository.getByUsernameAndPassword(
+            Email.create(email).getOrThrow(),
+            Password.create(password).getOrThrow()
+        );
     }
 }

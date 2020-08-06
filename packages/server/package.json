@@ -11,6 +11,7 @@
     "build": "yarn clean && yarn tsc",
     "start-dev": "../../node_modules/nodemon/bin/nodemon.js -e ts  --exec \"yarn build-dev\"",
     "build-dev": "yarn build && node -r dotenv/config ./build/server.js",
+    "start-debug": "yarn build && node -r dotenv/config --inspect ./build/server.js",
     "tsc": "tsc --build",
     "clean": "rm -rf build",
     "test": "echo \"no test specified\" && exit 0"

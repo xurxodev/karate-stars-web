@@ -1,5 +1,5 @@
 import UserRepository from "../../domain/users/boundaries/UserRepository";
-import { User, Maybe } from "karate-stars-core";
+import { User, Maybe, Id, Email, Password } from "karate-stars-core";
 import * as MongoClient from "mongodb";
 import { UserDB } from "./UserDB";
 
@@ -7,20 +7,20 @@ export default class UserMongoRepository implements UserRepository {
     constructor(private mongodbConecction: string) {}
 
     public async getByUsernameAndPassword(
-        username: string,
-        password: string
+        username: Email,
+        password: Password
     ): Promise<Maybe<User>> {
         const users = await this.getUsers();
         const result = Maybe.fromValue(
-            users.find(u => u.username === username && u.password === password)
+            users.find(u => u.username === username.value && u.password === password.value)
         );
 
         return result.map(userDB => this.mapToDomain(userDB));
     }
 
-    public async getByUserId(userId: string): Promise<Maybe<User>> {
+    public async getByUserId(userId: Id): Promise<Maybe<User>> {
         const users = await this.getUsers();
-        const result = Maybe.fromValue(users.find(u => u._id === userId));
+        const result = Maybe.fromValue(users.find(u => u._id === userId.value));
 
         return result.map(userDB => this.mapToDomain(userDB));
     }
@@ -31,7 +31,6 @@ export default class UserMongoRepository implements UserRepository {
                 useUnifiedTopology: true,
             });
 
-            // Use connect method to connect to the Server
             mongoClient.connect(async (errCon, client) => {
                 if (errCon) {
                     reject(errCon);
@@ -49,22 +48,16 @@ export default class UserMongoRepository implements UserRepository {
     }
 
     private mapToDomain(userDB: UserDB): User {
-        const user = this.renameProp<UserDB, User>("_id", "userId", userDB);
+        const user = User.createExisted({
+            id: Id.createExisted(userDB._id).getOrThrow(),
+            name: userDB.name,
+            image: userDB.image,
+            email: Email.create(userDB.username).getOrThrow(),
+            password: Password.create(userDB.password).getOrThrow(),
+            isAdmin: userDB.isAdmin,
+            isClientUser: userDB.isClientUser,
+        });
 
         return user;
-    }
-
-    private renameProp<Input, Output>(
-        oldProp: keyof Input,
-        newProp: keyof Output,
-        old: Input
-    ): Output {
-        const output = Object.keys(old).reduce((acc, key) => {
-            const finalKey = key === oldProp ? newProp : key;
-            const result = { ...acc, [finalKey]: old[key] };
-            return result;
-        }, {} as Output);
-
-        return output;
     }
 }

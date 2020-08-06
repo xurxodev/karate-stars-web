@@ -1,7 +1,7 @@
 import * as jwt from "jsonwebtoken";
 import GetUserByIdUseCase from "../../domain/users/usecases/GetUserByIdUseCase";
 import CompositionRoot from "../../CompositionRoot";
-import { User } from "karate-stars-core";
+import { UserData } from "karate-stars-core";
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
@@ -19,10 +19,10 @@ const jwtAutentication = {
             return { isValid: false };
         }
     },
-    generateToken: (user: User) => {
+    generateToken: (user: UserData) => {
         return jwt.sign(
             {
-                userId: user.userId,
+                userId: user.id.value,
             },
             jwtSecretKey,
             { expiresIn: "24h" }

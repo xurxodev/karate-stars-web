@@ -1,4 +1,5 @@
 export * from "./entities/User";
+export * from "./entities/Entity";
 
 export * from "./types/Either";
 export * from "./types/Maybe";
