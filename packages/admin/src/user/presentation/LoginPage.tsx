@@ -171,6 +171,7 @@ const LoginContent: React.FC = () => {
                                                         </Alert>
                                                     )}
                                                     <TextField
+                                                        id="email"
                                                         className={classes.textField}
                                                         error={stateForm.email.error ? true : false}
                                                         fullWidth
@@ -184,6 +185,7 @@ const LoginContent: React.FC = () => {
                                                         autoComplete="username"
                                                     />
                                                     <TextField
+                                                        id="password"
                                                         className={classes.textField}
                                                         error={
                                                             stateForm.password.error ? true : false
@@ -206,7 +208,7 @@ const LoginContent: React.FC = () => {
                                                         size="large"
                                                         type="submit"
                                                         variant="contained">
-                                                        Sign in now
+                                                        Sign In
                                                     </Button>
                                                 </form>
                                             );
