@@ -11,7 +11,7 @@ describe("Login Page", () => {
     describe("Sign in button", () => {
         it("should be disabled the first time", () => {
             render(<LoginPage />);
-            expect(screen.getByText("Sign In")).toBeDisabled();
+            expect(screen.getByRole("button", { name: "Sign In" })).toBeDisabled();
         });
         it("should be enabled after type email and password", () => {
             render(<LoginPage />);
@@ -19,7 +19,7 @@ describe("Login Page", () => {
             userEvent.type(screen.getByLabelText("Email"), "example@gmail.com");
             userEvent.type(screen.getByLabelText("Password"), "password");
 
-            expect(screen.getByText("Sign In")).toBeEnabled();
+            expect(screen.getByRole("button", { name: "Sign In" })).toBeEnabled();
         });
     });
     describe("validation messages", () => {
@@ -33,25 +33,16 @@ describe("Login Page", () => {
         it("should be visible with text email is required if email has value and then is clear it", () => {
             render(<LoginPage />);
 
-            //Review to user userEvent.type
-            fireEvent.change(screen.getByLabelText("Email"), {
-                target: { value: "example" },
-            });
-            fireEvent.change(screen.getByLabelText("Email"), {
-                target: { value: "" },
-            });
+            userEvent.type(screen.getByLabelText("Email"), "example");
+            userEvent.clear(screen.getByLabelText("Email"));
+
             expect(screen.getByText("Email is required")).toBeInTheDocument();
         });
         it("should be visible with text password is required if password has value and then is clear it", () => {
             render(<LoginPage />);
 
-            //Review to user userEvent.type
-            fireEvent.change(screen.getByLabelText("Password"), {
-                target: { value: "example" },
-            });
-            fireEvent.change(screen.getByLabelText("Password"), {
-                target: { value: "" },
-            });
+            userEvent.type(screen.getByLabelText("Password"), "example");
+            userEvent.clear(screen.getByLabelText("Password"));
 
             expect(screen.getByText("Email is required")).toBeInTheDocument();
         });
@@ -67,18 +58,7 @@ describe("Login Page", () => {
     });
     describe("After submit", () => {
         it("should show invalid crentials message if the credentials one are not valid", async () => {
-            mockServerTest.addRequestHandlers([
-                {
-                    method: "post",
-                    endpoint: "/api/v1/login",
-                    httpStatusCode: 401,
-                    response: {
-                        statusCode: 401,
-                        error: "Unauthorized",
-                        message: "Invalid credentials",
-                    },
-                },
-            ]);
+            givenAnUnauthorizedServerResponse(401);
 
             render(<LoginPage />);
 
@@ -87,21 +67,10 @@ describe("Login Page", () => {
 
             fireEvent.click(screen.getByRole("button", { name: "Sign In" }));
 
-            expect(await screen.findByText("Invalid credentials")).toBeInTheDocument();
+            await screen.findByText("Invalid credentials");
         });
         it("should show generic error if an error has ocurred in the server", async () => {
-            mockServerTest.addRequestHandlers([
-                {
-                    method: "post",
-                    endpoint: "/api/v1/login",
-                    httpStatusCode: 500,
-                    response: {
-                        statusCode: 500,
-                        error: "Internal Server Error",
-                        message: "An internal server error occurred",
-                    },
-                },
-            ]);
+            givenAnUnauthorizedServerResponse(500);
 
             render(<LoginPage />);
 
@@ -110,37 +79,12 @@ describe("Login Page", () => {
 
             fireEvent.click(screen.getByRole("button", { name: "Sign In" }));
 
-            expect(
-                await screen.findByText(
-                    "Sorry, an error has ocurred in the server. Please try later again"
-                )
-            ).toBeInTheDocument();
+            await screen.findByText(
+                "Sorry, an error has ocurred in the server. Please try later again"
+            );
         });
         it("should navigate to dashboard if credentials are valid", async () => {
-            const user = {
-                id: "ID",
-                name: "NAME",
-                image: "IMAGE",
-                email: "EMAIL",
-                password: "PASSWORD",
-                isAdmin: true,
-                isClientUser: true,
-            };
-
-            mockServerTest.addRequestHandlers([
-                {
-                    method: "get",
-                    endpoint: "/api/v1/me",
-                    httpStatusCode: 200,
-                    response: user,
-                },
-                {
-                    method: "post",
-                    endpoint: "/api/v1/login",
-                    httpStatusCode: 200,
-                    response: user,
-                },
-            ]);
+            givenASuccesfullyLoginResponse();
 
             render(
                 <RedirectTester
@@ -154,7 +98,50 @@ describe("Login Page", () => {
 
             fireEvent.click(screen.getByRole("button", { name: "Sign In" }));
 
-            expect(await screen.findByText(pages.dashboard.path)).toBeInTheDocument();
+            screen.findByText(pages.dashboard.path);
         });
     });
 });
+function givenASuccesfullyLoginResponse() {
+    const user = {
+        id: "ID",
+        name: "NAME",
+        image: "IMAGE",
+        email: "EMAIL",
+        password: "PASSWORD",
+        isAdmin: true,
+        isClientUser: true,
+    };
+
+    mockServerTest.addRequestHandlers([
+        {
+            method: "get",
+            endpoint: "/api/v1/me",
+            httpStatusCode: 200,
+            response: user,
+        },
+        {
+            method: "post",
+            endpoint: "/api/v1/login",
+            httpStatusCode: 200,
+            response: user,
+        },
+    ]);
+
+    return user;
+}
+
+function givenAnUnauthorizedServerResponse(httpStatusCode: number) {
+    mockServerTest.addRequestHandlers([
+        {
+            method: "post",
+            endpoint: "/api/v1/login",
+            httpStatusCode: httpStatusCode,
+            response: {
+                statusCode: httpStatusCode,
+                error: "error",
+                message: "message",
+            },
+        },
+    ]);
+}
