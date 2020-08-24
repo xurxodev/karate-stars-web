@@ -1,6 +1,6 @@
 import React from "react";
 
-import { FormState, FormFieldState } from "../../../notifications/presentation/FormState";
+import { FormState, FormFieldState } from "../../state/FormState";
 import {
     makeStyles,
     CardHeader,
@@ -14,28 +14,6 @@ import {
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import FormFieldBuilder from "./FormFieldBuilder";
-
-const useStyles = makeStyles((theme: Theme) => ({
-    paper: {
-        padding: theme.spacing(2),
-        textAlign: "center",
-        color: theme.palette.text.secondary,
-    },
-    formControl: {
-        //margin: theme.spacing(1),
-        minWidth: 220,
-    },
-    textField: {
-        marginTop: theme.spacing(2),
-    },
-    submitButton: {
-        margin: theme.spacing(0, 1),
-    },
-    formResult: {
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1),
-    },
-}));
 
 interface FormBuilderProps {
     formState: FormState;
@@ -94,3 +72,25 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
 };
 
 export default FormBuilder;
+
+const useStyles = makeStyles((theme: Theme) => ({
+    paper: {
+        padding: theme.spacing(2),
+        textAlign: "center",
+        color: theme.palette.text.secondary,
+    },
+    formControl: {
+        //margin: theme.spacing(1),
+        minWidth: 220,
+    },
+    textField: {
+        marginTop: theme.spacing(2),
+    },
+    submitButton: {
+        margin: theme.spacing(0, 1),
+    },
+    formResult: {
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1),
+    },
+}));

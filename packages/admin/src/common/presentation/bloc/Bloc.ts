@@ -1,7 +1,7 @@
 type Subscription<S> = (state: S) => void;
 
 abstract class Bloc<S> {
-    private state: S;
+    protected state: S;
     private listeners: Subscription<S>[] = [];
 
     constructor(initalState: S) {

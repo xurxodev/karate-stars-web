@@ -1,10 +1,10 @@
 import React from "react";
 import { makeStyles, Theme } from "@material-ui/core";
-import { FormState } from "./FormState";
+import { FormState } from "../../common/presentation/state/FormState";
 import MainLayout from "../../common/presentation/layouts/main/MainLayout";
 import CompositionRoot from "../../CompositionRoot";
 import { BlocBuilder } from "../../common/presentation/bloc";
-import FormBuilder from "../../common/presentation/components/FormBuilder";
+import FormBuilder from "../../common/presentation/components/form-builder/FormBuilder";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {

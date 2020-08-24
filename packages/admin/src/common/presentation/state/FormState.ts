@@ -23,6 +23,7 @@ export interface FormFieldState {
     errors?: string[];
     value?: string;
     selectOptions?: SelectOption[];
+    required?: boolean;
     xs?: GridSize;
     sm?: GridSize;
     md?: GridSize;
