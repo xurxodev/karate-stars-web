@@ -23,5 +23,3 @@ export abstract class PushNotification {
         this.topic = data.topic;
     }
 }
-
-export type NotificationErrors = Record<string, string[]>;

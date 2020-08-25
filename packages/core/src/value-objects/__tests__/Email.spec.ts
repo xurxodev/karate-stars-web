@@ -14,7 +14,10 @@ describe("Email", () => {
         const emailResult = Email.create("");
 
         emailResult.fold(
-            error => expect(error.kind).toBe("InvalidEmptyEmail"),
+            errors => {
+                expect(errors.length).toBe(1);
+                expect(errors[0]).toBe("Email cannot be blank");
+            },
             () => fail("should be fail")
         );
     });
@@ -22,7 +25,10 @@ describe("Email", () => {
         const emailResult = Email.create("infokaratestarsapp.com");
 
         emailResult.fold(
-            error => expect(error.kind).toBe("InvalidEmail"),
+            errors => {
+                expect(errors.length).toBe(1);
+                expect(errors[0]).toBe("Invalid email");
+            },
             () => fail("should be fail")
         );
     });

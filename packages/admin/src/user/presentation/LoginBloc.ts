@@ -1,6 +1,6 @@
 import { Bloc } from "../../common/presentation/bloc";
 import { LoginState, LoginFormState, FormFieldState } from "./LoginState";
-import { Email, EmailError, Password, PasswordError } from "karate-stars-core";
+import { Email, Password } from "karate-stars-core";
 import LoginUseCase from "../domain/LoginUseCase";
 import { GetUserError } from "../domain/Errors";
 
@@ -66,22 +66,13 @@ class LoginBloc extends Bloc<LoginState> {
     private updateStateWithEmail(emailInput: string): LoginState {
         const formState = this.getState as LoginFormState;
 
-        const handleError = (error: EmailError): string => {
-            switch (error.kind) {
-                case "InvalidEmail":
-                    return "Invalid email";
-                case "InvalidEmptyEmail":
-                    return "Email is required";
-            }
-        };
-
         const email = Email.create(emailInput);
 
         const emailField = {
             ...formState.email,
             value: emailInput,
             error: email.fold(
-                error => handleError(error),
+                errors => errors[0],
                 () => undefined
             ),
         };
@@ -96,20 +87,13 @@ class LoginBloc extends Bloc<LoginState> {
     private updateStateWithPassword(passwordInput: string): LoginState {
         const formState = this.getState as LoginFormState;
 
-        const handleError = (error: PasswordError): string => {
-            switch (error.kind) {
-                case "InvalidEmptyPassword":
-                    return "Email is required";
-            }
-        };
-
         const password = Password.create(passwordInput);
 
         const passwordField = {
             ...formState.password,
             value: passwordInput,
             error: password.fold(
-                error => handleError(error),
+                errors => errors[0],
                 () => undefined
             ),
         };

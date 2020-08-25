@@ -14,7 +14,10 @@ describe("Url", () => {
         const urlResult = Url.create("");
 
         urlResult.fold(
-            error => expect(error.kind).toBe("InvalidEmptyUrl"),
+            errors => {
+                expect(errors.length).toBe(1);
+                expect(errors[0]).toBe("Url cannot be blank");
+            },
             () => fail("should be fail")
         );
     });
@@ -22,7 +25,10 @@ describe("Url", () => {
         const urlResult = Url.create("hp://karatestarsapp.com");
 
         urlResult.fold(
-            error => expect(error.kind).toBe("InvalidUrl"),
+            errors => {
+                expect(errors.length).toBe(1);
+                expect(errors[0]).toBe("Invalid url");
+            },
             () => fail("should be fail")
         );
     });

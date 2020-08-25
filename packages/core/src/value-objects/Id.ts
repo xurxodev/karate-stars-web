@@ -1,15 +1,7 @@
 import { ValueObject } from "./ValueObject";
 import { Either } from "../types/Either";
-
-export interface InvalidId {
-    kind: "InvalidId";
-}
-
-export interface InvalidEmptyId {
-    kind: "InvalidEmptyId";
-}
-
-export type IdError = InvalidId | InvalidEmptyId;
+import { validateRegexp, validateRequired } from "../utils/validations";
+import { ValidationErrors } from "../types/Errors";
 
 export interface IdProps {
     value: string;
@@ -23,7 +15,12 @@ const ALLOWED_CHARS = `0123456789${letters}`;
 const NUMBER_OF_CODEPOINTS = ALLOWED_CHARS.length;
 const CODESIZE = 11;
 
-const CODE_PATTERN = /^[a-zA-Z]{1}[a-zA-Z0-9]{10}$/;
+/**
+ * JkWynlWMjJR' // valid
+ * 0kWynlWMjJR' // invalid (Uid can not start with a number)
+ * AkWy$lWMjJR  // invalid (Uid can only contain alphanumeric characters.
+ */
+const ID_PATTERN = /^[a-zA-Z]{1}[a-zA-Z0-9]{10}$/;
 
 export class Id extends ValueObject<IdProps> {
     get value(): string {
@@ -50,32 +47,17 @@ export class Id extends ValueObject<IdProps> {
         return new Id({ value: randomChars });
     }
 
-    public static createExisted(id: string): Either<IdError, Id> {
-        if (!id) {
-            return Either.left({ kind: "InvalidEmptyId" });
-        } else if (!this.isValid(id)) {
-            return Either.left({ kind: "InvalidId" });
+    public static createExisted(id: string): Either<ValidationErrors, Id> {
+        const requiredError = validateRequired(id, Id.name);
+        const regexpErrors = validateRegexp(id, Id.name, ID_PATTERN);
+
+        if (requiredError.length > 0) {
+            return Either.left(requiredError);
+        } else if (regexpErrors.length > 0) {
+            return Either.left(regexpErrors);
         } else {
             return Either.right(new Id({ value: id }));
         }
-    }
-
-    /**
-     * Tests whether the given code is valid.
-     *
-     * @param {string} code The code to validate.
-     * @return {boolean} Returns true if the code is valid, false otherwise.
-     *
-     * isValidUid('JkWynlWMjJR'); // true
-     * isValidUid('0kWynlWMjJR'); // false (Uid can not start with a number)
-     * isValidUid('AkWy$lWMjJR'); // false (Uid can only contain alphanumeric characters.
-     */
-    public static isValid(id: string): boolean {
-        if (id === null) {
-            return false;
-        }
-
-        return CODE_PATTERN.test(id);
     }
 }
 

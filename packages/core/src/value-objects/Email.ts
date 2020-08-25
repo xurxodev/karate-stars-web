@@ -1,19 +1,13 @@
 import { ValueObject } from "./ValueObject";
 import { Either } from "../types/Either";
-
-export interface InvalidEmail {
-    kind: "InvalidEmail";
-}
-
-export interface InvalidEmptyEmail {
-    kind: "InvalidEmptyEmail";
-}
-
-export type EmailError = InvalidEmail | InvalidEmptyEmail;
+import { ValidationErrors } from "../types/Errors";
+import { validateRequired, validateRegexp } from "../utils/validations";
 
 export interface UserEmailProps {
     value: string;
 }
+
+const EMAIL_PATTERN = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export class Email extends ValueObject<UserEmailProps> {
     get value(): string {
@@ -24,19 +18,17 @@ export class Email extends ValueObject<UserEmailProps> {
         super(props);
     }
 
-    public static create(email: string): Either<EmailError, Email> {
-        if (!email) {
-            return Either.left({ kind: "InvalidEmptyEmail" });
-        } else if (!this.isValidEmail(email)) {
-            return Either.left({ kind: "InvalidEmail" });
+    public static create(email: string): Either<ValidationErrors, Email> {
+        const requiredError = validateRequired(email, Email.name);
+        const regexpErrors = validateRegexp(email, Email.name, EMAIL_PATTERN);
+
+        if (requiredError.length > 0) {
+            return Either.left(requiredError);
+        } else if (regexpErrors.length > 0) {
+            return Either.left(regexpErrors);
         } else {
             return Either.right(new Email({ value: this.format(email) }));
         }
-    }
-
-    private static isValidEmail(email: string) {
-        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(email);
     }
 
     private static format(email: string): string {

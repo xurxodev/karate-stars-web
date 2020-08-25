@@ -36,7 +36,7 @@ describe("Login Page", () => {
             userEvent.type(screen.getByLabelText("Email"), "example");
             userEvent.clear(screen.getByLabelText("Email"));
 
-            expect(screen.getByText("Email is required")).toBeInTheDocument();
+            expect(screen.getByText("Email cannot be blank")).toBeInTheDocument();
         });
         it("should be visible with text password is required if password has value and then is clear it", () => {
             render(<LoginPage />);
@@ -44,7 +44,7 @@ describe("Login Page", () => {
             userEvent.type(screen.getByLabelText("Password"), "example");
             userEvent.clear(screen.getByLabelText("Password"));
 
-            expect(screen.getByText("Email is required")).toBeInTheDocument();
+            expect(screen.getByText("Password cannot be blank")).toBeInTheDocument();
         });
         it("should be enabled after type email and password", () => {
             render(<LoginPage />);
@@ -52,7 +52,7 @@ describe("Login Page", () => {
             userEvent.type(screen.getByLabelText("Email"), "example@gmail.com");
 
             expect(screen.queryByText("Invalid email")).not.toBeInTheDocument();
-            expect(screen.queryByText("Email is required")).not.toBeInTheDocument();
+            expect(screen.queryByText("Email cannot be blank")).not.toBeInTheDocument();
             expect(screen.queryByText("Invalid password")).not.toBeInTheDocument();
         });
     });

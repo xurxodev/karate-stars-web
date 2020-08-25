@@ -1,11 +1,6 @@
 import { Id } from "../Id";
 
 describe("Id", () => {
-    it("should generate a valid id", () => {
-        const id = Id.generateId();
-
-        expect(Id.isValid(id.value)).toBeTruthy();
-    });
     it("should return success creating from a valid existed id", () => {
         const existedId = Id.generateId().value;
 
@@ -16,19 +11,25 @@ describe("Id", () => {
             id => expect(id.value).toEqual(existedId)
         );
     });
-    it("should return InvalidEmptyId error if value argument is empty", () => {
+    it("should return Id cannot be blank error if value argument is empty", () => {
         const idResult = Id.createExisted("");
 
         idResult.fold(
-            error => expect(error.kind).toBe("InvalidEmptyId"),
+            errors => {
+                expect(errors.length).toBe(1);
+                expect(errors[0]).toBe("Id cannot be blank");
+            },
             () => fail("should be fail")
         );
     });
     it("should return InvalidId error if value argument is invalid", () => {
-        const idResult = Id.createExisted("invalid");
+        const idResult = Id.createExisted("wrong id");
 
         idResult.fold(
-            error => expect(error.kind).toBe("InvalidId"),
+            errors => {
+                expect(errors.length).toBe(1);
+                expect(errors[0]).toBe("Invalid id");
+            },
             () => fail("should be fail")
         );
     });
@@ -36,7 +37,10 @@ describe("Id", () => {
         const idResult = Id.createExisted("0kWynlWMjJR");
 
         idResult.fold(
-            error => expect(error.kind).toBe("InvalidId"),
+            errors => {
+                expect(errors.length).toBe(1);
+                expect(errors[0]).toBe("Invalid id");
+            },
             () => fail("should be fail")
         );
     });
@@ -44,7 +48,10 @@ describe("Id", () => {
         const idResult = Id.createExisted("AkWy$lWMjJR");
 
         idResult.fold(
-            error => expect(error.kind).toBe("InvalidId"),
+            errors => {
+                expect(errors.length).toBe(1);
+                expect(errors[0]).toBe("Invalid id");
+            },
             () => fail("should be fail")
         );
     });

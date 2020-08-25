@@ -14,7 +14,10 @@ describe("Password", () => {
         const passwordResult = Password.create("");
 
         passwordResult.fold(
-            error => expect(error.kind).toBe("InvalidEmptyPassword"),
+            errors => {
+                expect(errors.length).toBe(1);
+                expect(errors[0]).toBe("Password cannot be blank");
+            },
             () => fail("should be fail")
         );
     });

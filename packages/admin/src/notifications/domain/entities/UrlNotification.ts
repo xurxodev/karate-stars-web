@@ -1,7 +1,15 @@
-import { NotificationErrors, PushNotification } from "./PushNotification";
+import { PushNotification } from "./PushNotification";
 import { Url, Either } from "karate-stars-core";
+import { ValidationErrorsDictionary, validateRequired } from "karate-stars-core";
 
 export interface NotificationUrlData {
+    topic: string;
+    title: string;
+    description: string;
+    url: Url;
+}
+
+export interface NotificationUrlInput {
     topic: string;
     title: string;
     description: string;
@@ -13,7 +21,7 @@ export class UrlNotification extends PushNotification {
 
     private constructor({ topic, title, description, url }: NotificationUrlData) {
         super({ title, description, topic });
-        this.url = Url.create(url).getOrThrow();
+        this.url = url;
     }
 
     public static create({
@@ -21,22 +29,16 @@ export class UrlNotification extends PushNotification {
         title,
         description,
         url,
-    }: NotificationUrlData): Either<NotificationErrors, UrlNotification> {
+    }: NotificationUrlInput): Either<ValidationErrorsDictionary, UrlNotification> {
         const urlValue = Url.create(url);
 
-        const errors: NotificationErrors = {
-            topic: !topic ? ["Topic is required"] : [],
-            title: !title ? ["Title is required"] : [],
-            description: !description ? ["Description is required"] : [],
+        debugger;
+        const errors: ValidationErrorsDictionary = {
+            topic: validateRequired(topic, "topic"),
+            title: validateRequired(title, "title"),
+            description: validateRequired(description, "description"),
             url: urlValue.fold(
-                error => {
-                    switch (error.kind) {
-                        case "InvalidEmptyUrl":
-                            return ["Url is required"];
-                        case "InvalidUrl":
-                            return ["Invalid Url"];
-                    }
-                },
+                errors => errors,
                 () => []
             ),
         };
@@ -46,9 +48,11 @@ export class UrlNotification extends PushNotification {
         );
 
         if (Object.keys(errors).length === 0) {
-            return Either.right(new UrlNotification({ title, description, url, topic }));
+            return Either.right(
+                new UrlNotification({ title, description, topic, url: urlValue.getOrThrow() })
+            );
         } else {
-            return Either.left(errors as NotificationErrors);
+            return Either.left(errors);
         }
     }
 }

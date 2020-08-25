@@ -1,15 +1,11 @@
 import { ValueObject } from "./ValueObject";
 import { Either } from "../types/Either";
+import { ValidationErrors } from "../types/Errors";
+import { validateRequired } from "../utils/validations";
 
 export interface PasswordProps {
     value: string;
 }
-
-export interface InvalidEmptyPassword {
-    kind: "InvalidEmptyPassword";
-}
-
-export type PasswordError = InvalidEmptyPassword;
 
 export class Password extends ValueObject<PasswordProps> {
     get value(): string {
@@ -20,15 +16,13 @@ export class Password extends ValueObject<PasswordProps> {
         super(props);
     }
 
-    public static create(value: string): Either<PasswordError, Password> {
-        if (!value) {
-            return Either.left({ kind: "InvalidEmptyPassword" });
+    public static create(password: string): Either<ValidationErrors, Password> {
+        const requiredError = validateRequired(password, Password.name);
+
+        if (requiredError.length > 0) {
+            return Either.left(requiredError);
         } else {
-            return Either.right(
-                new Password({
-                    value: value,
-                })
-            );
+            return Either.right(new Password({ value: password }));
         }
     }
 }
