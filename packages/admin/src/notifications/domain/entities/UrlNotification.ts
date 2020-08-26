@@ -32,7 +32,6 @@ export class UrlNotification extends PushNotification {
     }: NotificationUrlInput): Either<ValidationErrorsDictionary, UrlNotification> {
         const urlValue = Url.create(url);
 
-        debugger;
         const errors: ValidationErrorsDictionary = {
             topic: validateRequired(topic, "topic"),
             title: validateRequired(title, "title"),
