@@ -29,6 +29,8 @@ export interface FormFieldState {
     md?: GridSize;
     lg?: GridSize;
     xl?: GridSize;
+    autoComplete?: string;
+    type?: string;
 }
 
 export interface FormState {
@@ -36,4 +38,6 @@ export interface FormState {
     isValid: boolean;
     fields: FormFieldState[];
     result?: FormResult;
+    submitName?: string;
+    submitfullWidth?: boolean;
 }

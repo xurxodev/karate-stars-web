@@ -21,6 +21,7 @@ const FormFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handleFieldC
     return (
         <Grid item md={field.md || defaultColumnValue} xs={field.xs || defaultColumnValue}>
             <TextField
+                id={field.name}
                 className={classes.textField}
                 error={field.errors && field.errors.length > 0}
                 select={field.selectOptions ? true : false}
@@ -31,7 +32,9 @@ const FormFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handleFieldC
                 onChange={handleFieldChange}
                 SelectProps={{ native: true }}
                 helperText={field.errors ? field.errors.join("/n") : ""}
-                variant="outlined">
+                variant="outlined"
+                autoComplete={field.autoComplete}
+                type={field.type}>
                 {field.selectOptions &&
                     field.selectOptions.map((option: SelectOption, index: number) => {
                         return (

@@ -1,4 +1,4 @@
-import { Either, Email, Password, User } from "karate-stars-core";
+import { Either, User, Credentials } from "karate-stars-core";
 import { GetUserError } from "../domain/Errors";
 import UserRepository from "../domain/Boundaries";
 import { AxiosInstance } from "axios";
@@ -7,14 +7,11 @@ import { TokenStorage } from "../../common/data/TokenLocalStorage";
 export default class UserApiRepository implements UserRepository {
     constructor(private axiosInstance: AxiosInstance, private tokenStorage: TokenStorage) {}
 
-    async getByEmailAndPassword(
-        email: Email,
-        password: Password
-    ): Promise<Either<GetUserError, User>> {
+    async getByEmailAndPassword(credentials: Credentials): Promise<Either<GetUserError, User>> {
         try {
             const response = await this.axiosInstance.post<User>("/login", {
-                username: email.value,
-                password: password.value,
+                username: credentials.email.value,
+                password: credentials.password.value,
             });
 
             const token = response.headers["authorization"];

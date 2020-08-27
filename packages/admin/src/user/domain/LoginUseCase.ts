@@ -1,5 +1,5 @@
 import { GetUserError } from "./Errors";
-import { Either, Email, Password, User } from "karate-stars-core";
+import { Either, User, Credentials } from "karate-stars-core";
 import UserRepository from "./Boundaries";
 
 export default class LoginUseCase {
@@ -9,7 +9,7 @@ export default class LoginUseCase {
         this.userRepository = userRepository;
     }
 
-    execute(email: Email, password: Password): Promise<Either<GetUserError, User>> {
-        return this.userRepository.getByEmailAndPassword(email, password);
+    execute(credentials: Credentials): Promise<Either<GetUserError, User>> {
+        return this.userRepository.getByEmailAndPassword(credentials);
     }
 }

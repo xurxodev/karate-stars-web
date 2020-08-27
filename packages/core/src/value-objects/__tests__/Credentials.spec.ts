@@ -6,7 +6,7 @@ const invalidEmailInput = "infokaratestarsapp.com";
 
 describe("Credentials", () => {
     it("should return success reponse if email and password are valid", () => {
-        const result = Credentials.create({ email: validEmailInput, password: validPasswordInput })
+        const result = Credentials.create({ email: validEmailInput, password: validPasswordInput });
 
         result.fold(
             error => fail(error),
@@ -17,7 +17,7 @@ describe("Credentials", () => {
         );
     });
     it("should return Email cannot be blan error if email is empty", () => {
-        const result = Credentials.create({ email: "", password: validPasswordInput })
+        const result = Credentials.create({ email: "", password: validPasswordInput });
 
         result.fold(
             errors => {
@@ -28,7 +28,7 @@ describe("Credentials", () => {
     });
 
     it("should return Email cannot be blan error if email is empty", () => {
-        const result = Credentials.create({ email: validEmailInput, password: "" })
+        const result = Credentials.create({ email: validEmailInput, password: "" });
 
         result.fold(
             errors => {
@@ -39,7 +39,10 @@ describe("Credentials", () => {
     });
 
     it("should return Invalid email error if email is invalid", () => {
-        const result = Credentials.create({ email: invalidEmailInput, password: validPasswordInput })
+        const result = Credentials.create({
+            email: invalidEmailInput,
+            password: validPasswordInput,
+        });
 
         result.fold(
             errors => {

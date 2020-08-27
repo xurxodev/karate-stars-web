@@ -12,3 +12,4 @@ export * from "./value-objects/Id";
 export * from "./value-objects/Email";
 export * from "./value-objects/Password";
 export * from "./value-objects/Url";
+export * from "./value-objects/Credentials";

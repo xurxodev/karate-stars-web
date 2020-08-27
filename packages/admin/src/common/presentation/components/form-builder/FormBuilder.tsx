@@ -19,24 +19,30 @@ interface FormBuilderProps {
     formState: FormState;
     handleSubmit: (event: any) => void;
     handleFieldChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    classes?: Record<string, string>;
 }
 
 const FormBuilder: React.FC<FormBuilderProps> = ({
     handleSubmit,
     handleFieldChange,
     formState,
+    classes,
 }) => {
-    const classes = useStyles();
+    const finalClasses = { ...useStyles(), ...classes };
 
     return (
         <Card>
-            <form autoComplete="off" noValidate onSubmit={handleSubmit}>
+            <form
+                autoComplete="off"
+                noValidate
+                onSubmit={handleSubmit}
+                className={finalClasses.form}>
                 <CardHeader title={formState.title} />
                 <Divider />
                 <CardContent>
                     {formState.result && (
                         <Alert
-                            className={classes.formResult}
+                            className={finalClasses.formAlert}
                             severity={
                                 formState.result.kind === "FormResultSuccess" ? "success" : "error"
                             }>
@@ -62,8 +68,9 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
                         variant="contained"
                         type="submit"
                         disabled={!formState.isValid}
-                        className={classes.submitButton}>
-                        Send
+                        className={finalClasses.submitButton}
+                        fullWidth={formState.submitfullWidth}>
+                        {formState.submitName || "Send"}
                     </Button>
                 </CardActions>
             </form>
@@ -79,18 +86,12 @@ const useStyles = makeStyles((theme: Theme) => ({
         textAlign: "center",
         color: theme.palette.text.secondary,
     },
-    formControl: {
-        //margin: theme.spacing(1),
-        minWidth: 220,
-    },
-    textField: {
-        marginTop: theme.spacing(2),
+    form: {},
+    formAlert: {
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1),
     },
     submitButton: {
         margin: theme.spacing(0, 1),
-    },
-    formResult: {
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1),
     },
 }));

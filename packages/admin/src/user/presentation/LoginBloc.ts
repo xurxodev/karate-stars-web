@@ -1,117 +1,92 @@
-import { Bloc } from "../../common/presentation/bloc";
-import { LoginState, LoginFormState, FormFieldState } from "./LoginState";
-import { Email, Password } from "karate-stars-core";
+import { Credentials, ValidationErrorsDictionary, Either } from "karate-stars-core";
 import LoginUseCase from "../domain/LoginUseCase";
 import { GetUserError } from "../domain/Errors";
+import FormBloc from "../../common/presentation/bloc/FormBloc";
+import { FormState, FormFieldState } from "../../common/presentation/state/FormState";
 
-class LoginBloc extends Bloc<LoginState> {
+class LoginBloc extends FormBloc {
     constructor(private loginUseCase: LoginUseCase) {
         super({
-            kind: "loginForm",
+            title: "Login",
             isValid: false,
-            email: { name: "email" },
-            password: { name: "password" },
+            fields: initialFieldsState,
+            submitName: "Sign In",
+            submitfullWidth: true,
         });
     }
 
-    changeEmail(emailInput: string): void {
-        const state = this.updateStateWithEmail(emailInput);
-
-        this.changeState(state);
+    protected validateState(state: FormState): Record<string, string[]> | null {
+        const result = this.createCredentials(state);
+        const errors = result.fold(
+            errors => errors,
+            () => null
+        );
+        return errors;
     }
 
-    changePassword(passwordInput: string): void {
-        const state = this.updateStateWithPassword(passwordInput);
+    private createCredentials(state: FormState): Either<ValidationErrorsDictionary, Credentials> {
+        const notificationDataFields = state.fields.map(field => ({ [field.name]: field.value }));
+        const notificationData = Object.assign({}, ...notificationDataFields);
 
-        this.changeState(state);
+        return Credentials.create(notificationData);
     }
 
-    async login() {
-        const formState = this.getState as LoginFormState;
+    async submit() {
+        if (this.state.isValid) {
+            const credentials = this.createCredentials(this.state).getOrThrow();
 
-        if (formState.isValid) {
-            const email = Email.create(formState.email.value ?? "").getOrThrow();
-            const password = Password.create(formState.password.value ?? "").getOrThrow();
+            const loginResult = await this.loginUseCase.execute(credentials);
 
-            const result = await this.loginUseCase.execute(email, password);
-
-            result.fold(
-                error => this.changeState(this.handleError(error)),
-                _ => this.changeState({ kind: "loginOk" })
+            loginResult.fold(
+                (error: GetUserError) => this.changeState(this.handleError(error)),
+                () =>
+                    this.changeState({
+                        ...this.state,
+                        result: {
+                            kind: "FormResultSuccess",
+                            message: "Sign In successfully",
+                        },
+                    })
             );
         } else {
-            this.changeState(formState);
+            this.changeState(this.state);
         }
     }
 
-    private handleError(error: GetUserError): LoginState {
-        const formState = this.getState as LoginFormState;
-
+    private handleError(error: GetUserError): FormState {
         switch (error.kind) {
             case "Unauthorized": {
-                return { ...formState, error: `Invalid credentials` };
+                return {
+                    ...this.state,
+                    result: { kind: "FormResultError", message: "Invalid credentials" },
+                };
             }
             case "ApiError": {
                 return {
-                    ...formState,
-                    error: `Sorry, an error has ocurred in the server. Please try later again`,
+                    ...this.state,
+                    result: {
+                        kind: "FormResultError",
+                        message:
+                            "Sorry, an error has ocurred in the server. Please try later again",
+                    },
                 };
             }
             case "UnexpectedError": {
-                return { ...formState, error: `An unexpected error has ocurred: ${error.message}` };
+                return {
+                    ...this.state,
+                    result: {
+                        kind: "FormResultError",
+                        message: "Sorry, an error has ocurred. Please try later again",
+                    },
+                };
             }
         }
-    }
-
-    private updateStateWithEmail(emailInput: string): LoginState {
-        const formState = this.getState as LoginFormState;
-
-        const email = Email.create(emailInput);
-
-        const emailField = {
-            ...formState.email,
-            value: emailInput,
-            error: email.fold(
-                errors => errors[0],
-                () => undefined
-            ),
-        };
-
-        return {
-            ...formState,
-            isValid: this.isFormValid(emailField, formState.password),
-            email: emailField,
-        };
-    }
-
-    private updateStateWithPassword(passwordInput: string): LoginState {
-        const formState = this.getState as LoginFormState;
-
-        const password = Password.create(passwordInput);
-
-        const passwordField = {
-            ...formState.password,
-            value: passwordInput,
-            error: password.fold(
-                errors => errors[0],
-                () => undefined
-            ),
-        };
-
-        return {
-            ...formState,
-            isValid: this.isFormValid(formState.email, passwordField),
-            password: passwordField,
-        };
-    }
-
-    private isFormValid(email: FormFieldState, password: FormFieldState): boolean {
-        const isFieldValid = (field: FormFieldState): boolean => {
-            return field.error === undefined && field.value !== undefined && field.value.length > 0;
-        };
-
-        return isFieldValid(email) && isFieldValid(password);
     }
 }
 
 export default LoginBloc;
+
+const initialFieldsState: FormFieldState[] = [
+    { label: "Email", name: "email", autoComplete: "username" },
+    { label: "Password", name: "password", autoComplete: "current-password", type: "password" },
+];
