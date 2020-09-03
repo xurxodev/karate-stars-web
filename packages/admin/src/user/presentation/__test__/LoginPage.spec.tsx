@@ -1,6 +1,6 @@
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
-import { render, screen, fireEvent } from "../../../common/testing/testing_library/custom";
+import { render, screen } from "../../../common/testing/testing_library/custom";
 import * as mockServerTest from "../../../common/testing/mockServerTest";
 import userEvent from "@testing-library/user-event";
 import LoginPage from "../LoginPage";
@@ -65,7 +65,7 @@ describe("Login Page", () => {
             userEvent.type(screen.getByLabelText("Email"), "example@gmail.com");
             userEvent.type(screen.getByLabelText("Password"), "password");
 
-            fireEvent.click(screen.getByRole("button", { name: "Sign In" }));
+            userEvent.click(screen.getByRole("button", { name: "Sign In" }));
 
             await screen.findByText("Invalid credentials");
         });
@@ -77,7 +77,7 @@ describe("Login Page", () => {
             userEvent.type(screen.getByLabelText("Email"), "example@gmail.com");
             userEvent.type(screen.getByLabelText("Password"), "password");
 
-            fireEvent.click(screen.getByRole("button", { name: "Sign In" }));
+            userEvent.click(screen.getByRole("button", { name: "Sign In" }));
 
             await screen.findByText(
                 "Sorry, an error has ocurred in the server. Please try later again"
@@ -96,7 +96,7 @@ describe("Login Page", () => {
             userEvent.type(screen.getByLabelText("Email"), "example@gmail.com");
             userEvent.type(screen.getByLabelText("Password"), "password");
 
-            fireEvent.click(screen.getByRole("button", { name: "Sign In" }));
+            userEvent.click(screen.getByRole("button", { name: "Sign In" }));
 
             screen.findByText(pages.dashboard.path);
         });
