@@ -2,11 +2,13 @@ import React from "react";
 import "./App.css";
 import { ThemeProvider, CssBaseline } from "@material-ui/core";
 import theme from "./theme";
-import CompositionRoot from "../CompositionRoot";
+import * as CompositionRoot from "../CompositionRoot";
 import { AppRoutes } from "./AppRoutes";
 import { AppBlocContext } from "./AppContext";
+import AppBloc from "./AppBloc";
 
-const appBloc = CompositionRoot.getInstance().provideAppBloc();
+CompositionRoot.init();
+const appBloc = CompositionRoot.di.get(AppBloc);
 
 const App: React.FC = () => {
     return (

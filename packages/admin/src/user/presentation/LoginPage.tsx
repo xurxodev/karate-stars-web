@@ -4,18 +4,19 @@ import { Grid, Typography, Theme } from "@material-ui/core";
 import background from "./images/login.png";
 import { useAppBlocContext } from "../../app/AppContext";
 import { BlocBuilder } from "../../common/presentation/bloc";
-import CompositionRoot from "../../CompositionRoot";
+import { di } from "../../CompositionRoot";
 import MinimalLayout from "../../common/presentation/layouts/minimal/MinimalLayout";
 import { FormState } from "../../common/presentation/state/FormState";
 import FormBuilder from "../../common/presentation/components/form-builder/FormBuilder";
 import { pages } from "../../app/AppRoutes";
 import { Redirect } from "react-router-dom";
+import LoginBloc from "./LoginBloc";
 
 const LoginPage: React.FC = () => {
     const classes = useStyles();
     const appBloc = useAppBlocContext();
 
-    const loginBloc = CompositionRoot.getInstance().provideLogicBloc();
+    const loginBloc = di.get(LoginBloc);
 
     const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.persist();

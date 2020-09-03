@@ -2,9 +2,10 @@ import React from "react";
 import { makeStyles, Theme } from "@material-ui/core";
 import { FormState } from "../../common/presentation/state/FormState";
 import MainLayout from "../../common/presentation/layouts/main/MainLayout";
-import CompositionRoot from "../../CompositionRoot";
+import { di } from "../../CompositionRoot";
 import { BlocBuilder } from "../../common/presentation/bloc";
 import FormBuilder from "../../common/presentation/components/form-builder/FormBuilder";
+import SendPushNotificationBloc from "./SendPushNotificationBloc";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -15,7 +16,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const SendPushNotificationPage: React.FC = () => {
     const classes = useStyles();
-    const bloc = CompositionRoot.getInstance().provideSendPushNotificationBloc();
+    const bloc = di.get(SendPushNotificationBloc);
+
     const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.persist();
 

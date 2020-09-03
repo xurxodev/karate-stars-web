@@ -8,7 +8,7 @@ import CurrentNewsSettingsPage from "../settings/current-news/presentation/Curre
 import SocialNewsSettingsPage from "../settings/social-news/presentation/SocialNewsSettingsPage";
 import SendPushNotificationPage from "../notifications/presentation/SendPushNotificationPage";
 import NotFoundPage from "../common/presentation/pages/NotFoundPage";
-import PrivateRoute from "../common/presentation/components/PrivateRoute";
+import PrivateRoute from "../common/presentation/components/private-route/PrivateRoute";
 
 export const pages = {
     base: { title: "base", path: "/admin" },

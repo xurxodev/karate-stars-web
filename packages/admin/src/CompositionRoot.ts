@@ -9,61 +9,83 @@ import RemoveCurrentUserUseCase from "./user/domain/RemoveCurrentUserUseCase";
 import SendPushNotificationBloc from "./notifications/presentation/SendPushNotificationBloc";
 import FcmPushNotificationRepository from "./notifications/data/FcmPushNotificationRepository";
 import SendPushNotificationUseCase from "./notifications/domain/SendPushNotificationUseCase";
+import DIContainer from "./DIContainer";
 
-export default class CompositionRoot {
-    private static instance: CompositionRoot;
+export const names = {
+    AxiosInstanceAPI: "axiosInstanceAPI",
+    AxiosInstancePush: "axiosInstancePush",
+    UserRepository: "userRepository",
+    PushNotificationRepository: "pushNotificationRepository",
+    TokenStorage: "tokenStorage",
+};
 
-    private constructor() {}
+export const di = DIContainer.getInstance();
 
-    static getInstance(): CompositionRoot {
-        if (!CompositionRoot.instance) {
-            CompositionRoot.instance = new CompositionRoot();
-        }
+export function init() {
+    initApp();
+    initLogin();
+    initSendPushNotifications();
+}
 
-        return CompositionRoot.instance;
-    }
+export function reset() {
+    di.clear();
+    init();
+}
 
-    //TODO: create DIContainer dictionary y hacer bind de cada depeendencia
-
-    provideAppBloc(): AppBloc {
-        const axiosInstance = axios.create({
+function initApp() {
+    di.bindLazySingleton(names.AxiosInstanceAPI, () =>
+        axios.create({
             baseURL: "/api/v1/",
-        });
-        const tokenStorage = new TokenLocalStorage();
-        const userApiRepository = new UserApiRepository(axiosInstance, tokenStorage);
-        const getCurrentUserUseCase = new GetCurrentUserUseCase(userApiRepository);
-        const removeCurrentUserUseCase = new RemoveCurrentUserUseCase(userApiRepository);
-        const appBloc = new AppBloc(getCurrentUserUseCase, removeCurrentUserUseCase);
+        })
+    );
 
-        return appBloc;
-    }
+    di.bindLazySingleton(names.TokenStorage, () => new TokenLocalStorage());
 
-    provideLogicBloc(): LoginBloc {
-        const axiosInstance = axios.create({
-            baseURL: "/api/v1/",
-        });
-        const tokenStorage = new TokenLocalStorage();
-        const loginRepository = new UserApiRepository(axiosInstance, tokenStorage);
-        const loginUseCase = new LoginUseCase(loginRepository);
-        const loginBloc = new LoginBloc(loginUseCase);
+    di.bindLazySingleton(
+        names.UserRepository,
+        () => new UserApiRepository(di.get(names.AxiosInstanceAPI), di.get(names.TokenStorage))
+    );
+    di.bindLazySingleton(
+        GetCurrentUserUseCase,
+        () => new GetCurrentUserUseCase(di.get(names.UserRepository))
+    );
+    di.bindLazySingleton(
+        RemoveCurrentUserUseCase,
+        () => new RemoveCurrentUserUseCase(di.get(names.UserRepository))
+    );
 
-        return loginBloc;
-    }
+    di.bindFactory(
+        AppBloc,
+        () => new AppBloc(di.get(GetCurrentUserUseCase), di.get(RemoveCurrentUserUseCase))
+    );
+}
 
-    provideSendPushNotificationBloc(): SendPushNotificationBloc {
-        const axiosInstance = axios.create({
+function initLogin() {
+    di.bindLazySingleton(LoginUseCase, () => new LoginUseCase(di.get(names.UserRepository)));
+    di.bindFactory(LoginBloc, () => new LoginBloc(di.get(LoginUseCase)));
+}
+
+function initSendPushNotifications() {
+    di.bindLazySingleton(names.AxiosInstancePush, () =>
+        axios.create({
             baseURL: "https://fcm.googleapis.com/fcm",
-        });
-        const fcmApiToken = process.env.REACT_APP_FCM_API_TOKEN || "";
-        const pushNotificationRepository = new FcmPushNotificationRepository(
-            axiosInstance,
-            fcmApiToken
-        );
-        const sendPushNotificationUseCase = new SendPushNotificationUseCase(
-            pushNotificationRepository
-        );
-        const bloc = new SendPushNotificationBloc(sendPushNotificationUseCase);
+        })
+    );
 
-        return bloc;
-    }
+    const fcmApiToken = process.env.REACT_APP_FCM_API_TOKEN || "";
+
+    di.bindLazySingleton(
+        names.PushNotificationRepository,
+        () => new FcmPushNotificationRepository(di.get(names.AxiosInstancePush), fcmApiToken)
+    );
+
+    di.bindLazySingleton(
+        SendPushNotificationUseCase,
+        () => new SendPushNotificationUseCase(di.get(names.PushNotificationRepository))
+    );
+
+    di.bindFactory(
+        SendPushNotificationBloc,
+        () => new SendPushNotificationBloc(di.get(SendPushNotificationUseCase))
+    );
 }
