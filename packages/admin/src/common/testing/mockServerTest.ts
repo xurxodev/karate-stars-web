@@ -27,11 +27,13 @@ function createMwsHandler(handler: MockHandler) {
     switch (handler.method) {
         case "post":
             return rest.post(handler.endpoint, (req, res, ctx) =>
-                res(ctx.status(handler.httpStatusCode), ctx.json(handler.response))
+                res(ctx.status(handler.httpStatusCode),
+                    typeof (handler.response) === "string" ? ctx.text(handler.response) : ctx.json(handler.response))
             );
         case "get":
             return rest.get(handler.endpoint, (req, res, ctx) =>
-                res(ctx.status(handler.httpStatusCode), ctx.json(handler.response))
+                res(ctx.status(handler.httpStatusCode),
+                    typeof (handler.response) === "string" ? ctx.text(handler.response) : ctx.json(handler.response))
             );
     }
 }

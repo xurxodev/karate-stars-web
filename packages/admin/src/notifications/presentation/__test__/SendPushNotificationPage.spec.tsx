@@ -79,7 +79,6 @@ describe("Send push page", () => {
     describe("After submit", () => {
         it("should show invalid crentials message if the credentials one are not valid", async () => {
             givenANotificationPushErrorServerResponse(401);
-            const server = mockServerTest.server;
 
             render(<SendPushNotificationPage />);
 

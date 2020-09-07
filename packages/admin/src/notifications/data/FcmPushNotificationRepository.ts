@@ -5,7 +5,7 @@ import { UrlNotification } from "../domain/entities/UrlNotification";
 import { Either } from "karate-stars-core";
 
 class FcmPushNotificationRepository implements PushNotificationRepository {
-    constructor(private axiosInstance: AxiosInstance, private fcmApiToken: string) { }
+    constructor(private axiosInstance: AxiosInstance, private fcmApiToken: string) {}
 
     async send(
         notification: UrlNotification
@@ -35,9 +35,8 @@ class FcmPushNotificationRepository implements PushNotificationRepository {
     private handleError(
         error: any
     ): Either<SendPushNotificationError, SendPushNotificationSuccess> {
-
         if (error.response.status === 401) {
-            return Either.left({ kind: "Unauthorized" })
+            return Either.left({ kind: "Unauthorized" });
         } else if (error.response?.data?.statusCode) {
             return Either.left({
                 kind: "ApiError",
