@@ -61,7 +61,7 @@ class SendPushNotificationBloc extends FormBloc {
                     ...this.state,
                     result: {
                         kind: "FormResultError",
-                        message: `${error.error}: ${error.message}`,
+                        message: `Sorry, an error has ocurred in the server. Please try later again`,
                     },
                 };
             case "UnexpectedError":
@@ -69,7 +69,7 @@ class SendPushNotificationBloc extends FormBloc {
                     ...this.state,
                     result: {
                         kind: "FormResultError",
-                        message: `An unexpected error has ocurred: ${error.message}`,
+                        message: `Sorry, an error has ocurred. Please try later again`,
                     },
                 };
         }

@@ -5,7 +5,7 @@ import { UrlNotification } from "../domain/entities/UrlNotification";
 import { Either } from "karate-stars-core";
 
 class FcmPushNotificationRepository implements PushNotificationRepository {
-    constructor(private axiosInstance: AxiosInstance, private fcmApiToken: string) {}
+    constructor(private axiosInstance: AxiosInstance, private fcmApiToken: string) { }
 
     async send(
         notification: UrlNotification
@@ -35,17 +35,23 @@ class FcmPushNotificationRepository implements PushNotificationRepository {
     private handleError(
         error: any
     ): Either<SendPushNotificationError, SendPushNotificationSuccess> {
-        if (error.response?.data?.statusCode) {
-            return error.response.data.statusCode === 401
-                ? Either.left({ kind: "Unauthorized" })
-                : Either.left({
-                      kind: "ApiError",
-                      error: error.response.data.error,
-                      statusCode: error.response.data.statusCode,
-                      message: error.response.data.message,
-                  });
+
+        if (error.response.status === 401) {
+            return Either.left({ kind: "Unauthorized" })
+        } else if (error.response?.data?.statusCode) {
+            return Either.left({
+                kind: "ApiError",
+                error: error.response?.data?.error,
+                statusCode: error.response.data.statusCode,
+                message: error.response?.data?.message,
+            });
         } else if (typeof error.response?.data === "string") {
-            return Either.left({ kind: "UnexpectedError", message: error.response.data });
+            return Either.left({
+                kind: "ApiError",
+                error: error.response?.data,
+                statusCode: error.response.status,
+                message: error.response?.data,
+            });
         } else {
             return Either.left({ kind: "UnexpectedError", message: error.message });
         }
