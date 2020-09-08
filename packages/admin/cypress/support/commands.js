@@ -20,14 +20,13 @@ if (!apiUrl) {
 Cypress.Commands.add("login", () => {
     cy.request({
         method: "POST",
-        url: `apiUrl/login`,
+        url: `${apiUrl}/login`,
         body: {
-            user: {
-                username,
-                password,
-            },
+            username,
+            password,
         },
     }).then(resp => {
+        cy.log(`Saving apiToken ${resp.headers["authorization"]}`);
         window.localStorage.setItem("apiToken", resp.headers["authorization"]);
     });
 });
