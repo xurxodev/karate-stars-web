@@ -4,8 +4,7 @@ import LoginPage from "../user/presentation/LoginPage";
 import DashboardPage from "../dashboard/presentation/DashboardPage";
 import CompetitorsPage from "../competitors/presentation/CompetitorsPage";
 import VideosPage from "../videos/presentation/VideosPage";
-import CurrentNewsSettingsPage from "../settings/current-news/presentation/CurrentNewsSettingsPage";
-import SocialNewsSettingsPage from "../settings/social-news/presentation/SocialNewsSettingsPage";
+import SettingsPage from "../settings/presentation/SettingsPage";
 import SendPushNotificationPage from "../notifications/presentation/SendPushNotificationPage";
 import NotFoundPage from "../common/presentation/pages/NotFoundPage";
 import PrivateRoute from "../common/presentation/components/private-route/PrivateRoute";
@@ -16,8 +15,7 @@ export const pages = {
     dashboard: { title: "Dasboard", path: "/dashboard" },
     competitors: { title: "Competitors", path: "/competitors" },
     videos: { title: "Videos", path: "/videos" },
-    currentNewsSettings: { title: "Current news", path: "/current-news-settings" },
-    socialNewsSettings: { title: "Social news", path: "/social-news-settings" },
+    settings: { title: "Settings", path: "/settings" },
     sendPushNotification: { title: "Send push notification", path: "/send-push-notification" },
     notFound: { title: "Not found", path: "/not-found" },
 };
@@ -32,14 +30,7 @@ export const AppRoutes: React.FC = () => {
                 <PrivateRoute path={pages.dashboard.path} component={DashboardPage} />
                 <PrivateRoute path={pages.competitors.path} component={CompetitorsPage} />
                 <PrivateRoute path={pages.videos.path} component={VideosPage} />
-                <PrivateRoute
-                    path={pages.currentNewsSettings.path}
-                    component={CurrentNewsSettingsPage}
-                />
-                <PrivateRoute
-                    path={pages.socialNewsSettings.path}
-                    component={SocialNewsSettingsPage}
-                />
+                <PrivateRoute path={pages.settings.path} component={SettingsPage} />
                 <PrivateRoute
                     path={pages.sendPushNotification.path}
                     component={SendPushNotificationPage}

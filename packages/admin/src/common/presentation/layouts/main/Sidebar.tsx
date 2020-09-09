@@ -82,11 +82,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
             icon: <VideoLibrary />,
         },
         {
-            ...pages.currentNewsSettings,
-            icon: <SettingsIcon />,
-        },
-        {
-            ...pages.socialNewsSettings,
+            ...pages.settings,
             icon: <SettingsIcon />,
         },
         {
