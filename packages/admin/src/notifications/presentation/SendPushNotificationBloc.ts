@@ -1,4 +1,4 @@
-import { FormState, FormFieldState } from "../../common/presentation/state/FormState";
+import { FormState, FormSectionState } from "../../common/presentation/state/FormState";
 import { URL_NEWS_TOPIC, DEBUG_URL_NEWS_TOPIC } from "../domain/entities/PushNotification";
 import { UrlNotification } from "../domain/entities/UrlNotification";
 import SendPushNotificationUseCase from "../domain/SendPushNotificationUseCase";
@@ -10,9 +10,8 @@ import { ValidationErrorsDictionary } from "karate-stars-core";
 class SendPushNotificationBloc extends FormBloc {
     constructor(private sendPushNotificationUseCase: SendPushNotificationUseCase) {
         super({
-            title: "Send push notification",
             isValid: false,
-            fields: initialFieldsState,
+            sections: initialFieldsState,
         });
     }
 
@@ -78,7 +77,9 @@ class SendPushNotificationBloc extends FormBloc {
     private createNotification(
         state: FormState
     ): Either<ValidationErrorsDictionary, UrlNotification> {
-        const notificationDataFields = state.fields.map(field => ({ [field.name]: field.value }));
+        const notificationDataFields = state.sections.flatMap(section =>
+            section.fields.map(field => ({ [field.name]: field.value }))
+        );
         const notificationData = Object.assign({}, ...notificationDataFields);
 
         return UrlNotification.create(notificationData);
@@ -87,33 +88,37 @@ class SendPushNotificationBloc extends FormBloc {
 
 export default SendPushNotificationBloc;
 
-const initialFieldsState: FormFieldState[] = [
+const initialFieldsState: FormSectionState[] = [
     {
-        label: "Type",
-        name: "type",
-        value: "news",
-        selectOptions: [
-            { id: "news", name: "News" },
-            { id: "competitors", name: "Competitors" },
-            { id: "videos", name: "Videos" },
+        fields: [
+            {
+                label: "Type",
+                name: "type",
+                value: "news",
+                selectOptions: [
+                    { id: "news", name: "News" },
+                    { id: "competitors", name: "Competitors" },
+                    { id: "videos", name: "Videos" },
+                ],
+                md: 4,
+                xs: 12,
+                required: true,
+            },
+            {
+                label: "Topic",
+                name: "topic",
+                value: DEBUG_URL_NEWS_TOPIC,
+                selectOptions: [
+                    { id: DEBUG_URL_NEWS_TOPIC, name: "Debug" },
+                    { id: URL_NEWS_TOPIC, name: "Real" },
+                ],
+                md: 4,
+                xs: 12,
+                required: true,
+            },
+            { label: "Url", name: "url", required: true },
+            { label: "Title", name: "title", required: true },
+            { label: "Description", name: "description", required: true },
         ],
-        md: 4,
-        xs: 12,
-        required: true,
     },
-    {
-        label: "Topic",
-        name: "topic",
-        value: DEBUG_URL_NEWS_TOPIC,
-        selectOptions: [
-            { id: DEBUG_URL_NEWS_TOPIC, name: "Debug" },
-            { id: URL_NEWS_TOPIC, name: "Real" },
-        ],
-        md: 4,
-        xs: 12,
-        required: true,
-    },
-    { label: "Url", name: "url", required: true },
-    { label: "Title", name: "title", required: true },
-    { label: "Description", name: "description", required: true },
 ];

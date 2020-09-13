@@ -1,13 +1,13 @@
 import React from "react";
-import { FormState } from "../../common/presentation/state/FormState";
-import MainLayout from "../../common/presentation/layouts/main/MainLayout";
-import { di } from "../../CompositionRoot";
-import { BlocBuilder } from "../../common/presentation/bloc";
-import FormBuilder from "../../common/presentation/components/form-builder/FormBuilder";
-import SendPushNotificationBloc from "./SendPushNotificationBloc";
+import { BlocBuilder } from "../../../common/presentation/bloc";
+import FormBuilder from "../../../common/presentation/components/form-builder/FormBuilder";
+import MainLayout from "../../../common/presentation/layouts/main/MainLayout";
+import { FormState } from "../../../common/presentation/state/FormState";
+import { di } from "../../../CompositionRoot";
+import SettingsBloc from "./RssFeedDetailBloc";
 
-const SendPushNotificationPage: React.FC = () => {
-    const bloc = di.get(SendPushNotificationBloc);
+const SettingsPage: React.FC = () => {
+    const bloc = di.get(SettingsBloc);
 
     const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.persist();
@@ -21,7 +21,7 @@ const SendPushNotificationPage: React.FC = () => {
     };
 
     return (
-        <MainLayout title={"Send Push Notification"}>
+        <MainLayout title={"Rss Feed"}>
             <BlocBuilder
                 bloc={bloc}
                 builder={(formState: FormState) => {
@@ -38,4 +38,4 @@ const SendPushNotificationPage: React.FC = () => {
     );
 };
 
-export default SendPushNotificationPage;
+export default SettingsPage;

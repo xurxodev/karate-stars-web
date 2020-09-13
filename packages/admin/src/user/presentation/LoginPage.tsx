@@ -25,6 +25,7 @@ const LoginPage: React.FC = () => {
     };
 
     const handleSubmit = (event: any) => {
+        debugger;
         event.preventDefault();
         loginBloc.submit();
     };
@@ -54,6 +55,9 @@ const LoginPage: React.FC = () => {
 
                     <Grid className={classes.contentContainer} item lg={7} xs={12}>
                         <div>
+                            <Typography variant="h3" component="h1" className={classes.title}>
+                                {"Login"}
+                            </Typography>
                             <BlocBuilder
                                 bloc={loginBloc}
                                 builder={(formState: FormState) => {
@@ -72,7 +76,6 @@ const LoginPage: React.FC = () => {
                                                 classes={{
                                                     form: classes.form,
                                                     formAlert: classes.formAlert,
-                                                    title: classes.title,
                                                     submitButton: classes.submitButton,
                                                 }}
                                             />
@@ -143,11 +146,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginBottom: theme.spacing(1),
     },
     form: {
-        paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(2),
+        paddingLeft: theme.spacing(0),
+        paddingRight: theme.spacing(0),
     },
     title: {
-        marginTop: theme.spacing(3),
+        margin: theme.spacing(0, 0, 3, 0),
     },
     submitButton: {
         margin: theme.spacing(2, 0),

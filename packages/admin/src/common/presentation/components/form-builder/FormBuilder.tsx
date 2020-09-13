@@ -1,13 +1,12 @@
 import React from "react";
 
-import { FormState, FormFieldState } from "../../state/FormState";
+import { FormState, FormFieldState, FormSectionState } from "../../state/FormState";
 import {
     makeStyles,
     CardHeader,
     Divider,
     CardContent,
     Card,
-    CardActions,
     Button,
     Grid,
     Theme,
@@ -29,69 +28,79 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
     classes,
 }) => {
     const finalClasses = { ...useStyles(), ...classes };
+    const defaultColumnValue = 12;
 
     return (
-        <Card>
+        <React.Fragment>
+            {formState.result && (
+                <Alert
+                    className={finalClasses.formAlert}
+                    severity={formState.result.kind === "FormResultSuccess" ? "success" : "error"}>
+                    {formState.result.message}
+                </Alert>
+            )}
+
             <form
                 autoComplete="off"
                 noValidate
                 onSubmit={handleSubmit}
                 className={finalClasses.form}>
-                <CardHeader title={formState.title} />
-                <Divider />
-                <CardContent>
-                    {formState.result && (
-                        <Alert
-                            className={finalClasses.formAlert}
-                            severity={
-                                formState.result.kind === "FormResultSuccess" ? "success" : "error"
-                            }>
-                            {formState.result.message}
-                        </Alert>
-                    )}
-                    <Grid container spacing={1}>
-                        {formState.fields &&
-                            formState.fields.map((field: FormFieldState) => {
-                                return (
-                                    <FormFieldBuilder
-                                        key={field.name}
-                                        field={field}
-                                        handleFieldChange={handleFieldChange}
-                                    />
-                                );
-                            })}
-                    </Grid>
-                </CardContent>
-                <CardActions>
-                    <Button
-                        color="primary"
-                        variant="contained"
-                        type="submit"
-                        disabled={!formState.isValid}
-                        className={finalClasses.submitButton}
-                        fullWidth={formState.submitfullWidth}>
-                        {formState.submitName || "Send"}
-                    </Button>
-                </CardActions>
+                <Grid container spacing={1}>
+                    {formState.sections.map((section: FormSectionState, index: number) => {
+                        return (
+                            <Grid
+                                item
+                                md={section.md || defaultColumnValue}
+                                xs={section.xs || defaultColumnValue}
+                                key={index}>
+                                <Card>
+                                    {section.title && <CardHeader title={section.title} />}
+                                    {section.title && <Divider />}
+                                    <CardContent>
+                                        <Grid container spacing={1}>
+                                            {section.fields &&
+                                                section.fields.map((field: FormFieldState) => {
+                                                    return (
+                                                        <FormFieldBuilder
+                                                            key={field.name}
+                                                            field={field}
+                                                            handleFieldChange={handleFieldChange}
+                                                        />
+                                                    );
+                                                })}
+                                        </Grid>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        );
+                    })}
+                </Grid>
+                <Button
+                    color="primary"
+                    variant="contained"
+                    type="submit"
+                    disabled={!formState.isValid}
+                    className={finalClasses.submitButton}
+                    fullWidth={formState.submitfullWidth}>
+                    {formState.submitName || "Send"}
+                </Button>
             </form>
-        </Card>
+        </React.Fragment>
     );
 };
 
 export default FormBuilder;
 
 const useStyles = makeStyles((theme: Theme) => ({
-    paper: {
-        padding: theme.spacing(2),
-        textAlign: "center",
-        color: theme.palette.text.secondary,
+    form: {
+        paddingRight: theme.spacing(0),
+        paddingLeft: theme.spacing(0),
     },
-    form: {},
     formAlert: {
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(1),
     },
     submitButton: {
-        margin: theme.spacing(0, 1),
+        margin: theme.spacing(2, 0),
     },
 }));

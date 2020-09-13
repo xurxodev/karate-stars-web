@@ -33,10 +33,19 @@ export interface FormFieldState {
     type?: string;
 }
 
-export interface FormState {
-    title: string;
-    isValid: boolean;
+export interface FormSectionState {
+    title?: string;
+    xs?: GridSize;
+    sm?: GridSize;
+    md?: GridSize;
+    lg?: GridSize;
+    xl?: GridSize;
     fields: FormFieldState[];
+}
+
+export interface FormState {
+    isValid: boolean;
+    sections: FormSectionState[];
     result?: FormResult;
     submitName?: string;
     submitfullWidth?: boolean;

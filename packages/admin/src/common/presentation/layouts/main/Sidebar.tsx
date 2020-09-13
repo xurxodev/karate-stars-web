@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/styles";
 import { Divider, Drawer, Theme, Button, colors, Hidden } from "@material-ui/core";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import PeopleIcon from "@material-ui/icons/People";
-import SettingsIcon from "@material-ui/icons/Settings";
 import Notifications from "@material-ui/icons/Notifications";
 import VideoLibrary from "@material-ui/icons/VideoLibrary";
 import InputIcon from "@material-ui/icons/Input";
@@ -12,6 +11,7 @@ import SidebarNav from "./SidebarNav";
 import Profile from "./Profile";
 import { pages } from "../../../../app/AppRoutes";
 import { useAppBlocContext } from "../../../../app/AppContext";
+import { RssFeed } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme: Theme) => ({
     drawer: {
@@ -82,8 +82,8 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
             icon: <VideoLibrary />,
         },
         {
-            ...pages.settings,
-            icon: <SettingsIcon />,
+            ...pages.rssFeedDetail,
+            icon: <RssFeed />,
         },
         {
             ...pages.sendPushNotification,

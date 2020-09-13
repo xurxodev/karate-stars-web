@@ -2,14 +2,13 @@ import { Credentials, ValidationErrorsDictionary, Either } from "karate-stars-co
 import LoginUseCase from "../domain/LoginUseCase";
 import { GetUserError } from "../domain/Errors";
 import FormBloc from "../../common/presentation/bloc/FormBloc";
-import { FormState, FormFieldState } from "../../common/presentation/state/FormState";
+import { FormState, FormSectionState } from "../../common/presentation/state/FormState";
 
 class LoginBloc extends FormBloc {
     constructor(private loginUseCase: LoginUseCase) {
         super({
-            title: "Login",
             isValid: false,
-            fields: initialFieldsState,
+            sections: initialFieldsState,
             submitName: "Sign In",
             submitfullWidth: true,
         });
@@ -25,14 +24,19 @@ class LoginBloc extends FormBloc {
     }
 
     private createCredentials(state: FormState): Either<ValidationErrorsDictionary, Credentials> {
-        const notificationDataFields = state.fields.map(field => ({ [field.name]: field.value }));
-        const notificationData = Object.assign({}, ...notificationDataFields);
+        const loginFields = state.sections.flatMap(section =>
+            section.fields.map(field => ({ [field.name]: field.value }))
+        );
 
-        return Credentials.create(notificationData);
+        const loginData = Object.assign({}, ...loginFields);
+
+        return Credentials.create(loginData);
     }
 
     async submit() {
+        debugger;
         if (this.state.isValid) {
+            debugger;
             const credentials = this.createCredentials(this.state).getOrThrow();
 
             const loginResult = await this.loginUseCase.execute(credentials);
@@ -86,7 +90,16 @@ class LoginBloc extends FormBloc {
 
 export default LoginBloc;
 
-const initialFieldsState: FormFieldState[] = [
-    { label: "Email", name: "email", autoComplete: "username" },
-    { label: "Password", name: "password", autoComplete: "current-password", type: "password" },
+const initialFieldsState: FormSectionState[] = [
+    {
+        fields: [
+            { label: "Email", name: "email", autoComplete: "username" },
+            {
+                label: "Password",
+                name: "password",
+                autoComplete: "current-password",
+                type: "password",
+            },
+        ],
+    },
 ];

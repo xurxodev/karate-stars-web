@@ -10,6 +10,7 @@ import SendPushNotificationBloc from "./notifications/presentation/SendPushNotif
 import FcmPushNotificationRepository from "./notifications/data/FcmPushNotificationRepository";
 import SendPushNotificationUseCase from "./notifications/domain/SendPushNotificationUseCase";
 import DIContainer from "./DIContainer";
+import RssFeedDetailBloc from "./news/presentation/rss-feed-detail/RssFeedDetailBloc";
 
 export const names = {
     AxiosInstanceAPI: "axiosInstanceAPI",
@@ -25,6 +26,7 @@ export function init() {
     initApp();
     initLogin();
     initSendPushNotifications();
+    initRssFeed();
 }
 
 export function reset() {
@@ -88,4 +90,8 @@ function initSendPushNotifications() {
         SendPushNotificationBloc,
         () => new SendPushNotificationBloc(di.get(SendPushNotificationUseCase))
     );
+}
+
+function initRssFeed() {
+    di.bindFactory(RssFeedDetailBloc, () => new RssFeedDetailBloc());
 }

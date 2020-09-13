@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/styles";
-import { useMediaQuery, Theme, Box } from "@material-ui/core";
+import { useMediaQuery, Theme, Box, Typography, Divider } from "@material-ui/core";
 
 import Sidebar from "./Sidebar";
 import Footer from "./Footer";
@@ -19,12 +19,16 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingLeft: 240,
     },
     content: {
-        padding: theme.spacing(2),
+        padding: theme.spacing(4),
         height: "100%",
     },
 }));
 
-const MainLayout: React.FC = ({ children }) => {
+interface MainLayoutProps {
+    title: string;
+}
+
+const MainLayout: React.FC<MainLayoutProps> = ({ title, children }) => {
     const classes = useStyles();
     const theme: Theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up("lg"), {
@@ -62,6 +66,10 @@ const MainLayout: React.FC = ({ children }) => {
                     justifyContent="space-between"
                     flexDirection="column"
                     height="100%">
+                    <Typography variant="h3" component="h1">
+                        {title}
+                    </Typography>
+                    <Divider />
                     {children}
                     <Footer />
                 </Box>
