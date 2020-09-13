@@ -7,11 +7,11 @@ import Notifications from "@material-ui/icons/Notifications";
 import VideoLibrary from "@material-ui/icons/VideoLibrary";
 import InputIcon from "@material-ui/icons/Input";
 
-import SidebarNav from "./SidebarNav";
+import SidebarNav, { Menu } from "./SidebarNav";
 import Profile from "./Profile";
 import { pages } from "../../../../app/AppRoutes";
 import { useAppBlocContext } from "../../../../app/AppContext";
-import { RssFeed } from "@material-ui/icons";
+import { Description, RssFeed } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme: Theme) => ({
     drawer: {
@@ -68,24 +68,42 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
 
     const handleLogout = () => appBloc.logout();
 
-    const menus = [
+    const menus: Menu[] = [
         {
+            kind: "MenuLeaf",
+            level: 0,
             ...pages.dashboard,
             icon: <DashboardIcon />,
         },
         {
+            kind: "MenuLeaf",
+            level: 0,
             ...pages.competitors,
             icon: <PeopleIcon />,
         },
         {
+            kind: "MenuLeaf",
+            level: 0,
             ...pages.videos,
             icon: <VideoLibrary />,
         },
         {
-            ...pages.rssFeedDetail,
-            icon: <RssFeed />,
+            kind: "MenuGroup",
+            level: 0,
+            title: "News",
+            icon: <Description />,
+            children: [
+                {
+                    kind: "MenuLeaf",
+                    level: 1,
+                    ...pages.rssFeedDetail,
+                    icon: <RssFeed />,
+                },
+            ],
         },
         {
+            kind: "MenuLeaf",
+            level: 0,
             ...pages.sendPushNotification,
             icon: <Notifications />,
         },
