@@ -19,8 +19,8 @@ export class Email extends ValueObject<UserEmailProps> {
     }
 
     public static create(email: string): Either<ValidationErrors, Email> {
-        const requiredError = validateRequired(email, Email.name);
-        const regexpErrors = validateRegexp(email, Email.name, EMAIL_PATTERN);
+        const requiredError = validateRequired(email);
+        const regexpErrors = validateRegexp(email, EMAIL_PATTERN);
 
         if (requiredError.length > 0) {
             return Either.left(requiredError);

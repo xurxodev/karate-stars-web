@@ -16,7 +16,7 @@ describe("Password", () => {
         passwordResult.fold(
             errors => {
                 expect(errors.length).toBe(1);
-                expect(errors[0]).toBe("Password cannot be blank");
+                expect(errors[0]).toBe("field_cannot_be_blank");
             },
             () => fail("should be fail")
         );

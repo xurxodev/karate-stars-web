@@ -17,7 +17,7 @@ describe("Id", () => {
         idResult.fold(
             errors => {
                 expect(errors.length).toBe(1);
-                expect(errors[0]).toBe("Id cannot be blank");
+                expect(errors[0]).toBe("field_cannot_be_blank");
             },
             () => fail("should be fail")
         );
@@ -28,7 +28,7 @@ describe("Id", () => {
         idResult.fold(
             errors => {
                 expect(errors.length).toBe(1);
-                expect(errors[0]).toBe("Invalid id");
+                expect(errors[0]).toBe("invalid_field");
             },
             () => fail("should be fail")
         );
@@ -39,7 +39,7 @@ describe("Id", () => {
         idResult.fold(
             errors => {
                 expect(errors.length).toBe(1);
-                expect(errors[0]).toBe("Invalid id");
+                expect(errors[0]).toBe("invalid_field");
             },
             () => fail("should be fail")
         );
@@ -50,7 +50,7 @@ describe("Id", () => {
         idResult.fold(
             errors => {
                 expect(errors.length).toBe(1);
-                expect(errors[0]).toBe("Invalid id");
+                expect(errors[0]).toBe("invalid_field");
             },
             () => fail("should be fail")
         );

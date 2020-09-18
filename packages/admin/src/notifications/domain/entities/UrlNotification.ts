@@ -33,9 +33,9 @@ export class UrlNotification extends PushNotification {
         const urlValue = Url.create(url);
 
         const errors: ValidationErrorsDictionary = {
-            topic: validateRequired(topic, "topic"),
-            title: validateRequired(title, "title"),
-            description: validateRequired(description, "description"),
+            topic: validateRequired(topic),
+            title: validateRequired(title),
+            description: validateRequired(description),
             url: urlValue.fold(
                 errors => errors,
                 () => []

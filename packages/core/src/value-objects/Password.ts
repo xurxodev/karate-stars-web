@@ -17,7 +17,7 @@ export class Password extends ValueObject<PasswordProps> {
     }
 
     public static create(password: string): Either<ValidationErrors, Password> {
-        const requiredError = validateRequired(password, Password.name);
+        const requiredError = validateRequired(password);
 
         if (requiredError.length > 0) {
             return Either.left(requiredError);

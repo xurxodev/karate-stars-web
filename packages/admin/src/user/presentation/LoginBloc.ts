@@ -1,4 +1,4 @@
-import { Credentials, ValidationErrorsDictionary, Either } from "karate-stars-core";
+import { Credentials, ValidationErrorsDictionary, Either, ValidationErrorKey } from "karate-stars-core";
 import LoginUseCase from "../domain/LoginUseCase";
 import { GetUserError } from "../domain/Errors";
 import FormBloc from "../../common/presentation/bloc/FormBloc";
@@ -14,7 +14,7 @@ class LoginBloc extends FormBloc {
         });
     }
 
-    protected validateState(state: FormState): Record<string, string[]> | null {
+    protected validateState(state: FormState): Record<string, ValidationErrorKey[]> | null {
         const result = this.createCredentials(state);
         const errors = result.fold(
             errors => errors,

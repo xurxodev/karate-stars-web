@@ -19,8 +19,8 @@ export class Url extends ValueObject<UrlProps> {
     }
 
     public static create(url: string): Either<ValidationErrors, Url> {
-        const requiredError = validateRequired(url, Url.name);
-        const regexpErrors = validateRegexp(url, Url.name, URL_PATTERN);
+        const requiredError = validateRequired(url);
+        const regexpErrors = validateRegexp(url, URL_PATTERN);
 
         if (requiredError.length > 0) {
             return Either.left(requiredError);
