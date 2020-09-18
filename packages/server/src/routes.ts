@@ -5,6 +5,7 @@ import categoryRoutes from "./api/categories/CategoryRoutes";
 import competitorRoutes from "./api/competitors/CompetitorRoutes";
 import countryRoutes from "./api/countries/CountryRoutes";
 import currentNewsRoutes from "./api/currentnews/CurrentNewsRoutes";
+import NewsFeedsRoutes from "./api/newsFeeds/NewsFeedsRoutes";
 import socialNewsRoutes from "./api/socialnews/SocialNewsRoutes";
 import userRoutes from "./api/users/UserRoutes";
 import videoRoutes from "./api/videos/VideoRoutes";
@@ -60,6 +61,7 @@ const initializeRoutes = (server: hapi.Server) => {
         ...countryRoutes(apiPrefix),
         ...categoryRoutes(apiPrefix),
         ...videoRoutes(apiPrefix),
+        ...NewsFeedsRoutes(apiPrefix),
     ];
 
     allRoutes.forEach(route => {

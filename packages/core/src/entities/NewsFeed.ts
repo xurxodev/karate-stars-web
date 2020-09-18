@@ -17,7 +17,7 @@ export interface NewsFeedData extends EntityData {
 }
 
 export interface NewsFeedRawData {
-    id: String
+    id: string
     name: string;
     language: string;
     type: RssType;
@@ -43,12 +43,15 @@ export class NewsFeed extends Entity<NewsFeed> implements NewsFeedData {
         this.image = data.image;
     }
 
-    public static create({ name, language, type, image, url }: Omit<NewsFeedRawData, "id">):
+    public static create({ id, name, language, type, image, url }: NewsFeedRawData):
         Either<ValidationErrorsDictionary, NewsFeed> {
         const urlValue = Url.create(url);
         const imageValue = Url.create(image);
 
+        const IdValue = id !== "" ? Id.createExisted(id) : null;
+
         const errors: ValidationErrorsDictionary = {
+            id: IdValue ? IdValue.fold(errors => errors, () => []) : [],
             name: validateRequired(name),
             language: validateRequired(language),
             type: validateRequired(type),
@@ -61,13 +64,24 @@ export class NewsFeed extends Entity<NewsFeed> implements NewsFeedData {
         );
 
         if (Object.keys(errors).length === 0) {
-            const IdValue = Id.generateId();
+            const finalId = IdValue ? IdValue.get() : Id.generateId();
 
             return Either.right(
-                new NewsFeed({ id: IdValue, name, language, type, url: urlValue.get(), image: imageValue.get() })
+                new NewsFeed({ id: finalId, name, language, type, url: urlValue.get(), image: imageValue.get() })
             );
         } else {
             return Either.left(errors);
+        }
+    }
+
+    public toRawData(): NewsFeedRawData {
+        return {
+            id: this.id.value,
+            name: this.name,
+            language: this.language,
+            type: this.type,
+            image: this.image.value,
+            url: this.url.value
         }
     }
 }

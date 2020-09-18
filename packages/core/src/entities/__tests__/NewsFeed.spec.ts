@@ -1,4 +1,4 @@
-import { NewsFeed, NewsFeedRawData, RssType } from "../NewsFeed";
+import { NewsFeed, RssType } from "../NewsFeed";
 
 const newsFeedRawData = {
     name: "Karate-K",

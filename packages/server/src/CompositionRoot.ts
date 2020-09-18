@@ -11,14 +11,17 @@ import CurrentNewsRSSRepository from "./data/currentnews/CurrentNewsRSSRepositor
 import GetCurrentNewsUseCase from "./domain/currentnews/usecases/GetCurrentNewsUseCase";
 import SocialNewsController from "./api/socialnews/SocialNewsController";
 import CurrentNewsController from "./api/currentnews/CurrentNewsController";
+import NewsFeedMongoRepository from "./data/newsFeed/NewsFeedMongoRepository";
+import GetNewsFeedsUseCase from "./domain/newsFeeds/usecases/GetNewsFeedsUseCase";
+import NewsFeedsController from "./api/newsFeeds/NewsFeedsController";
 
 interface Type<T> {
-    new (...args: any[]): T;
+    new(...args: any[]): T;
 }
 
 export type NamedToken = "";
 
-type PrivateNamedToken = "settingsRepository";
+type PrivateNamedToken = "settingsRepository" | "newsFeedRepository";
 
 type Token<T> = Type<T> | NamedToken | PrivateNamedToken;
 
@@ -49,6 +52,7 @@ class CompositionRoot {
         this.initializeSettings();
         this.initializeSocialNews();
         this.initializeCurrentNews();
+        this.initializeNewsFeeds();
     }
 
     public get<T>(token: Type<T> | NamedToken): T {
@@ -106,6 +110,17 @@ class CompositionRoot {
         const currentNewsController = new CurrentNewsController(getCurrentNewsUseCase);
 
         this.bind(CurrentNewsController, currentNewsController);
+    }
+
+    private initializeNewsFeeds() {
+        const newsFeedRepository = new NewsFeedMongoRepository(this.mongoConnection);
+        this.dependencies.set("newsFeedRepository", newsFeedRepository);
+
+        const getNewsFeedsUseCase = new GetNewsFeedsUseCase(newsFeedRepository);
+
+        const newsFeedsController = new NewsFeedsController(getNewsFeedsUseCase);
+
+        this.bind(NewsFeedsController, newsFeedsController);
     }
 }
 
