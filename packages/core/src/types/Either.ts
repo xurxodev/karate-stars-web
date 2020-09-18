@@ -4,7 +4,7 @@ type Right<R> = { kind: "right"; rightValue: R };
 type EitherValue<L, R> = Left<L> | Right<R>;
 
 export class Either<L, R> {
-    private constructor(private readonly value: EitherValue<L, R>) {}
+    private constructor(private readonly value: EitherValue<L, R>) { }
 
     isLeft(): boolean {
         return this.value.kind === "left";
@@ -31,6 +31,10 @@ export class Either<L, R> {
             leftValue => Either.left(leftValue),
             rightValue => fn(rightValue)
         );
+    }
+
+    get(errorMessage?: string): R {
+        return this.getOrThrow(errorMessage);
     }
 
     getOrThrow(errorMessage?: string): R {
