@@ -3,10 +3,10 @@ import { NewsFeed, NewsFeedRawData } from "karate-stars-core";
 import NewsFeedRepository from "../../domain/newsFeeds/boundaries/NewsFeedRepository";
 import { MongoCollection } from "../common/Types";
 
-type NewsFeedDB = Omit<NewsFeedRawData, "id"> & MongoCollection
+type NewsFeedDB = Omit<NewsFeedRawData, "id"> & MongoCollection;
 
 export default class NewsFeedMongoRepository implements NewsFeedRepository {
-    constructor(private mongodbConecction: string) { }
+    constructor(private mongodbConecction: string) {}
 
     async getAll(): Promise<NewsFeed[]> {
         const mongoClient = new MongoClient(this.mongodbConecction, {
@@ -16,7 +16,7 @@ export default class NewsFeedMongoRepository implements NewsFeedRepository {
         await mongoClient.connect();
 
         const cursor = mongoClient.db().collection("newsFeeds").find<NewsFeedDB>();
-        const newsFeeds = (await cursor.toArray());
+        const newsFeeds = await cursor.toArray();
 
         return newsFeeds.map(feed => this.mapToDomain(feed));
     }
@@ -28,7 +28,7 @@ export default class NewsFeedMongoRepository implements NewsFeedRepository {
             language: newsFeed.language,
             type: newsFeed.type,
             image: newsFeed.image,
-            url: newsFeed.url
+            url: newsFeed.url,
         }).get();
     }
 }

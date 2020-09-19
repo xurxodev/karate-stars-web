@@ -1,16 +1,16 @@
 import CurrentNewsRepository from "../boundaries/CurrentNewsRepository";
 import { CurrentNews } from "../entities/CurrentNews";
-import SettingsRepository from "../../settings/boundaries/SettingsRepository";
+import NewsFeedRepository from "../../newsFeeds/boundaries/NewsFeedRepository";
 
 export default class GetCurrentNewsUseCase {
     constructor(
         private currentNewsRepository: CurrentNewsRepository,
-        private settingsRepository: SettingsRepository
+        private newsFeedRepository: NewsFeedRepository
     ) {}
 
     public async execute(): Promise<CurrentNews[]> {
-        const settings = await this.settingsRepository.get();
+        const newsFeeds = await this.newsFeedRepository.getAll();
 
-        return this.currentNewsRepository.get(settings.currentNews.feeds);
+        return this.currentNewsRepository.get(newsFeeds);
     }
 }

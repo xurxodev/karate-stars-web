@@ -16,7 +16,7 @@ import GetNewsFeedsUseCase from "./domain/newsFeeds/usecases/GetNewsFeedsUseCase
 import NewsFeedsController from "./api/newsFeeds/NewsFeedsController";
 
 interface Type<T> {
-    new(...args: any[]): T;
+    new (...args: any[]): T;
 }
 
 export type NamedToken = "";
@@ -50,9 +50,9 @@ class CompositionRoot {
 
         this.initializeUser();
         this.initializeSettings();
+        this.initializeNewsFeeds();
         this.initializeSocialNews();
         this.initializeCurrentNews();
-        this.initializeNewsFeeds();
     }
 
     public get<T>(token: Type<T> | NamedToken): T {
@@ -98,14 +98,14 @@ class CompositionRoot {
     }
 
     private initializeCurrentNews() {
-        const settingsRespository = this.dependencies.get(
-            "settingsRepository"
-        ) as SettingsRepository;
+        const newsFeedMongoRepository = this.dependencies.get(
+            "newsFeedRepository"
+        ) as NewsFeedMongoRepository;
         const currentNewsRSSRepository = new CurrentNewsRSSRepository();
 
         const getCurrentNewsUseCase = new GetCurrentNewsUseCase(
             currentNewsRSSRepository,
-            settingsRespository
+            newsFeedMongoRepository
         );
         const currentNewsController = new CurrentNewsController(getCurrentNewsUseCase);
 

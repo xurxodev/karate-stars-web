@@ -2,7 +2,7 @@ import { MongoClient } from "mongodb";
 import { SettingsDB } from "./SettingsDB";
 import SettingsRepository from "../../domain/settings/boundaries/SettingsRepository";
 import { Settings } from "../../domain/settings/entities/Settings";
-import { Id, Url } from "karate-stars-core";
+import { Id } from "karate-stars-core";
 
 export default class SettingsMongoRepository implements SettingsRepository {
     constructor(private mongodbConecction: string) {}
@@ -26,15 +26,6 @@ export default class SettingsMongoRepository implements SettingsRepository {
         return {
             ...settingsDB,
             identifier: Id.createExisted(settingsDB._id).getOrThrow(),
-            currentNews: {
-                feeds: settingsDB.currentNews.feeds.map(feedDB => {
-                    return {
-                        ...feedDB,
-                        url: Url.create(feedDB.url).getOrThrow(),
-                        image: Url.create(feedDB.image).getOrThrow(),
-                    };
-                }),
-            },
         };
     }
 }

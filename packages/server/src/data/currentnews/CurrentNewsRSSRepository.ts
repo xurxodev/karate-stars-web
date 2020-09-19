@@ -1,7 +1,7 @@
+import { NewsFeed } from "karate-stars-core";
 import Parser from "rss-parser";
 import CurrentNewsRepository from "../../domain/currentnews/boundaries/CurrentNewsRepository";
 import { CurrentNews } from "../../domain/currentnews/entities/CurrentNews";
-import { NewsFeed } from "../../domain/settings/entities/Settings";
 
 export default class CurrentNewsRSSRepository implements CurrentNewsRepository {
     public parser = new Parser();
