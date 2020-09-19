@@ -96,7 +96,13 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
                 {
                     kind: "MenuLeaf",
                     level: 1,
-                    ...pages.rssFeedDetail,
+                    ...pages.newsFeedDetail,
+                    icon: <RssFeed />,
+                },
+                {
+                    kind: "MenuLeaf",
+                    level: 1,
+                    ...pages.newsFeedList,
                     icon: <RssFeed />,
                 },
             ],

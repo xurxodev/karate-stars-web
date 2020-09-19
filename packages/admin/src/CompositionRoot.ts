@@ -10,7 +10,7 @@ import SendPushNotificationBloc from "./notifications/presentation/SendPushNotif
 import FcmPushNotificationRepository from "./notifications/data/FcmPushNotificationRepository";
 import SendPushNotificationUseCase from "./notifications/domain/SendPushNotificationUseCase";
 import DIContainer from "./DIContainer";
-import RssFeedDetailBloc from "./news/presentation/rss-feed-detail/RssFeedDetailBloc";
+import RssFeedDetailBloc from "./news/presentation/news-feed-detail/NewsFeedDetailBloc";
 
 export const names = {
     AxiosInstanceAPI: "axiosInstanceAPI",

@@ -30,13 +30,15 @@ export default abstract class FormBloc extends Bloc<FormState> {
 
                         return field.name === name
                             ? {
-                                ...field, errors: fieldErrors ?
-                                    fieldErrors.map(error =>
-                                        validationErrorMessages[error](name)) : undefined
-                            }
-                            : field
-                    }
-                    ),
+                                  ...field,
+                                  errors: fieldErrors
+                                      ? fieldErrors.map(error =>
+                                            validationErrorMessages[error](name)
+                                        )
+                                      : undefined,
+                              }
+                            : field;
+                    }),
                 };
             }),
             isValid: !errors ? true : false,

@@ -4,10 +4,10 @@ import FormBuilder from "../../../common/presentation/components/form-builder/Fo
 import MainLayout from "../../../common/presentation/layouts/main/MainLayout";
 import { FormState } from "../../../common/presentation/state/FormState";
 import { di } from "../../../CompositionRoot";
-import SettingsBloc from "./RssFeedDetailBloc";
+import NewsFeedDetailBloc from "./NewsFeedDetailBloc";
 
-const SettingsPage: React.FC = () => {
-    const bloc = di.get(SettingsBloc);
+const NewsFeedDetailPage: React.FC = () => {
+    const bloc = di.get(NewsFeedDetailBloc);
 
     const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.persist();
@@ -38,4 +38,4 @@ const SettingsPage: React.FC = () => {
     );
 };
 
-export default SettingsPage;
+export default NewsFeedDetailPage;

@@ -1,7 +1,8 @@
 import { FormState, FormSectionState } from "../../../common/presentation/state/FormState";
 import FormBloc from "../../../common/presentation/bloc/FormBloc";
+import { ValidationErrorKey } from "karate-stars-core";
 
-class SettingsBloc extends FormBloc {
+class NewsFeedDetailBloc extends FormBloc {
     constructor() {
         super({
             isValid: false,
@@ -9,7 +10,7 @@ class SettingsBloc extends FormBloc {
         });
     }
 
-    protected validateState(state: FormState): Record<string, string[]> | null {
+    protected validateState(state: FormState): Record<string, ValidationErrorKey[]> | null {
         // const result = this.createNotification(state);
         // const errors = result.fold(
         //     errors => errors,
@@ -78,7 +79,7 @@ class SettingsBloc extends FormBloc {
     // }
 }
 
-export default SettingsBloc;
+export default NewsFeedDetailBloc;
 
 const initialFieldsState: FormSectionState[] = [
     {

@@ -1,4 +1,9 @@
-import { Credentials, ValidationErrorsDictionary, Either, ValidationErrorKey } from "karate-stars-core";
+import {
+    Credentials,
+    ValidationErrorsDictionary,
+    Either,
+    ValidationErrorKey,
+} from "karate-stars-core";
 import LoginUseCase from "../domain/LoginUseCase";
 import { GetUserError } from "../domain/Errors";
 import FormBloc from "../../common/presentation/bloc/FormBloc";
