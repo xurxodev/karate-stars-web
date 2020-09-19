@@ -17,7 +17,7 @@ export interface NewsFeedData extends EntityData {
 }
 
 export interface NewsFeedRawData {
-    id: string
+    id: string;
     name: string;
     language: string;
     type: RssType;
@@ -43,20 +43,37 @@ export class NewsFeed extends Entity<NewsFeed> implements NewsFeedData {
         this.image = data.image;
     }
 
-    public static create({ id, name, language, type, image, url }: NewsFeedRawData):
-        Either<ValidationErrorsDictionary, NewsFeed> {
+    public static create({
+        id,
+        name,
+        language,
+        type,
+        image,
+        url,
+    }: NewsFeedRawData): Either<ValidationErrorsDictionary, NewsFeed> {
         const urlValue = Url.create(url);
         const imageValue = Url.create(image);
 
         const IdValue = id !== "" ? Id.createExisted(id) : null;
 
         const errors: ValidationErrorsDictionary = {
-            id: IdValue ? IdValue.fold(errors => errors, () => []) : [],
+            id: IdValue
+                ? IdValue.fold(
+                      errors => errors,
+                      () => []
+                  )
+                : [],
             name: validateRequired(name),
             language: validateRequired(language),
             type: validateRequired(type),
-            url: urlValue.fold(errors => errors, () => []),
-            image: imageValue.fold(errors => errors, () => [])
+            url: urlValue.fold(
+                errors => errors,
+                () => []
+            ),
+            image: imageValue.fold(
+                errors => errors,
+                () => []
+            ),
         };
 
         Object.keys(errors).forEach(
@@ -67,7 +84,14 @@ export class NewsFeed extends Entity<NewsFeed> implements NewsFeedData {
             const finalId = IdValue ? IdValue.get() : Id.generateId();
 
             return Either.right(
-                new NewsFeed({ id: finalId, name, language, type, url: urlValue.get(), image: imageValue.get() })
+                new NewsFeed({
+                    id: finalId,
+                    name,
+                    language,
+                    type,
+                    url: urlValue.get(),
+                    image: imageValue.get(),
+                })
             );
         } else {
             return Either.left(errors);
@@ -81,7 +105,7 @@ export class NewsFeed extends Entity<NewsFeed> implements NewsFeedData {
             language: this.language,
             type: this.type,
             image: this.image.value,
-            url: this.url.value
-        }
+            url: this.url.value,
+        };
     }
 }

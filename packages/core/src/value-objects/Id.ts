@@ -48,7 +48,7 @@ export class Id extends ValueObject<IdProps> {
     }
 
     public static createExisted(id: string): Either<ValidationErrors, Id> {
-        const requiredError = validateRequired(id,);
+        const requiredError = validateRequired(id);
         const regexpErrors = validateRegexp(id, ID_PATTERN);
 
         if (requiredError.length > 0) {
