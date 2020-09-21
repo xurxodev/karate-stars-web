@@ -2,7 +2,7 @@ import * as hapi from "@hapi/hapi";
 
 import CompetitorsRepository from "../../data/competitors/CompetitorJsonRepository";
 import GetCompetitorsUseCase from "../../domain/competitors/usecases/GetCompetitorsUseCase";
-import jwtAuthentication from "../users/JwtAuthentication";
+import jwtAuthentication from "../authentication/JwtAuthentication";
 import CompetitorController from "./CompetitorController";
 
 export default function (apiPrefix: string): hapi.ServerRoute[] {

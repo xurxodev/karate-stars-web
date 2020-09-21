@@ -1,6 +1,6 @@
 import * as hapi from "@hapi/hapi";
 
-import jwtAuthentication from "../users/JwtAuthentication";
+import jwtAuthentication from "../authentication/JwtAuthentication";
 import CompositionRoot from "../../CompositionRoot";
 import NewsFeedsController from "./NewsFeedsController";
 

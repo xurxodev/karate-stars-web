@@ -2,7 +2,7 @@ import * as hapi from "@hapi/hapi";
 
 import VideoRepository from "../../data/videos/VideosJsonRepository";
 import GetVideosUseCase from "../../domain/videos/usecases/GetVideosUseCase";
-import jwtAuthentication from "../users/JwtAuthentication";
+import jwtAuthentication from "../authentication/JwtAuthentication";
 import VideoController from "./VideoController";
 
 export default function (apiPrefix: string): hapi.ServerRoute[] {

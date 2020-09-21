@@ -2,7 +2,7 @@ import * as boom from "@hapi/boom";
 import * as hapi from "@hapi/hapi";
 import GetUserByIdUseCase from "../../domain/users/usecases/GetUserByIdUseCase";
 import GetUserByUsernameAndPasswordUseCase from "../../domain/users/usecases/GetUserByUsernameAndPasswordUseCase";
-import jwtAuthentication from "./JwtAuthentication";
+import jwtAuthentication from "../authentication/JwtAuthentication";
 import { Maybe, UserData } from "karate-stars-core";
 import { UserAPI } from "./UserAPI";
 

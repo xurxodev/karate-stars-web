@@ -1,12 +1,16 @@
-import { NewsFeedRawData } from "karate-stars-core";
+import { Either, NewsFeedRawData } from "karate-stars-core";
+import { AdminUseCase, AdminUseCaseError, WithUserIdArgs } from "../../common/AdminUseCase";
+import UserRepository from "../../users/boundaries/UserRepository";
 import NewsFeedsRepository from "../boundaries/NewsFeedRepository";
 
-export default class GetNewsFeedsUseCase {
-    constructor(private newsFeedsRepository: NewsFeedsRepository) {}
+export class GetNewsFeedsUseCase extends AdminUseCase<WithUserIdArgs, NewsFeedRawData[]> {
+    constructor(private newsFeedsRepository: NewsFeedsRepository, userRepository: UserRepository) {
+        super(userRepository);
+    }
 
-    public async execute(): Promise<NewsFeedRawData[]> {
+    public async run(_: WithUserIdArgs): Promise<Either<AdminUseCaseError, NewsFeedRawData[]>> {
         const newsFeed = await this.newsFeedsRepository.getAll();
 
-        return newsFeed.map(newsFeed => newsFeed.toRawData());
+        return Either.right(newsFeed.map(newsFeed => newsFeed.toRawData()));
     }
 }

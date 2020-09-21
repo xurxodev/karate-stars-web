@@ -1,5 +1,5 @@
 import * as hapi from "@hapi/hapi";
-import jwtAuthentication from "./api/users/JwtAuthentication";
+import jwtAuthentication from "./api/authentication/JwtAuthentication";
 import initializeRoutes from "./routes";
 import * as jwt from "hapi-auth-jwt2";
 import * as inert from "@hapi/inert";

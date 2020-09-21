@@ -12,8 +12,9 @@ import GetCurrentNewsUseCase from "./domain/currentnews/usecases/GetCurrentNewsU
 import SocialNewsController from "./api/socialnews/SocialNewsController";
 import CurrentNewsController from "./api/currentnews/CurrentNewsController";
 import NewsFeedMongoRepository from "./data/newsFeed/NewsFeedMongoRepository";
-import GetNewsFeedsUseCase from "./domain/newsFeeds/usecases/GetNewsFeedsUseCase";
 import NewsFeedsController from "./api/newsFeeds/NewsFeedsController";
+import UserRepository from "./domain/users/boundaries/UserRepository";
+import { GetNewsFeedsUseCase } from "./domain/newsFeeds/usecases/GetNewsFeedsUseCase";
 
 interface Type<T> {
     new (...args: any[]): T;
@@ -21,7 +22,7 @@ interface Type<T> {
 
 export type NamedToken = "";
 
-type PrivateNamedToken = "settingsRepository" | "newsFeedRepository";
+type PrivateNamedToken = "settingsRepository" | "newsFeedRepository" | "userRespository";
 
 type Token<T> = Type<T> | NamedToken | PrivateNamedToken;
 
@@ -65,6 +66,8 @@ class CompositionRoot {
 
     private initializeUser() {
         const userRespository = new UserMongoRepository(this.mongoConnection);
+        this.dependencies.set("userRespository", userRespository);
+
         const getUserByUsernameUseCase = new GetUserByUsernameAndPasswordUseCase(userRespository);
         const getUserByIdUseCase = new GetUserByIdUseCase(userRespository);
         const userController = new UserController(getUserByUsernameUseCase, getUserByIdUseCase);
@@ -116,7 +119,9 @@ class CompositionRoot {
         const newsFeedRepository = new NewsFeedMongoRepository(this.mongoConnection);
         this.dependencies.set("newsFeedRepository", newsFeedRepository);
 
-        const getNewsFeedsUseCase = new GetNewsFeedsUseCase(newsFeedRepository);
+        const userRepository = this.dependencies.get("userRespository") as UserRepository;
+
+        const getNewsFeedsUseCase = new GetNewsFeedsUseCase(newsFeedRepository, userRepository);
 
         const newsFeedsController = new NewsFeedsController(getNewsFeedsUseCase);
 

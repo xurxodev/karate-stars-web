@@ -14,12 +14,12 @@ export class Maybe<Data> {
         return this.value.kind === "none";
     }
 
-    fold<T>(leftFn: () => T, rightFn: (someValue: Data) => T): T {
+    fold<T>(noneFn: () => T, someFn: (someValue: Data) => T): T {
         switch (this.value.kind) {
             case "none":
-                return leftFn();
+                return noneFn();
             case "some":
-                return rightFn(this.value.someValue);
+                return someFn(this.value.someValue);
         }
     }
 

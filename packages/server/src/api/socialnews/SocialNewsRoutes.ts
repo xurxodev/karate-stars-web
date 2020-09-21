@@ -1,6 +1,6 @@
 import * as hapi from "@hapi/hapi";
 import SocialNewsController from "../socialnews/SocialNewsController";
-import jwtAuthentication from "../users/JwtAuthentication";
+import jwtAuthentication from "../authentication/JwtAuthentication";
 import CompositionRoot from "../../CompositionRoot";
 
 export default function (apiPrefix: string): hapi.ServerRoute[] {

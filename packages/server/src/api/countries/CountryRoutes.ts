@@ -2,7 +2,7 @@ import * as hapi from "@hapi/hapi";
 
 import CountryRepository from "../../data/countries/CountryJsonRepository";
 import GetCountriesUseCase from "../../domain/countries/usecases/GetCountriesUseCase";
-import jwtAuthentication from "../users/JwtAuthentication";
+import jwtAuthentication from "../authentication/JwtAuthentication";
 import CountryController from "./CountryController";
 
 export default function (apiPrefix: string): hapi.ServerRoute[] {

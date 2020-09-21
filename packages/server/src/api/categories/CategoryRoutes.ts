@@ -2,7 +2,7 @@ import * as hapi from "@hapi/hapi";
 
 import CategoryRepository from "../../data/categories/CategoryJsonRepository";
 import GetCategoriesUseCase from "../../domain/categories/usecases/GetCategoriesUseCase";
-import jwtAuthentication from "../users/JwtAuthentication";
+import jwtAuthentication from "../authentication/JwtAuthentication";
 import CategoryController from "./CategoryController";
 
 export default function (apiPrefix: string): hapi.ServerRoute[] {
