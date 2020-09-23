@@ -1,3 +1,5 @@
+export * from "./di/DIContainer";
+
 export * from "./entities/User";
 export * from "./entities/NewsFeed";
 export * from "./entities/Entity";

@@ -11,7 +11,7 @@ type Binder<T> = {
     fn: () => T;
 };
 
-export default class DIContainer {
+export class DIContainer {
     private factories = new Map<Token<any>, Binder<any>>();
     private lazySingletons = new Map<Token<any>, any>();
 

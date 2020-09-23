@@ -9,8 +9,8 @@ import RemoveCurrentUserUseCase from "./user/domain/RemoveCurrentUserUseCase";
 import SendPushNotificationBloc from "./notifications/presentation/SendPushNotificationBloc";
 import FcmPushNotificationRepository from "./notifications/data/FcmPushNotificationRepository";
 import SendPushNotificationUseCase from "./notifications/domain/SendPushNotificationUseCase";
-import DIContainer from "./DIContainer";
 import RssFeedDetailBloc from "./news/presentation/news-feed-detail/NewsFeedDetailBloc";
+import { DIContainer } from "karate-stars-core";
 
 export const names = {
     AxiosInstanceAPI: "axiosInstanceAPI",
