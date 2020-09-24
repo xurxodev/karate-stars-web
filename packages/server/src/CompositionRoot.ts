@@ -4,7 +4,6 @@ import GetUserByIdUseCase from "./domain/users/usecases/GetUserByIdUseCase";
 import UserController from "./api/users/UserController";
 import SettingsMongoRepository from "./data/settings/SettingsMongoRepository";
 import GetSettingsUseCase from "./domain/settings/usecases/GetSettingsUseCase";
-import SettingsRepository from "./domain/settings/boundaries/SettingsRepository";
 import GetSocialNewsUseCase from "./domain/socialnews/usecases/GetSocialNewsUseCase";
 import SocialNewsTwitterRepository from "./data/socialnews/SocialNewsTwitterRepository";
 import CurrentNewsRSSRepository from "./data/currentnews/CurrentNewsRSSRepository";
@@ -13,120 +12,147 @@ import SocialNewsController from "./api/socialnews/SocialNewsController";
 import CurrentNewsController from "./api/currentnews/CurrentNewsController";
 import NewsFeedMongoRepository from "./data/newsFeed/NewsFeedMongoRepository";
 import NewsFeedsController from "./api/newsFeeds/NewsFeedsController";
-import UserRepository from "./domain/users/boundaries/UserRepository";
 import { GetNewsFeedsUseCase } from "./domain/newsFeeds/usecases/GetNewsFeedsUseCase";
+import { DIContainer } from "karate-stars-core";
+import JwtAuthenticator from "./api/authentication/JwtAuthenticator";
 
-interface Type<T> {
-    new (...args: any[]): T;
+export const names = {
+    mongoConnection: "mongoConnection",
+    settingsRepository: "settingsRepository",
+    newsFeedRepository: "newsFeedRepository",
+    userRepository: "userRepository",
+    socialNewsRepository: "socialNewsRepository",
+    currentNewsRepository: "currentNewsRepository",
+};
+
+export const di = DIContainer.getInstance();
+
+export function init() {
+    initApp();
+    initUser();
+    initializeSettings();
+    initializeNewsFeeds();
+    initializeSocialNews();
+    initializeCurrentNews();
 }
 
-export type NamedToken = "";
-
-type PrivateNamedToken = "settingsRepository" | "newsFeedRepository" | "userRespository";
-
-type Token<T> = Type<T> | NamedToken | PrivateNamedToken;
-
-class CompositionRoot {
-    private dependencies = new Map<Token<any>, any>();
-
-    private static instance: CompositionRoot;
-
-    static getInstance(): CompositionRoot {
-        if (!CompositionRoot.instance) {
-            CompositionRoot.instance = new CompositionRoot();
-        }
-
-        return CompositionRoot.instance;
-    }
-    readonly mongoConnection: string;
-
-    private constructor() {
-        const mongoConnection = process.env.MONGO_DB_CONNECTION;
-
-        if (!mongoConnection) {
-            throw new Error("Does not exists environment variable for mongo data base connection");
-        }
-
-        this.mongoConnection = mongoConnection;
-
-        this.initializeUser();
-        this.initializeSettings();
-        this.initializeNewsFeeds();
-        this.initializeSocialNews();
-        this.initializeCurrentNews();
-    }
-
-    public get<T>(token: Type<T> | NamedToken): T {
-        return this.dependencies.get(token);
-    }
-
-    public bind<T>(token: Type<T> | NamedToken, value: T) {
-        this.dependencies.set(token, value);
-    }
-
-    private initializeUser() {
-        const userRespository = new UserMongoRepository(this.mongoConnection);
-        this.dependencies.set("userRespository", userRespository);
-
-        const getUserByUsernameUseCase = new GetUserByUsernameAndPasswordUseCase(userRespository);
-        const getUserByIdUseCase = new GetUserByIdUseCase(userRespository);
-        const userController = new UserController(getUserByUsernameUseCase, getUserByIdUseCase);
-
-        this.bind(GetUserByIdUseCase, getUserByIdUseCase);
-        this.bind(UserController, userController);
-    }
-
-    private initializeSettings() {
-        const settingsRespository = new SettingsMongoRepository(this.mongoConnection);
-        this.dependencies.set("settingsRepository", settingsRespository);
-
-        const getSettingsUseCase = new GetSettingsUseCase(settingsRespository);
-
-        this.bind(GetSettingsUseCase, getSettingsUseCase);
-    }
-
-    private initializeSocialNews() {
-        const settingsRespository = this.dependencies.get(
-            "settingsRepository"
-        ) as SettingsRepository;
-        const socialNewsRepository = new SocialNewsTwitterRepository();
-
-        const getSocialNewsUseCase = new GetSocialNewsUseCase(
-            socialNewsRepository,
-            settingsRespository
-        );
-        const socialNewsController = new SocialNewsController(getSocialNewsUseCase);
-
-        this.bind(SocialNewsController, socialNewsController);
-    }
-
-    private initializeCurrentNews() {
-        const newsFeedMongoRepository = this.dependencies.get(
-            "newsFeedRepository"
-        ) as NewsFeedMongoRepository;
-        const currentNewsRSSRepository = new CurrentNewsRSSRepository();
-
-        const getCurrentNewsUseCase = new GetCurrentNewsUseCase(
-            currentNewsRSSRepository,
-            newsFeedMongoRepository
-        );
-        const currentNewsController = new CurrentNewsController(getCurrentNewsUseCase);
-
-        this.bind(CurrentNewsController, currentNewsController);
-    }
-
-    private initializeNewsFeeds() {
-        const newsFeedRepository = new NewsFeedMongoRepository(this.mongoConnection);
-        this.dependencies.set("newsFeedRepository", newsFeedRepository);
-
-        const userRepository = this.dependencies.get("userRespository") as UserRepository;
-
-        const getNewsFeedsUseCase = new GetNewsFeedsUseCase(newsFeedRepository, userRepository);
-
-        const newsFeedsController = new NewsFeedsController(getNewsFeedsUseCase);
-
-        this.bind(NewsFeedsController, newsFeedsController);
-    }
+export function reset() {
+    di.clear();
+    init();
 }
 
-export default CompositionRoot;
+function initApp() {
+    const mongoConnection = process.env.MONGO_DB_CONNECTION;
+
+    if (!mongoConnection) {
+        throw new Error("Does not exists environment variable for mongo data base connection");
+    }
+
+    di.bindLazySingleton(names.mongoConnection, () => mongoConnection);
+
+    const jwtSecretKey = process.env.JWT_SECRET_KEY;
+
+    if (!jwtSecretKey) {
+        throw new Error("Does not exists environment variable for jwtSecretKey");
+    }
+
+    di.bindLazySingleton(
+        JwtAuthenticator,
+        () => new JwtAuthenticator(jwtSecretKey, di.get(GetUserByIdUseCase))
+    );
+
+    di.bindLazySingleton(names.mongoConnection, () => mongoConnection);
+}
+
+function initializeSettings() {
+    di.bindLazySingleton(
+        names.settingsRepository,
+        () => new SettingsMongoRepository(di.get(names.mongoConnection))
+    );
+
+    di.bindLazySingleton(
+        GetSettingsUseCase,
+        () => new GetSettingsUseCase(di.get(names.userRepository))
+    );
+}
+
+function initUser() {
+    di.bindLazySingleton(
+        names.userRepository,
+        () => new UserMongoRepository(di.get(names.mongoConnection))
+    );
+
+    di.bindLazySingleton(
+        GetUserByUsernameAndPasswordUseCase,
+        () => new GetUserByUsernameAndPasswordUseCase(di.get(names.userRepository))
+    );
+
+    di.bindLazySingleton(
+        GetUserByIdUseCase,
+        () => new GetUserByIdUseCase(di.get(names.userRepository))
+    );
+
+    di.bindFactory(
+        UserController,
+        () =>
+            new UserController(
+                di.get(JwtAuthenticator),
+                di.get(GetUserByUsernameAndPasswordUseCase),
+                di.get(GetUserByIdUseCase)
+            )
+    );
+}
+
+function initializeNewsFeeds() {
+    di.bindLazySingleton(
+        names.newsFeedRepository,
+        () => new NewsFeedMongoRepository(di.get(names.mongoConnection))
+    );
+
+    di.bindLazySingleton(
+        GetNewsFeedsUseCase,
+        () =>
+            new GetNewsFeedsUseCase(di.get(names.newsFeedRepository), di.get(names.userRepository))
+    );
+
+    di.bindFactory(
+        NewsFeedsController,
+        () => new NewsFeedsController(di.get(JwtAuthenticator), di.get(GetNewsFeedsUseCase))
+    );
+}
+
+function initializeSocialNews() {
+    di.bindLazySingleton(names.socialNewsRepository, () => new SocialNewsTwitterRepository());
+
+    di.bindLazySingleton(
+        GetSocialNewsUseCase,
+        () =>
+            new GetSocialNewsUseCase(
+                di.get(names.socialNewsRepository),
+                di.get(names.userRepository)
+            )
+    );
+
+    di.bindFactory(
+        SocialNewsController,
+        () => new SocialNewsController(di.get(GetSocialNewsUseCase))
+    );
+}
+
+function initializeCurrentNews() {
+    di.bindLazySingleton(names.currentNewsRepository, () => new CurrentNewsRSSRepository());
+
+    di.bindLazySingleton(
+        GetCurrentNewsUseCase,
+        () =>
+            new GetCurrentNewsUseCase(
+                di.get(names.currentNewsRepository),
+                di.get(names.newsFeedRepository)
+            )
+    );
+
+    di.bindFactory(
+        CurrentNewsController,
+        () => new CurrentNewsController(di.get(GetCurrentNewsUseCase))
+    );
+}

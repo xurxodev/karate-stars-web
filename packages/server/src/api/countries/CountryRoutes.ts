@@ -1,11 +1,13 @@
 import * as hapi from "@hapi/hapi";
 
+import * as CompositionRoot from "./../../CompositionRoot";
 import CountryRepository from "../../data/countries/CountryJsonRepository";
 import GetCountriesUseCase from "../../domain/countries/usecases/GetCountriesUseCase";
-import jwtAuthentication from "../authentication/JwtAuthentication";
 import CountryController from "./CountryController";
+import JwtAuthenticator from "../authentication/JwtAuthenticator";
 
 export default function (apiPrefix: string): hapi.ServerRoute[] {
+    const jwtAuthenticator = CompositionRoot.di.get(JwtAuthenticator);
     const countryRepository = new CountryRepository();
     const getCountriesUseCase = new GetCountriesUseCase(countryRepository);
     const countryController = new CountryController(getCountriesUseCase);
@@ -15,7 +17,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
             method: "GET",
             path: `${apiPrefix}/countries`,
             options: {
-                auth: jwtAuthentication.name,
+                auth: jwtAuthenticator.name,
             },
             handler: (
                 request: hapi.Request,

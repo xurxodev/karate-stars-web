@@ -1,8 +1,9 @@
 import * as hapi from "@hapi/hapi";
-import jwtAuthentication from "./api/authentication/JwtAuthentication";
 import initializeRoutes from "./routes";
 import * as jwt from "hapi-auth-jwt2";
 import * as inert from "@hapi/inert";
+import * as CompositionRoot from "./CompositionRoot";
+import JwtAuthenticator from "./api/authentication/JwtAuthenticator";
 
 const server: hapi.Server = new hapi.Server({
     host: "0.0.0.0",
@@ -11,18 +12,23 @@ const server: hapi.Server = new hapi.Server({
 
 async function start() {
     try {
+        CompositionRoot.init();
+
         await server.register(jwt);
         await server.register(inert);
 
-        const validate = jwtAuthentication.validateHandler;
-        const secretKey = jwtAuthentication.secretKey;
+        const jwtAuthenticator = CompositionRoot.di.get(JwtAuthenticator);
 
-        server.auth.strategy(jwtAuthentication.name, "jwt", {
-            key: secretKey,
+        const validate = function (decoded, _request, _h) {
+            return jwtAuthenticator.validateTokenData(decoded);
+        };
+
+        server.auth.strategy(jwtAuthenticator.name, "jwt", {
+            key: jwtAuthenticator.secretKey,
             validate,
         });
 
-        server.auth.default(jwtAuthentication.name);
+        server.auth.default(jwtAuthenticator.name);
 
         initializeRoutes(server);
 

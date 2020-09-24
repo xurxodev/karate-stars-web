@@ -1,17 +1,19 @@
 import * as hapi from "@hapi/hapi";
+
+import * as CompositionRoot from "../../CompositionRoot";
+import JwtAuthenticator from "../authentication/JwtAuthenticator";
 import SocialNewsController from "../socialnews/SocialNewsController";
-import jwtAuthentication from "../authentication/JwtAuthentication";
-import CompositionRoot from "../../CompositionRoot";
 
 export default function (apiPrefix: string): hapi.ServerRoute[] {
-    const socialNewsController = CompositionRoot.getInstance().get(SocialNewsController);
+    const jwtAuthenticator = CompositionRoot.di.get(JwtAuthenticator);
+    const socialNewsController = CompositionRoot.di.get(SocialNewsController);
 
     return [
         {
             method: "GET",
             path: `${apiPrefix}/socialnews`,
             options: {
-                auth: jwtAuthentication.name,
+                auth: jwtAuthenticator.name,
             },
             handler: (
                 request: hapi.Request,

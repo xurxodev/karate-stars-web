@@ -1,11 +1,13 @@
 import * as hapi from "@hapi/hapi";
 
+import * as CompositionRoot from "./../../CompositionRoot";
 import CompetitorsRepository from "../../data/competitors/CompetitorJsonRepository";
 import GetCompetitorsUseCase from "../../domain/competitors/usecases/GetCompetitorsUseCase";
-import jwtAuthentication from "../authentication/JwtAuthentication";
 import CompetitorController from "./CompetitorController";
+import JwtAuthenticator from "../authentication/JwtAuthenticator";
 
 export default function (apiPrefix: string): hapi.ServerRoute[] {
+    const jwtAuthenticator = CompositionRoot.di.get(JwtAuthenticator);
     const competitorsRepository = new CompetitorsRepository();
     const getCompetitorsUseCase = new GetCompetitorsUseCase(competitorsRepository);
     const competitorController = new CompetitorController(getCompetitorsUseCase);
@@ -15,7 +17,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
             method: "GET",
             path: `${apiPrefix}/competitors`,
             options: {
-                auth: jwtAuthentication.name,
+                auth: jwtAuthenticator.name,
             },
             handler: (
                 request: hapi.Request,

@@ -2,12 +2,13 @@ import * as boom from "@hapi/boom";
 import * as hapi from "@hapi/hapi";
 import GetUserByIdUseCase from "../../domain/users/usecases/GetUserByIdUseCase";
 import GetUserByUsernameAndPasswordUseCase from "../../domain/users/usecases/GetUserByUsernameAndPasswordUseCase";
-import jwtAuthentication from "../authentication/JwtAuthentication";
 import { Maybe, UserData } from "karate-stars-core";
 import { UserAPI } from "./UserAPI";
+import JwtAuthenticator from "../authentication/JwtAuthenticator";
 
 export default class UserController {
     constructor(
+        private jwtAuthenticator: JwtAuthenticator,
         private getUserByUsernameAndPasswordUseCase: GetUserByUsernameAndPasswordUseCase,
         private getUserByIdUseCase: GetUserByIdUseCase
     ) {}
@@ -21,7 +22,7 @@ export default class UserController {
                 .then((result: Maybe<UserData>) => {
                     if (result.isDefined()) {
                         const response = h.response(this.mapToAPI(result.get()));
-                        const token = jwtAuthentication.generateToken(result.get());
+                        const token = this.jwtAuthenticator.generateToken(result.get());
                         response.header("Authorization", `Bearer ${token}`);
                         return response;
                     } else {
@@ -42,7 +43,7 @@ export default class UserController {
     ): hapi.Lifecycle.ReturnValue {
         const token = request.headers.authorization;
 
-        const userId = jwtAuthentication.decodeToken(token.replace("Bearer ", "")).userId;
+        const userId = this.jwtAuthenticator.decodeToken(token.replace("Bearer ", "")).userId;
 
         return this.getUserByIdUseCase
             .execute(userId)

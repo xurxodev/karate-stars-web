@@ -1,11 +1,13 @@
 import * as hapi from "@hapi/hapi";
 
+import * as CompositionRoot from "./../../CompositionRoot";
+import JwtAuthenticator from "../authentication/JwtAuthenticator";
 import CategoryRepository from "../../data/categories/CategoryJsonRepository";
 import GetCategoriesUseCase from "../../domain/categories/usecases/GetCategoriesUseCase";
-import jwtAuthentication from "../authentication/JwtAuthentication";
 import CategoryController from "./CategoryController";
 
 export default function (apiPrefix: string): hapi.ServerRoute[] {
+    const jwtAuthenticator = CompositionRoot.di.get(JwtAuthenticator);
     const categoryRepository = new CategoryRepository();
     const getCategoriesUseCase = new GetCategoriesUseCase(categoryRepository);
     const categoryController = new CategoryController(getCategoriesUseCase);
@@ -15,7 +17,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
             method: "GET",
             path: `${apiPrefix}/categories`,
             options: {
-                auth: jwtAuthentication.name,
+                auth: jwtAuthenticator.name,
             },
             handler: (
                 request: hapi.Request,

@@ -1,11 +1,12 @@
 import * as hapi from "@hapi/hapi";
 
-import jwtAuthentication from "../authentication/JwtAuthentication";
+import * as CompositionRoot from "../../CompositionRoot";
+import JwtAuthenticator from "../authentication/JwtAuthenticator";
 import UserController from "./UserController";
-import CompositionRoot from "../../CompositionRoot";
 
 export default function (apiPrefix: string): hapi.ServerRoute[] {
-    const userController = CompositionRoot.getInstance().get(UserController);
+    const jwtAuthenticator = CompositionRoot.di.get(JwtAuthenticator);
+    const userController = CompositionRoot.di.get(UserController);
 
     return [
         {
@@ -23,7 +24,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
             method: "GET",
             path: `${apiPrefix}/me`,
             options: {
-                auth: jwtAuthentication.name,
+                auth: jwtAuthenticator.name,
             },
             handler: (
                 request: hapi.Request,
