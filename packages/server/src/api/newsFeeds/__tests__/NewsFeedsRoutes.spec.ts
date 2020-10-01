@@ -1,4 +1,4 @@
-import { Email, Id, Maybe, Password, User } from "karate-stars-core";
+import { Email, Id, Maybe, NewsFeed, Password, User } from "karate-stars-core";
 import request from "supertest";
 import * as CompositionRoot from "../../../CompositionRoot";
 import NewsFeedRepository from "../../../domain/newsFeeds/boundaries/NewsFeedRepository";
@@ -34,11 +34,30 @@ describe("NewsFeedRoutes", () => {
 });
 
 function givenThereAreANewsFeeds() {
-    const newsFeed = [];
+    const newsFeeds = [
+        NewsFeed.create({
+            id: Id.generateId().value,
+            name: "WKF News Center",
+            url: "http://fetchrss.com/rss/59baa0d28a93f8a1048b4567777611407.xml",
+            language: "en",
+            type: "rss",
+            image:
+                "https://firebasestorage.googleapis.com/v0/b/karatestars-1261.appspot.com/o/feeds%2Fwkf.png?alt=media",
+        }).get(),
+        NewsFeed.create({
+            id: Id.generateId().value,
+            name: "Inside The Games",
+            url: "http://fetchrss.com/rss/59baa0d28a93f8a1048b4567627850382.xml",
+            language: "en",
+            type: "rss",
+            image:
+                "https://firebasestorage.googleapis.com/v0/b/karatestars-1261.appspot.com/o/feeds%2Finside_the_games.gif?alt=media",
+        }).get(),
+    ];
 
     const stubRepository: NewsFeedRepository = {
-        getAll: jest.fn().mockImplementation(() => {
-            return newsFeed;
+        getAll: jest.fn().mockImplementation((): NewsFeed[] => {
+            return newsFeeds;
         }),
     };
 
@@ -47,7 +66,7 @@ function givenThereAreANewsFeeds() {
         () => stubRepository
     );
 
-    return newsFeed;
+    return newsFeeds.map(feed => feed.toRawData());
 }
 
 function givenThereAreAUser(params: { admin: boolean }): User {
