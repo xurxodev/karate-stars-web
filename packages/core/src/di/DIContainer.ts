@@ -27,19 +27,25 @@ export class DIContainer {
     }
 
     public get<T>(token: Type<T> | string): T {
-        const factory = this.factories.get(token);
+        //TODO: try handle exceptions in server.ts
+        try {
+            const factory = this.factories.get(token);
 
-        if (!factory) {
-            throw new Error(`Dependency ${token} is not regestered`);
-        }
+            if (!factory) {
+                throw new Error(`Dependency ${token} is not regestered`);
+            }
 
-        if (factory.type === "lazySingleton") {
-            const singleton = this.lazySingletons.get(token) || factory.fn();
-            this.lazySingletons.set(token, singleton);
+            if (factory.type === "lazySingleton") {
+                const singleton = this.lazySingletons.get(token) || factory.fn();
+                this.lazySingletons.set(token, singleton);
 
-            return singleton;
-        } else {
-            return factory.fn();
+                return singleton;
+            } else {
+                return factory.fn();
+            }
+        } catch (error) {
+            console.log({ error });
+            throw error;
         }
     }
 
