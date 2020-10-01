@@ -3,15 +3,19 @@ import { SocialNews } from "../../domain/socialnews/entities/SocialNews";
 import Twit from "twit";
 
 export default class SocialNewsTwitterRepository implements SocialNewsRepository {
-    public twitterApiClient = new Twit({
-        consumer_key: process.env.TWITTER_CONSUMER_KEY_PROP || "",
-        consumer_secret: process.env.TWITTER_CONSUMER_SECRET_PROP || "",
-        // access_token: '...',
-        // access_token_secret: '...',
-        timeout_ms: 60 * 1000, // optional HTTP request timeout to apply to all requests.
-        // strictSSL: true,     // optional - requires SSL certificates to be valid.
-        app_only_auth: true,
-    });
+    private twitterApiClient: Twit;
+
+    constructor(twitterConcomerKey: string, twitterConcomerSecret: string) {
+        this.twitterApiClient = new Twit({
+            consumer_key: twitterConcomerKey,
+            consumer_secret: twitterConcomerSecret,
+            // access_token: '...',
+            // access_token_secret: '...',
+            timeout_ms: 60 * 1000, // optional HTTP request timeout to apply to all requests.
+            // strictSSL: true,     // optional - requires SSL certificates to be valid.
+            app_only_auth: true,
+        });
+    }
 
     public get(search: string): Promise<SocialNews[]> {
         return new Promise((resolve, reject) => {

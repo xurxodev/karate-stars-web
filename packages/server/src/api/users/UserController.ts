@@ -4,7 +4,7 @@ import GetUserByIdUseCase from "../../domain/users/usecases/GetUserByIdUseCase";
 import GetUserByUsernameAndPasswordUseCase from "../../domain/users/usecases/GetUserByUsernameAndPasswordUseCase";
 import { Maybe, UserData } from "karate-stars-core";
 import { UserAPI } from "./UserAPI";
-import JwtAuthenticator from "../authentication/JwtAuthenticator";
+import { JwtAuthenticator } from "../../server";
 
 export default class UserController {
     constructor(
@@ -22,7 +22,7 @@ export default class UserController {
                 .then((result: Maybe<UserData>) => {
                     if (result.isDefined()) {
                         const response = h.response(this.mapToAPI(result.get()));
-                        const token = this.jwtAuthenticator.generateToken(result.get());
+                        const token = this.jwtAuthenticator.generateToken(result.get().id);
                         response.header("Authorization", `Bearer ${token}`);
                         return response;
                     } else {

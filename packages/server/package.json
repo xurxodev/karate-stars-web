@@ -2,19 +2,19 @@
   "name": "karate-stars-server",
   "version": "0.1.0",
   "description": "Karate stars Server. Developed using TypeScript in Node.js and using hapijs framework.",
-  "main": "build/server.js",
+  "main": "build/index.js",
   "repository": "https://github.com/xurxodev/karate-stars-api",
   "author": "Jorge Sánchez <xurxosf@gmail.com>",
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "start": "node ./build/server.js",
+    "start": "node ./build/index.js",
     "build": "yarn clean && yarn tsc",
     "start-dev": "../../node_modules/nodemon/bin/nodemon.js -e ts  --exec \"yarn build-dev\"",
-    "build-dev": "yarn build && node -r dotenv/config ./build/server.js",
-    "start-debug": "yarn build && node -r dotenv/config --inspect ./build/server.js",
+    "build-dev": "yarn build && node -r dotenv/config ./build/index.js",
+    "start-debug": "yarn build && node -r dotenv/config --inspect ./build/index.js",
     "tsc": "tsc --build",
     "clean": "rm -rf build",
-    "test": "echo \"no test specified\" && exit 0"
+    "test": "jest"
   },
   "dependencies": {
     "@hapi/boom": "^9.0.1",
@@ -32,11 +32,17 @@
     "@types/hapi__boom": "^9.0.1",
     "@types/hapi__hapi": "^19.0.3",
     "@types/hapi__inert": "^5.2.0",
+    "@types/jest": "24.9.1",
+    "@types/jsonwebtoken": "^8.5.0",
     "@types/mongodb": "^3.5.20",
     "@types/node": "^12.7.2",
     "@types/node-fetch": "^2.5.4",
+    "@types/supertest": "^2.0.10",
     "@types/twit": "^2.2.23",
-    "nodemon": "^1.19.1"
+    "jest": "^26.4.2",
+    "nodemon": "^1.19.1",
+    "supertest": "^4.0.2",
+    "ts-jest": "^24.3.0"
   },
   "engines": {
     "node": "14.x"

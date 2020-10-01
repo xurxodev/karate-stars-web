@@ -3,41 +3,72 @@ import initializeRoutes from "./routes";
 import * as jwt from "hapi-auth-jwt2";
 import * as inert from "@hapi/inert";
 import * as CompositionRoot from "./CompositionRoot";
-import JwtAuthenticator from "./api/authentication/JwtAuthenticator";
+import * as http from "http";
+import { names } from "./CompositionRoot";
+import { Id } from "karate-stars-core";
 
-const server: hapi.Server = new hapi.Server({
-    host: "0.0.0.0",
-    port: process.env.PORT || 8000,
-});
+export interface TokenData {
+    userId: string;
+}
 
-async function start() {
-    try {
-        CompositionRoot.init();
+export interface JwtAuthenticator {
+    name: string;
+    secretKey: string;
+    validateTokenData: (tokenData: TokenData) => Promise<{ isValid: boolean }>;
+    generateToken: (userId: Id) => string;
+    decodeToken(token: string): TokenData;
+}
 
-        await server.register(jwt);
-        await server.register(inert);
+export class Server {
+    server: hapi.Server = new hapi.Server({
+        host: "0.0.0.0",
+        port: process.env.PORT || 8000,
+    });
 
-        const jwtAuthenticator = CompositionRoot.di.get(JwtAuthenticator);
+    async setupServer() {
+        await this.server.register(jwt);
+        await this.server.register(inert);
+
+        const jwtAuthenticator = CompositionRoot.di.get<JwtAuthenticator>(names.jwtAuthenticator);
 
         const validate = function (decoded, _request, _h) {
             return jwtAuthenticator.validateTokenData(decoded);
         };
 
-        server.auth.strategy(jwtAuthenticator.name, "jwt", {
+        this.server.auth.strategy(jwtAuthenticator.name, "jwt", {
             key: jwtAuthenticator.secretKey,
             validate,
         });
 
-        server.auth.default(jwtAuthenticator.name);
+        this.server.auth.default(jwtAuthenticator.name);
 
-        initializeRoutes(server);
-
-        await server.start();
-    } catch (err) {
-        console.log(err);
-        process.exit(1);
+        initializeRoutes(this.server);
     }
-    console.log("Server running at:", server.info.uri);
+
+    async start() {
+        await this.setupServer();
+        await this.server.start();
+        console.log(`Server running at: ${this.server.info.uri}`);
+    }
+
+    async init(): Promise<http.Server> {
+        await this.setupServer();
+        await this.server.initialize();
+
+        return this.server.listener;
+    }
+
+    async stop() {
+        this.server.stop();
+    }
 }
 
-start();
+process.on("unhandledRejection", err => {
+    console.log(err);
+    process.exit(1);
+});
+
+process.on("uncaughtException", err => {
+    console.log(err);
+    process.exit(1);
+});

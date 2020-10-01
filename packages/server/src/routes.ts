@@ -24,7 +24,7 @@ const initializeRoutes = (server: hapi.Server) => {
         },
         {
             method: "GET",
-            path: "/api",
+            path: apiPrefix,
             options: { auth: false as const },
             handler: () => {
                 return "Welcome to Karate Stars Api!!";

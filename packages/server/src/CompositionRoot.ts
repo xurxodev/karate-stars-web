@@ -14,9 +14,10 @@ import NewsFeedMongoRepository from "./data/newsFeed/NewsFeedMongoRepository";
 import NewsFeedsController from "./api/newsFeeds/NewsFeedsController";
 import { GetNewsFeedsUseCase } from "./domain/newsFeeds/usecases/GetNewsFeedsUseCase";
 import { DIContainer } from "karate-stars-core";
-import JwtAuthenticator from "./api/authentication/JwtAuthenticator";
+import JwtDefaultAuthenticator from "./api/authentication/JwtDefaultAuthenticator";
 
 export const names = {
+    jwtAuthenticator: "jwtAuthenticator",
     mongoConnection: "mongoConnection",
     settingsRepository: "settingsRepository",
     newsFeedRepository: "newsFeedRepository",
@@ -42,26 +43,21 @@ export function reset() {
 }
 
 function initApp() {
-    const mongoConnection = process.env.MONGO_DB_CONNECTION;
+    di.bindLazySingleton(names.mongoConnection, () => {
+        const mongoConnection = process.env.MONGO_DB_CONNECTION;
 
-    if (!mongoConnection) {
-        throw new Error("Does not exists environment variable for mongo data base connection");
-    }
+        if (!mongoConnection) {
+            throw new Error("Does not exists environment variable for mongo data base connection");
+        }
 
-    di.bindLazySingleton(names.mongoConnection, () => mongoConnection);
+        return mongoConnection;
+    });
 
-    const jwtSecretKey = process.env.JWT_SECRET_KEY;
+    di.bindLazySingleton(names.jwtAuthenticator, () => {
+        const jwtSecretKey = process.env.JWT_SECRET_KEY || "";
 
-    if (!jwtSecretKey) {
-        throw new Error("Does not exists environment variable for jwtSecretKey");
-    }
-
-    di.bindLazySingleton(
-        JwtAuthenticator,
-        () => new JwtAuthenticator(jwtSecretKey, di.get(GetUserByIdUseCase))
-    );
-
-    di.bindLazySingleton(names.mongoConnection, () => mongoConnection);
+        return new JwtDefaultAuthenticator(jwtSecretKey, di.get(GetUserByIdUseCase));
+    });
 }
 
 function initializeSettings() {
@@ -72,7 +68,7 @@ function initializeSettings() {
 
     di.bindLazySingleton(
         GetSettingsUseCase,
-        () => new GetSettingsUseCase(di.get(names.userRepository))
+        () => new GetSettingsUseCase(di.get(names.settingsRepository))
     );
 }
 
@@ -96,7 +92,7 @@ function initUser() {
         UserController,
         () =>
             new UserController(
-                di.get(JwtAuthenticator),
+                di.get(names.jwtAuthenticator),
                 di.get(GetUserByUsernameAndPasswordUseCase),
                 di.get(GetUserByIdUseCase)
             )
@@ -117,19 +113,24 @@ function initializeNewsFeeds() {
 
     di.bindFactory(
         NewsFeedsController,
-        () => new NewsFeedsController(di.get(JwtAuthenticator), di.get(GetNewsFeedsUseCase))
+        () => new NewsFeedsController(di.get(names.jwtAuthenticator), di.get(GetNewsFeedsUseCase))
     );
 }
 
 function initializeSocialNews() {
-    di.bindLazySingleton(names.socialNewsRepository, () => new SocialNewsTwitterRepository());
+    di.bindLazySingleton(names.socialNewsRepository, () => {
+        const consumerkey = process.env.TWITTER_CONSUMER_KEY_PROP || "";
+        const consumer_secret = process.env.TWITTER_CONSUMER_SECRET_PROP || "";
+
+        return new SocialNewsTwitterRepository(consumerkey, consumer_secret);
+    });
 
     di.bindLazySingleton(
         GetSocialNewsUseCase,
         () =>
             new GetSocialNewsUseCase(
                 di.get(names.socialNewsRepository),
-                di.get(names.userRepository)
+                di.get(names.settingsRepository)
             )
     );
 

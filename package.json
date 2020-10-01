@@ -2,7 +2,7 @@
   "private": true,
   "name": "karate-stars-web",
   "version": "0.1.0",
-  "main": "packages/server/build/server.js",
+  "main": "packages/server/build/index.js",
   "description": "Official Karate Stars Web packages.",
   "workspaces": [
     "packages/*"

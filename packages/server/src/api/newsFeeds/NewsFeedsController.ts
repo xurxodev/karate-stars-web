@@ -2,7 +2,7 @@ import * as hapi from "@hapi/hapi";
 import * as boom from "@hapi/boom";
 import { GetNewsFeedsUseCase } from "../../domain/newsFeeds/usecases/GetNewsFeedsUseCase";
 import { AdminUseCaseError } from "../../domain/common/AdminUseCase";
-import JwtAuthenticator from "../authentication/JwtAuthenticator";
+import { JwtAuthenticator } from "../../server";
 
 export default class NewsFeedsController {
     constructor(

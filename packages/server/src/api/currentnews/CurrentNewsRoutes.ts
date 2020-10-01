@@ -2,11 +2,11 @@ import * as hapi from "@hapi/hapi";
 
 import * as CompositionRoot from "./../../CompositionRoot";
 import CurrentNewsController from "./CurrentNewsController";
-import JwtAuthenticator from "../authentication/JwtAuthenticator";
+import { names } from "./../../CompositionRoot";
+import { JwtAuthenticator } from "../../server";
 
 export default function (apiPrefix: string): hapi.ServerRoute[] {
-    const jwtAuthenticator = CompositionRoot.di.get(JwtAuthenticator);
-    const currentNewsController = CompositionRoot.di.get(CurrentNewsController);
+    const jwtAuthenticator = CompositionRoot.di.get<JwtAuthenticator>(names.jwtAuthenticator);
 
     return [
         {
@@ -19,7 +19,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
                 request: hapi.Request,
                 h: hapi.ResponseToolkit
             ): hapi.Lifecycle.ReturnValue => {
-                return currentNewsController.get(request, h);
+                return CompositionRoot.di.get(CurrentNewsController).get(request, h);
             },
         },
     ];
