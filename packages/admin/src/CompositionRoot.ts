@@ -10,7 +10,7 @@ import SendPushNotificationBloc from "./notifications/presentation/SendPushNotif
 import FcmPushNotificationRepository from "./notifications/data/FcmPushNotificationRepository";
 import SendPushNotificationUseCase from "./notifications/domain/SendPushNotificationUseCase";
 import RssFeedDetailBloc from "./news/presentation/news-feed-detail/NewsFeedDetailBloc";
-import { DIContainer } from "karate-stars-core";
+import { DependencyLocator } from "karate-stars-core";
 
 export const names = {
     AxiosInstanceAPI: "axiosInstanceAPI",
@@ -20,7 +20,7 @@ export const names = {
     TokenStorage: "tokenStorage",
 };
 
-export const di = DIContainer.getInstance();
+export const di = DependencyLocator.getInstance();
 
 export function init() {
     initApp();

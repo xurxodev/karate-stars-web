@@ -11,19 +11,19 @@ type Binder<T> = {
     fn: () => T;
 };
 
-export class DIContainer {
+export class DependencyLocator {
     private factories = new Map<Token<any>, Binder<any>>();
     private lazySingletons = new Map<Token<any>, any>();
 
-    private static instance: DIContainer;
+    private static instance: DependencyLocator;
     private constructor() {}
 
-    static getInstance(): DIContainer {
-        if (!DIContainer.instance) {
-            DIContainer.instance = new DIContainer();
+    static getInstance(): DependencyLocator {
+        if (!DependencyLocator.instance) {
+            DependencyLocator.instance = new DependencyLocator();
         }
 
-        return DIContainer.instance;
+        return DependencyLocator.instance;
     }
 
     public get<T>(token: Type<T> | string): T {

@@ -1,4 +1,4 @@
-export * from "./di/DIContainer";
+export * from "./di/DependencyLocator";
 
 export * from "./entities/User";
 export * from "./entities/NewsFeed";

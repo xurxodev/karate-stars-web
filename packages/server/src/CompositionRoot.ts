@@ -13,7 +13,7 @@ import CurrentNewsController from "./api/currentnews/CurrentNewsController";
 import NewsFeedMongoRepository from "./data/newsFeed/NewsFeedMongoRepository";
 import NewsFeedsController from "./api/newsFeeds/NewsFeedsController";
 import { GetNewsFeedsUseCase } from "./domain/newsFeeds/usecases/GetNewsFeedsUseCase";
-import { DIContainer } from "karate-stars-core";
+import { DependencyLocator } from "karate-stars-core";
 import JwtDefaultAuthenticator from "./api/authentication/JwtDefaultAuthenticator";
 
 export const names = {
@@ -26,7 +26,7 @@ export const names = {
     currentNewsRepository: "currentNewsRepository",
 };
 
-export const di = DIContainer.getInstance();
+export const di = DependencyLocator.getInstance();
 
 export function init() {
     initApp();
