@@ -16,8 +16,8 @@ export const pages = {
     dashboard: { title: "Dasboard", path: "/dashboard" },
     competitors: { title: "Competitors", path: "/competitors" },
     videos: { title: "Videos", path: "/videos" },
-    newsFeedList: { title: "Rss Feeds", path: "/rss-feeds" },
-    newsFeedDetail: { title: "Create Rss Feed", path: "/news-feed-detail" },
+    newsFeedList: { title: "News Feeds", path: "/rss-feeds" },
+    newsFeedDetail: { title: "Create News Feed", path: "/news-feed-detail" },
     sendPushNotification: { title: "Send push notification", path: "/send-push-notification" },
     notFound: { title: "Not found", path: "/not-found" },
 };

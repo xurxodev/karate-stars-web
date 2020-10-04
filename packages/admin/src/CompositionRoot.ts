@@ -9,15 +9,21 @@ import RemoveCurrentUserUseCase from "./user/domain/RemoveCurrentUserUseCase";
 import SendPushNotificationBloc from "./notifications/presentation/SendPushNotificationBloc";
 import FcmPushNotificationRepository from "./notifications/data/FcmPushNotificationRepository";
 import SendPushNotificationUseCase from "./notifications/domain/SendPushNotificationUseCase";
-import RssFeedDetailBloc from "./news/presentation/news-feed-detail/NewsFeedDetailBloc";
+import NewsFeedDetailBloc from "./news/presentation/news-feed-detail/NewsFeedDetailBloc";
 import { DependencyLocator } from "karate-stars-core";
+import NewsFeedListBloc from "./news/presentation/news-feed-list/NewsFeedListBloc";
+import NewsFeedApiRepository from "./news/data/NewsFeedApiRepository";
+import { NewsFeedRepository } from "./news/domain/Boundaries";
+import UserRepository from "./user/domain/Boundaries";
+import GetNewsFeedsUseCase from "./news/domain/GetNewsFeedsUseCase";
 
 export const names = {
-    AxiosInstanceAPI: "axiosInstanceAPI",
-    AxiosInstancePush: "axiosInstancePush",
-    UserRepository: "userRepository",
-    PushNotificationRepository: "pushNotificationRepository",
-    TokenStorage: "tokenStorage",
+    axiosInstanceAPI: "axiosInstanceAPI",
+    axiosInstancePush: "axiosInstancePush",
+    userRepository: "userRepository",
+    newsFeedRepository: "newsFeedRepository",
+    pushNotificationRepository: "pushNotificationRepository",
+    tokenStorage: "tokenStorage",
 };
 
 export const di = DependencyLocator.getInstance();
@@ -26,7 +32,7 @@ export function init() {
     initApp();
     initLogin();
     initSendPushNotifications();
-    initRssFeed();
+    initNewsFeed();
 }
 
 export function reset() {
@@ -35,25 +41,25 @@ export function reset() {
 }
 
 function initApp() {
-    di.bindLazySingleton(names.AxiosInstanceAPI, () =>
+    di.bindLazySingleton(names.axiosInstanceAPI, () =>
         axios.create({
             baseURL: "/api/v1/",
         })
     );
 
-    di.bindLazySingleton(names.TokenStorage, () => new TokenLocalStorage());
+    di.bindLazySingleton(names.tokenStorage, () => new TokenLocalStorage());
 
     di.bindLazySingleton(
-        names.UserRepository,
-        () => new UserApiRepository(di.get(names.AxiosInstanceAPI), di.get(names.TokenStorage))
+        names.userRepository,
+        () => new UserApiRepository(di.get(names.axiosInstanceAPI), di.get(names.tokenStorage))
     );
     di.bindLazySingleton(
         GetCurrentUserUseCase,
-        () => new GetCurrentUserUseCase(di.get(names.UserRepository))
+        () => new GetCurrentUserUseCase(di.get<UserRepository>(names.userRepository))
     );
     di.bindLazySingleton(
         RemoveCurrentUserUseCase,
-        () => new RemoveCurrentUserUseCase(di.get(names.UserRepository))
+        () => new RemoveCurrentUserUseCase(di.get<UserRepository>(names.userRepository))
     );
 
     di.bindFactory(
@@ -63,12 +69,12 @@ function initApp() {
 }
 
 function initLogin() {
-    di.bindLazySingleton(LoginUseCase, () => new LoginUseCase(di.get(names.UserRepository)));
+    di.bindLazySingleton(LoginUseCase, () => new LoginUseCase(di.get(names.userRepository)));
     di.bindFactory(LoginBloc, () => new LoginBloc(di.get(LoginUseCase)));
 }
 
 function initSendPushNotifications() {
-    di.bindLazySingleton(names.AxiosInstancePush, () =>
+    di.bindLazySingleton(names.axiosInstancePush, () =>
         axios.create({
             baseURL: "https://fcm.googleapis.com/fcm",
         })
@@ -77,13 +83,13 @@ function initSendPushNotifications() {
     const fcmApiToken = process.env.REACT_APP_FCM_API_TOKEN || "";
 
     di.bindLazySingleton(
-        names.PushNotificationRepository,
-        () => new FcmPushNotificationRepository(di.get(names.AxiosInstancePush), fcmApiToken)
+        names.pushNotificationRepository,
+        () => new FcmPushNotificationRepository(di.get(names.axiosInstancePush), fcmApiToken)
     );
 
     di.bindLazySingleton(
         SendPushNotificationUseCase,
-        () => new SendPushNotificationUseCase(di.get(names.PushNotificationRepository))
+        () => new SendPushNotificationUseCase(di.get(names.pushNotificationRepository))
     );
 
     di.bindFactory(
@@ -92,6 +98,18 @@ function initSendPushNotifications() {
     );
 }
 
-function initRssFeed() {
-    di.bindFactory(RssFeedDetailBloc, () => new RssFeedDetailBloc());
+function initNewsFeed() {
+    di.bindLazySingleton(
+        names.newsFeedRepository,
+        () => new NewsFeedApiRepository(di.get(names.axiosInstanceAPI), di.get(names.tokenStorage))
+    );
+
+    di.bindLazySingleton(
+        GetNewsFeedsUseCase,
+        () => new GetNewsFeedsUseCase(di.get<NewsFeedRepository>(names.newsFeedRepository))
+    );
+
+    di.bindFactory(NewsFeedListBloc, () => new NewsFeedListBloc(di.get(GetNewsFeedsUseCase)));
+
+    di.bindFactory(NewsFeedDetailBloc, () => new NewsFeedDetailBloc());
 }

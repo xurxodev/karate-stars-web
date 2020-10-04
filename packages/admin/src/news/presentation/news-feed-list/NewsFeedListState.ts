@@ -4,7 +4,7 @@ export interface ListLoadingState {
 
 export interface ListLoadedState<T> {
     kind: "ListLoadedState";
-    data: T;
+    data: Array<T>;
 }
 
 export interface ListErrorState<T> {

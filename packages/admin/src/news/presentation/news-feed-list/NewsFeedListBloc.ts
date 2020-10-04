@@ -1,94 +1,49 @@
-import { FormState } from "../../../common/presentation/state/FormState";
 import { Bloc } from "../../../common/presentation/bloc";
 import { ListState } from "./NewsFeedListState";
 import { NewsFeedRawData } from "karate-stars-core";
+import GetNewsFeedsUseCase from "../../domain/GetNewsFeedsUseCase";
+import { GetNewsFeedsError } from "../../domain/Errors";
 
 class NewsFeedListBloc extends Bloc<ListState<NewsFeedRawData>> {
-    constructor() {
+    constructor(private getNewsFeedsUseCase: GetNewsFeedsUseCase) {
         super({
             kind: "ListLoadingState",
         });
+
+        this.loadData();
     }
 
-    protected validateState(state: FormState): Record<string, string[]> | null {
-        // const result = this.createNotification(state);
-        // const errors = result.fold(
-        //     errors => errors,
-        //     () => null
-        // );
-        console.log({ state });
-        return {};
+    async loadData() {
+        const response = await this.getNewsFeedsUseCase.execute();
+
+        response.fold(
+            error => this.changeState(this.handleError(error)),
+            feeds => this.changeState({ kind: "ListLoadedState", data: feeds })
+        );
     }
 
-    async submit() {
-        // if (this.state.isValid) {
-        //     const creationResult = this.createNotification(this.state);
-        //     const sendResult = await this.sendPushNotificationUseCase.execute(
-        //         creationResult.getOrThrow()
-        //     );
-        //     sendResult.fold(
-        //         (error: SendPushNotificationError) => this.changeState(this.handleError(error)),
-        //         () =>
-        //             this.changeState({
-        //                 ...this.state,
-        //                 result: {
-        //                     kind: "FormResultSuccess",
-        //                     message: "Push notification sent successfully",
-        //                 },
-        //             })
-        //     );
-        // } else {
-        //     this.changeState({ ...this.state });
-        // }
+    private handleError(error: GetNewsFeedsError): ListState<NewsFeedRawData> {
+        switch (error.kind) {
+            case "Unauthorized": {
+                return {
+                    kind: "ListErrorState",
+                    message: "Invalid credentials",
+                };
+            }
+            case "ApiError": {
+                return {
+                    kind: "ListErrorState",
+                    message: "Sorry, an error has ocurred in the server. Please try later again",
+                };
+            }
+            case "UnexpectedError": {
+                return {
+                    kind: "ListErrorState",
+                    message: "Sorry, an error has ocurred. Please try later again",
+                };
+            }
+        }
     }
-
-    // private handleError(error: SendPushNotificationError): FormState {
-    //     switch (error.kind) {
-    //         case "Unauthorized":
-    //             return {
-    //                 ...this.state,
-    //                 result: { kind: "FormResultError", message: "Invalid credentials" },
-    //             };
-    //         case "ApiError":
-    //             return {
-    //                 ...this.state,
-    //                 result: {
-    //                     kind: "FormResultError",
-    //                     message: `Sorry, an error has ocurred in the server. Please try later again`,
-    //                 },
-    //             };
-    //         case "UnexpectedError":
-    //             return {
-    //                 ...this.state,
-    //                 result: {
-    //                     kind: "FormResultError",
-    //                     message: `Sorry, an error has ocurred. Please try later again`,
-    //                 },
-    //             };
-    //     }
-    // }
-
-    // private createNotification(
-    //     state: FormState
-    // ): Either<ValidationErrorsDictionary, UrlNotification> {
-    //     const notificationDataFields = state.sections.flatMap(section =>
-    //         section.fields.map(field => ({ [field.name]: field.value })));
-    //     const notificationData = Object.assign({}, ...notificationDataFields);
-
-    //     return UrlNotification.create(notificationData);
-    // }
 }
 
 export default NewsFeedListBloc;
-
-// const initialFieldsState: FormSectionState[] = [
-//     {
-//         fields: [
-//             { label: "Name", name: "name", required: true },
-//             { label: "Url", name: "url", required: true },
-//             { label: "Language", name: "language", required: true },
-//             { label: "Type", name: "type", required: true },
-//             { label: "Image", name: "image", required: true },
-//         ],
-//     },
-// ];

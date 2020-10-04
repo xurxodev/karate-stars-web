@@ -13,3 +13,5 @@ export interface UnexpectedError {
 export interface Unauthorized {
     kind: "Unauthorized";
 }
+
+export type DataError = ApiError | UnexpectedError | Unauthorized;

@@ -1,3 +1,3 @@
-import { ApiError, UnexpectedError, Unauthorized } from "../../common/domain/Errors";
+import { DataError } from "../../common/domain/Errors";
 
-export type GetRssFeedListError = ApiError | UnexpectedError | Unauthorized;
+export type GetNewsFeedsError = DataError;

@@ -6,7 +6,7 @@ export function givenAValidAuthenticatedUser() {
     CompositionRoot.reset();
 
     CompositionRoot.di.bindLazySingleton(
-        CompositionRoot.names.TokenStorage,
+        CompositionRoot.names.tokenStorage,
         () => new MockTokenStorage()
     );
 
@@ -36,7 +36,7 @@ export function givenANonAuthenticatedUser() {
     CompositionRoot.reset();
 
     CompositionRoot.di.bindLazySingleton(
-        CompositionRoot.names.TokenStorage,
+        CompositionRoot.names.tokenStorage,
         () => new MockTokenStorage(false)
     );
 
@@ -58,7 +58,7 @@ export function givenAnUnauthorizedUser() {
     CompositionRoot.reset();
 
     CompositionRoot.di.bindLazySingleton(
-        CompositionRoot.names.TokenStorage,
+        CompositionRoot.names.tokenStorage,
         () => new MockTokenStorage()
     );
 
