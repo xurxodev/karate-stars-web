@@ -1,10 +1,14 @@
-import { CircularProgress, makeStyles, Snackbar, Typography } from "@material-ui/core";
+import { Avatar, CircularProgress, makeStyles } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { NewsFeedRawData } from "karate-stars-core";
 import React from "react";
+import { Link } from "react-router-dom";
 import { BlocBuilder } from "../../../common/presentation/bloc";
 import MainLayout from "../../../common/presentation/layouts/main/MainLayout";
 import { di } from "../../../CompositionRoot";
+import NewsFeedTable, {
+    TableColumn,
+} from "../../../common/presentation/components/objects-table/ObjectsTable";
 import NewsFeedListBloc from "./NewsFeedListBloc";
 import { ListState } from "./NewsFeedListState";
 
@@ -17,10 +21,30 @@ const useStyles = makeStyles({
     },
 });
 
+const feedAvatar = (feed: NewsFeedRawData) => <Avatar src={feed.image} />;
+const feedLink = (feed: NewsFeedRawData) => <Link to={feed.url}>{feed.url}</Link>;
+
 const NewsFeedListPage: React.FC = () => {
     const classes = useStyles();
 
     const bloc = di.get(NewsFeedListBloc);
+
+    const columns: TableColumn<NewsFeedRawData>[] = [
+        { name: "id", text: "Id" },
+        {
+            name: "image",
+            text: "Image",
+            getValue: feedAvatar,
+        },
+        { name: "name", text: "Name" },
+        { name: "language", text: "Language" },
+        { name: "type", text: "Type" },
+        {
+            name: "url",
+            text: "Url",
+            getValue: feedLink,
+        },
+    ];
 
     return (
         <MainLayout title={"News Feed List"}>
@@ -36,20 +60,10 @@ const NewsFeedListPage: React.FC = () => {
                             );
                         }
                         case "ListErrorState": {
-                            return (
-                                <Snackbar open={true} autoHideDuration={6000}>
-                                    <Alert severity="error">{state.message}</Alert>
-                                </Snackbar>
-                            );
+                            return <Alert severity="error">{state.message}</Alert>;
                         }
                         case "ListLoadedState": {
-                            return (
-                                <React.Fragment>
-                                    {state.data.map(feed => (
-                                        <Typography key={feed.id}>{feed.name}</Typography>
-                                    ))}
-                                </React.Fragment>
-                            );
+                            return <NewsFeedTable rows={state.data} columns={columns} />;
                         }
                     }
                 }}

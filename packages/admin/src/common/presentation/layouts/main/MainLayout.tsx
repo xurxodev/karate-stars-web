@@ -22,6 +22,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         padding: theme.spacing(4),
         height: "100%",
     },
+    divider: {
+        marginTop: "16px",
+        marginBottom: "16px",
+    },
 }));
 
 interface MainLayoutProps {
@@ -69,8 +73,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ title, children }) => {
                     <Typography variant="h3" component="h1">
                         {title}
                     </Typography>
-                    <Divider />
-                    {children}
+                    <Divider className={classes.divider} />
+                    <Box display="flex" justifyContent="start" flexDirection="column" flexGrow={1}>
+                        {children}
+                    </Box>
                     <Footer />
                 </Box>
             </main>
