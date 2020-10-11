@@ -25,7 +25,6 @@ const LoginPage: React.FC = () => {
     };
 
     const handleSubmit = (event: any) => {
-        debugger;
         event.preventDefault();
         loginBloc.submit();
     };

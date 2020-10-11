@@ -34,8 +34,6 @@ interface SearchInputProps {
 const SearchInput: React.FC<SearchInputProps> = ({ searchTerm, className, onChange, style }) => {
     const classes = useStyles();
 
-    debugger;
-
     return (
         <Paper className={clsx(classes.root, className)} style={style}>
             <SearchIcon className={classes.icon} />

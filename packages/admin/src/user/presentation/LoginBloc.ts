@@ -39,9 +39,7 @@ class LoginBloc extends FormBloc {
     }
 
     async submit() {
-        debugger;
         if (this.state.isValid) {
-            debugger;
             const credentials = this.createCredentials(this.state).getOrThrow();
 
             const loginResult = await this.loginUseCase.execute(credentials);

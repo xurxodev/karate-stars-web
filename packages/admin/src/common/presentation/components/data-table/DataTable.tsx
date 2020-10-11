@@ -5,6 +5,7 @@ import {
     CardActions,
     CardContent,
     Checkbox,
+    Grid,
     makeStyles,
     Table,
     TableBody,
@@ -43,8 +44,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface TableColumn<T> {
     name: keyof T;
     text: string;
-    // sortable?: boolean;
-    // hidden?: boolean;
     getValue?: (row: T) => JSX.Element;
 }
 
@@ -59,7 +58,7 @@ interface IdentifiableObject {
 }
 
 //const ObjectsTable: React.FC<NewsFeedTableProps<T>> = <T>({ rows, className, columns }) => {
-export default function ObjectsTable<T extends IdentifiableObject>({
+export default function DataTable<T extends IdentifiableObject>({
     rows,
     className,
     columns,
@@ -75,7 +74,6 @@ export default function ObjectsTable<T extends IdentifiableObject>({
     const rowsPerPageOptions = [5, 10, 25];
 
     React.useEffect(() => {
-        debugger;
         const filteredRows = search
             ? rows.filter(row => {
                   return columns.some(column => (row[column.name] as any).includes(search));
@@ -126,7 +124,6 @@ export default function ObjectsTable<T extends IdentifiableObject>({
     };
 
     const handleSearch = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        debugger;
         setSearch(event.target.value);
     };
 
@@ -144,56 +141,60 @@ export default function ObjectsTable<T extends IdentifiableObject>({
             <Card className={clsx(classes.root, className)}>
                 <CardContent className={classes.content}>
                     <div className={classes.inner}>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell padding="checkbox">
-                                        <Checkbox
-                                            checked={selectedRows.length === pageRows.length}
-                                            color="primary"
-                                            indeterminate={
-                                                selectedRows.length > 0 &&
-                                                selectedRows.length < pageRows.length
-                                            }
-                                            onChange={handleSelectAll}
-                                        />
-                                    </TableCell>
-
-                                    {columns.map((column, index) => {
-                                        return <TableCell key={index}>{column.text}</TableCell>;
-                                    })}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {pageRows.map(item => (
-                                    <TableRow
-                                        className={classes.tableRow}
-                                        hover
-                                        key={item.id}
-                                        selected={selectedRows.indexOf(item.id) !== -1}>
+                        <Grid item xs={12}>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
                                         <TableCell padding="checkbox">
                                             <Checkbox
-                                                checked={selectedRows.indexOf(version) !== -1}
+                                                checked={selectedRows.length === pageRows.length}
                                                 color="primary"
-                                                onChange={event => handleSelectOne(event, item.id)}
-                                                value="true"
+                                                indeterminate={
+                                                    selectedRows.length > 0 &&
+                                                    selectedRows.length < pageRows.length
+                                                }
+                                                onChange={handleSelectAll}
                                             />
                                         </TableCell>
 
                                         {columns.map((column, index) => {
-                                            const cellContent = !column.getValue
-                                                ? item[column.name]
-                                                : column.getValue(item);
-                                            return (
-                                                <TableCell key={`${item.id}-${index}`}>
-                                                    {cellContent}
-                                                </TableCell>
-                                            );
+                                            return <TableCell key={index}>{column.text}</TableCell>;
                                         })}
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                </TableHead>
+                                <TableBody>
+                                    {pageRows.map(item => (
+                                        <TableRow
+                                            className={classes.tableRow}
+                                            hover
+                                            key={item.id}
+                                            selected={selectedRows.indexOf(item.id) !== -1}>
+                                            <TableCell padding="checkbox">
+                                                <Checkbox
+                                                    checked={selectedRows.indexOf(version) !== -1}
+                                                    color="primary"
+                                                    onChange={event =>
+                                                        handleSelectOne(event, item.id)
+                                                    }
+                                                    value="true"
+                                                />
+                                            </TableCell>
+
+                                            {columns.map((column, index) => {
+                                                const cellContent = !column.getValue
+                                                    ? item[column.name]
+                                                    : column.getValue(item);
+                                                return (
+                                                    <TableCell key={`${item.id}-${index}`}>
+                                                        {cellContent}
+                                                    </TableCell>
+                                                );
+                                            })}
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </Grid>
                     </div>
                 </CardContent>
                 <CardActions className={classes.actions}>
