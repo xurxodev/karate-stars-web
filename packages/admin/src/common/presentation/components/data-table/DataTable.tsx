@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import {
     Box,
-    Card,
-    CardActions,
-    CardContent,
     Checkbox,
-    Grid,
     makeStyles,
+    Paper,
     Table,
     TableBody,
     TableCell,
+    TableContainer,
     TableHead,
     TablePagination,
     TableRow,
@@ -24,8 +22,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     content: {
         padding: theme.spacing(0),
     },
-    inner: {
-        minWidth: 1050,
+    paper: {
+        width: "100%",
+        marginBottom: theme.spacing(2),
     },
     nameContainer: {
         display: "flex",
@@ -130,7 +129,7 @@ export default function DataTable<T extends IdentifiableObject>({
     //<PerfectScrollbar></PerfectScrollbar>
     //  <Card {...rest} className={clsx(classes.root, className)}>
     return (
-        <Box display="flex" justifyContent="space-between" flexDirection="column">
+        <div className={clsx(classes.root, className)}>
             <Box
                 className={classes.toolbar}
                 display="flex"
@@ -138,77 +137,69 @@ export default function DataTable<T extends IdentifiableObject>({
                 flexDirection="row">
                 <SearchInput searchTerm={search} onChange={handleSearch} />
             </Box>
-            <Card className={clsx(classes.root, className)}>
-                <CardContent className={classes.content}>
-                    <div className={classes.inner}>
-                        <Grid item xs={12}>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell padding="checkbox">
-                                            <Checkbox
-                                                checked={selectedRows.length === pageRows.length}
-                                                color="primary"
-                                                indeterminate={
-                                                    selectedRows.length > 0 &&
-                                                    selectedRows.length < pageRows.length
-                                                }
-                                                onChange={handleSelectAll}
-                                            />
-                                        </TableCell>
+            <Paper className={classes.paper}>
+                <TableContainer>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell padding="checkbox">
+                                    <Checkbox
+                                        checked={selectedRows.length === pageRows.length}
+                                        color="primary"
+                                        indeterminate={
+                                            selectedRows.length > 0 &&
+                                            selectedRows.length < pageRows.length
+                                        }
+                                        onChange={handleSelectAll}
+                                    />
+                                </TableCell>
 
-                                        {columns.map((column, index) => {
-                                            return <TableCell key={index}>{column.text}</TableCell>;
-                                        })}
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {pageRows.map(item => (
-                                        <TableRow
-                                            className={classes.tableRow}
-                                            hover
-                                            key={item.id}
-                                            selected={selectedRows.indexOf(item.id) !== -1}>
-                                            <TableCell padding="checkbox">
-                                                <Checkbox
-                                                    checked={selectedRows.indexOf(version) !== -1}
-                                                    color="primary"
-                                                    onChange={event =>
-                                                        handleSelectOne(event, item.id)
-                                                    }
-                                                    value="true"
-                                                />
+                                {columns.map((column, index) => {
+                                    return <TableCell key={index}>{column.text}</TableCell>;
+                                })}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {pageRows.map(item => (
+                                <TableRow
+                                    className={classes.tableRow}
+                                    hover
+                                    key={item.id}
+                                    selected={selectedRows.indexOf(item.id) !== -1}>
+                                    <TableCell padding="checkbox">
+                                        <Checkbox
+                                            checked={selectedRows.indexOf(version) !== -1}
+                                            color="primary"
+                                            onChange={event => handleSelectOne(event, item.id)}
+                                            value="true"
+                                        />
+                                    </TableCell>
+
+                                    {columns.map((column, index) => {
+                                        const cellContent = !column.getValue
+                                            ? item[column.name]
+                                            : column.getValue(item);
+                                        return (
+                                            <TableCell key={`${item.id}-${index}`}>
+                                                {cellContent}
                                             </TableCell>
-
-                                            {columns.map((column, index) => {
-                                                const cellContent = !column.getValue
-                                                    ? item[column.name]
-                                                    : column.getValue(item);
-                                                return (
-                                                    <TableCell key={`${item.id}-${index}`}>
-                                                        {cellContent}
-                                                    </TableCell>
-                                                );
-                                            })}
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </Grid>
-                    </div>
-                </CardContent>
-                <CardActions className={classes.actions}>
-                    <TablePagination
-                        component="div"
-                        count={filteredRows.length}
-                        onChangePage={handlePageChange}
-                        onChangeRowsPerPage={handleRowsPerPageChange}
-                        page={page}
-                        rowsPerPage={rowsPerPage}
-                        rowsPerPageOptions={rowsPerPageOptions}
-                    />
-                </CardActions>
-            </Card>
-        </Box>
+                                        );
+                                    })}
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <TablePagination
+                    component="div"
+                    count={filteredRows.length}
+                    onChangePage={handlePageChange}
+                    onChangeRowsPerPage={handleRowsPerPageChange}
+                    page={page}
+                    rowsPerPage={rowsPerPage}
+                    rowsPerPageOptions={rowsPerPageOptions}
+                />
+            </Paper>
+        </div>
     );
 }

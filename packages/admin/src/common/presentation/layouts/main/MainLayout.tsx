@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     content: {
         padding: theme.spacing(4),
-        height: "100%",
+        flex: 1,
     },
     divider: {
         marginTop: "16px",
@@ -52,7 +52,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ title, children }) => {
     const shouldOpenSidebar = isDesktop ? true : openSidebar;
 
     return (
-        <div
+        <Box
+            display="flex"
+            flexDirection="column"
             className={clsx({
                 [classes.root]: true,
                 [classes.shiftContent]: isDesktop,
@@ -65,22 +67,15 @@ const MainLayout: React.FC<MainLayoutProps> = ({ title, children }) => {
             />
 
             <main className={classes.content}>
-                <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    flexDirection="column"
-                    height="100%">
-                    <Typography variant="h3" component="h1">
-                        {title}
-                    </Typography>
-                    <Divider className={classes.divider} />
-                    <Box display="flex" justifyContent="start" flexDirection="column" flexGrow={1}>
-                        {children}
-                    </Box>
-                    <Footer />
-                </Box>
+                <Typography variant="h3" component="h1">
+                    {title}
+                </Typography>
+                <Divider className={classes.divider} />
+
+                {children}
             </main>
-        </div>
+            <Footer />
+        </Box>
     );
 };
 
