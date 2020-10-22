@@ -50,6 +50,9 @@ interface ObjectsTableProps<T> {
     className?: string;
     columns: TableColumn<T>[];
     rows: T[];
+    search?: string;
+    onSearchChange?: (search: string) => void;
+    searchEnable?: boolean;
 }
 
 interface IdentifiableObject {
@@ -61,28 +64,23 @@ export default function DataTable<T extends IdentifiableObject>({
     rows,
     className,
     columns,
+    search = "",
+    onSearchChange,
+    searchEnable,
 }: ObjectsTableProps<T>) {
     const classes = useStyles();
 
     const [selectedRows, setSelectedRows] = useState<string[]>([]);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [filteredRows, setFilteredRows] = useState<T[]>(rows);
-    const [pageRows, setPageRows] = useState<T[]>(filteredRows);
+    const [pageRows, setPageRows] = useState<T[]>(rows);
     const [page, setPage] = useState(0);
-    const [search, setSearch] = useState("");
+    const [searchVisible] = useState(searchEnable || true);
     const rowsPerPageOptions = [5, 10, 25];
 
     React.useEffect(() => {
-        const filteredRows = search
-            ? rows.filter(row => {
-                  return columns.some(column => (row[column.name] as any).includes(search));
-              })
-            : rows;
-
         const start = page * rowsPerPage;
-        const result = filteredRows.slice(start, start + rowsPerPage);
+        const result = rows.slice(start, start + rowsPerPage);
 
-        setFilteredRows(filteredRows);
         setPageRows(result);
     }, [search, page, rowsPerPage, columns, rows]);
 
@@ -122,12 +120,12 @@ export default function DataTable<T extends IdentifiableObject>({
         setRowsPerPage(+event.target.value);
     };
 
-    const handleSearch = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        setSearch(event.target.value);
+    const handleSearch = (value: string) => {
+        if (onSearchChange) {
+            onSearchChange(value);
+        }
     };
 
-    //<PerfectScrollbar></PerfectScrollbar>
-    //  <Card {...rest} className={clsx(classes.root, className)}>
     return (
         <div className={clsx(classes.root, className)}>
             <Box
@@ -135,7 +133,7 @@ export default function DataTable<T extends IdentifiableObject>({
                 display="flex"
                 justifyContent="space-between"
                 flexDirection="row">
-                <SearchInput searchTerm={search} onChange={handleSearch} />
+                {searchVisible && <SearchInput value={search} onChange={handleSearch} />}
             </Box>
             <Paper className={classes.paper}>
                 <TableContainer>
@@ -192,7 +190,7 @@ export default function DataTable<T extends IdentifiableObject>({
                 </TableContainer>
                 <TablePagination
                     component="div"
-                    count={filteredRows.length}
+                    count={rows.length}
                     onChangePage={handlePageChange}
                     onChangeRowsPerPage={handleRowsPerPageChange}
                     page={page}

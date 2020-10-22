@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/styles";
 import { Paper, Input, Theme } from "@material-ui/core";
@@ -25,14 +25,33 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface SearchInputProps {
-    searchTerm: string;
+    value: string;
     className?: string;
-    onChange?: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>;
+    onChange?: (value: string) => void;
     style?: React.CSSProperties;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({ searchTerm, className, onChange, style }) => {
+const SearchInput: React.FC<SearchInputProps> = ({ value, className, onChange, style }) => {
     const classes = useStyles();
+
+    const [stateValue, updateStateValue] = useState(value);
+    useEffect(() => updateStateValue(value), [value]);
+
+    const onChangeDebounced = useCallback(
+        debounce((value: string) => {
+            if (onChange) onChange(value);
+        }, 400),
+        [onChange]
+    );
+
+    const onKeyUp = useCallback(
+        (event: React.ChangeEvent<HTMLInputElement>) => {
+            const value = event.target.value;
+            onChangeDebounced(value);
+            updateStateValue(value);
+        },
+        [onChangeDebounced, updateStateValue]
+    );
 
     return (
         <Paper className={clsx(classes.root, className)} style={style}>
@@ -40,12 +59,26 @@ const SearchInput: React.FC<SearchInputProps> = ({ searchTerm, className, onChan
             <Input
                 className={classes.input}
                 disableUnderline
-                onChange={onChange}
+                onChange={onKeyUp}
                 placeholder="Search ..."
-                value={searchTerm}
+                value={stateValue}
             />
         </Paper>
     );
 };
 
 export default SearchInput;
+
+function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
+    let timeout: ReturnType<typeof setTimeout> | null = null;
+
+    const debounced = (...args: Parameters<F>) => {
+        if (timeout !== null) {
+            clearTimeout(timeout);
+            timeout = null;
+        }
+        timeout = setTimeout(() => func(...args), waitFor);
+    };
+
+    return debounced as (...args: Parameters<F>) => ReturnType<F>;
+}

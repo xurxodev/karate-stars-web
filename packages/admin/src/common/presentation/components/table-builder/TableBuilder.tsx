@@ -17,6 +17,8 @@ const useStyles = makeStyles({
 interface TableBuilderProps<T> {
     className?: string;
     state: ListState<T>;
+    search?: string;
+    onSearchChange?: (search: string) => void;
 }
 
 interface IdentifiableObject {
@@ -25,6 +27,7 @@ interface IdentifiableObject {
 
 export default function TableBuilder<T extends IdentifiableObject>({
     state,
+    onSearchChange,
 }: TableBuilderProps<T>) {
     const classes = useStyles();
 
@@ -42,7 +45,14 @@ export default function TableBuilder<T extends IdentifiableObject>({
         case "ListLoadedState": {
             const columns = mapColumns<T>(state.fields);
 
-            return <DataTable columns={columns} rows={state.items} />;
+            return (
+                <DataTable
+                    columns={columns}
+                    rows={state.items}
+                    search={state.search}
+                    onSearchChange={onSearchChange}
+                />
+            );
         }
     }
 }

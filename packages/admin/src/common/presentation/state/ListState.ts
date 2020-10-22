@@ -6,6 +6,7 @@ export interface ListLoadedState<T> {
     kind: "ListLoadedState";
     items: Array<T>;
     fields: ListField<T>[];
+    search?: string;
 }
 
 export interface ListErrorState<T> {

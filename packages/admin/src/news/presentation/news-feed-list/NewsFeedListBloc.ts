@@ -13,8 +13,12 @@ class NewsFeedListBloc extends Bloc<ListState<NewsFeedRawData>> {
         this.loadData();
     }
 
-    async loadData() {
-        const response = await this.getNewsFeedsUseCase.execute();
+    async search(search: string) {
+        this.loadData(search);
+    }
+
+    private async loadData(search?: string) {
+        const response = await this.getNewsFeedsUseCase.execute(search);
 
         response.fold(
             error => this.changeState(this.handleError(error)),

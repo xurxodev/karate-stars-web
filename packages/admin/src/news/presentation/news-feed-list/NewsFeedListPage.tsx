@@ -10,12 +10,16 @@ import { ListState } from "../../../common/presentation/state/ListState";
 const NewsFeedListPage: React.FC = () => {
     const bloc = di.get(NewsFeedListBloc);
 
+    const handleSearch = (search: string) => {
+        bloc.search(search);
+    };
+
     return (
         <MainLayout title={"News Feed List"}>
             <BlocBuilder
                 bloc={bloc}
                 builder={(state: ListState<NewsFeedRawData>) => {
-                    return <TableBuilder state={state} />;
+                    return <TableBuilder state={state} onSearchChange={handleSearch} />;
                 }}
             />
         </MainLayout>
