@@ -26,6 +26,26 @@ abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListState<S>>
         super.changeState(state);
     }
 
+    selectChange(id: string) {
+        if (this.state.kind === "ListLoadedState") {
+            const exists = this.state.selectedItems.includes(id);
+
+            const selectedItems = exists
+                ? this.state.selectedItems.filter(selectedId => selectedId !== id)
+                : [...this.state.selectedItems, id];
+
+            this.changeState({ ...this.state, selectedItems: selectedItems });
+        }
+    }
+
+    selectAllChange(value: boolean) {
+        if (this.state.kind === "ListLoadedState") {
+            const selectedItems = value ? [...this.state.items.map(item => item.id)] : [];
+
+            this.changeState({ ...this.state, selectedItems });
+        }
+    }
+
     protected changeState(state: ListState<S>) {
         super.changeState(state);
 

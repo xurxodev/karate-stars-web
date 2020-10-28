@@ -15,7 +15,6 @@ import {
 } from "@material-ui/core";
 import clsx from "clsx";
 import SearchInput from "../search-input/SearchInput";
-import { version } from "process";
 import { IdentifiableObject } from "../../state/ListState";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -47,12 +46,15 @@ export interface TableColumn<T> {
     getValue?: (row: T) => JSX.Element;
 }
 
-interface ObjectsTableProps<T> {
+export interface DataTableProps<T> {
     className?: string;
     columns: TableColumn<T>[];
     rows: T[];
+    selectedRows: string[];
     search?: string;
     onSearchChange?: (search: string) => void;
+    onSelectionChange?: (id: string) => void;
+    onSelectionAllChange?: (select: boolean) => void;
     searchEnable?: boolean;
 }
 
@@ -62,16 +64,20 @@ export default function DataTable<T extends IdentifiableObject>({
     columns,
     search = "",
     onSearchChange,
+    selectedRows,
+    onSelectionChange,
+    onSelectionAllChange,
     searchEnable,
-}: ObjectsTableProps<T>) {
+}: DataTableProps<T>) {
     const classes = useStyles();
 
-    const [selectedRows, setSelectedRows] = useState<string[]>([]);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [pageRows, setPageRows] = useState<T[]>(rows);
-    const [page, setPage] = useState(0);
-    const [searchVisible] = useState(searchEnable || true);
     const rowsPerPageOptions = [5, 10, 25];
+    const [page, setPage] = useState(0);
+
+    const [pageRows, setPageRows] = useState<T[]>(rows);
+
+    const [searchVisible] = useState(searchEnable || true);
 
     React.useEffect(() => {
         const start = page * rowsPerPage;
@@ -81,29 +87,15 @@ export default function DataTable<T extends IdentifiableObject>({
     }, [search, page, rowsPerPage, columns, rows]);
 
     const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const selected = event.target.checked ? pageRows.map(feed => feed.id) : [];
-
-        setSelectedRows(selected);
+        if (onSelectionAllChange) {
+            onSelectionAllChange(event.target.checked);
+        }
     };
 
-    const handleSelectOne = (_event: React.ChangeEvent<HTMLInputElement>, id: string) => {
-        const selectedIndex = selectedRows.indexOf(id);
-        let newSelectedRows: string[] = [];
-
-        if (selectedIndex === -1) {
-            newSelectedRows = newSelectedRows.concat(selectedRows, id);
-        } else if (selectedIndex === 0) {
-            newSelectedRows = newSelectedRows.concat(selectedRows.slice(1));
-        } else if (selectedIndex === selectedRows.length - 1) {
-            newSelectedRows = newSelectedRows.concat(selectedRows.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelectedRows = newSelectedRows.concat(
-                selectedRows.slice(0, selectedIndex),
-                selectedRows.slice(selectedIndex + 1)
-            );
+    const handleSelectOne = (id: string) => {
+        if (onSelectionChange) {
+            onSelectionChange(id);
         }
-
-        setSelectedRows(newSelectedRows);
     };
 
     const handlePageChange = (_event: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
@@ -159,12 +151,12 @@ export default function DataTable<T extends IdentifiableObject>({
                                     className={classes.tableRow}
                                     hover
                                     key={item.id}
-                                    selected={selectedRows.indexOf(item.id) !== -1}>
+                                    selected={selectedRows.includes(item.id)}>
                                     <TableCell padding="checkbox">
                                         <Checkbox
-                                            checked={selectedRows.indexOf(version) !== -1}
+                                            checked={selectedRows.includes(item.id)}
                                             color="primary"
-                                            onChange={event => handleSelectOne(event, item.id)}
+                                            onChange={() => handleSelectOne(item.id)}
                                             value="true"
                                         />
                                     </TableCell>

@@ -14,12 +14,27 @@ const NewsFeedListPage: React.FC = () => {
         bloc.search(search);
     };
 
+    const handleOnSelectionChange = (id: string) => {
+        bloc.selectChange(id);
+    };
+
+    const handleOnSelectionAllChange = (value: boolean) => {
+        bloc.selectAllChange(value);
+    };
+
     return (
         <MainLayout title={"News Feed List"}>
             <BlocBuilder
                 bloc={bloc}
                 builder={(state: ListState<NewsFeedRawData>) => {
-                    return <TableBuilder state={state} onSearchChange={handleSearch} />;
+                    return (
+                        <TableBuilder
+                            state={state}
+                            onSearchChange={handleSearch}
+                            onSelectionChange={handleOnSelectionChange}
+                            onSelectionAllChange={handleOnSelectionAllChange}
+                        />
+                    );
                 }}
             />
         </MainLayout>

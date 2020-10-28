@@ -19,7 +19,13 @@ class NewsFeedListBloc extends ListBloc<NewsFeedRawData> {
 
         response.fold(
             error => this.changeState(this.handleError(error)),
-            feeds => this.changeState({ kind: "ListLoadedState", items: feeds, fields: fields })
+            feeds =>
+                this.changeState({
+                    kind: "ListLoadedState",
+                    items: feeds,
+                    fields: fields,
+                    selectedItems: [],
+                })
         );
     }
 }

@@ -7,7 +7,7 @@ export interface ListLoadedState<T extends IdentifiableObject> {
     items: Array<T>;
     fields: ListField<T>[];
     search?: string;
-    //selection: string[];
+    selectedItems: string[];
     //sorting: TableSorting<T>;
     //pagination: ListPagination;
     //actions: ListAction[]

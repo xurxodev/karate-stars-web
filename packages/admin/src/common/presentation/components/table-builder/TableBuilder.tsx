@@ -17,8 +17,9 @@ const useStyles = makeStyles({
 interface TableBuilderProps<T extends IdentifiableObject> {
     className?: string;
     state: ListState<T>;
-    search?: string;
     onSearchChange?: (search: string) => void;
+    onSelectionChange?: (id: string) => void;
+    onSelectionAllChange?: (select: boolean) => void;
 }
 
 interface IdentifiableObject {
@@ -28,6 +29,8 @@ interface IdentifiableObject {
 export default function TableBuilder<T extends IdentifiableObject>({
     state,
     onSearchChange,
+    onSelectionChange,
+    onSelectionAllChange,
 }: TableBuilderProps<T>) {
     const classes = useStyles();
 
@@ -51,6 +54,9 @@ export default function TableBuilder<T extends IdentifiableObject>({
                     rows={state.items}
                     search={state.search}
                     onSearchChange={onSearchChange}
+                    selectedRows={state.selectedItems}
+                    onSelectionChange={onSelectionChange}
+                    onSelectionAllChange={onSelectionAllChange}
                 />
             );
         }
