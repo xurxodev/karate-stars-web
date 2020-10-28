@@ -2,14 +2,29 @@ export interface ListLoadingState {
     kind: "ListLoadingState";
 }
 
-export interface ListLoadedState<T> {
+export interface ListLoadedState<T extends IdentifiableObject> {
     kind: "ListLoadedState";
     items: Array<T>;
     fields: ListField<T>[];
     search?: string;
+    //selection: string[];
+    //sorting: TableSorting<T>;
+    //pagination: ListPagination;
+    //actions: ListAction[]
 }
 
-export interface ListErrorState<T> {
+export interface ListAction {
+    key: string;
+    name: string;
+    text: string;
+    icon?: string;
+    multiple?: boolean;
+    primary?: boolean;
+    active?: boolean;
+    //onClick?(selectedIds: string[]): void;
+}
+
+export interface ListErrorState {
     kind: "ListErrorState";
     message: string;
 }
@@ -20,4 +35,22 @@ export interface ListField<T> {
     type: "text" | "image" | "url";
 }
 
-export type ListState<T> = ListLoadingState | ListLoadedState<T> | ListErrorState<T>;
+export interface ListPagination {
+    pageSize: number;
+    total: number;
+    page: number;
+}
+
+export interface TableSorting<T extends IdentifiableObject> {
+    field: keyof T;
+    order: "asc" | "desc";
+}
+
+export interface IdentifiableObject {
+    id: string;
+}
+
+export type ListState<T extends IdentifiableObject> =
+    | ListLoadingState
+    | ListLoadedState<T>
+    | ListErrorState;

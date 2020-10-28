@@ -16,6 +16,7 @@ import {
 import clsx from "clsx";
 import SearchInput from "../search-input/SearchInput";
 import { version } from "process";
+import { IdentifiableObject } from "../../state/ListState";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {},
@@ -55,11 +56,6 @@ interface ObjectsTableProps<T> {
     searchEnable?: boolean;
 }
 
-interface IdentifiableObject {
-    id: string;
-}
-
-//const ObjectsTable: React.FC<NewsFeedTableProps<T>> = <T>({ rows, className, columns }) => {
 export default function DataTable<T extends IdentifiableObject>({
     rows,
     className,

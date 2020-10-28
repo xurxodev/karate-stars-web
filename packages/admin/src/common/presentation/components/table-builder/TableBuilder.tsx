@@ -14,7 +14,7 @@ const useStyles = makeStyles({
     },
 });
 
-interface TableBuilderProps<T> {
+interface TableBuilderProps<T extends IdentifiableObject> {
     className?: string;
     state: ListState<T>;
     search?: string;

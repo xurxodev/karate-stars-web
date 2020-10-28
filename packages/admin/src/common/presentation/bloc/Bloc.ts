@@ -12,7 +12,7 @@ abstract class Bloc<S> {
         return this.state;
     }
 
-    changeState(state: S) {
+    protected changeState(state: S) {
         this.state = state;
 
         if (this.listeners.length > 0) {
