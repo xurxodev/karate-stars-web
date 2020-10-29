@@ -46,16 +46,25 @@ export interface TableColumn<T> {
     getValue?: (row: T) => JSX.Element;
 }
 
+export interface TablePagination {
+    pageSize: number;
+    page: number;
+    total: number;
+}
+
 export interface DataTableProps<T> {
     className?: string;
     columns: TableColumn<T>[];
     rows: T[];
     selectedRows: string[];
+    paginationOptions: number[];
+    pagination: TablePagination;
     search?: string;
+    searchEnable?: boolean;
     onSearchChange?: (search: string) => void;
     onSelectionChange?: (id: string) => void;
     onSelectionAllChange?: (select: boolean) => void;
-    searchEnable?: boolean;
+    onPaginationChange?: (pagination: TablePagination) => void;
 }
 
 export default function DataTable<T extends IdentifiableObject>({
@@ -63,28 +72,18 @@ export default function DataTable<T extends IdentifiableObject>({
     className,
     columns,
     search = "",
-    onSearchChange,
     selectedRows,
+    paginationOptions,
+    pagination,
+    searchEnable,
+    onSearchChange,
     onSelectionChange,
     onSelectionAllChange,
-    searchEnable,
+    onPaginationChange,
 }: DataTableProps<T>) {
     const classes = useStyles();
 
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const rowsPerPageOptions = [5, 10, 25];
-    const [page, setPage] = useState(0);
-
-    const [pageRows, setPageRows] = useState<T[]>(rows);
-
     const [searchVisible] = useState(searchEnable || true);
-
-    React.useEffect(() => {
-        const start = page * rowsPerPage;
-        const result = rows.slice(start, start + rowsPerPage);
-
-        setPageRows(result);
-    }, [search, page, rowsPerPage, columns, rows]);
 
     const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (onSelectionAllChange) {
@@ -99,13 +98,17 @@ export default function DataTable<T extends IdentifiableObject>({
     };
 
     const handlePageChange = (_event: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
-        setPage(page);
+        if (onPaginationChange) {
+            onPaginationChange({ ...pagination, page });
+        }
     };
 
     const handleRowsPerPageChange = (
         event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
     ) => {
-        setRowsPerPage(+event.target.value);
+        if (onPaginationChange) {
+            onPaginationChange({ ...pagination, pageSize: +event.target.value });
+        }
     };
 
     const handleSearch = (value: string) => {
@@ -130,11 +133,11 @@ export default function DataTable<T extends IdentifiableObject>({
                             <TableRow>
                                 <TableCell padding="checkbox">
                                     <Checkbox
-                                        checked={selectedRows.length === pageRows.length}
+                                        checked={selectedRows.length === rows.length}
                                         color="primary"
                                         indeterminate={
                                             selectedRows.length > 0 &&
-                                            selectedRows.length < pageRows.length
+                                            selectedRows.length < rows.length
                                         }
                                         onChange={handleSelectAll}
                                     />
@@ -146,7 +149,7 @@ export default function DataTable<T extends IdentifiableObject>({
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {pageRows.map(item => (
+                            {rows.map(item => (
                                 <TableRow
                                     className={classes.tableRow}
                                     hover
@@ -178,12 +181,12 @@ export default function DataTable<T extends IdentifiableObject>({
                 </TableContainer>
                 <TablePagination
                     component="div"
-                    count={rows.length}
+                    count={pagination.total}
                     onChangePage={handlePageChange}
                     onChangeRowsPerPage={handleRowsPerPageChange}
-                    page={page}
-                    rowsPerPage={rowsPerPage}
-                    rowsPerPageOptions={rowsPerPageOptions}
+                    page={pagination.page}
+                    rowsPerPage={pagination.pageSize}
+                    rowsPerPageOptions={paginationOptions}
                 />
             </Paper>
         </div>

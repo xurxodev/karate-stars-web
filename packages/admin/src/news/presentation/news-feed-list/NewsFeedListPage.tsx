@@ -10,17 +10,14 @@ import { ListState } from "../../../common/presentation/state/ListState";
 const NewsFeedListPage: React.FC = () => {
     const bloc = di.get(NewsFeedListBloc);
 
-    const handleSearch = (search: string) => {
-        bloc.search(search);
-    };
+    const handleSearch = (search: string) => bloc.search(search);
 
-    const handleOnSelectionChange = (id: string) => {
-        bloc.selectChange(id);
-    };
+    const handleOnSelectionChange = (id: string) => bloc.selectChange(id);
 
-    const handleOnSelectionAllChange = (value: boolean) => {
-        bloc.selectAllChange(value);
-    };
+    const handleOnSelectionAllChange = (value: boolean) => bloc.selectAllChange(value);
+
+    const handleOnPaginationChange = (page: number, pageSize: number) =>
+        bloc.paginationChange(page, pageSize);
 
     return (
         <MainLayout title={"News Feed List"}>
@@ -33,6 +30,7 @@ const NewsFeedListPage: React.FC = () => {
                             onSearchChange={handleSearch}
                             onSelectionChange={handleOnSelectionChange}
                             onSelectionAllChange={handleOnSelectionAllChange}
+                            onPaginationChange={handleOnPaginationChange}
                         />
                     );
                 }}

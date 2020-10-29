@@ -1,7 +1,7 @@
 import { ListField } from "../../../common/presentation/state/ListState";
 import { NewsFeedRawData } from "karate-stars-core";
 import GetNewsFeedsUseCase from "../../domain/GetNewsFeedsUseCase";
-import ListBloc from "../../../common/presentation/bloc/ListBloc";
+import ListBloc, { defaultPagination } from "../../../common/presentation/bloc/ListBloc";
 
 class NewsFeedListBloc extends ListBloc<NewsFeedRawData> {
     constructor(private getNewsFeedsUseCase: GetNewsFeedsUseCase) {
@@ -25,6 +25,7 @@ class NewsFeedListBloc extends ListBloc<NewsFeedRawData> {
                     items: feeds,
                     fields: fields,
                     selectedItems: [],
+                    pagination: { ...defaultPagination, total: feeds.length }
                 })
         );
     }

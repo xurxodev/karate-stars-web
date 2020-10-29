@@ -2,6 +2,8 @@ import Bloc from "./Bloc";
 import { IdentifiableObject, ListLoadedState, ListState } from "../state/ListState";
 import { DataError } from "../../domain/Errors";
 
+export const defaultPagination = { pageSizeOptions: [5, 10, 25], pageSize: 10, page: 0, total: 0 }
+
 abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListState<S>> {
     items: S[] = [];
 
@@ -24,6 +26,23 @@ abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListState<S>>
         };
 
         super.changeState(state);
+    }
+
+    paginationChange(page: number, pageSize: number) {
+        const currentstate = this.state as ListLoadedState<S>;
+
+        if (this.state.kind === "ListLoadedState") {
+            const start = page * pageSize;
+            const pageRows = this.items.slice(start, start + pageSize);
+
+            const state = {
+                ...currentstate,
+                items: pageRows,
+                pagination: { ...currentstate.pagination, page: page, pageSize: pageSize }
+            };
+
+            super.changeState(state);
+        }
     }
 
     selectChange(id: string) {

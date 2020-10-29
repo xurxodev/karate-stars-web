@@ -2,7 +2,7 @@ import React from "react";
 import { Avatar, CircularProgress, makeStyles } from "@material-ui/core";
 import { ListField, ListState } from "../../state/ListState";
 import { Alert } from "@material-ui/lab";
-import DataTable, { TableColumn } from "../data-table/DataTable";
+import DataTable, { TableColumn, TablePagination } from "../data-table/DataTable";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({
@@ -20,6 +20,7 @@ interface TableBuilderProps<T extends IdentifiableObject> {
     onSearchChange?: (search: string) => void;
     onSelectionChange?: (id: string) => void;
     onSelectionAllChange?: (select: boolean) => void;
+    onPaginationChange?: (page: number, pageSize: number) => void;
 }
 
 interface IdentifiableObject {
@@ -31,8 +32,15 @@ export default function TableBuilder<T extends IdentifiableObject>({
     onSearchChange,
     onSelectionChange,
     onSelectionAllChange,
+    onPaginationChange,
 }: TableBuilderProps<T>) {
     const classes = useStyles();
+
+    const handlePaginationChange = (pagination: TablePagination) => {
+        if (onPaginationChange) {
+            onPaginationChange(pagination.page, pagination.pageSize);
+        }
+    };
 
     switch (state.kind) {
         case "ListLoadingState": {
@@ -53,10 +61,17 @@ export default function TableBuilder<T extends IdentifiableObject>({
                     columns={columns}
                     rows={state.items}
                     search={state.search}
-                    onSearchChange={onSearchChange}
                     selectedRows={state.selectedItems}
+                    paginationOptions={state.pagination.pageSizeOptions}
+                    pagination={{
+                        pageSize: state.pagination.pageSize,
+                        page: state.pagination.page,
+                        total: state.pagination.total,
+                    }}
+                    onSearchChange={onSearchChange}
                     onSelectionChange={onSelectionChange}
                     onSelectionAllChange={onSelectionAllChange}
+                    onPaginationChange={handlePaginationChange}
                 />
             );
         }

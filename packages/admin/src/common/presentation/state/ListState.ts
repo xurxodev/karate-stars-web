@@ -8,8 +8,8 @@ export interface ListLoadedState<T extends IdentifiableObject> {
     fields: ListField<T>[];
     search?: string;
     selectedItems: string[];
+    pagination: ListPagination;
     //sorting: TableSorting<T>;
-    //pagination: ListPagination;
     //actions: ListAction[]
 }
 
@@ -36,6 +36,7 @@ export interface ListField<T> {
 }
 
 export interface ListPagination {
+    pageSizeOptions: number[];
     pageSize: number;
     total: number;
     page: number;
