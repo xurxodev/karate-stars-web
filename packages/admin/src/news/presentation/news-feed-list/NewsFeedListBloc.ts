@@ -25,7 +25,7 @@ class NewsFeedListBloc extends ListBloc<NewsFeedRawData> {
                     items: feeds,
                     fields: fields,
                     selectedItems: [],
-                    pagination: { ...defaultPagination, total: feeds.length }
+                    pagination: { ...defaultPagination, total: feeds.length },
                 })
         );
     }

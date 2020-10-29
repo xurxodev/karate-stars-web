@@ -2,7 +2,7 @@ import Bloc from "./Bloc";
 import { IdentifiableObject, ListLoadedState, ListState } from "../state/ListState";
 import { DataError } from "../../domain/Errors";
 
-export const defaultPagination = { pageSizeOptions: [5, 10, 25], pageSize: 10, page: 0, total: 0 }
+export const defaultPagination = { pageSizeOptions: [5, 10, 25], pageSize: 10, page: 0, total: 0 };
 
 abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListState<S>> {
     items: S[] = [];
@@ -38,7 +38,7 @@ abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListState<S>>
             const state = {
                 ...currentstate,
                 items: pageRows,
-                pagination: { ...currentstate.pagination, page: page, pageSize: pageSize }
+                pagination: { ...currentstate.pagination, page: page, pageSize: pageSize },
             };
 
             super.changeState(state);
