@@ -10,9 +10,10 @@ class NewsFeedListBloc extends ListBloc<NewsFeedRawData> {
         this.loadData();
     }
 
-    async search(search: string) {
-        this.loadData(search);
-    }
+    //For the moment local search realized by super class ListBloc
+    // async search(search: string) {
+    //     this.loadData(search);
+    // }
 
     private async loadData(search?: string) {
         const response = await this.getNewsFeedsUseCase.execute(search);

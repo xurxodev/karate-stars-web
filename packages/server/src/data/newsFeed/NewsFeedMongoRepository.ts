@@ -1,21 +1,17 @@
-import { MongoClient } from "mongodb";
 import { NewsFeed, NewsFeedRawData } from "karate-stars-core";
 import NewsFeedRepository from "../../domain/newsFeeds/boundaries/NewsFeedRepository";
 import { MongoCollection } from "../common/Types";
+import { MongoConector } from "../common/MongoConector";
 
 type NewsFeedDB = Omit<NewsFeedRawData, "id"> & MongoCollection;
 
 export default class NewsFeedMongoRepository implements NewsFeedRepository {
-    constructor(private mongodbConecction: string) {}
+    constructor(private mongoConector: MongoConector) {}
 
     async getAll(): Promise<NewsFeed[]> {
-        const mongoClient = new MongoClient(this.mongodbConecction, {
-            useUnifiedTopology: true,
-        });
+        const db = await this.mongoConector.db();
 
-        await mongoClient.connect();
-
-        const cursor = mongoClient.db().collection("newsFeeds").find<NewsFeedDB>();
+        const cursor = db.collection("newsFeeds").find<NewsFeedDB>();
         const newsFeeds = await cursor.toArray();
 
         return newsFeeds.map(feed => this.mapToDomain(feed));

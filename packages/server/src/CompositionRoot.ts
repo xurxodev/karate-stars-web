@@ -15,10 +15,10 @@ import NewsFeedsController from "./api/newsFeeds/NewsFeedsController";
 import { GetNewsFeedsUseCase } from "./domain/newsFeeds/usecases/GetNewsFeedsUseCase";
 import { DependencyLocator } from "karate-stars-core";
 import JwtDefaultAuthenticator from "./api/authentication/JwtDefaultAuthenticator";
+import { MongoConector } from "./data/common/MongoConector";
 
 export const names = {
     jwtAuthenticator: "jwtAuthenticator",
-    mongoConnection: "mongoConnection",
     settingsRepository: "settingsRepository",
     newsFeedRepository: "newsFeedRepository",
     userRepository: "userRepository",
@@ -43,14 +43,14 @@ export function reset() {
 }
 
 function initApp() {
-    di.bindLazySingleton(names.mongoConnection, () => {
+    di.bindLazySingleton(MongoConector, () => {
         const mongoConnection = process.env.MONGO_DB_CONNECTION;
 
         if (!mongoConnection) {
             throw new Error("Does not exists environment variable for mongo data base connection");
         }
 
-        return mongoConnection;
+        return new MongoConector(mongoConnection);
     });
 
     di.bindLazySingleton(names.jwtAuthenticator, () => {
@@ -63,7 +63,7 @@ function initApp() {
 function initializeSettings() {
     di.bindLazySingleton(
         names.settingsRepository,
-        () => new SettingsMongoRepository(di.get(names.mongoConnection))
+        () => new SettingsMongoRepository(di.get(MongoConector))
     );
 
     di.bindLazySingleton(
@@ -75,7 +75,7 @@ function initializeSettings() {
 function initUser() {
     di.bindLazySingleton(
         names.userRepository,
-        () => new UserMongoRepository(di.get(names.mongoConnection))
+        () => new UserMongoRepository(di.get(MongoConector))
     );
 
     di.bindLazySingleton(
@@ -102,7 +102,7 @@ function initUser() {
 function initializeNewsFeeds() {
     di.bindLazySingleton(
         names.newsFeedRepository,
-        () => new NewsFeedMongoRepository(di.get(names.mongoConnection))
+        () => new NewsFeedMongoRepository(di.get(MongoConector))
     );
 
     di.bindLazySingleton(

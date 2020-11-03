@@ -1,10 +1,10 @@
 import UserRepository from "../../domain/users/boundaries/UserRepository";
 import { User, Maybe, Id, Email, Password } from "karate-stars-core";
-import * as MongoClient from "mongodb";
 import { UserDB } from "./UserDB";
+import { MongoConector } from "../common/MongoConector";
 
 export default class UserMongoRepository implements UserRepository {
-    constructor(private mongodbConecction: string) {}
+    constructor(private mongoConector: MongoConector) {}
 
     public async getByUsernameAndPassword(
         username: Email,
@@ -25,26 +25,14 @@ export default class UserMongoRepository implements UserRepository {
         return result.map(userDB => this.mapToDomain(userDB));
     }
 
-    private getUsers(): Promise<UserDB[]> {
-        return new Promise((resolve, reject) => {
-            const mongoClient = new MongoClient.MongoClient(this.mongodbConecction, {
-                useUnifiedTopology: true,
-            });
+    private async getUsers(): Promise<UserDB[]> {
+        const db = await this.mongoConector.db();
 
-            mongoClient.connect(async (errCon, client) => {
-                if (errCon) {
-                    reject(errCon);
-                }
+        const cursor = db.collection("users").find<UserDB>();
 
-                const cursor = client.db().collection("users").find<UserDB>();
+        const rows = await cursor.toArray();
 
-                const rows = await cursor.toArray();
-
-                resolve(rows);
-
-                client.close();
-            });
-        });
+        return rows;
     }
 
     private mapToDomain(userDB: UserDB): User {
