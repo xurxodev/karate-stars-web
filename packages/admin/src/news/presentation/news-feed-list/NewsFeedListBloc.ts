@@ -27,6 +27,7 @@ class NewsFeedListBloc extends ListBloc<NewsFeedRawData> {
                     fields: fields,
                     selectedItems: [],
                     pagination: { ...defaultPagination, total: feeds.length },
+                    sorting: { field: "name", order: "asc" },
                 })
         );
     }
@@ -40,6 +41,8 @@ const fields: ListField<NewsFeedRawData>[] = [
         name: "image",
         text: "Image",
         type: "image",
+        sortable: false,
+        searchable: false,
     },
     { name: "name", text: "Name", type: "text" },
     { name: "language", text: "Language", type: "text" },

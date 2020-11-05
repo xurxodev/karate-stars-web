@@ -11,8 +11,10 @@ import {
     TableHead,
     TablePagination,
     TableRow,
+    TableSortLabel,
     Theme,
 } from "@material-ui/core";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import clsx from "clsx";
 import SearchInput from "../search-input/SearchInput";
 import { IdentifiableObject } from "../../state/ListState";
@@ -43,6 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface TableColumn<T> {
     name: keyof T;
     text: string;
+    sortable?: boolean;
     getValue?: (row: T) => JSX.Element;
 }
 
@@ -52,6 +55,11 @@ export interface TablePagination {
     total: number;
 }
 
+export interface TableSorting<T> {
+    field: keyof T;
+    order: "asc" | "desc";
+}
+
 export interface DataTableProps<T> {
     className?: string;
     columns: TableColumn<T>[];
@@ -59,12 +67,14 @@ export interface DataTableProps<T> {
     selectedRows: string[];
     paginationOptions: number[];
     pagination: TablePagination;
+    sorting?: TableSorting<T>;
     search?: string;
     searchEnable?: boolean;
     onSearchChange?: (search: string) => void;
     onSelectionChange?: (id: string) => void;
     onSelectionAllChange?: (select: boolean) => void;
     onPaginationChange?: (pagination: TablePagination) => void;
+    onSortingChange?: (sorting: TableSorting<T>) => void;
 }
 
 export default function DataTable<T extends IdentifiableObject>({
@@ -75,11 +85,13 @@ export default function DataTable<T extends IdentifiableObject>({
     selectedRows,
     paginationOptions,
     pagination,
+    sorting,
     searchEnable,
     onSearchChange,
     onSelectionChange,
     onSelectionAllChange,
     onPaginationChange,
+    onSortingChange,
 }: DataTableProps<T>) {
     const classes = useStyles();
 
@@ -117,6 +129,11 @@ export default function DataTable<T extends IdentifiableObject>({
         }
     };
 
+    const handleSortChange = (property: keyof T) => (_event: React.MouseEvent<unknown>) => {
+        const isDesc = sorting?.field === property && sorting.order === "desc";
+        if (onSortingChange) onSortingChange({ field: property, order: isDesc ? "asc" : "desc" });
+    };
+
     return (
         <div className={clsx(classes.root, className)}>
             <Box
@@ -144,7 +161,24 @@ export default function DataTable<T extends IdentifiableObject>({
                                 </TableCell>
 
                                 {columns.map((column, index) => {
-                                    return <TableCell key={index}>{column.text}</TableCell>;
+                                    return (
+                                        <TableCell
+                                            key={index}
+                                            sortDirection={
+                                                column.name === sorting?.field
+                                                    ? sorting?.order
+                                                    : false
+                                            }>
+                                            <TableSortLabel
+                                                active={column.name === sorting?.field}
+                                                direction={sorting?.order}
+                                                onClick={handleSortChange(column.name)}
+                                                IconComponent={ExpandMoreIcon}
+                                                disabled={column.sortable === false}>
+                                                {column.text}
+                                            </TableSortLabel>
+                                        </TableCell>
+                                    );
                                 })}
                             </TableRow>
                         </TableHead>

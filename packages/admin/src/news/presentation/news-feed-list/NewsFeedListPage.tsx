@@ -5,7 +5,7 @@ import MainLayout from "../../../common/presentation/layouts/main/MainLayout";
 import { di } from "../../../CompositionRoot";
 import TableBuilder from "../../../common/presentation/components/table-builder/TableBuilder";
 import NewsFeedListBloc from "./NewsFeedListBloc";
-import { ListState } from "../../../common/presentation/state/ListState";
+import { ListState, SortDirection } from "../../../common/presentation/state/ListState";
 
 const NewsFeedListPage: React.FC = () => {
     const bloc = di.get(NewsFeedListBloc);
@@ -19,6 +19,9 @@ const NewsFeedListPage: React.FC = () => {
     const handleOnPaginationChange = (page: number, pageSize: number) =>
         bloc.paginationChange(page, pageSize);
 
+    const handleOnSortingChange = (field: keyof NewsFeedRawData, order: SortDirection) =>
+        bloc.sortingChange(field, order);
+
     return (
         <MainLayout title={"News Feed List"}>
             <BlocBuilder
@@ -31,6 +34,7 @@ const NewsFeedListPage: React.FC = () => {
                             onSelectionChange={handleOnSelectionChange}
                             onSelectionAllChange={handleOnSelectionAllChange}
                             onPaginationChange={handleOnPaginationChange}
+                            onSortingChange={handleOnSortingChange}
                         />
                     );
                 }}

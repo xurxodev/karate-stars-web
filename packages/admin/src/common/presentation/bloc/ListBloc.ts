@@ -1,5 +1,13 @@
 import Bloc from "./Bloc";
-import { IdentifiableObject, ListLoadedState, ListState } from "../state/ListState";
+import {
+    IdentifiableObject,
+    ListField,
+    ListLoadedState,
+    ListPagination,
+    ListSorting,
+    ListState,
+    SortDirection,
+} from "../state/ListState";
 import { DataError } from "../../domain/Errors";
 
 export const defaultPagination = { pageSizeOptions: [5, 10, 25], pageSize: 10, page: 0, total: 0 };
@@ -13,36 +21,25 @@ abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListState<S>>
         });
     }
 
-    async search(search: string) {
+    search(search: string) {
         const currentstate = this.state as ListLoadedState<S>;
 
-        const newItems = this.items.filter(item =>
-            currentstate.fields.some(field => (item[field.name] as any).includes(search))
-        );
-
-        const state = {
-            ...currentstate,
-            items: newItems,
-        };
-
-        super.changeState(state);
+        const pagination = { ...currentstate.pagination, page: 0 };
+        this.updateItems(pagination, search, currentstate.sorting);
     }
 
     paginationChange(page: number, pageSize: number) {
         const currentstate = this.state as ListLoadedState<S>;
 
-        if (this.state.kind === "ListLoadedState") {
-            const start = page * pageSize;
-            const pageRows = this.items.slice(start, start + pageSize);
+        const pagination = { ...currentstate.pagination, page, pageSize };
+        this.updateItems(pagination, currentstate.search, currentstate.sorting);
+    }
 
-            const state = {
-                ...currentstate,
-                items: pageRows,
-                pagination: { ...currentstate.pagination, page: page, pageSize: pageSize },
-            };
+    sortingChange(field: keyof S, order: SortDirection) {
+        const currentstate = this.state as ListLoadedState<S>;
 
-            super.changeState(state);
-        }
+        const sorting = { field, order };
+        this.updateItems(currentstate.pagination, currentstate.search, sorting);
     }
 
     selectChange(id: string) {
@@ -96,6 +93,56 @@ abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListState<S>>
                 };
             }
         }
+    }
+
+    private updateItems(pagination: ListPagination, search?: string, sorting?: ListSorting<S>) {
+        const currentstate = this.state as ListLoadedState<S>;
+
+        const itemsBySearch = this.searchItems(this.items, currentstate.fields, search);
+
+        const sortedItems = this.sortItems(itemsBySearch, sorting);
+
+        const currentItems = this.paginateItems(sortedItems, pagination);
+
+        const state: ListLoadedState<S> = {
+            ...currentstate,
+            search,
+            items: currentItems,
+            sorting,
+            pagination: { ...pagination, total: sortedItems.length },
+        };
+
+        super.changeState(state);
+    }
+
+    private sortItems(items: S[], sorting?: ListSorting<S>): S[] {
+        const sortedItems = sorting
+            ? items.sort((a, b) => {
+                  if (a[sorting.field] < b[sorting.field]) return -1;
+                  if (a[sorting.field] > b[sorting.field]) return 1;
+                  return 0;
+              })
+            : items;
+
+        return sorting ? (sorting.order === "asc" ? sortedItems : sortedItems.reverse()) : items;
+    }
+
+    private searchItems(items: S[], fields: ListField<S>[], search: string | undefined): S[] {
+        const searchableFields = fields.filter(
+            field => field.searchable === undefined || field.searchable === true
+        );
+
+        const itemsBySearch = items.filter(item =>
+            searchableFields.some(field => !search || (item[field.name] as any).includes(search))
+        );
+
+        return itemsBySearch;
+    }
+
+    private paginateItems(items: S[], pagination: ListPagination) {
+        const start = pagination ? pagination.page * pagination.pageSize : 0;
+        const currentItems = pagination ? items.slice(start, start + pagination.pageSize) : items;
+        return currentItems;
     }
 }
 

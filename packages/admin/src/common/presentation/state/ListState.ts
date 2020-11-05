@@ -9,8 +9,15 @@ export interface ListLoadedState<T extends IdentifiableObject> {
     search?: string;
     selectedItems: string[];
     pagination: ListPagination;
-    //sorting: TableSorting<T>;
+    sorting?: ListSorting<T>;
     //actions: ListAction[]
+}
+
+export type SortDirection = "asc" | "desc";
+
+export interface ListSorting<T extends IdentifiableObject> {
+    field: keyof T;
+    order: SortDirection;
 }
 
 export interface ListAction {
@@ -32,6 +39,8 @@ export interface ListErrorState {
 export interface ListField<T> {
     name: keyof T;
     text: string;
+    sortable?: boolean;
+    searchable?: boolean;
     type: "text" | "image" | "url";
 }
 
@@ -42,7 +51,7 @@ export interface ListPagination {
     page: number;
 }
 
-export interface TableSorting<T extends IdentifiableObject> {
+export interface ListSorting<T extends IdentifiableObject> {
     field: keyof T;
     order: "asc" | "desc";
 }

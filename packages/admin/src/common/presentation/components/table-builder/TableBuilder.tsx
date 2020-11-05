@@ -2,7 +2,7 @@ import React from "react";
 import { Avatar, CircularProgress, makeStyles } from "@material-ui/core";
 import { ListField, ListState } from "../../state/ListState";
 import { Alert } from "@material-ui/lab";
-import DataTable, { TableColumn, TablePagination } from "../data-table/DataTable";
+import DataTable, { TableColumn, TablePagination, TableSorting } from "../data-table/DataTable";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({
@@ -21,6 +21,7 @@ interface TableBuilderProps<T extends IdentifiableObject> {
     onSelectionChange?: (id: string) => void;
     onSelectionAllChange?: (select: boolean) => void;
     onPaginationChange?: (page: number, pageSize: number) => void;
+    onSortingChange?: (field: keyof T, order: "asc" | "desc") => void;
 }
 
 interface IdentifiableObject {
@@ -33,12 +34,19 @@ export default function TableBuilder<T extends IdentifiableObject>({
     onSelectionChange,
     onSelectionAllChange,
     onPaginationChange,
+    onSortingChange,
 }: TableBuilderProps<T>) {
     const classes = useStyles();
 
     const handlePaginationChange = (pagination: TablePagination) => {
         if (onPaginationChange) {
             onPaginationChange(pagination.page, pagination.pageSize);
+        }
+    };
+
+    const handleSortingChange = (sorting: TableSorting<T>) => {
+        if (onSortingChange) {
+            onSortingChange(sorting.field, sorting.order);
         }
     };
 
@@ -68,10 +76,12 @@ export default function TableBuilder<T extends IdentifiableObject>({
                         page: state.pagination.page,
                         total: state.pagination.total,
                     }}
+                    sorting={state.sorting}
                     onSearchChange={onSearchChange}
                     onSelectionChange={onSelectionChange}
                     onSelectionAllChange={onSelectionAllChange}
                     onPaginationChange={handlePaginationChange}
+                    onSortingChange={handleSortingChange}
                 />
             );
         }
@@ -80,13 +90,14 @@ export default function TableBuilder<T extends IdentifiableObject>({
 
 function mapColumns<T extends IdentifiableObject>(fields: ListField<T>[]): TableColumn<T>[] {
     return fields.map(field => {
+        const baseColumn = { name: field.name, text: field.text, sortable: field.sortable };
+
         switch (field.type) {
             case "image": {
                 const avatar = (row: T) => <Avatar src={(row[field.name] as unknown) as string} />;
 
                 return {
-                    name: field.name,
-                    text: field.text,
+                    ...baseColumn,
                     getValue: avatar,
                 };
             }
@@ -94,13 +105,12 @@ function mapColumns<T extends IdentifiableObject>(fields: ListField<T>[]): Table
                 const link = (row: T) => <Link to={row[field.name]}>{row[field.name]}</Link>;
 
                 return {
-                    name: field.name,
-                    text: field.text,
+                    ...baseColumn,
                     getValue: link,
                 };
             }
             default: {
-                return { name: field.name, text: field.text };
+                return baseColumn;
             }
         }
     });
