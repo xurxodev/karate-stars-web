@@ -3,12 +3,12 @@ import "@testing-library/jest-dom/extend-expect";
 import { render, screen } from "../../../../testing/testing_library/custom";
 import PrivateRoute from "../PrivateRoute";
 import RedirectTester from "../../../../testing/testing_library/RedirectTester";
-import { pages } from "../../../../../app/AppRoutes";
 import {
     givenAnUnauthorizedUser,
     givenANonAuthenticatedUser,
     givenAValidAuthenticatedUser,
 } from "../../../../testing/scenarios/UserTestScenarios";
+import { pages } from "../../../PageRoutes";
 
 const FakeComponent = () => <span>FakeComponent</span>;
 const PrivateRouteToTest = () => <PrivateRoute path="/" component={FakeComponent} />;

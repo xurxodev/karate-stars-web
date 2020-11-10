@@ -3,7 +3,8 @@ import { Avatar, CircularProgress, makeStyles } from "@material-ui/core";
 import { ListField, ListState } from "../../state/ListState";
 import { Alert } from "@material-ui/lab";
 import DataTable, { TableColumn, TablePagination, TableSorting } from "../data-table/DataTable";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
+import FabButton from "../add-fab-button/AddFabButton";
 
 const useStyles = makeStyles({
     loading: {
@@ -22,6 +23,9 @@ interface TableBuilderProps<T extends IdentifiableObject> {
     onSelectionAllChange?: (select: boolean) => void;
     onPaginationChange?: (page: number, pageSize: number) => void;
     onSortingChange?: (field: keyof T, order: "asc" | "desc") => void;
+    onItemActionClick?: (actionName: string, id: string) => void;
+    onItemClick?: (id: string) => void;
+    onActionClick?: () => void;
 }
 
 interface IdentifiableObject {
@@ -35,7 +39,10 @@ export default function TableBuilder<T extends IdentifiableObject>({
     onSelectionAllChange,
     onPaginationChange,
     onSortingChange,
-}: TableBuilderProps<T>) {
+    onItemActionClick,
+    onItemClick,
+    onActionClick,
+}: TableBuilderProps<T>): JSX.Element {
     const classes = useStyles();
 
     const handlePaginationChange = (pagination: TablePagination) => {
@@ -61,28 +68,37 @@ export default function TableBuilder<T extends IdentifiableObject>({
         case "ListErrorState": {
             return <Alert severity="error">{state.message}</Alert>;
         }
+        case "NavigateTo": {
+            return <Redirect to={state.route} />;
+        }
         case "ListLoadedState": {
             const columns = mapColumns<T>(state.fields);
 
             return (
-                <DataTable
-                    columns={columns}
-                    rows={state.items}
-                    search={state.search}
-                    selectedRows={state.selectedItems}
-                    paginationOptions={state.pagination.pageSizeOptions}
-                    pagination={{
-                        pageSize: state.pagination.pageSize,
-                        page: state.pagination.page,
-                        total: state.pagination.total,
-                    }}
-                    sorting={state.sorting}
-                    onSearchChange={onSearchChange}
-                    onSelectionChange={onSelectionChange}
-                    onSelectionAllChange={onSelectionAllChange}
-                    onPaginationChange={handlePaginationChange}
-                    onSortingChange={handleSortingChange}
-                />
+                <React.Fragment>
+                    <DataTable
+                        columns={columns}
+                        rows={state.items}
+                        search={state.search}
+                        selectedRows={state.selectedItems}
+                        paginationOptions={state.pagination.pageSizeOptions}
+                        pagination={{
+                            pageSize: state.pagination.pageSize,
+                            page: state.pagination.page,
+                            total: state.pagination.total,
+                        }}
+                        sorting={state.sorting}
+                        actions={state.actions}
+                        onSearchChange={onSearchChange}
+                        onSelectionChange={onSelectionChange}
+                        onSelectionAllChange={onSelectionAllChange}
+                        onPaginationChange={handlePaginationChange}
+                        onSortingChange={handleSortingChange}
+                        onItemActionClick={onItemActionClick}
+                        onRowClick={onItemClick}
+                    />
+                    {onActionClick && <FabButton action={onActionClick} />}
+                </React.Fragment>
             );
         }
     }

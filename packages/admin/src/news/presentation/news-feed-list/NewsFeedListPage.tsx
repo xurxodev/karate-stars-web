@@ -6,13 +6,8 @@ import { di } from "../../../CompositionRoot";
 import TableBuilder from "../../../common/presentation/components/table-builder/TableBuilder";
 import NewsFeedListBloc from "./NewsFeedListBloc";
 import { ListState, SortDirection } from "../../../common/presentation/state/ListState";
-import AddFabButton from "../../../common/presentation/components/add-fab-button/AddFabButton";
-import { useHistory } from "react-router-dom";
-import { pages } from "../../../app/AppRoutes";
 
 const NewsFeedListPage: React.FC = () => {
-    const history = useHistory();
-
     const bloc = di.get(NewsFeedListBloc);
 
     const handleSearch = (search: string) => bloc.search(search);
@@ -27,10 +22,12 @@ const NewsFeedListPage: React.FC = () => {
     const handleOnSortingChange = (field: keyof NewsFeedRawData, order: SortDirection) =>
         bloc.sortingChange(field, order);
 
-    const handleAdd = () => {
-        debugger;
-        history.push(pages.newsFeedDetail.generateUrl({ action: "new" }));
+    const onActionClick = () => {
+        bloc.actionClick();
     };
+
+    const handleItemActionClick = (actionName: string, id: string) =>
+        bloc.actionItemClick(actionName, id);
 
     return (
         <MainLayout title={"News Feed List"}>
@@ -38,17 +35,16 @@ const NewsFeedListPage: React.FC = () => {
                 bloc={bloc}
                 builder={(state: ListState<NewsFeedRawData>) => {
                     return (
-                        <React.Fragment>
-                            <TableBuilder
-                                state={state}
-                                onSearchChange={handleSearch}
-                                onSelectionChange={handleOnSelectionChange}
-                                onSelectionAllChange={handleOnSelectionAllChange}
-                                onPaginationChange={handleOnPaginationChange}
-                                onSortingChange={handleOnSortingChange}
-                            />
-                            <AddFabButton action={handleAdd} />
-                        </React.Fragment>
+                        <TableBuilder
+                            state={state}
+                            onSearchChange={handleSearch}
+                            onSelectionChange={handleOnSelectionChange}
+                            onSelectionAllChange={handleOnSelectionAllChange}
+                            onPaginationChange={handleOnPaginationChange}
+                            onSortingChange={handleOnSortingChange}
+                            onItemActionClick={handleItemActionClick}
+                            onActionClick={onActionClick}
+                        />
                     );
                 }}
             />

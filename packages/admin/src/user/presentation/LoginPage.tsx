@@ -8,9 +8,9 @@ import { di } from "../../CompositionRoot";
 import MinimalLayout from "../../common/presentation/layouts/minimal/MinimalLayout";
 import { FormState } from "../../common/presentation/state/FormState";
 import FormBuilder from "../../common/presentation/components/form-builder/FormBuilder";
-import { pages } from "../../app/AppRoutes";
 import { Redirect } from "react-router-dom";
 import LoginBloc from "./LoginBloc";
+import { pages } from "../../common/presentation/PageRoutes";
 
 const LoginPage: React.FC = () => {
     const classes = useStyles();

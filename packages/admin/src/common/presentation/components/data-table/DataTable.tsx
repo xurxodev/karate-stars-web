@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import {
     Box,
     Checkbox,
+    IconButton,
     makeStyles,
     Paper,
+    PopoverPosition,
     Table,
     TableBody,
     TableCell,
@@ -13,34 +15,14 @@ import {
     TableRow,
     TableSortLabel,
     Theme,
+    Tooltip,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import clsx from "clsx";
 import SearchInput from "../search-input/SearchInput";
 import { IdentifiableObject } from "../../state/ListState";
-
-const useStyles = makeStyles((theme: Theme) => ({
-    root: {},
-    content: {
-        padding: theme.spacing(0),
-    },
-    paper: {
-        width: "100%",
-        marginBottom: theme.spacing(2),
-    },
-    nameContainer: {
-        display: "flex",
-        alignItems: "center",
-    },
-    tableRow: {},
-    actions: {
-        justifyContent: "flex-end",
-    },
-    toolbar: {
-        paddingTop: theme.spacing(2),
-        paddingBottom: theme.spacing(2),
-    },
-}));
+import ContextualMenu, { MenuItemData } from "../contextual-menu/ContextualMenu";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 export interface TableColumn<T> {
     name: keyof T;
@@ -60,6 +42,15 @@ export interface TableSorting<T> {
     order: "asc" | "desc";
 }
 
+export interface TableAction<T> {
+    name: string;
+    text: string;
+    icon?: string;
+    multiple?: boolean;
+    primary?: boolean;
+    isActive?(rows: T[]): boolean;
+}
+
 export interface DataTableProps<T> {
     className?: string;
     columns: TableColumn<T>[];
@@ -70,11 +61,14 @@ export interface DataTableProps<T> {
     sorting?: TableSorting<T>;
     search?: string;
     searchEnable?: boolean;
+    actions?: TableAction<T>[];
     onSearchChange?: (search: string) => void;
     onSelectionChange?: (id: string) => void;
     onSelectionAllChange?: (select: boolean) => void;
     onPaginationChange?: (pagination: TablePagination) => void;
     onSortingChange?: (sorting: TableSorting<T>) => void;
+    onItemActionClick?: (actionName: string, id: string) => void;
+    onRowClick?: (id: string) => void;
 }
 
 export default function DataTable<T extends IdentifiableObject>({
@@ -87,15 +81,43 @@ export default function DataTable<T extends IdentifiableObject>({
     pagination,
     sorting,
     searchEnable,
+    actions,
     onSearchChange,
     onSelectionChange,
     onSelectionAllChange,
     onPaginationChange,
     onSortingChange,
+    onItemActionClick,
+    onRowClick,
 }: DataTableProps<T>) {
     const classes = useStyles();
 
     const [searchVisible] = useState(searchEnable || true);
+    const [contextualMenuPosition, setContextualMenuPosition] = useState<PopoverPosition>();
+    const [menus] = useState<MenuItemData[]>(
+        actions
+            ? actions.map(action => ({ name: action.name, text: action.text, icon: action.icon }))
+            : []
+    );
+
+    const [contextualOwnerId, setContextualOwnerId] = useState<string>();
+
+    const handleContextMenu = (event: React.MouseEvent<unknown>, row: T) => {
+        event.preventDefault();
+        setContextualOwnerId(row.id);
+        setContextualMenuPosition({
+            left: event.clientX - 2,
+            top: event.clientY - 4,
+        });
+    };
+
+    const handleClick = (event: React.MouseEvent<unknown>, row: T) => {
+        const { tagName, type = null } = event.target as HTMLAnchorElement;
+        if (!tagName) return;
+        const isCheckboxClick = tagName.localeCompare("input") && type === "checkbox";
+
+        if (onRowClick && !isCheckboxClick) onRowClick(row.id);
+    };
 
     const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (onSelectionAllChange) {
@@ -132,6 +154,10 @@ export default function DataTable<T extends IdentifiableObject>({
     const handleSortChange = (property: keyof T) => (_event: React.MouseEvent<unknown>) => {
         const isDesc = sorting?.field === property && sorting.order === "desc";
         if (onSortingChange) onSortingChange({ field: property, order: isDesc ? "asc" : "desc" });
+    };
+
+    const handleMenuSelected = (menu: string) => {
+        if (onItemActionClick && contextualOwnerId) onItemActionClick(menu, contextualOwnerId);
     };
 
     return (
@@ -180,6 +206,8 @@ export default function DataTable<T extends IdentifiableObject>({
                                         </TableCell>
                                     );
                                 })}
+
+                                <TableCell></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -188,7 +216,9 @@ export default function DataTable<T extends IdentifiableObject>({
                                     className={classes.tableRow}
                                     hover
                                     key={item.id}
-                                    selected={selectedRows.includes(item.id)}>
+                                    selected={selectedRows.includes(item.id)}
+                                    onClick={event => handleClick(event, item)}
+                                    onContextMenu={event => handleContextMenu(event, item)}>
                                     <TableCell padding="checkbox">
                                         <Checkbox
                                             checked={selectedRows.includes(item.id)}
@@ -208,6 +238,18 @@ export default function DataTable<T extends IdentifiableObject>({
                                             </TableCell>
                                         );
                                     })}
+
+                                    <TableCell
+                                        key={`${item.id}-actions`}
+                                        padding="none"
+                                        align={"center"}>
+                                        <Tooltip title={"Actions"}>
+                                            <IconButton
+                                                onClick={event => handleContextMenu(event, item)}>
+                                                <MoreVertIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -223,6 +265,38 @@ export default function DataTable<T extends IdentifiableObject>({
                     rowsPerPageOptions={paginationOptions}
                 />
             </Paper>
+            {contextualMenuPosition && (
+                <ContextualMenu
+                    isOpen={contextualMenuPosition !== undefined}
+                    position={contextualMenuPosition}
+                    menus={menus}
+                    onClose={() => setContextualMenuPosition(undefined)}
+                    onMenuSelected={handleMenuSelected}
+                />
+            )}
         </div>
     );
 }
+
+const useStyles = makeStyles((theme: Theme) => ({
+    root: {},
+    content: {
+        padding: theme.spacing(0),
+    },
+    paper: {
+        width: "100%",
+        marginBottom: theme.spacing(2),
+    },
+    nameContainer: {
+        display: "flex",
+        alignItems: "center",
+    },
+    tableRow: {},
+    actions: {
+        justifyContent: "flex-end",
+    },
+    toolbar: {
+        paddingTop: theme.spacing(2),
+        paddingBottom: theme.spacing(2),
+    },
+}));

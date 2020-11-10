@@ -5,9 +5,9 @@ import { AppBar, Toolbar, Badge, Hidden, IconButton, Theme } from "@material-ui/
 import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/NotificationsOutlined";
 import InputIcon from "@material-ui/icons/Input";
-import { pages } from "../../../../app/AppRoutes";
 import logo from "../logo.png";
 import { useAppBlocContext } from "../../../../app/AppContext";
+import { pages } from "../../PageRoutes";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {

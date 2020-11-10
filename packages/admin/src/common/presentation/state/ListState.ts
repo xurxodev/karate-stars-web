@@ -10,7 +10,17 @@ export interface ListLoadedState<T extends IdentifiableObject> {
     selectedItems: string[];
     pagination: ListPagination;
     sorting?: ListSorting<T>;
-    //actions: ListAction[]
+    actions?: ListAction[];
+}
+
+export interface ListErrorState {
+    kind: "ListErrorState";
+    message: string;
+}
+
+export interface NavigateTo {
+    kind: "NavigateTo";
+    route: string;
 }
 
 export type SortDirection = "asc" | "desc";
@@ -21,19 +31,12 @@ export interface ListSorting<T extends IdentifiableObject> {
 }
 
 export interface ListAction {
-    key: string;
     name: string;
     text: string;
     icon?: string;
     multiple?: boolean;
     primary?: boolean;
     active?: boolean;
-    //onClick?(selectedIds: string[]): void;
-}
-
-export interface ListErrorState {
-    kind: "ListErrorState";
-    message: string;
 }
 
 export interface ListField<T> {
@@ -63,4 +66,5 @@ export interface IdentifiableObject {
 export type ListState<T extends IdentifiableObject> =
     | ListLoadingState
     | ListLoadedState<T>
-    | ListErrorState;
+    | ListErrorState
+    | NavigateTo;

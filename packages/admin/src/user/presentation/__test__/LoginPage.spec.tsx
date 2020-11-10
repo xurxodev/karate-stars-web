@@ -4,8 +4,8 @@ import { render, screen } from "../../../common/testing/testing_library/custom";
 import * as mockServerTest from "../../../common/testing/mockServerTest";
 import userEvent from "@testing-library/user-event";
 import LoginPage from "../LoginPage";
-import { pages } from "../../../app/AppRoutes";
 import RedirectTester from "../../../common/testing/testing_library/RedirectTester";
+import { pages } from "../../../common/presentation/PageRoutes";
 
 describe("Login Page", () => {
     describe("Sign in button", () => {

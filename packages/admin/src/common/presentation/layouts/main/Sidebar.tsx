@@ -9,9 +9,9 @@ import InputIcon from "@material-ui/icons/Input";
 
 import SidebarNav, { Menu } from "./SidebarNav";
 import Profile from "./Profile";
-import { pages } from "../../../../app/AppRoutes";
 import { useAppBlocContext } from "../../../../app/AppContext";
 import { Description, RssFeed } from "@material-ui/icons";
+import { pages } from "../../PageRoutes";
 
 const useStyles = makeStyles((theme: Theme) => ({
     drawer: {

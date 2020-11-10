@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { pages } from "../../../../app/AppRoutes";
 import { Route, Redirect, useHistory } from "react-router-dom";
 import { useAppBlocContext } from "../../../../app/AppContext";
 import AppState from "../../../../app/AppState";
 import { makeStyles, CircularProgress } from "@material-ui/core";
+import { pages } from "../../PageRoutes";
 
 const useStyles = makeStyles({
     loading: {

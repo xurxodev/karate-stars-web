@@ -15,6 +15,9 @@ export const defaultPagination = { pageSizeOptions: [5, 10, 25], pageSize: 10, p
 abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListState<S>> {
     items: S[] = [];
 
+    public abstract actionItemClick(actionName: string, id: string): void;
+    public abstract actionClick(): void;
+
     constructor() {
         super({
             kind: "ListLoadingState",
