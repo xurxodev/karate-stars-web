@@ -22,8 +22,8 @@ export const fakeAuthenticator: JwtAuthenticator = {
 
         return jwt.sign(tokenData, fakeSecretKey, { expiresIn: "24h" });
     },
-    decodeToken: (token: string) => {
-        return jwt.verify(token, fakeSecretKey) as TokenData;
+    decodeTokenData: (token: string) => {
+        return jwt.verify(token.replace("Bearer ", ""), fakeSecretKey) as TokenData;
     },
 };
 

@@ -16,7 +16,7 @@ export interface JwtAuthenticator {
     secretKey: string;
     validateTokenData: (tokenData: TokenData) => Promise<{ isValid: boolean }>;
     generateToken: (userId: Id) => string;
-    decodeToken(token: string): TokenData;
+    decodeTokenData(token: string): TokenData;
 }
 
 export class Server {

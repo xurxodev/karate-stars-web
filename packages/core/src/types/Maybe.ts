@@ -1,3 +1,5 @@
+import { Either } from "./Either";
+
 type None = { kind: "none" };
 type Some<Data> = { kind: "some"; someValue: Data };
 
@@ -38,6 +40,13 @@ export class Maybe<Data> {
         return this.fold(
             () => Maybe.none(),
             someValue => f(someValue)
+        );
+    }
+
+    toEither<L>(leftValue: L): Either<L, Data> {
+        return this.fold(
+            () => Either.left(leftValue),
+            someValue => Either.right(someValue)
         );
     }
 

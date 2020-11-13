@@ -33,6 +33,17 @@ export class Either<L, R> {
         );
     }
 
+    mapLeft<T>(fn: (l: L) => T): Either<T, R> {
+        return this.flatMapLeft(l => Either.left(fn(l)));
+    }
+
+    flatMapLeft<T>(fn: (left: L) => Either<T, R>): Either<T, R> {
+        return this.fold(
+            leftValue => fn(leftValue),
+            rightValue => Either.right(rightValue)
+        );
+    }
+
     get(errorMessage?: string): R {
         return this.getOrThrow(errorMessage);
     }

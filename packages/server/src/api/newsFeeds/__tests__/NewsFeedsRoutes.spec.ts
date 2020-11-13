@@ -6,30 +6,59 @@ import UserRepository from "../../../domain/users/boundaries/UserRepository";
 import { initServer, generateToken } from "../../common/testUtils/serverTest";
 
 describe("NewsFeedRoutes", () => {
-    it("should return expected news feeds if token is of an admin user", async () => {
-        const newsFeeds = givenThereAreANewsFeeds();
-        const user = givenThereAreAUser({ admin: true });
+    describe("GET /news-feeds", () => {
+        it("should return expected news feeds if token is of an admin user", async () => {
+            const newsFeeds = givenThereAreANewsFeeds();
+            const user = givenThereAreAUser({ admin: true });
 
-        const server = await initServer();
+            const server = await initServer();
 
-        const res = await request(server)
-            .get("/api/v1/news-feeds")
-            .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+            const res = await request(server)
+                .get("/api/v1/news-feeds")
+                .set({ Authorization: `Bearer ${generateToken(user.id)}` });
 
-        expect(res.status).toEqual(200);
-        expect(res.body).toEqual(newsFeeds);
+            expect(res.status).toEqual(200);
+            expect(res.body).toEqual(newsFeeds);
+        });
+        it("should return 403 forbidden if token is not of an admin user", async () => {
+            givenThereAreANewsFeeds();
+            const user = givenThereAreAUser({ admin: false });
+
+            const server = await initServer();
+
+            const res = await request(server)
+                .get("/api/v1/news-feeds")
+                .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+
+            expect(res.status).toEqual(403);
+        });
     });
-    it("should return 403 forbidden if token is not of an admin user", async () => {
-        givenThereAreANewsFeeds();
-        const user = givenThereAreAUser({ admin: false });
+    describe("GET /news-feeds/{id}", () => {
+        it("should return expected news feed if token is of an admin user", async () => {
+            const newsFeeds = givenThereAreANewsFeeds();
+            const user = givenThereAreAUser({ admin: true });
 
-        const server = await initServer();
+            const server = await initServer();
 
-        const res = await request(server)
-            .get("/api/v1/news-feeds")
-            .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+            const res = await request(server)
+                .get(`/api/v1/news-feeds/${newsFeeds[0].id}`)
+                .set({ Authorization: `Bearer ${generateToken(user.id)}` });
 
-        expect(res.status).toEqual(403);
+            expect(res.status).toEqual(200);
+            expect(res.body).toEqual(newsFeeds[0]);
+        });
+        it("should return 403 forbidden if token is not of an admin user", async () => {
+            const newsFeeds = givenThereAreANewsFeeds();
+            const user = givenThereAreAUser({ admin: false });
+
+            const server = await initServer();
+
+            const res = await request(server)
+                .get(`/api/v1/news-feeds/${newsFeeds[0].id}`)
+                .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+
+            expect(res.status).toEqual(403);
+        });
     });
 });
 
@@ -56,8 +85,11 @@ function givenThereAreANewsFeeds() {
     ];
 
     const stubRepository: NewsFeedRepository = {
-        getAll: jest.fn().mockImplementation((): NewsFeed[] => {
+        getAll: jest.fn().mockImplementation(async () => {
             return newsFeeds;
+        }),
+        getById: jest.fn().mockImplementation(async (_id: Id) => {
+            return Maybe.fromValue(newsFeeds[0]);
         }),
     };
 

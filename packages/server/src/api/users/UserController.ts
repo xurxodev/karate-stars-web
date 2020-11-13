@@ -41,9 +41,7 @@ export default class UserController {
         request: hapi.Request,
         h: hapi.ResponseToolkit
     ): hapi.Lifecycle.ReturnValue {
-        const token = request.headers.authorization;
-
-        const userId = this.jwtAuthenticator.decodeToken(token.replace("Bearer ", "")).userId;
+        const { userId } = this.jwtAuthenticator.decodeTokenData(request.headers.authorization);
 
         return this.getUserByIdUseCase
             .execute(userId)

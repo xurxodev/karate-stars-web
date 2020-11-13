@@ -30,8 +30,8 @@ class JwtDefaultAuthenticator implements JwtAuthenticator {
         return jwt.sign(tokenData, this.secretKey, { expiresIn: "24h" });
     }
 
-    decodeToken(token: string): TokenData {
-        return jwt.verify(token, this.secretKey) as TokenData;
+    decodeTokenData(token: string): TokenData {
+        return jwt.verify(token.replace("Bearer ", ""), this.secretKey) as TokenData;
     }
 }
 

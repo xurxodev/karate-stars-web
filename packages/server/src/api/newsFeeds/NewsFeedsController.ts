@@ -3,22 +3,38 @@ import * as boom from "@hapi/boom";
 import { GetNewsFeedsUseCase } from "../../domain/newsFeeds/usecases/GetNewsFeedsUseCase";
 import { AdminUseCaseError } from "../../domain/common/AdminUseCase";
 import { JwtAuthenticator } from "../../server";
+import { GetNewsFeedByIdUseCase } from "../../domain/newsFeeds/usecases/GetNewsFeedByIdUseCase";
 
 export default class NewsFeedsController {
     constructor(
         private jwtAuthenticator: JwtAuthenticator,
-        private getNewsFeedsUseCase: GetNewsFeedsUseCase
+        private getNewsFeedsUseCase: GetNewsFeedsUseCase,
+        private getNewsFeedByIdUseCase: GetNewsFeedByIdUseCase
     ) {}
 
-    public async getAll(
+    async getAll(
         request: hapi.Request,
-        _: hapi.ResponseToolkit
+        _h: hapi.ResponseToolkit
     ): Promise<hapi.Lifecycle.ReturnValue> {
-        const token = request.headers.authorization;
-
-        const userId = this.jwtAuthenticator.decodeToken(token.replace("Bearer ", "")).userId;
+        const { userId } = this.jwtAuthenticator.decodeTokenData(request.headers.authorization);
 
         const result = await this.getNewsFeedsUseCase.execute({ userId });
+
+        return result.fold(
+            error => this.handleFailure(error),
+            newsFeeds => newsFeeds
+        );
+    }
+
+    async get(
+        request: hapi.Request,
+        _h: hapi.ResponseToolkit
+    ): Promise<hapi.Lifecycle.ReturnValue> {
+        const { userId } = this.jwtAuthenticator.decodeTokenData(request.headers.authorization);
+
+        const id = request.params.id;
+
+        const result = await this.getNewsFeedByIdUseCase.execute({ userId, id });
 
         return result.fold(
             error => this.handleFailure(error),
