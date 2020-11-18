@@ -5,7 +5,9 @@ export * from "./entities/NewsFeed";
 export * from "./entities/Entity";
 
 export * from "./types/Either";
+export * from "./types/EitherAsync";
 export * from "./types/Maybe";
+export * from "./types/MaybeAsync";
 export * from "./types/Errors";
 
 export * from "./utils/validations";

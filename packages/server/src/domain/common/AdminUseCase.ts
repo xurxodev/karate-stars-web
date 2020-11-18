@@ -1,4 +1,4 @@
-import { Either, Id, User } from "karate-stars-core";
+import { Either, EitherAsync, Id, MaybeAsync } from "karate-stars-core";
 import { PermissionError } from "../../api/authentication/PermisionError";
 import { ResourceNotFound, UnexpectedError } from "../../api/common/Errors";
 import UserRepository from "../users/boundaries/UserRepository";
@@ -36,22 +36,21 @@ export abstract class AdminUseCase<Arguments extends AdminUseCaseArgs, Error, Da
             message: `NewsFeed with id ${userId} not found`,
         } as ResourceNotFound;
 
-        const userResult = await Id.createExisted(userId).fold<
-            Promise<Either<ResourceNotFound, User>>
-        >(
-            async () => Either.left(notFoundError),
-            async id => (await this.userRepository.getByUserId(id)).toEither(notFoundError)
-        );
+        const permissionError = {
+            kind: "PermissionError",
+            message: `You have not permissions to access to this resource. Only admin users can accesss to this resource`,
+        } as PermissionError;
+
+        const userResult = await EitherAsync.fromEither(Id.createExisted(userId))
+            .mapLeft(() => notFoundError)
+            .flatMap(id =>
+                MaybeAsync.fromPromise(this.userRepository.getByUserId(id)).toEither(notFoundError)
+            )
+            .run();
 
         return userResult.fold(
             error => Either.left(error),
-            user =>
-                !user.isAdmin
-                    ? Either.left({
-                          kind: "PermissionError",
-                          message: `You have not permissions to access to this resource. Only admin users can accesss to this resource`,
-                      } as PermissionError)
-                    : Either.right(true)
+            user => (!user.isAdmin ? Either.left(permissionError) : Either.right(true))
         );
     }
 }

@@ -1,4 +1,4 @@
-import { Either, Id, NewsFeedRawData } from "karate-stars-core";
+import { Either, EitherAsync, Id, NewsFeedRawData, MaybeAsync } from "karate-stars-core";
 import { ResourceNotFound } from "../../../api/common/Errors";
 import { AdminUseCase, AdminUseCaseArgs } from "../../common/AdminUseCase";
 import UserRepository from "../../users/boundaries/UserRepository";
@@ -25,12 +25,14 @@ export class GetNewsFeedByIdUseCase extends AdminUseCase<
             message: `NewsFeed with id ${id} not found`,
         } as ResourceNotFound;
 
-        return Id.createExisted(id).fold<Promise<Either<ResourceNotFound, NewsFeedRawData>>>(
-            async () => Either.left(notFoundError),
-            async id =>
-                (await this.newsFeedsRepository.getById(id))
-                    .toEither(notFoundError)
-                    .map(newsFeed => newsFeed.toRawData())
-        );
+        const result = await EitherAsync.fromEither(Id.createExisted(id))
+            .mapLeft(() => notFoundError)
+            .flatMap(id =>
+                MaybeAsync.fromPromise(this.newsFeedsRepository.getById(id)).toEither(notFoundError)
+            )
+            .map(newsFeed => newsFeed.toRawData())
+            .run();
+
+        return result;
     }
 }
