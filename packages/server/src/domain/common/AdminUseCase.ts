@@ -1,13 +1,13 @@
 import { Either, EitherAsync, Id, MaybeAsync } from "karate-stars-core";
 import { PermissionError } from "../../api/authentication/PermisionError";
-import { ResourceNotFound, UnexpectedError } from "../../api/common/Errors";
+import { Unauthorized, UnexpectedError } from "../../api/common/Errors";
 import UserRepository from "../users/boundaries/UserRepository";
 
 export interface AdminUseCaseArgs {
     userId: string;
 }
 
-export type AdminUseCaseError = ResourceNotFound | PermissionError | UnexpectedError;
+export type AdminUseCaseError = Unauthorized | PermissionError | UnexpectedError;
 
 export abstract class AdminUseCase<Arguments extends AdminUseCaseArgs, Error, Data> {
     constructor(private userRepository: UserRepository) {}
@@ -32,9 +32,9 @@ export abstract class AdminUseCase<Arguments extends AdminUseCaseArgs, Error, Da
 
     private async validateUser(userId: string): Promise<Either<AdminUseCaseError | Error, true>> {
         const notFoundError = {
-            kind: "ResourceNotFound",
-            message: `NewsFeed with id ${userId} not found`,
-        } as ResourceNotFound;
+            kind: "Unauthorized",
+            message: `User with id ${userId} not found`,
+        } as Unauthorized;
 
         const permissionError = {
             kind: "PermissionError",
@@ -44,7 +44,7 @@ export abstract class AdminUseCase<Arguments extends AdminUseCaseArgs, Error, Da
         const userResult = await EitherAsync.fromEither(Id.createExisted(userId))
             .mapLeft(() => notFoundError)
             .flatMap(id =>
-                MaybeAsync.fromPromise(this.userRepository.getByUserId(id)).toEither(notFoundError)
+                MaybeAsync.fromPromise(this.userRepository.getById(id)).toEither(notFoundError)
             )
             .run();
 

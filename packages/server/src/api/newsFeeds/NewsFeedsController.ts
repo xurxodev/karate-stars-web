@@ -4,12 +4,15 @@ import { GetNewsFeedsUseCase } from "../../domain/newsFeeds/usecases/GetNewsFeed
 import { AdminUseCaseError } from "../../domain/common/AdminUseCase";
 import { JwtAuthenticator } from "../../server";
 import { GetNewsFeedByIdUseCase } from "../../domain/newsFeeds/usecases/GetNewsFeedByIdUseCase";
+import { ResourceNotFound } from "../common/Errors";
+import { DeleteNewsFeedUseCase } from "../../domain/newsFeeds/usecases/DeleteNewsFeedUseCase";
 
 export default class NewsFeedsController {
     constructor(
         private jwtAuthenticator: JwtAuthenticator,
         private getNewsFeedsUseCase: GetNewsFeedsUseCase,
-        private getNewsFeedByIdUseCase: GetNewsFeedByIdUseCase
+        private getNewsFeedByIdUseCase: GetNewsFeedByIdUseCase,
+        private deleteNewsFeedUseCase: DeleteNewsFeedUseCase
     ) {}
 
     async getAll(
@@ -42,8 +45,27 @@ export default class NewsFeedsController {
         );
     }
 
-    handleFailure(error: AdminUseCaseError): hapi.Lifecycle.ReturnValue {
+    async delete(
+        request: hapi.Request,
+        _h: hapi.ResponseToolkit
+    ): Promise<hapi.Lifecycle.ReturnValue> {
+        const { userId } = this.jwtAuthenticator.decodeTokenData(request.headers.authorization);
+
+        const id = request.params.id;
+
+        const result = await this.deleteNewsFeedUseCase.execute({ userId, id });
+
+        return result.fold(
+            error => this.handleFailure(error),
+            newsFeeds => newsFeeds
+        );
+    }
+
+    handleFailure(error: AdminUseCaseError | ResourceNotFound): hapi.Lifecycle.ReturnValue {
         switch (error.kind) {
+            case "Unauthorized": {
+                return boom.unauthorized(error.message);
+            }
             case "ResourceNotFound": {
                 return boom.notFound(error.message);
             }

@@ -18,7 +18,7 @@ export default class UserMongoRepository implements UserRepository {
         return result.map(userDB => this.mapToDomain(userDB));
     }
 
-    public async getByUserId(userId: Id): Promise<Maybe<User>> {
+    public async getById(userId: Id): Promise<Maybe<User>> {
         const users = await this.getUsers();
         const result = Maybe.fromValue(users.find(u => u._id === userId.value));
 

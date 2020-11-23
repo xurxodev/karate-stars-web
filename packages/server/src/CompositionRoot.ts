@@ -17,6 +17,7 @@ import { DependencyLocator } from "karate-stars-core";
 import JwtDefaultAuthenticator from "./api/authentication/JwtDefaultAuthenticator";
 import { MongoConector } from "./data/common/MongoConector";
 import { GetNewsFeedByIdUseCase } from "./domain/newsFeeds/usecases/GetNewsFeedByIdUseCase";
+import { DeleteNewsFeedUseCase } from "./domain/newsFeeds/usecases/DeleteNewsFeedUseCase";
 
 export const names = {
     jwtAuthenticator: "jwtAuthenticator",
@@ -121,13 +122,23 @@ function initializeNewsFeeds() {
             )
     );
 
+    di.bindLazySingleton(
+        DeleteNewsFeedUseCase,
+        () =>
+            new DeleteNewsFeedUseCase(
+                di.get(names.newsFeedRepository),
+                di.get(names.userRepository)
+            )
+    );
+
     di.bindFactory(
         NewsFeedsController,
         () =>
             new NewsFeedsController(
                 di.get(names.jwtAuthenticator),
                 di.get(GetNewsFeedsUseCase),
-                di.get(GetNewsFeedByIdUseCase)
+                di.get(GetNewsFeedByIdUseCase),
+                di.get(DeleteNewsFeedUseCase)
             )
     );
 }

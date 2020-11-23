@@ -9,6 +9,6 @@ export default class GetUserByIdUseCase {
     }
 
     public execute(userId: string): Promise<Maybe<UserData>> {
-        return this.repository.getByUserId(Id.createExisted(userId).getOrThrow());
+        return this.repository.getById(Id.createExisted(userId).getOrThrow());
     }
 }

@@ -35,5 +35,18 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
                 return CompositionRoot.di.get(NewsFeedsController).get(request, h);
             },
         },
+        {
+            method: "DELETE",
+            path: `${apiPrefix}/news-feeds/{id}`,
+            options: {
+                auth: jwtAuthenticator.name,
+            },
+            handler: (
+                request: hapi.Request,
+                h: hapi.ResponseToolkit
+            ): hapi.Lifecycle.ReturnValue => {
+                return CompositionRoot.di.get(NewsFeedsController).delete(request, h);
+            },
+        },
     ];
 }

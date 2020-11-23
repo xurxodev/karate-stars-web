@@ -7,3 +7,8 @@ export type ResourceNotFound = {
     kind: "ResourceNotFound";
     message: string;
 };
+
+export type Unauthorized = {
+    kind: "Unauthorized";
+    message: string;
+};
