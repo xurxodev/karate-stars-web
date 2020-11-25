@@ -4,7 +4,7 @@ import { validateRequired } from "../utils/validations";
 import { Id } from "../value-objects/Id";
 import { Url } from "../value-objects/Url";
 import { ImageUrl } from "../value-objects/ImageUrl";
-import { Entity, EntityData } from "./Entity";
+import { Entity, EntityData, EntityRawData } from "./Entity";
 
 export type RssType = "rss" | "atom";
 
@@ -16,8 +16,7 @@ export interface NewsFeedData extends EntityData {
     url: Url;
 }
 
-export interface NewsFeedRawData {
-    id: string;
+export interface NewsFeedRawData extends EntityRawData {
     name: string;
     language: string;
     type: RssType;
@@ -25,8 +24,7 @@ export interface NewsFeedRawData {
     url: string;
 }
 
-export class NewsFeed extends Entity<NewsFeed> implements NewsFeedData {
-    public readonly id: Id;
+export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements NewsFeedData {
     public readonly name: string;
     public readonly language: string;
     public readonly type: RssType;
@@ -59,9 +57,9 @@ export class NewsFeed extends Entity<NewsFeed> implements NewsFeedData {
         const errors: ValidationErrorsDictionary = {
             id: IdValue
                 ? IdValue.fold(
-                      errors => errors,
-                      () => []
-                  )
+                    errors => errors,
+                    () => []
+                )
                 : [],
             name: validateRequired(name),
             language: validateRequired(language),
