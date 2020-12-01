@@ -3,37 +3,85 @@ import NewsFeedRepository from "../../domain/newsFeeds/boundaries/NewsFeedReposi
 import { MongoCollection } from "../common/Types";
 import { MongoConector } from "../common/MongoConector";
 import { ActionResult } from "../../domain/newsFeeds/usecases/DeleteNewsFeedUseCase";
+import { Collection } from "mongodb";
 
 type NewsFeedDB = Omit<NewsFeedRawData, "id"> & MongoCollection;
 
 export default class NewsFeedMongoRepository implements NewsFeedRepository {
-    constructor(private mongoConector: MongoConector) {}
+
+    constructor(private mongoConector: MongoConector) { }
 
     async getAll(): Promise<NewsFeed[]> {
-        const db = await this.mongoConector.db();
+        try {
+            const collection = await this.collection()
+            const cursor = collection.find<NewsFeedDB>();
 
-        const cursor = db.collection("newsFeeds").find<NewsFeedDB>();
-        const newsFeeds = await cursor.toArray();
+            const newsFeeds = await cursor.toArray();
 
-        return newsFeeds.map(feed => this.mapToDomain(feed));
+            return newsFeeds.map(feed => this.mapToDomain(feed));
+        } catch (error) {
+            console.log({ error });
+            return [];
+        }
     }
 
     async getById(id: Id): Promise<Maybe<NewsFeed>> {
-        const db = await this.mongoConector.db();
+        try {
+            const collection = await this.collection()
 
-        const newsFeedDB = await db.collection("newsFeeds").findOne<NewsFeedDB>({ _id: id.value });
+            const newsFeedDB = await collection.findOne<NewsFeedDB>({ _id: id.value });
 
-        return Maybe.fromValue(newsFeedDB).map(newsFeedDB => this.mapToDomain(newsFeedDB));
+            return Maybe.fromValue(newsFeedDB).map(newsFeedDB => this.mapToDomain(newsFeedDB));
+        } catch (error) {
+            console.log({ error });
+            return Maybe.none();
+        }
     }
 
     async delete(id: Id): Promise<ActionResult> {
-        const db = await this.mongoConector.db();
-        const response = await db.collection("newsFeeds").deleteOne({ _id: id.value });
+        try {
+            const collection = await this.collection()
+            const response = await collection.deleteOne({ _id: id.value });
 
-        return {
-            ok: response.result.ok === 1,
-            count: response.result.n || 0,
-        };
+            return {
+                ok: response.result.ok === 1,
+                count: response.result.n || 0,
+            };
+        } catch (error) {
+            console.log({ error });
+            return {
+                ok: false,
+                count: 0,
+            };
+        }
+    }
+
+    async save(newsFeed: NewsFeed): Promise<ActionResult> {
+        try {
+            const collection = await this.collection()
+
+            const newsFeedDB = this.mapToDB(newsFeed);
+
+
+            const _id = newsFeedDB._id;
+            delete newsFeedDB._id;
+
+            const response = await collection.updateOne(
+                { _id },
+                { $set: { ...newsFeedDB } },
+                { upsert: true });
+
+            return {
+                ok: response.result.ok === 1,
+                count: response.result.ok === 1 ? 1 : 0,
+            };
+        } catch (error) {
+            console.log({ error });
+            return {
+                ok: false,
+                count: 0,
+            };
+        }
     }
 
     private mapToDomain(newsFeed: NewsFeedDB): NewsFeed {
@@ -45,5 +93,24 @@ export default class NewsFeedMongoRepository implements NewsFeedRepository {
             image: newsFeed.image,
             url: newsFeed.url,
         }).get();
+    }
+
+    private mapToDB(newsFeed: NewsFeed): Partial<NewsFeedDB> {
+        const rawData = newsFeed.toRawData()
+
+        return this.renameProp("id", "_id", rawData) as NewsFeedDB;
+    }
+
+    private renameProp(oldProp: string, newProp: string, { [oldProp]: old, ...others }) {
+        return {
+            [newProp]: old,
+            ...others
+        };
+    };
+
+    private async collection(): Promise<Collection> {
+        const db = await this.mongoConector.db();
+
+        return db.collection("newsFeeds");
     }
 }

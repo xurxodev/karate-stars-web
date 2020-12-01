@@ -41,6 +41,50 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
         this.image = data.image;
     }
 
+    public update({
+        name,
+        language,
+        type,
+        image,
+        url,
+    }: Omit<NewsFeedRawData, "id">): Either<ValidationErrorsDictionary, NewsFeed> {
+        const urlValue = Url.create(url);
+        const imageValue = Url.create(image);
+
+        const errors: ValidationErrorsDictionary = {
+            name: validateRequired(name),
+            language: validateRequired(language),
+            type: validateRequired(type),
+            url: urlValue.fold(
+                errors => errors,
+                () => []
+            ),
+            image: imageValue.fold(
+                errors => errors,
+                () => []
+            ),
+        };
+
+        Object.keys(errors).forEach(
+            (key: string) => errors[key].length === 0 && delete errors[key]
+        );
+
+        if (Object.keys(errors).length === 0) {
+            return Either.right(
+                new NewsFeed({
+                    id: this.id,
+                    name,
+                    language,
+                    type,
+                    url: urlValue.get(),
+                    image: imageValue.get(),
+                })
+            );
+        } else {
+            return Either.left(errors);
+        }
+    }
+
     public static create({
         id,
         name,

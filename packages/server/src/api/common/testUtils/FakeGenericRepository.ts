@@ -23,4 +23,16 @@ export class FakeGenericRepository<Data extends EntityData, RawData extends Enti
 
         return Promise.resolve({ ok: difference === 1, count: difference });
     }
+
+    save(itemToSave: T): Promise<ActionResult> {
+        const existeItem = this.items.find(item => item.id.equals(itemToSave.id));
+
+        if (existeItem) {
+            this.items = this.items.map(item => item.id.equals(itemToSave.id) ? itemToSave : item);
+        } else {
+            this.items = [...this.items, itemToSave];
+        }
+
+        return Promise.resolve({ ok: true, count: 1 });
+    }
 }

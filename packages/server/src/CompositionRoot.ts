@@ -18,6 +18,8 @@ import JwtDefaultAuthenticator from "./api/authentication/JwtDefaultAuthenticato
 import { MongoConector } from "./data/common/MongoConector";
 import { GetNewsFeedByIdUseCase } from "./domain/newsFeeds/usecases/GetNewsFeedByIdUseCase";
 import { DeleteNewsFeedUseCase } from "./domain/newsFeeds/usecases/DeleteNewsFeedUseCase";
+import { CreateNewsFeedUseCase } from "./domain/newsFeeds/usecases/CreateNewsFeedUseCase";
+import { UpdateNewsFeedUseCase } from "./domain/newsFeeds/usecases/UpdateNewsFeedUseCase";
 
 export const names = {
     jwtAuthenticator: "jwtAuthenticator",
@@ -131,6 +133,24 @@ function initializeNewsFeeds() {
             )
     );
 
+    di.bindLazySingleton(
+        CreateNewsFeedUseCase,
+        () =>
+            new CreateNewsFeedUseCase(
+                di.get(names.newsFeedRepository),
+                di.get(names.userRepository)
+            )
+    );
+
+    di.bindLazySingleton(
+        UpdateNewsFeedUseCase,
+        () =>
+            new UpdateNewsFeedUseCase(
+                di.get(names.newsFeedRepository),
+                di.get(names.userRepository)
+            )
+    );
+
     di.bindFactory(
         NewsFeedsController,
         () =>
@@ -138,6 +158,8 @@ function initializeNewsFeeds() {
                 di.get(names.jwtAuthenticator),
                 di.get(GetNewsFeedsUseCase),
                 di.get(GetNewsFeedByIdUseCase),
+                di.get(CreateNewsFeedUseCase),
+                di.get(UpdateNewsFeedUseCase),
                 di.get(DeleteNewsFeedUseCase)
             )
     );

@@ -5,4 +5,5 @@ export default interface NewsFeedRepository {
     getAll(): Promise<NewsFeed[]>;
     getById(id: Id): Promise<Maybe<NewsFeed>>;
     delete(id: Id): Promise<ActionResult>;
+    save(entity: NewsFeed): Promise<ActionResult>;
 }

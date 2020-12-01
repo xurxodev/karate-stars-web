@@ -1,6 +1,6 @@
-import { Id, NewsFeed } from "karate-stars-core";
+import { Id, NewsFeed, NewsFeedData, NewsFeedRawData } from "karate-stars-core";
 import * as CompositionRoot from "../../../CompositionRoot";
-import { commonCRUDTests } from "../../common/testUtils/crud.spec";
+import { commonCRUDTests, DataCreator } from "../../common/testUtils/crud.spec";
 
 const newsFeeds = [
     NewsFeed.create({
@@ -23,4 +23,24 @@ const newsFeeds = [
     }).get(),
 ];
 
-commonCRUDTests('news-feeds', CompositionRoot.names.newsFeedRepository, newsFeeds);
+const newsFeedCreator: DataCreator<NewsFeedData, NewsFeedRawData, NewsFeed> = {
+    givenAInitialItems: (): NewsFeed[] => {
+        return newsFeeds;
+    },
+    givenAValidNewItem: (): NewsFeedRawData => {
+        return { ...newsFeeds[0].toRawData(), id: Id.generateId().value };
+    },
+    givenAInvalidNewItem: (): NewsFeedRawData => {
+        return {
+            ...newsFeeds[0].toRawData(), id: Id.generateId().value, url: "Invalid", image: "Invalid"
+        };
+    },
+    givenAValidModifiedItem: (): NewsFeedRawData => {
+        return { ...newsFeeds[0].toRawData(), name: newsFeeds[0].name + "modified" };
+    },
+    givenAInvalidModifiedItem: (): NewsFeedRawData => {
+        return { ...newsFeeds[0].toRawData(), url: "Invalid" };
+    }
+}
+
+commonCRUDTests('news-feeds', CompositionRoot.names.newsFeedRepository, newsFeedCreator);

@@ -48,5 +48,31 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
                 return CompositionRoot.di.get(NewsFeedsController).delete(request, h);
             },
         },
+        {
+            method: "POST",
+            path: `${apiPrefix}/news-feeds`,
+            options: {
+                auth: jwtAuthenticator.name,
+            },
+            handler: (
+                request: hapi.Request,
+                h: hapi.ResponseToolkit
+            ): hapi.Lifecycle.ReturnValue => {
+                return CompositionRoot.di.get(NewsFeedsController).post(request, h);
+            },
+        },
+        {
+            method: "PUT",
+            path: `${apiPrefix}/news-feeds/{id}`,
+            options: {
+                auth: jwtAuthenticator.name,
+            },
+            handler: (
+                request: hapi.Request,
+                h: hapi.ResponseToolkit
+            ): hapi.Lifecycle.ReturnValue => {
+                return CompositionRoot.di.get(NewsFeedsController).put(request, h);
+            },
+        }
     ];
 }

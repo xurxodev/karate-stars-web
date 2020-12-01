@@ -1,16 +1,16 @@
 import { Either, EitherAsync, Id, MaybeAsync } from "karate-stars-core";
 import { PermissionError } from "../../api/authentication/PermisionError";
-import { Unauthorized, UnexpectedError } from "../../api/common/Errors";
+import { UnauthorizedError, UnexpectedError } from "../../api/common/Errors";
 import UserRepository from "../users/boundaries/UserRepository";
 
 export interface AdminUseCaseArgs {
     userId: string;
 }
 
-export type AdminUseCaseError = Unauthorized | PermissionError | UnexpectedError;
+export type AdminUseCaseError = UnauthorizedError | PermissionError | UnexpectedError;
 
 export abstract class AdminUseCase<Arguments extends AdminUseCaseArgs, Error, Data> {
-    constructor(private userRepository: UserRepository) {}
+    constructor(private userRepository: UserRepository) { }
 
     public abstract async run(arg: Arguments): Promise<Either<Error, Data>>;
 
@@ -18,10 +18,11 @@ export abstract class AdminUseCase<Arguments extends AdminUseCaseArgs, Error, Da
         try {
             const validationResult = await this.validateUser(arg.userId);
 
-            return validationResult.fold<Promise<Either<AdminUseCaseError | Error, Data>>>(
+            const result = validationResult.fold<Promise<Either<AdminUseCaseError | Error, Data>>>(
                 async userError => Either.left(userError),
                 async () => this.run(arg)
             );
+            return result;
         } catch (error) {
             return Either.left({
                 kind: "UnexpectedError",
@@ -34,7 +35,7 @@ export abstract class AdminUseCase<Arguments extends AdminUseCaseArgs, Error, Da
         const notFoundError = {
             kind: "Unauthorized",
             message: `User with id ${userId} not found`,
-        } as Unauthorized;
+        } as UnauthorizedError;
 
         const permissionError = {
             kind: "PermissionError",
