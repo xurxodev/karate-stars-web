@@ -13,7 +13,7 @@ const isEntity = (v: any): v is Entity<any, any> => {
 };
 
 export abstract class Entity<Data extends EntityData, RawData extends EntityRawData> {
-    constructor(public id: Id) { }
+    constructor(public id: Id) {}
 
     abstract toRawData(): RawData;
 

@@ -12,7 +12,7 @@ export class GetNewsFeedByIdUseCase extends AdminUseCase<
     GetNewsFeedByIdArg,
     ResourceNotFoundError,
     NewsFeedRawData
-    > {
+> {
     constructor(private newsFeedsRepository: NewsFeedsRepository, userRepository: UserRepository) {
         super(userRepository);
     }

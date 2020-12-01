@@ -1,4 +1,4 @@
-import { ValidationErrors, ValidationErrorsDictionary } from "karate-stars-core";
+import { ValidationErrorsDictionary } from "karate-stars-core";
 
 export type UnexpectedError = {
     kind: "UnexpectedError";

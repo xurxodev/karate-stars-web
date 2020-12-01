@@ -1,5 +1,4 @@
 import { Entity, EntityData, EntityRawData } from "./Entity";
-import { Id } from "../value-objects/Id";
 import { Email } from "../value-objects/Email";
 import { Password } from "../value-objects/Password";
 
@@ -52,7 +51,7 @@ export class User extends Entity<User, UserRawData> implements UserData {
             email: this.email.value,
             password: this.password.value,
             isAdmin: this.isAdmin,
-            isClientUser: this.isClientUser
+            isClientUser: this.isClientUser,
         };
     }
 }

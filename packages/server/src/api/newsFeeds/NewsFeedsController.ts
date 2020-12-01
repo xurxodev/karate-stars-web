@@ -4,7 +4,12 @@ import { GetNewsFeedsUseCase } from "../../domain/newsFeeds/usecases/GetNewsFeed
 import { AdminUseCaseError } from "../../domain/common/AdminUseCase";
 import { JwtAuthenticator } from "../../server";
 import { GetNewsFeedByIdUseCase } from "../../domain/newsFeeds/usecases/GetNewsFeedByIdUseCase";
-import { ConflictError, UnexpectedError, ValidationError, ResourceNotFoundError } from "../common/Errors";
+import {
+    ConflictError,
+    UnexpectedError,
+    ValidationError,
+    ResourceNotFoundError,
+} from "../common/Errors";
 import { DeleteNewsFeedUseCase } from "../../domain/newsFeeds/usecases/DeleteNewsFeedUseCase";
 import { NewsFeedRawData, validationErrorMessages } from "karate-stars-core";
 import { CreateNewsFeedUseCase } from "../../domain/newsFeeds/usecases/CreateNewsFeedUseCase";
@@ -18,7 +23,7 @@ export default class NewsFeedsController {
         private createNewsFeedUseCase: CreateNewsFeedUseCase,
         private updateNewsFeedUseCase: UpdateNewsFeedUseCase,
         private deleteNewsFeedUseCase: DeleteNewsFeedUseCase
-    ) { }
+    ) {}
 
     async getAll(
         request: hapi.Request,
@@ -96,7 +101,11 @@ export default class NewsFeedsController {
         const payload = request.payload as NewsFeedRawData;
 
         if (payload) {
-            const result = await this.updateNewsFeedUseCase.execute({ userId, item: payload, itemId: id });
+            const result = await this.updateNewsFeedUseCase.execute({
+                userId,
+                item: payload,
+                itemId: id,
+            });
 
             return result.fold(
                 error => this.handleFailure(error),
@@ -107,7 +116,14 @@ export default class NewsFeedsController {
         }
     }
 
-    handleFailure(error: AdminUseCaseError | ResourceNotFoundError | UnexpectedError | ConflictError | ValidationError): hapi.Lifecycle.ReturnValue {
+    handleFailure(
+        error:
+            | AdminUseCaseError
+            | ResourceNotFoundError
+            | UnexpectedError
+            | ConflictError
+            | ValidationError
+    ): hapi.Lifecycle.ReturnValue {
         switch (error.kind) {
             case "Unauthorized": {
                 return boom.unauthorized(error.message);
@@ -119,8 +135,14 @@ export default class NewsFeedsController {
                 return boom.forbidden(error.message);
             }
             case "ValidationError": {
-                const message = Object.keys(error.errors).map(field =>
-                    error.errors[field].map(errorByKey => validationErrorMessages[errorByKey](field))).flat().join(", ");
+                const message = Object.keys(error.errors)
+                    .map(field =>
+                        error.errors[field].map(errorByKey =>
+                            validationErrorMessages[errorByKey](field)
+                        )
+                    )
+                    .flat()
+                    .join(", ");
 
                 return boom.badRequest(message);
             }

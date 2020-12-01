@@ -73,6 +73,6 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
             ): hapi.Lifecycle.ReturnValue => {
                 return CompositionRoot.di.get(NewsFeedsController).put(request, h);
             },
-        }
+        },
     ];
 }

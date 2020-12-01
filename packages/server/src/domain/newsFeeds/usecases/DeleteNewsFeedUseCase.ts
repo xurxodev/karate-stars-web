@@ -17,12 +17,14 @@ export class DeleteNewsFeedUseCase extends AdminUseCase<
     GetNewsFeedByIdArg,
     ResourceNotFoundError,
     ActionResult
-    > {
+> {
     constructor(private newsFeedsRepository: NewsFeedsRepository, userRepository: UserRepository) {
         super(userRepository);
     }
 
-    public async run({ id }: GetNewsFeedByIdArg): Promise<Either<ResourceNotFoundError, ActionResult>> {
+    public async run({
+        id,
+    }: GetNewsFeedByIdArg): Promise<Either<ResourceNotFoundError, ActionResult>> {
         const notFoundError = {
             kind: "ResourceNotFound",
             message: `NewsFeed with id ${id} not found`,

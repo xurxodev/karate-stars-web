@@ -101,9 +101,9 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
         const errors: ValidationErrorsDictionary = {
             id: IdValue
                 ? IdValue.fold(
-                    errors => errors,
-                    () => []
-                )
+                      errors => errors,
+                      () => []
+                  )
                 : [],
             name: validateRequired(name),
             language: validateRequired(language),

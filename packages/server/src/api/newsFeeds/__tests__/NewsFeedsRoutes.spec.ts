@@ -32,7 +32,10 @@ const newsFeedCreator: DataCreator<NewsFeedData, NewsFeedRawData, NewsFeed> = {
     },
     givenAInvalidNewItem: (): NewsFeedRawData => {
         return {
-            ...newsFeeds[0].toRawData(), id: Id.generateId().value, url: "Invalid", image: "Invalid"
+            ...newsFeeds[0].toRawData(),
+            id: Id.generateId().value,
+            url: "Invalid",
+            image: "Invalid",
         };
     },
     givenAValidModifiedItem: (): NewsFeedRawData => {
@@ -40,7 +43,7 @@ const newsFeedCreator: DataCreator<NewsFeedData, NewsFeedRawData, NewsFeed> = {
     },
     givenAInvalidModifiedItem: (): NewsFeedRawData => {
         return { ...newsFeeds[0].toRawData(), url: "Invalid" };
-    }
-}
+    },
+};
 
-commonCRUDTests('news-feeds', CompositionRoot.names.newsFeedRepository, newsFeedCreator);
+commonCRUDTests("news-feeds", CompositionRoot.names.newsFeedRepository, newsFeedCreator);

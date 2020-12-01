@@ -8,12 +8,11 @@ import { Collection } from "mongodb";
 type NewsFeedDB = Omit<NewsFeedRawData, "id"> & MongoCollection;
 
 export default class NewsFeedMongoRepository implements NewsFeedRepository {
-
-    constructor(private mongoConector: MongoConector) { }
+    constructor(private mongoConector: MongoConector) {}
 
     async getAll(): Promise<NewsFeed[]> {
         try {
-            const collection = await this.collection()
+            const collection = await this.collection();
             const cursor = collection.find<NewsFeedDB>();
 
             const newsFeeds = await cursor.toArray();
@@ -27,7 +26,7 @@ export default class NewsFeedMongoRepository implements NewsFeedRepository {
 
     async getById(id: Id): Promise<Maybe<NewsFeed>> {
         try {
-            const collection = await this.collection()
+            const collection = await this.collection();
 
             const newsFeedDB = await collection.findOne<NewsFeedDB>({ _id: id.value });
 
@@ -40,7 +39,7 @@ export default class NewsFeedMongoRepository implements NewsFeedRepository {
 
     async delete(id: Id): Promise<ActionResult> {
         try {
-            const collection = await this.collection()
+            const collection = await this.collection();
             const response = await collection.deleteOne({ _id: id.value });
 
             return {
@@ -58,10 +57,9 @@ export default class NewsFeedMongoRepository implements NewsFeedRepository {
 
     async save(newsFeed: NewsFeed): Promise<ActionResult> {
         try {
-            const collection = await this.collection()
+            const collection = await this.collection();
 
             const newsFeedDB = this.mapToDB(newsFeed);
-
 
             const _id = newsFeedDB._id;
             delete newsFeedDB._id;
@@ -69,7 +67,8 @@ export default class NewsFeedMongoRepository implements NewsFeedRepository {
             const response = await collection.updateOne(
                 { _id },
                 { $set: { ...newsFeedDB } },
-                { upsert: true });
+                { upsert: true }
+            );
 
             return {
                 ok: response.result.ok === 1,
@@ -96,7 +95,7 @@ export default class NewsFeedMongoRepository implements NewsFeedRepository {
     }
 
     private mapToDB(newsFeed: NewsFeed): Partial<NewsFeedDB> {
-        const rawData = newsFeed.toRawData()
+        const rawData = newsFeed.toRawData();
 
         return this.renameProp("id", "_id", rawData) as NewsFeedDB;
     }
@@ -104,9 +103,9 @@ export default class NewsFeedMongoRepository implements NewsFeedRepository {
     private renameProp(oldProp: string, newProp: string, { [oldProp]: old, ...others }) {
         return {
             [newProp]: old,
-            ...others
+            ...others,
         };
-    };
+    }
 
     private async collection(): Promise<Collection> {
         const db = await this.mongoConector.db();

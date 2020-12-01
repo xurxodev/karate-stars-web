@@ -1,8 +1,12 @@
 import { Entity, EntityData, EntityRawData, Id, Maybe } from "karate-stars-core";
 import { ActionResult } from "../../../domain/newsFeeds/usecases/DeleteNewsFeedUseCase";
 
-export class FakeGenericRepository<Data extends EntityData, RawData extends EntityRawData, T extends Entity<Data, RawData>> {
-    constructor(protected items: T[]) { }
+export class FakeGenericRepository<
+    Data extends EntityData,
+    RawData extends EntityRawData,
+    T extends Entity<Data, RawData>
+> {
+    constructor(protected items: T[]) {}
 
     getAll(): Promise<T[]> {
         return Promise.resolve(this.items);
@@ -28,7 +32,9 @@ export class FakeGenericRepository<Data extends EntityData, RawData extends Enti
         const existeItem = this.items.find(item => item.id.equals(itemToSave.id));
 
         if (existeItem) {
-            this.items = this.items.map(item => item.id.equals(itemToSave.id) ? itemToSave : item);
+            this.items = this.items.map(item =>
+                item.id.equals(itemToSave.id) ? itemToSave : item
+            );
         } else {
             this.items = [...this.items, itemToSave];
         }
