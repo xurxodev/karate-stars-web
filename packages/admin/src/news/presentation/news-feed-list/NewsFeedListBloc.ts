@@ -3,9 +3,13 @@ import { NewsFeedRawData } from "karate-stars-core";
 import GetNewsFeedsUseCase from "../../domain/GetNewsFeedsUseCase";
 import ListBloc, { defaultPagination } from "../../../common/presentation/bloc/ListBloc";
 import { pages } from "../../../common/presentation/PageRoutes";
+import DeleteNewsFeedsUseCase from "../../domain/DeleteNewsFeedsUseCase";
 
 class NewsFeedListBloc extends ListBloc<NewsFeedRawData> {
-    constructor(private getNewsFeedsUseCase: GetNewsFeedsUseCase) {
+    constructor(
+        private getNewsFeedsUseCase: GetNewsFeedsUseCase,
+        private deleteNewsFeedsUseCase: DeleteNewsFeedsUseCase
+    ) {
         super();
 
         this.loadData();
@@ -30,11 +34,21 @@ class NewsFeedListBloc extends ListBloc<NewsFeedRawData> {
                     kind: "NavigateTo",
                     route: pages.newsFeedDetail.generateUrl({ id, action: "edit" }),
                 });
+                break;
             }
-            // case deleteAction.name: {
-
-            // }
+            case deleteAction.name: {
+                this.delete(id);
+                break;
+            }
         }
+    }
+    private async delete(id: string) {
+        const response = await this.deleteNewsFeedsUseCase.execute(id);
+
+        response.fold(
+            async error => this.changeState(this.handleError(error)),
+            () => this.loadData()
+        );
     }
 
     private async loadData(search?: string) {

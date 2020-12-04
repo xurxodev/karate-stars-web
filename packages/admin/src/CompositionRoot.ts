@@ -16,6 +16,7 @@ import NewsFeedApiRepository from "./news/data/NewsFeedApiRepository";
 import { NewsFeedRepository } from "./news/domain/Boundaries";
 import UserRepository from "./user/domain/Boundaries";
 import GetNewsFeedsUseCase from "./news/domain/GetNewsFeedsUseCase";
+import DeleteNewsFeedsUseCase from "./news/domain/DeleteNewsFeedsUseCase";
 
 export const names = {
     axiosInstanceAPI: "axiosInstanceAPI",
@@ -109,7 +110,15 @@ function initNewsFeed() {
         () => new GetNewsFeedsUseCase(di.get<NewsFeedRepository>(names.newsFeedRepository))
     );
 
-    di.bindFactory(NewsFeedListBloc, () => new NewsFeedListBloc(di.get(GetNewsFeedsUseCase)));
+    di.bindLazySingleton(
+        DeleteNewsFeedsUseCase,
+        () => new DeleteNewsFeedsUseCase(di.get<NewsFeedRepository>(names.newsFeedRepository))
+    );
+
+    di.bindFactory(
+        NewsFeedListBloc,
+        () => new NewsFeedListBloc(di.get(GetNewsFeedsUseCase), di.get(DeleteNewsFeedsUseCase))
+    );
 
     di.bindFactory(NewsFeedDetailBloc, () => new NewsFeedDetailBloc());
 }

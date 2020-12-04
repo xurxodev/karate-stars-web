@@ -157,7 +157,10 @@ export default function DataTable<T extends IdentifiableObject>({
     };
 
     const handleMenuSelected = (menu: string) => {
-        if (onItemActionClick && contextualOwnerId) onItemActionClick(menu, contextualOwnerId);
+        if (onItemActionClick && contextualOwnerId) {
+            setContextualMenuPosition(undefined);
+            onItemActionClick(menu, contextualOwnerId);
+        }
     };
 
     return (

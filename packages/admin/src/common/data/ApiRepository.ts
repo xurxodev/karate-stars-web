@@ -6,7 +6,25 @@ import { TokenStorage } from "./TokenLocalStorage";
 class ApiRepository<T> {
     constructor(private axiosInstance: AxiosInstance, private tokenStorage: TokenStorage) {}
 
-    async get(endpoint: string): Promise<Either<DataError, T>> {
+    async getMany(endpoint: string): Promise<Either<DataError, T[]>> {
+        try {
+            const token = this.tokenStorage.get();
+
+            if (!token) {
+                return Either.left({ kind: "Unauthorized" });
+            }
+
+            const response = await this.axiosInstance.get<T[]>(endpoint, {
+                headers: { authorization: token },
+            });
+
+            return Either.right(response.data);
+        } catch (error) {
+            return Either.left(this.handleError(error));
+        }
+    }
+
+    async getOne(endpoint: string): Promise<Either<DataError, T>> {
         try {
             const token = this.tokenStorage.get();
 
@@ -19,6 +37,60 @@ class ApiRepository<T> {
             });
 
             return Either.right(response.data);
+        } catch (error) {
+            return Either.left(this.handleError(error));
+        }
+    }
+
+    async delete(endpoint: string): Promise<Either<DataError, true>> {
+        try {
+            const token = this.tokenStorage.get();
+
+            if (!token) {
+                return Either.left({ kind: "Unauthorized" });
+            }
+
+            await this.axiosInstance.delete<T>(endpoint, {
+                headers: { authorization: token },
+            });
+
+            return Either.right(true);
+        } catch (error) {
+            return Either.left(this.handleError(error));
+        }
+    }
+
+    async post(endpoint: string, item: T): Promise<Either<DataError, true>> {
+        try {
+            const token = this.tokenStorage.get();
+
+            if (!token) {
+                return Either.left({ kind: "Unauthorized" });
+            }
+
+            await this.axiosInstance.post<T>(endpoint, item, {
+                headers: { authorization: token },
+            });
+
+            return Either.right(true);
+        } catch (error) {
+            return Either.left(this.handleError(error));
+        }
+    }
+
+    async put(endpoint: string, item: T): Promise<Either<DataError, true>> {
+        try {
+            const token = this.tokenStorage.get();
+
+            if (!token) {
+                return Either.left({ kind: "Unauthorized" });
+            }
+
+            await this.axiosInstance.put<T>(endpoint, item, {
+                headers: { authorization: token },
+            });
+
+            return Either.right(true);
         } catch (error) {
             return Either.left(this.handleError(error));
         }
