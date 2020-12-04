@@ -42,13 +42,28 @@ class NewsFeedListBloc extends ListBloc<NewsFeedRawData> {
             }
         }
     }
-    private async delete(id: string) {
-        const response = await this.deleteNewsFeedsUseCase.execute(id);
 
-        response.fold(
-            async error => this.changeState(this.handleError(error)),
-            () => this.loadData()
-        );
+    private async delete(id: string) {
+        if (this.state.kind === "ListLoadedState") {
+            this.changeState({ ...this.state, itemsToDelete: [id] });
+        }
+    }
+
+    async confirmDelete() {
+        if (this.state.kind === "ListLoadedState" && this.state.itemsToDelete) {
+            const response = await this.deleteNewsFeedsUseCase.execute(this.state.itemsToDelete[0]);
+
+            response.fold(
+                async error => this.changeState({ ...this.handleError(error) }),
+                () => this.loadData()
+            );
+        }
+    }
+
+    async cancelDelete() {
+        if (this.state.kind === "ListLoadedState") {
+            this.changeState({ ...this.state, itemsToDelete: undefined });
+        }
     }
 
     private async loadData(search?: string) {

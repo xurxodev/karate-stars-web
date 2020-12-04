@@ -5,6 +5,7 @@ import { Alert } from "@material-ui/lab";
 import DataTable, { TableColumn, TablePagination, TableSorting } from "../data-table/DataTable";
 import { Link, Redirect } from "react-router-dom";
 import FabButton from "../add-fab-button/AddFabButton";
+import ConfirmationDialog from "../confirmation-dialog/ConfirmationDialog";
 
 const useStyles = makeStyles({
     loading: {
@@ -26,6 +27,8 @@ interface TableBuilderProps<T extends IdentifiableObject> {
     onItemActionClick?: (actionName: string, id: string) => void;
     onItemClick?: (id: string) => void;
     onActionClick?: () => void;
+    onConfirmDelete?: () => void;
+    onCancelDelete?: () => void;
 }
 
 interface IdentifiableObject {
@@ -42,6 +45,8 @@ export default function TableBuilder<T extends IdentifiableObject>({
     onItemActionClick,
     onItemClick,
     onActionClick,
+    onConfirmDelete,
+    onCancelDelete,
 }: TableBuilderProps<T>): JSX.Element {
     const classes = useStyles();
 
@@ -98,6 +103,16 @@ export default function TableBuilder<T extends IdentifiableObject>({
                         onRowClick={onItemClick}
                     />
                     {onActionClick && <FabButton action={onActionClick} />}
+
+                    {state.itemsToDelete && (
+                        <ConfirmationDialog
+                            open={true}
+                            title={"Delete confirmation"}
+                            description={`Are you sure you want to delete ${state.itemsToDelete.length} items`}
+                            onSave={onConfirmDelete}
+                            onCancel={onCancelDelete}
+                        />
+                    )}
                 </React.Fragment>
             );
         }

@@ -29,22 +29,30 @@ const NewsFeedListPage: React.FC = () => {
     const handleItemActionClick = (actionName: string, id: string) =>
         bloc.actionItemClick(actionName, id);
 
+    const handleonConfirmDelete = () => bloc.confirmDelete();
+
+    const handleonCancelDelete = () => bloc.cancelDelete();
+
     return (
         <MainLayout title={"News Feed List"}>
             <BlocBuilder
                 bloc={bloc}
                 builder={(state: ListState<NewsFeedRawData>) => {
                     return (
-                        <TableBuilder
-                            state={state}
-                            onSearchChange={handleSearch}
-                            onSelectionChange={handleOnSelectionChange}
-                            onSelectionAllChange={handleOnSelectionAllChange}
-                            onPaginationChange={handleOnPaginationChange}
-                            onSortingChange={handleOnSortingChange}
-                            onItemActionClick={handleItemActionClick}
-                            onActionClick={onActionClick}
-                        />
+                        <React.Fragment>
+                            <TableBuilder
+                                state={state}
+                                onSearchChange={handleSearch}
+                                onSelectionChange={handleOnSelectionChange}
+                                onSelectionAllChange={handleOnSelectionAllChange}
+                                onPaginationChange={handleOnPaginationChange}
+                                onSortingChange={handleOnSortingChange}
+                                onItemActionClick={handleItemActionClick}
+                                onActionClick={onActionClick}
+                                onConfirmDelete={handleonConfirmDelete}
+                                onCancelDelete={handleonCancelDelete}
+                            />
+                        </React.Fragment>
                     );
                 }}
             />

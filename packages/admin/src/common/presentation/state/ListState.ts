@@ -11,6 +11,7 @@ export interface ListLoadedState<T extends IdentifiableObject> {
     pagination: ListPagination;
     sorting?: ListSorting<T>;
     actions?: ListAction[];
+    itemsToDelete?: string[];
 }
 
 export interface ListErrorState {
