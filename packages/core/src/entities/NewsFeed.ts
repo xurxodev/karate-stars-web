@@ -41,43 +41,19 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
         this.image = data.image;
     }
 
-    public update({
-        name,
-        language,
-        type,
-        image,
-        url,
-    }: Omit<NewsFeedRawData, "id">): Either<ValidationErrorsDictionary, NewsFeed> {
-        const urlValue = Url.create(url);
-        const imageValue = Url.create(image);
-
-        const errors: ValidationErrorsDictionary = {
-            name: validateRequired(name),
-            language: validateRequired(language),
-            type: validateRequired(type),
-            url: urlValue.fold(
-                errors => errors,
-                () => []
-            ),
-            image: imageValue.fold(
-                errors => errors,
-                () => []
-            ),
-        };
-
-        Object.keys(errors).forEach(
-            (key: string) => errors[key].length === 0 && delete errors[key]
-        );
+    public static create(data: NewsFeedRawData): Either<ValidationErrorsDictionary, NewsFeed> {
+        const finalId = !data.id ? Id.generateId().value : data.id;
+        const errors = validate({ ...data, id: finalId });
 
         if (Object.keys(errors).length === 0) {
             return Either.right(
                 new NewsFeed({
-                    id: this.id,
-                    name,
-                    language,
-                    type,
-                    url: urlValue.get(),
-                    image: imageValue.get(),
+                    id: Id.createExisted(finalId).get(),
+                    name: data.name,
+                    language: data.language,
+                    type: data.type,
+                    url: Url.create(data.url).get(),
+                    image: Url.create(data.image).get(),
                 })
             );
         } else {
@@ -85,54 +61,18 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
         }
     }
 
-    public static create({
-        id,
-        name,
-        language,
-        type,
-        image,
-        url,
-    }: NewsFeedRawData): Either<ValidationErrorsDictionary, NewsFeed> {
-        const urlValue = Url.create(url);
-        const imageValue = Url.create(image);
-
-        const IdValue = id !== "" ? Id.createExisted(id) : null;
-
-        const errors: ValidationErrorsDictionary = {
-            id: IdValue
-                ? IdValue.fold(
-                      errors => errors,
-                      () => []
-                  )
-                : [],
-            name: validateRequired(name),
-            language: validateRequired(language),
-            type: validateRequired(type),
-            url: urlValue.fold(
-                errors => errors,
-                () => []
-            ),
-            image: imageValue.fold(
-                errors => errors,
-                () => []
-            ),
-        };
-
-        Object.keys(errors).forEach(
-            (key: string) => errors[key].length === 0 && delete errors[key]
-        );
+    public update(data: Omit<NewsFeedRawData, "id">): Either<ValidationErrorsDictionary, NewsFeed> {
+        const errors = validate({ ...data, id: this.id.value });
 
         if (Object.keys(errors).length === 0) {
-            const finalId = IdValue ? IdValue.get() : Id.generateId();
-
             return Either.right(
                 new NewsFeed({
-                    id: finalId,
-                    name,
-                    language,
-                    type,
-                    url: urlValue.get(),
-                    image: imageValue.get(),
+                    id: this.id,
+                    name: data.name,
+                    language: data.language,
+                    type: data.type,
+                    url: Url.create(data.url).get(),
+                    image: Url.create(data.image).get(),
                 })
             );
         } else {
@@ -150,4 +90,34 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
             url: this.url.value,
         };
     }
+}
+
+function validate(data: NewsFeedRawData): ValidationErrorsDictionary {
+    const urlValue = Url.create(data.url);
+    const imageValue = Url.create(data.image);
+    const IdValue = Id.createExisted(data.id);
+
+    const errors: ValidationErrorsDictionary = {
+        id: IdValue
+            ? IdValue.fold(
+                  errors => errors,
+                  () => []
+              )
+            : [],
+        name: validateRequired(data.name),
+        language: validateRequired(data.language),
+        type: validateRequired(data.type),
+        url: urlValue.fold(
+            errors => errors,
+            () => []
+        ),
+        image: imageValue.fold(
+            errors => errors,
+            () => []
+        ),
+    };
+
+    Object.keys(errors).forEach((key: string) => errors[key].length === 0 && delete errors[key]);
+
+    return errors;
 }

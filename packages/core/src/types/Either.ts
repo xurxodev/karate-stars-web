@@ -50,7 +50,11 @@ export class Either<L, R> {
 
     getOrThrow(errorMessage?: string): R {
         const throwFn = () => {
-            throw Error(errorMessage ? errorMessage : "An error has ocurred: " + this.value);
+            throw Error(
+                errorMessage
+                    ? errorMessage
+                    : "An error has ocurred retrieving value: " + JSON.stringify(this.value)
+            );
         };
 
         return this.fold(
