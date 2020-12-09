@@ -60,6 +60,25 @@ class ApiRepository<T> {
         }
     }
 
+    async postOrPut(baseEndpoint: string, id: string, item: T): Promise<Either<DataError, true>> {
+        try {
+            const feedResult = await this.getOne(`${baseEndpoint}/${id}`);
+
+            return feedResult.fold<Promise<Either<DataError, true>>>(
+                async error => {
+                    if (error.kind === "ApiError" && error.statusCode === 404) {
+                        return await this.post(`${baseEndpoint}`, item);
+                    } else {
+                        return Either.left(error as DataError);
+                    }
+                },
+                async _ => await this.put(`${baseEndpoint}/${id}`, item)
+            );
+        } catch (error) {
+            return Either.left(this.handleError(error));
+        }
+    }
+
     async post(endpoint: string, item: T): Promise<Either<DataError, true>> {
         try {
             const token = this.tokenStorage.get();

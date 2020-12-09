@@ -19,5 +19,3 @@ export interface NotFound {
 }
 
 export type DataError = ApiError | UnexpectedError | Unauthorized;
-
-export type ItemDataError = ApiError | UnexpectedError | Unauthorized;

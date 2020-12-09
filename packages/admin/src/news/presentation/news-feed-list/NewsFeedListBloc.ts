@@ -66,8 +66,8 @@ class NewsFeedListBloc extends ListBloc<NewsFeedRawData> {
         }
     }
 
-    private async loadData(search?: string) {
-        const response = await this.getNewsFeedsUseCase.execute(search);
+    private async loadData() {
+        const response = await this.getNewsFeedsUseCase.execute();
 
         response.fold(
             error => this.changeState(this.handleError(error)),
