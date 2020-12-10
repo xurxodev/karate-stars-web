@@ -1,23 +1,40 @@
 import { FormState, FormSectionState } from "../../../common/presentation/state/FormState";
 import FormBloc from "../../../common/presentation/bloc/FormBloc";
-import { ValidationErrorKey } from "karate-stars-core";
+import { NewsFeedRawData, ValidationErrorKey } from "karate-stars-core";
+import GetNewsFeedByIdUseCase from "../../domain/GetNewsFeedByIdUseCase";
+import { DataError } from "../../../common/domain/Errors";
 
 class NewsFeedDetailBloc extends FormBloc {
-    constructor() {
+    constructor(private getNewsFeedByIdUseCase: GetNewsFeedByIdUseCase) {
         super({
             isValid: false,
-            sections: initialFieldsState,
+            sections: initialFieldsState(),
         });
     }
 
-    protected validateState(state: FormState): Record<string, ValidationErrorKey[]> | null {
+    async init(id?: string) {
+        if (id) {
+            const newsFeedResult = await this.getNewsFeedByIdUseCase.execute(id);
+
+            newsFeedResult.fold(
+                error => this.changeState(this.handleError(error)),
+                newsFeed => {
+                    this.changeState({
+                        ...this.state,
+                        sections: initialFieldsState(newsFeed),
+                    });
+                }
+            );
+        }
+    }
+
+    protected validateState(_state: FormState): Record<string, ValidationErrorKey[]> | null {
         // const result = this.createNotification(state);
         // const errors = result.fold(
         //     errors => errors,
         //     () => null
         // );
-        console.log({ state });
-        return {};
+        return null;
     }
 
     async submit() {
@@ -42,31 +59,31 @@ class NewsFeedDetailBloc extends FormBloc {
         // }
     }
 
-    // private handleError(error: SendPushNotificationError): FormState {
-    //     switch (error.kind) {
-    //         case "Unauthorized":
-    //             return {
-    //                 ...this.state,
-    //                 result: { kind: "FormResultError", message: "Invalid credentials" },
-    //             };
-    //         case "ApiError":
-    //             return {
-    //                 ...this.state,
-    //                 result: {
-    //                     kind: "FormResultError",
-    //                     message: `Sorry, an error has ocurred in the server. Please try later again`,
-    //                 },
-    //             };
-    //         case "UnexpectedError":
-    //             return {
-    //                 ...this.state,
-    //                 result: {
-    //                     kind: "FormResultError",
-    //                     message: `Sorry, an error has ocurred. Please try later again`,
-    //                 },
-    //             };
-    //     }
-    // }
+    private handleError(error: DataError): FormState {
+        switch (error.kind) {
+            case "Unauthorized":
+                return {
+                    ...this.state,
+                    result: { kind: "FormResultError", message: "Invalid credentials" },
+                };
+            case "ApiError":
+                return {
+                    ...this.state,
+                    result: {
+                        kind: "FormResultError",
+                        message: `Sorry, an error has ocurred in the server. Please try later again`,
+                    },
+                };
+            case "UnexpectedError":
+                return {
+                    ...this.state,
+                    result: {
+                        kind: "FormResultError",
+                        message: `Sorry, an error has ocurred. Please try later again`,
+                    },
+                };
+        }
+    }
 
     // private createNotification(
     //     state: FormState
@@ -81,14 +98,23 @@ class NewsFeedDetailBloc extends FormBloc {
 
 export default NewsFeedDetailBloc;
 
-const initialFieldsState: FormSectionState[] = [
-    {
-        fields: [
-            { label: "Name", name: "name", required: true },
-            { label: "Url", name: "url", required: true },
-            { label: "Language", name: "language", required: true },
-            { label: "Type", name: "type", required: true },
-            { label: "Image", name: "image", required: true },
-        ],
-    },
-];
+const initialFieldsState = (newsFeed?: NewsFeedRawData): FormSectionState[] => {
+    return [
+        {
+            fields: [
+                {
+                    label: "Image",
+                    name: "image",
+                    type: "file",
+                    required: true,
+                    value: newsFeed?.image,
+                    accept: "image/*",
+                },
+                { label: "Name", name: "name", required: true, value: newsFeed?.name },
+                { label: "Url", name: "url", required: true, value: newsFeed?.url },
+                { label: "Language", name: "language", required: true, value: newsFeed?.language },
+                { label: "Type", name: "type", required: true, value: newsFeed?.type },
+            ],
+        },
+    ];
+};

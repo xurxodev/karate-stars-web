@@ -4,7 +4,6 @@ export interface DetailPageParams {
 }
 
 export const pages = {
-    base: { title: "base", path: "/admin" },
     login: { title: "Login", path: "/login" },
     dashboard: { title: "Dasboard", path: "/dashboard" },
     competitors: { title: "Competitors", path: "/competitors" },

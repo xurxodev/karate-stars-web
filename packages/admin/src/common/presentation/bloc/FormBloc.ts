@@ -5,7 +5,7 @@ import { validationErrorMessages, ValidationErrorKey } from "karate-stars-core";
 export default abstract class FormBloc extends Bloc<FormState> {
     protected abstract validateState(state: FormState): Record<string, ValidationErrorKey[]> | null;
 
-    onFieldChanged(name: string, value: string) {
+    onFieldChanged(name: string, value: string | File) {
         const statePreviousToValidation = {
             ...this.state,
             sections: this.state.sections.map(section => {

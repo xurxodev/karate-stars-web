@@ -5,8 +5,8 @@ export class FakeGenericRepository<
     Data extends EntityData,
     RawData extends EntityRawData,
     T extends Entity<Data, RawData>
-    > {
-    constructor(protected items: T[]) { }
+> {
+    constructor(protected items: T[]) {}
 
     getAll(): Promise<T[]> {
         return Promise.resolve(this.items);

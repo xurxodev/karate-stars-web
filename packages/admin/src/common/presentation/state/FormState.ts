@@ -21,7 +21,7 @@ export interface FormFieldState {
     label: string;
     name: string;
     errors?: string[];
-    value?: string;
+    value?: string | File;
     selectOptions?: SelectOption[];
     required?: boolean;
     xs?: GridSize;
@@ -31,6 +31,7 @@ export interface FormFieldState {
     xl?: GridSize;
     autoComplete?: string;
     type?: string;
+    accept?: string;
 }
 
 export interface FormSectionState {
