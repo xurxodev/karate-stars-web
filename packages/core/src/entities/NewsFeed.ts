@@ -3,7 +3,6 @@ import { ValidationErrorsDictionary } from "../types/Errors";
 import { validateRequired } from "../utils/validations";
 import { Id } from "../value-objects/Id";
 import { Url } from "../value-objects/Url";
-import { ImageUrl } from "../value-objects/ImageUrl";
 import { Entity, EntityData, EntityRawData } from "./Entity";
 
 export type RssType = "rss" | "atom";
@@ -28,7 +27,7 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
     public readonly name: string;
     public readonly language: string;
     public readonly type: RssType;
-    public readonly image: ImageUrl;
+    public readonly image: Url;
     public readonly url: Url;
 
     private constructor(data: NewsFeedData) {

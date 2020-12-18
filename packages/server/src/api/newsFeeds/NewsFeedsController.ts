@@ -14,6 +14,8 @@ import { DeleteNewsFeedUseCase } from "../../domain/newsFeeds/usecases/DeleteNew
 import { NewsFeedRawData, validationErrorMessages } from "karate-stars-core";
 import { CreateNewsFeedUseCase } from "../../domain/newsFeeds/usecases/CreateNewsFeedUseCase";
 import { UpdateNewsFeedUseCase } from "../../domain/newsFeeds/usecases/UpdateNewsFeedUseCase";
+import { UpdateNewsFeedImageUseCase } from "../../domain/newsFeeds/usecases/UpdateNewsFeedImageUseCase";
+import { Readable } from "stream";
 
 export default class NewsFeedsController {
     constructor(
@@ -22,6 +24,7 @@ export default class NewsFeedsController {
         private getNewsFeedByIdUseCase: GetNewsFeedByIdUseCase,
         private createNewsFeedUseCase: CreateNewsFeedUseCase,
         private updateNewsFeedUseCase: UpdateNewsFeedUseCase,
+        private updateNewsFeedImageUseCase: UpdateNewsFeedImageUseCase,
         private deleteNewsFeedUseCase: DeleteNewsFeedUseCase
     ) {}
 
@@ -109,10 +112,39 @@ export default class NewsFeedsController {
 
             return result.fold(
                 error => this.handleFailure(error),
-                newsFeeds => newsFeeds
+                result => result
             );
         } else {
             return boom.badRequest("A body request with the resource to create is required");
+        }
+    }
+
+    async putImage(
+        request: hapi.Request,
+        _h: hapi.ResponseToolkit
+    ): Promise<hapi.Lifecycle.ReturnValue> {
+        const { userId } = this.jwtAuthenticator.decodeTokenData(request.headers.authorization);
+
+        const id = request.params.id;
+        const payload = request.payload;
+
+        if (payload) {
+            const stream = payload["file"] as Readable;
+            const fileName = payload["file"].hapi.filename as string;
+
+            const result = await this.updateNewsFeedImageUseCase.execute({
+                userId,
+                itemId: id,
+                image: stream,
+                filename: fileName,
+            });
+
+            return result.fold(
+                error => this.handleFailure(error),
+                result => result
+            );
+        } else {
+            return boom.badRequest("A body request with the file to edit is required");
         }
     }
 

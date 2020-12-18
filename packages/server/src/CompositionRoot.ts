@@ -20,6 +20,8 @@ import { GetNewsFeedByIdUseCase } from "./domain/newsFeeds/usecases/GetNewsFeedB
 import { DeleteNewsFeedUseCase } from "./domain/newsFeeds/usecases/DeleteNewsFeedUseCase";
 import { CreateNewsFeedUseCase } from "./domain/newsFeeds/usecases/CreateNewsFeedUseCase";
 import { UpdateNewsFeedUseCase } from "./domain/newsFeeds/usecases/UpdateNewsFeedUseCase";
+import { UpdateNewsFeedImageUseCase } from "./domain/newsFeeds/usecases/UpdateNewsFeedImageUseCase";
+import { ImageFirebaseStorageRepository } from "./data/images/ImageFirebaseStorageRepository";
 
 export const names = {
     jwtAuthenticator: "jwtAuthenticator",
@@ -28,6 +30,7 @@ export const names = {
     userRepository: "userRepository",
     socialNewsRepository: "socialNewsRepository",
     currentNewsRepository: "currentNewsRepository",
+    imageRepository: "imageRepository",
 };
 
 export const di = DependencyLocator.getInstance();
@@ -110,6 +113,11 @@ function initializeNewsFeeds() {
     );
 
     di.bindLazySingleton(
+        names.imageRepository,
+        () => new ImageFirebaseStorageRepository("karatestars-1261.appspot.com")
+    );
+
+    di.bindLazySingleton(
         GetNewsFeedsUseCase,
         () =>
             new GetNewsFeedsUseCase(di.get(names.newsFeedRepository), di.get(names.userRepository))
@@ -151,6 +159,16 @@ function initializeNewsFeeds() {
             )
     );
 
+    di.bindLazySingleton(
+        UpdateNewsFeedImageUseCase,
+        () =>
+            new UpdateNewsFeedImageUseCase(
+                di.get(names.newsFeedRepository),
+                di.get(names.userRepository),
+                di.get(names.imageRepository)
+            )
+    );
+
     di.bindFactory(
         NewsFeedsController,
         () =>
@@ -160,6 +178,7 @@ function initializeNewsFeeds() {
                 di.get(GetNewsFeedByIdUseCase),
                 di.get(CreateNewsFeedUseCase),
                 di.get(UpdateNewsFeedUseCase),
+                di.get(UpdateNewsFeedImageUseCase),
                 di.get(DeleteNewsFeedUseCase)
             )
     );

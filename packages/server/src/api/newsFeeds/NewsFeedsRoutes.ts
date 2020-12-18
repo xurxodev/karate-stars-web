@@ -74,5 +74,21 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
                 return CompositionRoot.di.get(NewsFeedsController).put(request, h);
             },
         },
+        {
+            method: "PUT",
+            path: `${apiPrefix}/news-feeds/{id}/image`,
+            options: {
+                payload: {
+                    maxBytes: 1024 * 1024 * 5,
+                    multipart: {
+                        output: "stream",
+                    },
+                    parse: true,
+                },
+                handler: async (request, h) => {
+                    return CompositionRoot.di.get(NewsFeedsController).putImage(request, h);
+                },
+            },
+        },
     ];
 }
