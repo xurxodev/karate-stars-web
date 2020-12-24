@@ -10,6 +10,7 @@
     "axios": "^0.19.2",
     "clsx": "^1.1.0",
     "karate-stars-core": "0.1.0",
+    "mime-types": "^2.1.27",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",

@@ -12,14 +12,8 @@ const NewsFeedDetailPage: React.FC = () => {
     const params = useParams<DetailPageParams>();
     const bloc = di.get(NewsFeedDetailBloc);
 
-    const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        event.persist();
-
-        if (event.target.type === "file" && event.target.files) {
-            bloc.onFieldChanged(event.target.name, event.target.files[0]);
-        } else {
-            bloc.onFieldChanged(event.target.name, event.target.value);
-        }
+    const handleFieldChange = (name: string, value: string) => {
+        bloc.onFieldChanged(name, value);
     };
 
     useEffect(() => {

@@ -1,11 +1,25 @@
-import { FormState, FormSectionState } from "../../../common/presentation/state/FormState";
+import {
+    FormState,
+    FormSectionState,
+    stateToRawData,
+} from "../../../common/presentation/state/FormState";
 import FormBloc from "../../../common/presentation/bloc/FormBloc";
-import { NewsFeedRawData, ValidationErrorKey } from "karate-stars-core";
+import {
+    Either,
+    NewsFeed,
+    NewsFeedRawData,
+    ValidationErrorKey,
+    ValidationErrorsDictionary,
+} from "karate-stars-core";
 import GetNewsFeedByIdUseCase from "../../domain/GetNewsFeedByIdUseCase";
 import { DataError } from "../../../common/domain/Errors";
+import SaveNewsFeedUseCase from "../../domain/SaveNewsFeedUseCase";
 
 class NewsFeedDetailBloc extends FormBloc {
-    constructor(private getNewsFeedByIdUseCase: GetNewsFeedByIdUseCase) {
+    constructor(
+        private getNewsFeedByIdUseCase: GetNewsFeedByIdUseCase,
+        private saveNewsFeedUseCase: SaveNewsFeedUseCase
+    ) {
         super({
             isValid: false,
             sections: initialFieldsState(),
@@ -26,37 +40,6 @@ class NewsFeedDetailBloc extends FormBloc {
                 }
             );
         }
-    }
-
-    protected validateState(_state: FormState): Record<string, ValidationErrorKey[]> | null {
-        // const result = this.createNotification(state);
-        // const errors = result.fold(
-        //     errors => errors,
-        //     () => null
-        // );
-        return null;
-    }
-
-    async submit() {
-        // if (this.state.isValid) {
-        //     const creationResult = this.createNotification(this.state);
-        //     const sendResult = await this.sendPushNotificationUseCase.execute(
-        //         creationResult.getOrThrow()
-        //     );
-        //     sendResult.fold(
-        //         (error: SendPushNotificationError) => this.changeState(this.handleError(error)),
-        //         () =>
-        //             this.changeState({
-        //                 ...this.state,
-        //                 result: {
-        //                     kind: "FormResultSuccess",
-        //                     message: "Push notification sent successfully",
-        //                 },
-        //             })
-        //     );
-        // } else {
-        //     this.changeState({ ...this.state });
-        // }
     }
 
     private handleError(error: DataError): FormState {
@@ -85,15 +68,42 @@ class NewsFeedDetailBloc extends FormBloc {
         }
     }
 
-    // private createNotification(
-    //     state: FormState
-    // ): Either<ValidationErrorsDictionary, UrlNotification> {
-    //     const notificationDataFields = state.sections.flatMap(section =>
-    //         section.fields.map(field => ({ [field.name]: field.value })));
-    //     const notificationData = Object.assign({}, ...notificationDataFields);
+    protected validateState(state: FormState): Record<string, ValidationErrorKey[]> | null {
+        const result = this.mapStateToEntity(state);
+        const errors = result.fold(
+            errors => errors,
+            () => null
+        );
 
-    //     return UrlNotification.create(notificationData);
-    // }
+        return errors;
+    }
+
+    async submit() {
+        if (this.state.isValid) {
+            const entityResult = this.mapStateToEntity(this.state);
+            const sendResult = await this.saveNewsFeedUseCase.execute(entityResult.getOrThrow());
+
+            sendResult.fold(
+                (error: DataError) => this.changeState(this.handleError(error)),
+                () =>
+                    this.changeState({
+                        ...this.state,
+                        result: {
+                            kind: "FormResultSuccess",
+                            message: "News feed saved!",
+                        },
+                    })
+            );
+        } else {
+            this.changeState({ ...this.state });
+        }
+    }
+
+    private mapStateToEntity(state: FormState): Either<ValidationErrorsDictionary, NewsFeed> {
+        const rawData = (stateToRawData(state) as unknown) as NewsFeedRawData;
+
+        return NewsFeed.create(rawData);
+    }
 }
 
 export default NewsFeedDetailBloc;
@@ -102,6 +112,7 @@ const initialFieldsState = (newsFeed?: NewsFeedRawData): FormSectionState[] => {
     return [
         {
             fields: [
+                { label: "Id", name: "id", value: newsFeed?.id, hide: true },
                 {
                     label: "Image",
                     name: "image",

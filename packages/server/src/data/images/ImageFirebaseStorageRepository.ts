@@ -7,7 +7,13 @@ import { v4 as uuidv4 } from "uuid";
 import { Readable } from "stream";
 
 export class ImageFirebaseStorageRepository implements ImageRepository {
-    constructor(private bucketName: string) {}
+    constructor(private bucketName: string) {
+        if (!firebaseAdmin.apps.length) {
+            firebaseAdmin.initializeApp({});
+        } else {
+            firebaseAdmin.app(); // if already initialized, use that one
+        }
+    }
 
     async uploadNewFile(
         type: ImageType,
@@ -17,8 +23,6 @@ export class ImageFirebaseStorageRepository implements ImageRepository {
         try {
             const refName = `${type}/${filename}`;
             const extension = filename.split(".").pop() || ".jpg";
-
-            firebaseAdmin.initializeApp();
 
             const bucket = firebaseAdmin.storage().bucket(this.bucketName);
             const file = bucket.file(`${refName}`);

@@ -21,7 +21,7 @@ export interface FormFieldState {
     label: string;
     name: string;
     errors?: string[];
-    value?: string | File;
+    value?: string;
     selectOptions?: SelectOption[];
     required?: boolean;
     xs?: GridSize;
@@ -32,6 +32,7 @@ export interface FormFieldState {
     autoComplete?: string;
     type?: string;
     accept?: string;
+    hide?: boolean;
 }
 
 export interface FormSectionState {
@@ -50,4 +51,12 @@ export interface FormState {
     result?: FormResult;
     submitName?: string;
     submitfullWidth?: boolean;
+}
+
+export function stateToRawData(state: FormState): Record<string, unknown> {
+    const fields = state.sections.flatMap(section =>
+        section.fields.map(field => ({ [field.name]: field.value }))
+    );
+
+    return Object.assign({}, ...fields);
 }

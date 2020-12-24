@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { FormFieldState, SelectOption } from "../../state/FormState";
 import { makeStyles, Grid, TextField, Theme, Button, Icon, Avatar, Box } from "@material-ui/core";
 
 interface FormFieldBuilderProps {
     field: FormFieldState;
-    handleFieldChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    handleFieldChange: (name: string, value: string) => void;
 }
 
 const createPreviewUrl = (file: File): Promise<string> => {
@@ -32,29 +32,30 @@ const FormFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handleFieldC
     const classes = useStyles();
     const defaultColumnValue = 12;
 
-    const [imageUrl, setImageUrl] = useState<string>();
+    const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        event.persist();
 
-    useEffect(() => {
-        if (field.value instanceof File) {
-            createPreviewUrl(field.value).then(setImageUrl);
+        if (event.target.type === "file" && event.target.files) {
+            const imageUrlPreview = await createPreviewUrl(event.target.files[0]);
+            handleFieldChange(event.target.name, imageUrlPreview);
         } else {
-            setImageUrl(field.value);
+            handleFieldChange(event.target.name, event.target.value);
         }
-    }, [field.value]);
+    };
 
     switch (field.type) {
         case "file": {
             return (
                 <Grid item md={field.md || defaultColumnValue} xs={field.xs || defaultColumnValue}>
                     <Box display="flex" alignItems="center" flexDirection="row">
-                        <Avatar className={classes.avatar} src={imageUrl} />
+                        <Avatar className={classes.avatar} src={field.value} />
                         <label htmlFor={field.name}>
                             <input
                                 style={{ display: "none" }}
                                 id={field.name}
                                 name={field.name}
                                 type="file"
-                                onChange={handleFieldChange}
+                                onChange={handleChange}
                                 accept={field.accept}
                             />
                             <Button color="secondary" variant="contained" component="span">
@@ -77,7 +78,7 @@ const FormFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handleFieldC
                         label={field.label.concat(field.required ? " (*)" : "")}
                         name={field.name}
                         value={field.value || ""}
-                        onChange={handleFieldChange}
+                        onChange={handleChange}
                         SelectProps={{ native: true }}
                         helperText={field.errors ? field.errors.join("/n") : ""}
                         variant="outlined"

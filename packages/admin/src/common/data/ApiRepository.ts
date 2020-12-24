@@ -79,6 +79,27 @@ class ApiRepository<T> {
         }
     }
 
+    async putImage(baseEndpoint: string, id: string, file: File): Promise<Either<DataError, true>> {
+        try {
+            const token = this.tokenStorage.get();
+
+            if (!token) {
+                return Either.left({ kind: "Unauthorized" });
+            }
+
+            const formdata = new FormData();
+            formdata.append("file", file);
+
+            await this.axiosInstance.put<T>(`${baseEndpoint}/${id}/image`, formdata, {
+                headers: { authorization: token },
+            });
+
+            return Either.right(true);
+        } catch (error) {
+            return Either.left(this.handleError(error));
+        }
+    }
+
     async post(endpoint: string, item: T): Promise<Either<DataError, true>> {
         try {
             const token = this.tokenStorage.get();

@@ -11,7 +11,7 @@ export interface NewsFeedData extends EntityData {
     name: string;
     language: string;
     type: RssType;
-    image: Url;
+    image?: Url;
     url: Url;
 }
 
@@ -19,7 +19,7 @@ export interface NewsFeedRawData extends EntityRawData {
     name: string;
     language: string;
     type: RssType;
-    image: string;
+    image?: string;
     url: string;
 }
 
@@ -52,7 +52,7 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
                     language: data.language,
                     type: data.type,
                     url: Url.create(data.url).get(),
-                    image: Url.create(data.image).get(),
+                    image: data.image ? Url.create(data.image).get() : undefined,
                 })
             );
         } else {
@@ -71,7 +71,7 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
                     language: data.language,
                     type: data.type,
                     url: Url.create(data.url).get(),
-                    image: Url.create(data.image).get(),
+                    image: data.image ? Url.create(data.image).get() : undefined,
                 })
             );
         } else {
@@ -92,28 +92,24 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
 }
 
 function validate(data: NewsFeedRawData): ValidationErrorsDictionary {
-    const urlValue = Url.create(data.url);
-    const imageValue = Url.create(data.image);
-    const IdValue = Id.createExisted(data.id);
-
     const errors: ValidationErrorsDictionary = {
-        id: IdValue
-            ? IdValue.fold(
+        id: Id.createExisted(data.id).fold(
+            errors => errors,
+            () => []
+        ),
+        name: validateRequired(data.name),
+        language: validateRequired(data.language),
+        type: validateRequired(data.type),
+        url: Url.create(data.url).fold(
+            errors => errors,
+            () => []
+        ),
+        image: data.image
+            ? Url.create(data.image).fold(
                   errors => errors,
                   () => []
               )
             : [],
-        name: validateRequired(data.name),
-        language: validateRequired(data.language),
-        type: validateRequired(data.type),
-        url: urlValue.fold(
-            errors => errors,
-            () => []
-        ),
-        image: imageValue.fold(
-            errors => errors,
-            () => []
-        ),
     };
 
     Object.keys(errors).forEach((key: string) => errors[key].length === 0 && delete errors[key]);

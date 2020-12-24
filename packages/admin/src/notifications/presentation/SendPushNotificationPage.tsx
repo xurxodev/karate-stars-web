@@ -9,10 +9,8 @@ import SendPushNotificationBloc from "./SendPushNotificationBloc";
 const SendPushNotificationPage: React.FC = () => {
     const bloc = di.get(SendPushNotificationBloc);
 
-    const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        event.persist();
-
-        bloc.onFieldChanged(event.target.name, event.target.value);
+    const handleFieldChange = (name: string, value: string) => {
+        bloc.onFieldChanged(name, value);
     };
 
     const handleSubmit = (event: any) => {

@@ -6,4 +6,5 @@ export interface NewsFeedRepository {
     getById(id: Id): Promise<Either<DataError, NewsFeed>>;
     deleteById(id: Id): Promise<Either<DataError, true>>;
     save(newsFeed: NewsFeed): Promise<Either<DataError, true>>;
+    saveImage(newsFeedId: Id, file: File): Promise<Either<DataError, true>>;
 }

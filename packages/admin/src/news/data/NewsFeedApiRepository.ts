@@ -25,6 +25,10 @@ class NewsFeedApiRepository extends ApiRepository<NewsFeedRawData> implements Ne
     async save(newsFeed: NewsFeed): Promise<Either<DataError, true>> {
         return super.postOrPut(this.endpoint, newsFeed.id.value, newsFeed.toRawData());
     }
+
+    async saveImage(newsFeedId: Id, file: File): Promise<Either<DataError, true>> {
+        return super.putImage(this.endpoint, newsFeedId.value, file);
+    }
 }
 
 export default NewsFeedApiRepository;

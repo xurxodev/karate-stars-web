@@ -18,6 +18,8 @@ import UserRepository from "./user/domain/Boundaries";
 import GetNewsFeedsUseCase from "./news/domain/GetNewsFeedsUseCase";
 import DeleteNewsFeedsUseCase from "./news/domain/DeleteNewsFeedsUseCase";
 import GetNewsFeedByIdUseCase from "./news/domain/GetNewsFeedByIdUseCase";
+import { base64ImageToFile } from "./news/data/Base64ImageConverter";
+import SaveNewsFeedUseCase from "./news/domain/SaveNewsFeedUseCase";
 
 export const names = {
     axiosInstanceAPI: "axiosInstanceAPI",
@@ -117,6 +119,15 @@ function initNewsFeed() {
     );
 
     di.bindLazySingleton(
+        SaveNewsFeedUseCase,
+        () =>
+            new SaveNewsFeedUseCase(
+                di.get<NewsFeedRepository>(names.newsFeedRepository),
+                base64ImageToFile
+            )
+    );
+
+    di.bindLazySingleton(
         DeleteNewsFeedsUseCase,
         () => new DeleteNewsFeedsUseCase(di.get<NewsFeedRepository>(names.newsFeedRepository))
     );
@@ -128,6 +139,6 @@ function initNewsFeed() {
 
     di.bindFactory(
         NewsFeedDetailBloc,
-        () => new NewsFeedDetailBloc(di.get(GetNewsFeedByIdUseCase))
+        () => new NewsFeedDetailBloc(di.get(GetNewsFeedByIdUseCase), di.get(SaveNewsFeedUseCase))
     );
 }

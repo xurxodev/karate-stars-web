@@ -19,6 +19,14 @@ describe("NewsFeed", () => {
                 feed => expect(feed).toBeTruthy()
             );
         });
+        it("should not return errors if all fields are valid but image", () => {
+            const result = NewsFeed.create({ ...newsFeedRawData, image: "" });
+
+            result.fold(
+                () => fail("should be success"),
+                feed => expect(feed).toBeTruthy()
+            );
+        });
         it("should return invalid field error for id", () => {
             const result = NewsFeed.create({ ...newsFeedRawData, id: "wrong_id" });
 
@@ -40,14 +48,6 @@ describe("NewsFeed", () => {
 
             result.fold(
                 errors => expect(errors["language"]).toEqual(["field_cannot_be_blank"]),
-                () => fail("should be error")
-            );
-        });
-        it("should return cannot be blank error for image", () => {
-            const result = NewsFeed.create({ ...newsFeedRawData, image: "" });
-
-            result.fold(
-                errors => expect(errors["image"]).toEqual(["field_cannot_be_blank"]),
                 () => fail("should be error")
             );
         });

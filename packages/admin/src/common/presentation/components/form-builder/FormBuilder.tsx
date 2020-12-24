@@ -17,7 +17,7 @@ import FormFieldBuilder from "./FormFieldBuilder";
 interface FormBuilderProps {
     formState: FormState;
     handleSubmit: (event: any) => void;
-    handleFieldChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    handleFieldChange: (name: string, value: string) => void;
     classes?: Record<string, string>;
 }
 
@@ -29,7 +29,6 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
 }) => {
     const finalClasses = { ...useStyles(), ...classes };
     const defaultColumnValue = 12;
-
     return (
         <React.Fragment>
             {formState.result && (
@@ -59,15 +58,19 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
                                     <CardContent>
                                         <Grid container spacing={1}>
                                             {section.fields &&
-                                                section.fields.map((field: FormFieldState) => {
-                                                    return (
-                                                        <FormFieldBuilder
-                                                            key={field.name}
-                                                            field={field}
-                                                            handleFieldChange={handleFieldChange}
-                                                        />
-                                                    );
-                                                })}
+                                                section.fields
+                                                    .filter(field => !field.hide === true)
+                                                    .map((field: FormFieldState) => {
+                                                        return (
+                                                            <FormFieldBuilder
+                                                                key={field.name}
+                                                                field={field}
+                                                                handleFieldChange={
+                                                                    handleFieldChange
+                                                                }
+                                                            />
+                                                        );
+                                                    })}
                                         </Grid>
                                     </CardContent>
                                 </Card>

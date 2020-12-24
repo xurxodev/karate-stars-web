@@ -18,10 +18,8 @@ const LoginPage: React.FC = () => {
 
     const loginBloc = di.get(LoginBloc);
 
-    const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        event.persist();
-
-        loginBloc.onFieldChanged(event.target.name, event.target.value);
+    const handleFieldChange = (name: string, value: string) => {
+        loginBloc.onFieldChanged(name, value);
     };
 
     const handleSubmit = (event: any) => {

@@ -15,11 +15,6 @@ class NewsFeedListBloc extends ListBloc<NewsFeedRawData> {
         this.loadData();
     }
 
-    //For the moment local search realized by super class ListBloc
-    // async search(search: string) {
-    //     this.loadData(search);
-    // }
-
     public actionClick(): void {
         this.changeState({
             kind: "NavigateTo",
