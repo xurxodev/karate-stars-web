@@ -27,7 +27,7 @@ export class CreateNewsFeedUseCase extends AdminUseCase<
     public async run({
         item,
     }: CreateNewsFeedArg): Promise<Either<CreateNewsFeedError, ActionResult>> {
-        return EitherAsync.fromEither(NewsFeed.create(item))
+        return EitherAsync.fromEither(NewsFeed.create(item, false))
             .mapLeft(
                 error =>
                     ({

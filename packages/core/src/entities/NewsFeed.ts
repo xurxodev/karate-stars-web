@@ -27,7 +27,7 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
     public readonly name: string;
     public readonly language: string;
     public readonly type: RssType;
-    public readonly image: Url;
+    public readonly image?: Url;
     public readonly url: Url;
 
     private constructor(data: NewsFeedData) {
@@ -40,9 +40,12 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
         this.image = data.image;
     }
 
-    public static create(data: NewsFeedRawData): Either<ValidationErrorsDictionary, NewsFeed> {
+    public static create(
+        data: NewsFeedRawData,
+        dataUrlIsSupported = true
+    ): Either<ValidationErrorsDictionary, NewsFeed> {
         const finalId = !data.id ? Id.generateId().value : data.id;
-        const errors = validate({ ...data, id: finalId });
+        const errors = validate({ ...data, id: finalId }, dataUrlIsSupported);
 
         if (Object.keys(errors).length === 0) {
             return Either.right(
@@ -51,7 +54,7 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
                     name: data.name,
                     language: data.language,
                     type: data.type,
-                    url: Url.create(data.url).get(),
+                    url: Url.create(data.url, dataUrlIsSupported).get(),
                     image: data.image ? Url.create(data.image).get() : undefined,
                 })
             );
@@ -60,8 +63,11 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
         }
     }
 
-    public update(data: Omit<NewsFeedRawData, "id">): Either<ValidationErrorsDictionary, NewsFeed> {
-        const errors = validate({ ...data, id: this.id.value });
+    public update(
+        data: Omit<NewsFeedRawData, "id">,
+        dataUrlIsSupported = true
+    ): Either<ValidationErrorsDictionary, NewsFeed> {
+        const errors = validate({ ...data, id: this.id.value }, dataUrlIsSupported);
 
         if (Object.keys(errors).length === 0) {
             return Either.right(
@@ -85,13 +91,13 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
             name: this.name,
             language: this.language,
             type: this.type,
-            image: this.image.value,
+            image: this.image?.value,
             url: this.url.value,
         };
     }
 }
 
-function validate(data: NewsFeedRawData): ValidationErrorsDictionary {
+function validate(data: NewsFeedRawData, dataUrlIsSupported: boolean): ValidationErrorsDictionary {
     const errors: ValidationErrorsDictionary = {
         id: Id.createExisted(data.id).fold(
             errors => errors,
@@ -105,7 +111,7 @@ function validate(data: NewsFeedRawData): ValidationErrorsDictionary {
             () => []
         ),
         image: data.image
-            ? Url.create(data.image).fold(
+            ? Url.create(data.image, dataUrlIsSupported).fold(
                   errors => errors,
                   () => []
               )

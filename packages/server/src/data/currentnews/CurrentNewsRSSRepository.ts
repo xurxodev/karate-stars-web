@@ -96,7 +96,7 @@ export default class CurrentNewsRSSRepository implements CurrentNewsRepository {
             },
             source: {
                 name: feed.name,
-                image: feed.image.value,
+                image: feed.image?.value || "",
                 url: feed.url.value,
             },
         };

@@ -49,7 +49,7 @@ export class UpdateNewsFeedUseCase extends AdminUseCase<
                 MaybeAsync.fromPromise(this.newsFeedsRepository.getById(id)).toEither(notFoundError)
             )
             .flatMap(async existedFeed =>
-                existedFeed.update(item).mapLeft(
+                existedFeed.update(item, false).mapLeft(
                     error =>
                         ({
                             kind: "ValidationError",

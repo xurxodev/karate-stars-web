@@ -54,9 +54,8 @@ export class UpdateNewsFeedImageUseCase extends AdminUseCase<
             .flatMap(async existedFeed => {
                 const item = existedFeed.toRawData();
 
-                return EitherAsync.fromPromise(
-                    this.imageRepository.uploadNewFile("feeds", filename, image)
-                )
+                return this.deletePreviousImage(existedFeed.image?.value)
+                    .flatMap(() => this.imageRepository.uploadNewImage("feeds", filename, image))
                     .mapLeft(error => error as UpdateNewsFeedImageError)
                     .flatMap(async newImageUrl =>
                         existedFeed.update({ ...item, image: newImageUrl }).mapLeft(error => ({
@@ -77,5 +76,13 @@ export class UpdateNewsFeedImageUseCase extends AdminUseCase<
                       });
             })
             .run();
+    }
+
+    private deletePreviousImage(imageUrl?: string): EitherAsync<UnexpectedError, true> {
+        if (imageUrl) {
+            return EitherAsync.fromPromise(this.imageRepository.deleteImage("feeds", imageUrl));
+        } else {
+            return EitherAsync.fromEither(Either.right(true));
+        }
     }
 }

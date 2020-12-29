@@ -9,16 +9,18 @@ export default class SaveNewsFeedUseCase {
     ) {}
 
     async execute(newsFeed: NewsFeed): Promise<Either<DataError, true>> {
-        debugger;
-        if (newsFeed.image && newsFeed.image.isDataUrl) {
-            return EitherAsync.fromPromise(this.newsFeedRepository.save(newsFeed))
+        if (newsFeed.image !== undefined && newsFeed.image.isDataUrl) {
+            const imageUrl = newsFeed.image.value;
+            const newsFeedWithoutImage = NewsFeed.create({
+                ...newsFeed.toRawData(),
+                image: undefined,
+            }).get();
+
+            return EitherAsync.fromPromise(this.newsFeedRepository.save(newsFeedWithoutImage))
                 .flatMap(async () => {
-                    debugger;
-                    const file = this.base64ImageToFile(newsFeed.image.value, newsFeed.name);
+                    const file = this.base64ImageToFile(imageUrl, newsFeed.name);
 
                     const imageResult = this.newsFeedRepository.saveImage(newsFeed.id, file);
-
-                    debugger;
 
                     return imageResult;
                 })

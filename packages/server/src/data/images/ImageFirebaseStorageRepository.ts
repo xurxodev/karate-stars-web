@@ -15,7 +15,7 @@ export class ImageFirebaseStorageRepository implements ImageRepository {
         }
     }
 
-    async uploadNewFile(
+    async uploadNewImage(
         type: ImageType,
         filename: string,
         readStream: Readable
@@ -30,6 +30,11 @@ export class ImageFirebaseStorageRepository implements ImageRepository {
             const writeStream = file.createWriteStream({
                 metadata: {
                     contentType: mime.lookup(extension),
+                    // Enable long-lived HTTP caching headers
+                    // Use only if the contents of the file will never change
+                    // (If the contents will change, use cacheControl: 'no-cache')
+                    cacheControl: "no-cache",
+                    // Required for firebase console
                     metadata: {
                         firebaseStorageDownloadTokens: uuidv4(),
                     },
@@ -59,6 +64,25 @@ export class ImageFirebaseStorageRepository implements ImageRepository {
                 kind: "UnexpectedError",
                 error,
             });
+        }
+    }
+
+    async deleteImage(type: ImageType, filename: string): Promise<Either<UnexpectedError, true>> {
+        try {
+            const refName = `${type}/${filename}`;
+
+            console.log({ refName });
+
+            const bucket = firebaseAdmin.storage().bucket(this.bucketName);
+            const file = bucket.file(`${refName}`);
+
+            await file.delete({ ignoreNotFound: true });
+
+            console.log("delete image ok");
+
+            return Either.right(true);
+        } catch (error) {
+            return Either.left({ kind: "UnexpectedError", error });
         }
     }
 }

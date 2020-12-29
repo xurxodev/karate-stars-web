@@ -24,14 +24,17 @@ export class Url extends ValueObject<UrlProps> {
         super(props);
     }
 
-    public static create(url: string): Either<ValidationErrors, Url> {
+    public static create(url: string, dataUrlIsSupported = true): Either<ValidationErrors, Url> {
         const requiredError = validateRequired(url);
         const regexpURLErrors = validateRegexp(url, URL_PATTERN);
         const regexpDataURLErrors = validateRegexp(url, DATA_URL_PATTERN);
 
         if (requiredError.length > 0) {
             return Either.left(requiredError);
-        } else if (regexpURLErrors.length > 0 && regexpDataURLErrors.length > 0) {
+        } else if (
+            regexpURLErrors.length > 0 &&
+            (regexpDataURLErrors.length > 0 || !dataUrlIsSupported)
+        ) {
             return Either.left(regexpURLErrors);
         } else {
             return Either.right(
