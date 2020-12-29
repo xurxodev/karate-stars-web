@@ -13,8 +13,7 @@ const SendPushNotificationPage: React.FC = () => {
         bloc.onFieldChanged(name, value);
     };
 
-    const handleSubmit = (event: any) => {
-        event.preventDefault();
+    const handleSubmit = () => {
         bloc.submit();
     };
 
@@ -26,7 +25,7 @@ const SendPushNotificationPage: React.FC = () => {
                     return (
                         <FormBuilder
                             formState={formState}
-                            handleSubmit={handleSubmit}
+                            onSubmit={handleSubmit}
                             handleFieldChange={handleFieldChange}
                         />
                     );

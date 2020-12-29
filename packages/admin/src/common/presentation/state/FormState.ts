@@ -51,6 +51,8 @@ export interface FormState {
     result?: FormResult;
     submitName?: string;
     submitfullWidth?: boolean;
+    showCancel?: boolean;
+    cancelName?: string;
 }
 
 export function stateToRawData(state: FormState): Record<string, unknown> {

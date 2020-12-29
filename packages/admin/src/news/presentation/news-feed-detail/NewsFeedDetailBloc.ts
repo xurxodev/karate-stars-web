@@ -21,7 +21,9 @@ class NewsFeedDetailBloc extends FormBloc {
         private saveNewsFeedUseCase: SaveNewsFeedUseCase
     ) {
         super({
+            submitName: "Accept",
             isValid: false,
+            showCancel: true,
             sections: initialFieldsState(),
         });
     }
@@ -117,14 +119,31 @@ const initialFieldsState = (newsFeed?: NewsFeedRawData): FormSectionState[] => {
                     label: "Image",
                     name: "image",
                     type: "file",
-                    required: true,
                     value: newsFeed?.image,
                     accept: "image/*",
                 },
                 { label: "Name", name: "name", required: true, value: newsFeed?.name },
                 { label: "Url", name: "url", required: true, value: newsFeed?.url },
-                { label: "Language", name: "language", required: true, value: newsFeed?.language },
-                { label: "Type", name: "type", required: true, value: newsFeed?.type },
+                {
+                    label: "Language",
+                    name: "language",
+                    required: true,
+                    value: newsFeed?.language,
+                    md: 6,
+                    xs: 12,
+                },
+                {
+                    label: "Type",
+                    name: "type",
+                    value: "rss",
+                    selectOptions: [
+                        { id: "debug", name: "Debug" },
+                        { id: "atom", name: "Atom" },
+                    ],
+                    md: 6,
+                    xs: 12,
+                    required: true,
+                },
             ],
         },
     ];

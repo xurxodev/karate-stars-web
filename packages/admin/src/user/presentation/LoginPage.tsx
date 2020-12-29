@@ -22,8 +22,7 @@ const LoginPage: React.FC = () => {
         loginBloc.onFieldChanged(name, value);
     };
 
-    const handleSubmit = (event: any) => {
-        event.preventDefault();
+    const handleSubmit = () => {
         loginBloc.submit();
     };
 
@@ -68,7 +67,7 @@ const LoginPage: React.FC = () => {
                                         return (
                                             <FormBuilder
                                                 formState={formState}
-                                                handleSubmit={handleSubmit}
+                                                onSubmit={handleSubmit}
                                                 handleFieldChange={handleFieldChange}
                                                 classes={{
                                                     form: classes.form,

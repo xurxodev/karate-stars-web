@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { BlocBuilder } from "../../../common/presentation/bloc";
 import FormBuilder from "../../../common/presentation/components/form-builder/FormBuilder";
 import MainLayout from "../../../common/presentation/layouts/main/MainLayout";
@@ -11,6 +11,7 @@ import NewsFeedDetailBloc from "./NewsFeedDetailBloc";
 const NewsFeedDetailPage: React.FC = () => {
     const params = useParams<DetailPageParams>();
     const bloc = di.get(NewsFeedDetailBloc);
+    const history = useHistory();
 
     const handleFieldChange = (name: string, value: string) => {
         bloc.onFieldChanged(name, value);
@@ -20,9 +21,13 @@ const NewsFeedDetailPage: React.FC = () => {
         bloc.init(params.id);
     }, [bloc, params]);
 
-    const handleSubmit = (event: any) => {
-        event.preventDefault();
+    const handleSubmit = () => {
         bloc.submit();
+    };
+
+    const handleCancel = () => {
+        // TODO: Decide in BLoC
+        history.goBack();
     };
 
     return (
@@ -33,7 +38,8 @@ const NewsFeedDetailPage: React.FC = () => {
                     return (
                         <FormBuilder
                             formState={formState}
-                            handleSubmit={handleSubmit}
+                            onSubmit={handleSubmit}
+                            onCancel={handleCancel}
                             handleFieldChange={handleFieldChange}
                         />
                     );

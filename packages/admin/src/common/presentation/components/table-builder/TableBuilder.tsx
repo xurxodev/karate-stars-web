@@ -74,7 +74,7 @@ export default function TableBuilder<T extends IdentifiableObject>({
             return <Alert severity="error">{state.message}</Alert>;
         }
         case "NavigateTo": {
-            return <Redirect to={state.route} />;
+            return <Redirect push to={state.route} />;
         }
         case "ListLoadedState": {
             const columns = mapColumns<T>(state.fields);

@@ -10,25 +10,40 @@ import {
     Button,
     Grid,
     Theme,
+    Box,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import FormFieldBuilder from "./FormFieldBuilder";
 
 interface FormBuilderProps {
     formState: FormState;
-    handleSubmit: (event: any) => void;
+    onSubmit?: () => void;
+    onCancel?: () => void;
     handleFieldChange: (name: string, value: string) => void;
     classes?: Record<string, string>;
 }
 
 const FormBuilder: React.FC<FormBuilderProps> = ({
-    handleSubmit,
+    onSubmit,
+    onCancel,
     handleFieldChange,
     formState,
     classes,
 }) => {
     const finalClasses = { ...useStyles(), ...classes };
     const defaultColumnValue = 12;
+
+    const handleSubmit = (event: any) => {
+        if (onSubmit) {
+            event.preventDefault();
+            onSubmit();
+        }
+    };
+
+    const handleCancel = () => {
+        if (onCancel) onCancel();
+    };
+
     return (
         <React.Fragment>
             {formState.result && (
@@ -78,15 +93,22 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
                         );
                     })}
                 </Grid>
-                <Button
-                    color="primary"
-                    variant="contained"
-                    type="submit"
-                    disabled={!formState.isValid}
-                    className={finalClasses.submitButton}
-                    fullWidth={formState.submitfullWidth}>
-                    {formState.submitName || "Send"}
-                </Button>
+                <Box display="flex" flexDirection="row" justifyContent="flex-start">
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        type="submit"
+                        disabled={!formState.isValid}
+                        className={finalClasses.submitButton}
+                        fullWidth={formState.submitfullWidth}>
+                        {formState.submitName || "Send"}
+                    </Button>
+                    {formState.showCancel && (
+                        <Button className={finalClasses.cancelButton} onClick={handleCancel}>
+                            {formState.cancelName || "Cancel"}
+                        </Button>
+                    )}
+                </Box>
             </form>
         </React.Fragment>
     );
@@ -105,5 +127,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     submitButton: {
         margin: theme.spacing(2, 0),
+    },
+    cancelButton: {
+        margin: theme.spacing(2, 1),
     },
 }));
