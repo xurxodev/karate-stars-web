@@ -96,7 +96,8 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
                 {
                     kind: "MenuLeaf",
                     level: 1,
-                    ...pages.newsFeedDetail,
+                    title: pages.newsFeedDetail.title,
+                    path: pages.newsFeedDetail.generateUrl({ action: "new" }),
                     icon: <RssFeed />,
                 },
                 {
