@@ -79,8 +79,10 @@ export class UpdateNewsFeedImageUseCase extends AdminUseCase<
     }
 
     private deletePreviousImage(imageUrl?: string): EitherAsync<UnexpectedError, true> {
-        if (imageUrl) {
-            return EitherAsync.fromPromise(this.imageRepository.deleteImage("feeds", imageUrl));
+        const filename = imageUrl ? imageUrl.split("/").pop() : undefined;
+
+        if (filename) {
+            return EitherAsync.fromPromise(this.imageRepository.deleteImage("feeds", filename));
         } else {
             return EitherAsync.fromEither(Either.right(true));
         }

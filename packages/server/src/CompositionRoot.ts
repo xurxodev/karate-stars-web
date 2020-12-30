@@ -137,7 +137,8 @@ function initializeNewsFeeds() {
         () =>
             new DeleteNewsFeedUseCase(
                 di.get(names.newsFeedRepository),
-                di.get(names.userRepository)
+                di.get(names.userRepository),
+                di.get(names.imageRepository)
             )
     );
 

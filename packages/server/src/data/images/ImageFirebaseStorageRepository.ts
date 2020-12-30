@@ -71,14 +71,10 @@ export class ImageFirebaseStorageRepository implements ImageRepository {
         try {
             const refName = `${type}/${filename}`;
 
-            console.log({ refName });
-
             const bucket = firebaseAdmin.storage().bucket(this.bucketName);
             const file = bucket.file(`${refName}`);
 
             await file.delete({ ignoreNotFound: true });
-
-            console.log("delete image ok");
 
             return Either.right(true);
         } catch (error) {
