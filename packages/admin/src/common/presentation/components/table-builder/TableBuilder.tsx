@@ -3,7 +3,7 @@ import { Avatar, CircularProgress, makeStyles } from "@material-ui/core";
 import { ListField, ListState } from "../../state/ListState";
 import { Alert } from "@material-ui/lab";
 import DataTable, { TableColumn, TablePagination, TableSorting } from "../data-table/DataTable";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import FabButton from "../add-fab-button/AddFabButton";
 import ConfirmationDialog from "../confirmation-dialog/ConfirmationDialog";
 
@@ -133,7 +133,14 @@ function mapColumns<T extends IdentifiableObject>(fields: ListField<T>[]): Table
                 };
             }
             case "url": {
-                const link = (row: T) => <Link to={row[field.name]}>{row[field.name]}</Link>;
+                const link = (row: T) => {
+                    const url = (row[field.name] as unknown) as string;
+                    return (
+                        <a href={url} target="_blank" rel="noreferrer noopener">
+                            {url}
+                        </a>
+                    );
+                };
 
                 return {
                     ...baseColumn,
