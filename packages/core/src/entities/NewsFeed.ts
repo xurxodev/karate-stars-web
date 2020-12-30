@@ -30,7 +30,7 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
     public readonly image?: Url;
     public readonly url: Url;
 
-    private constructor(data: NewsFeedData) {
+    private constructor(private data: NewsFeedData) {
         super(data.id);
 
         this.url = data.url;
@@ -64,20 +64,22 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
     }
 
     public update(
-        data: Omit<NewsFeedRawData, "id">,
+        dataToUpdate: Partial<Omit<NewsFeedRawData, "id">>,
         dataUrlIsSupported = true
     ): Either<ValidationErrorsDictionary, NewsFeed> {
-        const errors = validate({ ...data, id: this.id.value }, dataUrlIsSupported);
+        const newData = { ...this.toRawData(), ...dataToUpdate };
+
+        const errors = validate(newData, dataUrlIsSupported);
 
         if (Object.keys(errors).length === 0) {
             return Either.right(
                 new NewsFeed({
                     id: this.id,
-                    name: data.name,
-                    language: data.language,
-                    type: data.type,
-                    url: Url.create(data.url).get(),
-                    image: data.image ? Url.create(data.image).get() : undefined,
+                    name: newData.name,
+                    language: newData.language,
+                    type: newData.type,
+                    url: Url.create(newData.url).get(),
+                    image: newData.image ? Url.create(newData.image).get() : undefined,
                 })
             );
         } else {
