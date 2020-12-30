@@ -137,7 +137,7 @@ const initialFieldsState = (newsFeed?: NewsFeedRawData): FormSectionState[] => {
                     name: "type",
                     value: "rss",
                     selectOptions: [
-                        { id: "debug", name: "Debug" },
+                        { id: "rss", name: "RSS" },
                         { id: "atom", name: "Atom" },
                     ],
                     md: 6,
