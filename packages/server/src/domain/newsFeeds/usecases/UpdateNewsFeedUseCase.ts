@@ -29,7 +29,7 @@ export class UpdateNewsFeedUseCase extends AdminUseCase<
     CreateNewsFeedArg,
     UpdateNewsFeedError,
     ActionResult
-> {
+    > {
     constructor(private newsFeedsRepository: NewsFeedsRepository, userRepository: UserRepository) {
         super(userRepository);
     }
@@ -51,10 +51,10 @@ export class UpdateNewsFeedUseCase extends AdminUseCase<
             .flatMap(async existedFeed =>
                 existedFeed.update(item, false).mapLeft(
                     error =>
-                        ({
-                            kind: "ValidationError",
-                            errors: error,
-                        } as ValidationError)
+                    ({
+                        kind: "ValidationError",
+                        errors: error,
+                    } as ValidationError)
                 )
             )
             .flatMap(async entity => {
@@ -63,9 +63,9 @@ export class UpdateNewsFeedUseCase extends AdminUseCase<
                 return saveResult.ok
                     ? Either.right(saveResult)
                     : Either.left<UpdateNewsFeedError, ActionResult>({
-                          kind: "UnexpectedError",
-                          error: new Error("An error has ocurred updating the news feed"),
-                      });
+                        kind: "UnexpectedError",
+                        error: new Error("An error has ocurred updating the news feed"),
+                    });
             })
             .run();
     }
