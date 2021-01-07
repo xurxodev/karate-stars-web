@@ -2,8 +2,9 @@ import { Email, Entity, EntityData, EntityRawData, Id, Password, User } from "ka
 import request from "supertest";
 import * as CompositionRoot from "../../../CompositionRoot";
 import { initServer, generateToken } from "./serverTest";
-import { FakeGenericRepository } from "./FakeGenericRepository";
+import { FakeImageRepository } from "./FakeImageRepository";
 import { FakeUserRepository } from "./FakeUserRepository";
+import { FakeGenericRepository } from "./FakeGenericRepository";
 
 export interface DataCreator<
     Data extends EntityData,
@@ -31,6 +32,11 @@ export const commonCRUDTests = <
         CompositionRoot.di.bindLazySingleton(
             repositoryKey,
             () => new FakeGenericRepository<Data, RawData, T>(initialItems)
+        );
+
+        CompositionRoot.di.bindLazySingleton(
+            CompositionRoot.names.imageRepository,
+            () => new FakeImageRepository()
         );
 
         return initialItems.map(feed => feed.toRawData());

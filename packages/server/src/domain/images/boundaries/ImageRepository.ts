@@ -7,9 +7,9 @@ export type ImageType = "competitors" | "feeds" | "flags";
 export interface ImageRepository {
     uploadNewImage(
         type: ImageType,
-        fileName: string,
+        filename: string,
         stream: Stream
     ): Promise<Either<UnexpectedError, string>>;
 
-    deleteImage(type: ImageType, fileName: string): Promise<Either<UnexpectedError, true>>;
+    deleteImage(type: ImageType, filename: string): Promise<Either<UnexpectedError, true>>;
 }
