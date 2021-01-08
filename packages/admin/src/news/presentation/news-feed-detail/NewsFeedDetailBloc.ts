@@ -119,6 +119,7 @@ const initialFieldsState = (newsFeed?: NewsFeedRawData): FormSectionState[] => {
                     label: "Image",
                     name: "image",
                     type: "file",
+                    alt: newsFeed?.name,
                     value: newsFeed?.image,
                     accept: "image/*",
                 },

@@ -48,7 +48,7 @@ const FormFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handleFieldC
             return (
                 <Grid item md={field.md || defaultColumnValue} xs={field.xs || defaultColumnValue}>
                     <Box display="flex" alignItems="center" flexDirection="row">
-                        <Avatar className={classes.avatar} src={field.value} />
+                        <Avatar className={classes.avatar} src={field.value} alt={field.alt} />
                         <label htmlFor={field.name}>
                             <input
                                 style={{ display: "none" }}

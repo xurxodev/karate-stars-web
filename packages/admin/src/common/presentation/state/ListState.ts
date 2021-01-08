@@ -42,6 +42,7 @@ export interface ListAction {
 
 export interface ListField<T> {
     name: keyof T;
+    alt?: keyof T;
     text: string;
     sortable?: boolean;
     searchable?: boolean;

@@ -88,6 +88,7 @@ const fields: ListField<NewsFeedRawData>[] = [
         name: "image",
         text: "Image",
         type: "image",
+        alt: "name",
         sortable: false,
         searchable: false,
     },

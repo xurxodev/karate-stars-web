@@ -20,6 +20,7 @@ export interface SelectOption {
 export interface FormFieldState {
     label: string;
     name: string;
+    alt?: string;
     errors?: string[];
     value?: string;
     selectOptions?: SelectOption[];
