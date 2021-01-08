@@ -1,5 +1,5 @@
 import firebaseAdmin from "firebase-admin";
-import { Either } from "karate-stars-core";
+import { Either, Id } from "karate-stars-core";
 import { UnexpectedError } from "../../api/common/Errors";
 import { ImageRepository, ImageType } from "../../domain/images/boundaries/ImageRepository";
 import mime from "mime-types";
@@ -21,8 +21,8 @@ export class ImageFirebaseStorageRepository implements ImageRepository {
         readStream: Readable
     ): Promise<Either<UnexpectedError, string>> {
         try {
-            const refName = `${type}/${filename}`;
             const extension = filename.split(".").pop() || ".jpg";
+            const refName = `${type}/${Id.generateId().value}.${extension}`;
 
             const bucket = firebaseAdmin.storage().bucket(this.bucketName);
             const file = bucket.file(`${refName}`);
@@ -33,7 +33,7 @@ export class ImageFirebaseStorageRepository implements ImageRepository {
                     // Enable long-lived HTTP caching headers
                     // Use only if the contents of the file will never change
                     // (If the contents will change, use cacheControl: 'no-cache')
-                    cacheControl: "no-cache",
+                    //cacheControl: "no-cache",
                     // Required for firebase console
                     metadata: {
                         firebaseStorageDownloadTokens: uuidv4(),
