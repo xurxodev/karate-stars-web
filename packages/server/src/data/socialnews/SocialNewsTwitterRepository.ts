@@ -9,10 +9,7 @@ export default class SocialNewsTwitterRepository implements SocialNewsRepository
         this.twitterApiClient = new Twit({
             consumer_key: twitterConcomerKey,
             consumer_secret: twitterConcomerSecret,
-            // access_token: '...',
-            // access_token_secret: '...',
-            timeout_ms: 60 * 1000, // optional HTTP request timeout to apply to all requests.
-            // strictSSL: true,     // optional - requires SSL certificates to be valid.
+            timeout_ms: 60 * 1000,
             app_only_auth: true,
         });
     }
