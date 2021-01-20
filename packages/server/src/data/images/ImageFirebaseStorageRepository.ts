@@ -30,11 +30,6 @@ export class ImageFirebaseStorageRepository implements ImageRepository {
             const writeStream = file.createWriteStream({
                 metadata: {
                     contentType: mime.lookup(extension),
-                    // Enable long-lived HTTP caching headers
-                    // Use only if the contents of the file will never change
-                    // (If the contents will change, use cacheControl: 'no-cache')
-                    //cacheControl: "no-cache",
-                    // Required for firebase console
                     metadata: {
                         firebaseStorageDownloadTokens: uuidv4(),
                     },
