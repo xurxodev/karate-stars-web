@@ -112,8 +112,6 @@ export default class SocialNewsTwitterRepository implements SocialNewsRepository
             include_rts: false,
             count: 100,
         });
-        // this.twitterApiClient.get("search/tweets", { q: "#Karate1Madrid", count: 100,
-        // include_entities: true, result_type: "popular" })
     }
 
     private async getSocialNewsFromSearch(search: string): Promise<Twit.PromiseResponse> {
