@@ -6,10 +6,18 @@ import mime from "mime-types";
 import { v4 as uuidv4 } from "uuid";
 import { Readable } from "stream";
 
+export interface FirebaseConfig {
+    projectId: string,
+    clientEmail: string,
+    privateKey: string
+}
+
 export class ImageFirebaseStorageRepository implements ImageRepository {
-    constructor(private bucketName: string) {
+    constructor(private bucketName: string, firebaseConfig: FirebaseConfig) {
         if (!firebaseAdmin.apps.length) {
-            firebaseAdmin.initializeApp({});
+            firebaseAdmin.initializeApp({
+                credential: firebaseAdmin.credential.cert(firebaseConfig),
+            });
         } else {
             firebaseAdmin.app(); // if already initialized, use that one
         }

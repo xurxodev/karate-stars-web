@@ -114,7 +114,19 @@ function initializeNewsFeeds() {
 
     di.bindLazySingleton(
         names.imageRepository,
-        () => new ImageFirebaseStorageRepository("karatestars-1261.appspot.com")
+        () => {
+            const bucketName = process.env.FIREBASE_BUCKET_NAME || "";
+            const projectId = process.env.FIREBASE_PROJECT_ID || "";
+            const clientEmail = process.env.FIREBASE_CLIENT_EMAIL || "";
+            const privateKey = process.env.FIREBASE_PRIVATE_KEY || "";
+
+
+            return new ImageFirebaseStorageRepository(bucketName, {
+                projectId,
+                clientEmail,
+                privateKey
+            })
+        }
     );
 
     di.bindLazySingleton(
