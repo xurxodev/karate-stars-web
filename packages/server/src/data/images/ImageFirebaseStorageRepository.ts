@@ -7,9 +7,9 @@ import { v4 as uuidv4 } from "uuid";
 import { Readable } from "stream";
 
 export interface FirebaseConfig {
-    projectId: string,
-    clientEmail: string,
-    privateKey: string
+    projectId: string;
+    clientEmail: string;
+    privateKey: string;
 }
 
 export class ImageFirebaseStorageRepository implements ImageRepository {

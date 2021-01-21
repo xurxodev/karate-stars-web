@@ -112,22 +112,20 @@ function initializeNewsFeeds() {
         () => new NewsFeedMongoRepository(di.get(MongoConector))
     );
 
-    di.bindLazySingleton(
-        names.imageRepository,
-        () => {
-            const bucketName = process.env.FIREBASE_BUCKET_NAME || "";
-            const projectId = process.env.FIREBASE_PROJECT_ID || "";
-            const clientEmail = process.env.FIREBASE_CLIENT_EMAIL || "";
-            const privateKey = process.env.FIREBASE_PRIVATE_KEY || "";
+    di.bindLazySingleton(names.imageRepository, () => {
+        const bucketName = process.env.FIREBASE_BUCKET_NAME || "";
+        const projectId = process.env.FIREBASE_PROJECT_ID || "";
+        const clientEmail = process.env.FIREBASE_CLIENT_EMAIL || "";
 
+        //replace fix heroku error: FirebaseAppError: Failed to parse private key: Error: Invalid PEM formatted message.
+        const privateKey = (process.env.FIREBASE_PRIVATE_KEY ?? '').replace(/\\n/gu, '\n') || "";
 
-            return new ImageFirebaseStorageRepository(bucketName, {
-                projectId,
-                clientEmail,
-                privateKey
-            })
-        }
-    );
+        return new ImageFirebaseStorageRepository(bucketName, {
+            projectId,
+            clientEmail,
+            privateKey,
+        });
+    });
 
     di.bindLazySingleton(
         GetNewsFeedsUseCase,
