@@ -8,7 +8,8 @@
             "dom"
         ],
         "types": [
-            "cypress"
+            "cypress",
+            "@testing-library/cypress"
         ]
     },
     "include": [

@@ -5,13 +5,13 @@ context("Send push notification page", () => {
     })
 
     it("should send notification sucessfully", () => {
-        cy.get("select[name=topic]").select("debugurlnews");
-        cy.get("input[name=url]").type("http://karatestarsapp.com");
-        cy.get("input[name=title]").type("Karate stars news");
-        cy.get("input[name=description]").type("Best karate app of the world!!");
+        cy.findByLabelText("Topic (*)").select("debugurlnews");
+        cy.findByLabelText("Url (*)").type("http://karatestarsapp.com");
+        cy.findByLabelText("Title (*)").type("Karate stars news");
+        cy.findByLabelText("Description (*)").type("Best karate app of the world!!");
 
-        cy.get('button[type=submit]').click();
+        cy.findByText('Send').click();
 
-        cy.contains("Push notification sent successfully")
+        cy.findByText("Push notification sent successfully");
     });
 });

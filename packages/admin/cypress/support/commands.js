@@ -1,6 +1,8 @@
 // <reference types="Cypress" />
 /* global Cypress, cy */
 
+import "@testing-library/cypress/add-commands";
+
 const username = Cypress.env("USERNAME");
 const password = Cypress.env("PASSWORD");
 const apiUrl = Cypress.env("API_URL");
