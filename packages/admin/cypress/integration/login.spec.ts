@@ -1,7 +1,7 @@
 const username = Cypress.env("USERNAME");
 const password = Cypress.env("PASSWORD");
 
-context("Login page", () => {
+describe("Login page", () => {
     beforeEach(() => {
         cy.visit("/");
         cy.contains("Login");
