@@ -39,7 +39,10 @@ describe("News Feeds page", () => {
             });
         })
         it("should edit an item", () => {
+            cy.findByLabelText("Name (*)").type("Xurxo dev");
+            cy.findByLabelText("Url (*)").type("https://xurxodev.com/");
             cy.findByLabelText("Language (*)").type("es");
+            cy.findByLabelText("Type (*)").select("RSS");
 
             cy.findByText('Accept').click();
 
