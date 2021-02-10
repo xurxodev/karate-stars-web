@@ -1,14 +1,14 @@
 import * as hapi from "@hapi/hapi";
 import * as Path from "path";
 
-import categoryRoutes from "./api/categories/CategoryRoutes";
-import competitorRoutes from "./api/competitors/CompetitorRoutes";
-import countryRoutes from "./api/countries/CountryRoutes";
-import currentNewsRoutes from "./api/currentnews/CurrentNewsRoutes";
-import NewsFeedsRoutes from "./api/newsFeeds/NewsFeedsRoutes";
-import socialNewsRoutes from "./api/socialnews/SocialNewsRoutes";
-import userRoutes from "./api/users/UserRoutes";
-import videoRoutes from "./api/videos/VideoRoutes";
+import categoryRoutes from "./categories/api/CategoryRoutes";
+import competitorRoutes from "./competitors/api/CompetitorRoutes";
+import countryRoutes from "./countries/api/CountryRoutes";
+import currentNewsRoutes from "./currentnews/api/CurrentNewsRoutes";
+import NewsFeedsRoutes from "./newsfeeds/api/NewsFeedsRoutes";
+import socialNewsRoutes from "./socialnews/api/SocialNewsRoutes";
+import userRoutes from "./users/api/UserRoutes";
+import videoRoutes from "./videos/api/VideoRoutes";
 
 const initializeRoutes = (server: hapi.Server) => {
     const apiPrefix = "/api/v1";
