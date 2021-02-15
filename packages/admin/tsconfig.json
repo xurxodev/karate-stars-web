@@ -7,12 +7,11 @@
       "esnext"
     ],
     "noEmit": true,
+    //"noFallthroughCasesInSwitch": true,
     "module": "esnext",
     "jsx": "react"
   },
   "include": [
     "src",
-    "../core/src/value-objects/Password.ts",
-    "../core/src/value-objects/Email.ts"
   ],
 }

@@ -47,7 +47,7 @@
     "jest": "^26.4.2",
     "nodemon": "^1.19.1",
     "supertest": "^4.0.2",
-    "ts-jest": "^24.3.0"
+    "ts-jest": "^26.5.1"
   },
   "engines": {
     "node": "14.x"
