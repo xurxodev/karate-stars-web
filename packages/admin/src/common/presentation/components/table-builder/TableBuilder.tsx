@@ -2,7 +2,7 @@ import React from "react";
 import { Avatar, CircularProgress, makeStyles } from "@material-ui/core";
 import { ListField, ListState } from "../../state/ListState";
 import { Alert } from "@material-ui/lab";
-import DataTable, { TableColumn, TablePagination, TableSorting } from "../data-table/DataTable";
+import DataTable, { TableColumn, TablePager, TableSorting } from "../data-table/DataTable";
 import { Redirect } from "react-router-dom";
 import FabButton from "../add-fab-button/AddFabButton";
 import ConfirmationDialog from "../confirmation-dialog/ConfirmationDialog";
@@ -50,7 +50,7 @@ export default function TableBuilder<T extends IdentifiableObject>({
 }: TableBuilderProps<T>): JSX.Element {
     const classes = useStyles();
 
-    const handlePaginationChange = (pagination: TablePagination) => {
+    const handlePaginationChange = (pagination: TablePager) => {
         if (onPaginationChange) {
             onPaginationChange(pagination.page, pagination.pageSize);
         }

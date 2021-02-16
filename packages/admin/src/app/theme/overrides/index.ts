@@ -7,7 +7,7 @@ import MuiTypography from "./MuiTypography";
 import MuiFormLabel from "./MuiFormLabel";
 import MuiOutlinedInput from "./MuiOutlinedInput";
 
-export default {
+const overrides = {
     MuiButton,
     MuiFormLabel,
     MuiIconButton,
@@ -17,3 +17,5 @@ export default {
     MuiTableHead,
     MuiTypography,
 };
+
+export default overrides;

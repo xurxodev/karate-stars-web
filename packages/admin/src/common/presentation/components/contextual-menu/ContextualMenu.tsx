@@ -11,7 +11,7 @@ export interface MenuItemData {
     icon?: string;
 }
 
-export interface ContextualMenuProps<> {
+export interface ContextualMenuProps {
     isOpen: boolean;
     position: PopoverPosition;
     onClose(): void;

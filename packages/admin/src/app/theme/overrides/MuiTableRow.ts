@@ -1,6 +1,6 @@
 import palette from "../palette";
 
-export default {
+const overridePalette = {
     root: {
         "&$selected": {
             backgroundColor: palette.background.default,
@@ -12,3 +12,5 @@ export default {
         },
     },
 };
+
+export default overridePalette;

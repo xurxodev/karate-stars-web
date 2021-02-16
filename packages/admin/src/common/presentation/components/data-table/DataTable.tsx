@@ -31,7 +31,7 @@ export interface TableColumn<T> {
     getValue?: (row: T) => JSX.Element;
 }
 
-export interface TablePagination {
+export interface TablePager {
     pageSize: number;
     page: number;
     total: number;
@@ -57,7 +57,7 @@ export interface DataTableProps<T> {
     rows: T[];
     selectedRows: string[];
     paginationOptions: number[];
-    pagination: TablePagination;
+    pagination: TablePager;
     sorting?: TableSorting<T>;
     search?: string;
     searchEnable?: boolean;
@@ -65,7 +65,7 @@ export interface DataTableProps<T> {
     onSearchChange?: (search: string) => void;
     onSelectionChange?: (id: string) => void;
     onSelectionAllChange?: (select: boolean) => void;
-    onPaginationChange?: (pagination: TablePagination) => void;
+    onPaginationChange?: (pagination: TablePager) => void;
     onSortingChange?: (sorting: TableSorting<T>) => void;
     onItemActionClick?: (actionName: string, id: string) => void;
     onRowClick?: (id: string) => void;

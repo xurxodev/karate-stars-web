@@ -12,8 +12,8 @@ module.exports = {
     rules: {
         "react/prop-types": "off",
         "react-hooks/exhaustive-deps": "off",
-        //"react/jsx-uses-react": "off",
-        //"react/react-in-jsx-scope": "off",
+        "react/jsx-uses-react": "off",
+        "react/react-in-jsx-scope": "off",
     },
     settings: {
         react: {

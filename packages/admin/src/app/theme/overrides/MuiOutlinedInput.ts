@@ -1,6 +1,6 @@
 import palette from "../palette";
 
-export default {
+const overrideStyles = {
     root: {
         "&$focused $notchedOutline": {
             borderColor: palette.text.primary,
@@ -8,3 +8,5 @@ export default {
         },
     },
 };
+
+export default overrideStyles;
