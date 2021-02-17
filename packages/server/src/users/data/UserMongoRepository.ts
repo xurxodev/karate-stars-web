@@ -4,7 +4,7 @@ import { UserDB } from "./UserDB";
 import { MongoConector } from "../../common/data/MongoConector";
 
 export default class UserMongoRepository implements UserRepository {
-    constructor(private mongoConector: MongoConector) {}
+    constructor(private mongoConector: MongoConector) { }
 
     public async getByUsernameAndPassword(
         username: Email,
@@ -28,7 +28,7 @@ export default class UserMongoRepository implements UserRepository {
     private async getUsers(): Promise<UserDB[]> {
         const db = await this.mongoConector.db();
 
-        const cursor = db.collection("users").find<UserDB>();
+        const cursor = db.collection("users").find<UserDB>({}, {});
 
         const rows = await cursor.toArray();
 
