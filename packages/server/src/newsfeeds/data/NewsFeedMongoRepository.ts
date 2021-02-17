@@ -8,7 +8,7 @@ import NewsFeedRepository from "../domain/boundaries/NewsFeedRepository";
 type NewsFeedDB = Omit<NewsFeedRawData, "id"> & MongoCollection;
 
 export default class NewsFeedMongoRepository implements NewsFeedRepository {
-    constructor(private mongoConector: MongoConector) { }
+    constructor(private mongoConector: MongoConector) {}
 
     async getAll(): Promise<NewsFeed[]> {
         try {
