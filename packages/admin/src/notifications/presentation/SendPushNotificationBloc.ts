@@ -3,11 +3,10 @@ import { URL_NEWS_TOPIC, DEBUG_URL_NEWS_TOPIC } from "../domain/entities/PushNot
 import { UrlNotification } from "../domain/entities/UrlNotification";
 import SendPushNotificationUseCase from "../domain/SendPushNotificationUseCase";
 import { SendPushNotificationError } from "../domain/Errors";
-import { Either, ValidationErrorKey } from "karate-stars-core";
+import { Either, ValidationError } from "karate-stars-core";
 import FormBloc from "../../common/presentation/bloc/FormBloc";
-import { ValidationErrorsDictionary } from "karate-stars-core";
 
-class SendPushNotificationBloc extends FormBloc {
+class SendPushNotificationBloc extends FormBloc<UrlNotification> {
     constructor(private sendPushNotificationUseCase: SendPushNotificationUseCase) {
         super({
             isValid: false,
@@ -15,7 +14,7 @@ class SendPushNotificationBloc extends FormBloc {
         });
     }
 
-    protected validateState(state: FormState): Record<string, ValidationErrorKey[]> | null {
+    protected validateState(state: FormState): ValidationError<UrlNotification>[] | null {
         const result = this.createNotification(state);
         const errors = result.fold(
             errors => errors,
@@ -76,7 +75,7 @@ class SendPushNotificationBloc extends FormBloc {
 
     private createNotification(
         state: FormState
-    ): Either<ValidationErrorsDictionary, UrlNotification> {
+    ): Either<ValidationError<UrlNotification>[], UrlNotification> {
         const notificationDataFields = state.sections.flatMap(section =>
             section.fields.map(field => ({ [field.name]: field.value }))
         );

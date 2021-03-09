@@ -31,7 +31,10 @@ describe("NewsFeed", () => {
             const result = NewsFeed.create({ ...newsFeedRawData, id: "wrong_id" });
 
             result.fold(
-                errors => expect(errors["id"]).toEqual(["invalid_field"]),
+                errors =>
+                    expect(errors.find(error => error.property === "id").errors[0]).toBe(
+                        "invalid_field"
+                    ),
                 () => fail("should be error")
             );
         });
@@ -39,7 +42,10 @@ describe("NewsFeed", () => {
             const result = NewsFeed.create({ ...newsFeedRawData, name: "" });
 
             result.fold(
-                errors => expect(errors["name"]).toEqual(["field_cannot_be_blank"]),
+                errors =>
+                    expect(errors.find(error => error.property === "name").errors[0]).toBe(
+                        "field_cannot_be_blank"
+                    ),
                 () => fail("should be error")
             );
         });
@@ -47,7 +53,10 @@ describe("NewsFeed", () => {
             const result = NewsFeed.create({ ...newsFeedRawData, language: "" });
 
             result.fold(
-                errors => expect(errors["language"]).toEqual(["field_cannot_be_blank"]),
+                errors =>
+                    expect(errors.find(error => error.property === "language").errors[0]).toBe(
+                        "field_cannot_be_blank"
+                    ),
                 () => fail("should be error")
             );
         });
@@ -55,7 +64,10 @@ describe("NewsFeed", () => {
             const result = NewsFeed.create({ ...newsFeedRawData, url: "" });
 
             result.fold(
-                errors => expect(errors["url"]).toEqual(["field_cannot_be_blank"]),
+                errors =>
+                    expect(errors.find(error => error.property === "url").errors[0]).toBe(
+                        "field_cannot_be_blank"
+                    ),
                 () => fail("should be error")
             );
         });
@@ -63,7 +75,10 @@ describe("NewsFeed", () => {
             const result = NewsFeed.create({ ...newsFeedRawData, image: "wrong image" });
 
             result.fold(
-                errors => expect(errors["image"]).toEqual(["invalid_field"]),
+                errors =>
+                    expect(errors.find(error => error.property === "image").errors[0]).toBe(
+                        "invalid_field"
+                    ),
                 () => fail("should be error")
             );
         });
@@ -71,7 +86,10 @@ describe("NewsFeed", () => {
             const result = NewsFeed.create({ ...newsFeedRawData, url: "wrong url" });
 
             result.fold(
-                errors => expect(errors["url"]).toEqual(["invalid_field"]),
+                errors =>
+                    expect(errors.find(error => error.property === "url").errors[0]).toBe(
+                        "invalid_field"
+                    ),
                 () => fail("should be error")
             );
         });

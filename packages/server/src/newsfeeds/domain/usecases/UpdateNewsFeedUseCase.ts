@@ -1,9 +1,9 @@
-import { Either, EitherAsync, Id, MaybeAsync, NewsFeedRawData } from "karate-stars-core";
+import { Either, EitherAsync, Id, MaybeAsync, NewsFeed, NewsFeedRawData } from "karate-stars-core";
 import {
     ConflictError,
     ResourceNotFoundError,
     UnexpectedError,
-    ValidationError,
+    ValidationErrors,
 } from "../../../common/api/Errors";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
@@ -23,7 +23,7 @@ type UpdateNewsFeedError =
     | ConflictError
     | ResourceNotFoundError
     | UnexpectedError
-    | ValidationError;
+    | ValidationErrors<NewsFeed>;
 
 export class UpdateNewsFeedUseCase extends AdminUseCase<
     CreateNewsFeedArg,
@@ -49,12 +49,12 @@ export class UpdateNewsFeedUseCase extends AdminUseCase<
                 MaybeAsync.fromPromise(this.newsFeedsRepository.getById(id)).toEither(notFoundError)
             )
             .flatMap(async existedFeed =>
-                existedFeed.update(item, false).mapLeft(
+                existedFeed.update(item).mapLeft(
                     error =>
                         ({
-                            kind: "ValidationError",
+                            kind: "ValidationErrors",
                             errors: error,
-                        } as ValidationError)
+                        } as ValidationErrors<NewsFeed>)
                 )
             )
             .flatMap(async entity => {

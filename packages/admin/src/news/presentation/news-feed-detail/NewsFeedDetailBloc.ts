@@ -4,18 +4,12 @@ import {
     stateToRawData,
 } from "../../../common/presentation/state/FormState";
 import FormBloc from "../../../common/presentation/bloc/FormBloc";
-import {
-    Either,
-    NewsFeed,
-    NewsFeedRawData,
-    ValidationErrorKey,
-    ValidationErrorsDictionary,
-} from "karate-stars-core";
+import { Either, NewsFeed, NewsFeedRawData, ValidationError } from "karate-stars-core";
 import GetNewsFeedByIdUseCase from "../../domain/GetNewsFeedByIdUseCase";
 import { DataError } from "../../../common/domain/Errors";
 import SaveNewsFeedUseCase from "../../domain/SaveNewsFeedUseCase";
 
-class NewsFeedDetailBloc extends FormBloc {
+class NewsFeedDetailBloc extends FormBloc<NewsFeed> {
     constructor(
         private getNewsFeedByIdUseCase: GetNewsFeedByIdUseCase,
         private saveNewsFeedUseCase: SaveNewsFeedUseCase
@@ -70,7 +64,7 @@ class NewsFeedDetailBloc extends FormBloc {
         }
     }
 
-    protected validateState(state: FormState): Record<string, ValidationErrorKey[]> | null {
+    protected validateState(state: FormState): ValidationError<NewsFeed>[] | null {
         const result = this.mapStateToEntity(state);
         const errors = result.fold(
             errors => errors,
@@ -101,7 +95,7 @@ class NewsFeedDetailBloc extends FormBloc {
         }
     }
 
-    private mapStateToEntity(state: FormState): Either<ValidationErrorsDictionary, NewsFeed> {
+    private mapStateToEntity(state: FormState): Either<ValidationError<NewsFeed>[], NewsFeed> {
         const rawData = (stateToRawData(state) as unknown) as NewsFeedRawData;
 
         return NewsFeed.create(rawData);

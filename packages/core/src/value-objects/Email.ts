@@ -1,6 +1,6 @@
 import { ValueObject } from "./ValueObject";
 import { Either } from "../types/Either";
-import { ValidationErrors } from "../types/Errors";
+import { ValidationErrorKey } from "../types/Errors";
 import { validateRequired, validateRegexp } from "../utils/validations";
 
 export interface UserEmailProps {
@@ -18,7 +18,7 @@ export class Email extends ValueObject<UserEmailProps> {
         super(props);
     }
 
-    public static create(email: string): Either<ValidationErrors, Email> {
+    public static create(email: string): Either<ValidationErrorKey[], Email> {
         const requiredError = validateRequired(email);
         const regexpErrors = validateRegexp(email, EMAIL_PATTERN);
 

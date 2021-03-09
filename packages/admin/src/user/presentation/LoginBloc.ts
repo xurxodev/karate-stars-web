@@ -1,15 +1,10 @@
-import {
-    Credentials,
-    ValidationErrorsDictionary,
-    Either,
-    ValidationErrorKey,
-} from "karate-stars-core";
+import { Credentials, Either, ValidationError } from "karate-stars-core";
 import LoginUseCase from "../domain/LoginUseCase";
 import { GetUserError } from "../domain/Errors";
 import FormBloc from "../../common/presentation/bloc/FormBloc";
 import { FormState, FormSectionState } from "../../common/presentation/state/FormState";
 
-class LoginBloc extends FormBloc {
+class LoginBloc extends FormBloc<Credentials> {
     constructor(private loginUseCase: LoginUseCase) {
         super({
             isValid: false,
@@ -19,7 +14,7 @@ class LoginBloc extends FormBloc {
         });
     }
 
-    protected validateState(state: FormState): Record<string, ValidationErrorKey[]> | null {
+    protected validateState(state: FormState): ValidationError<Credentials>[] | null {
         const result = this.createCredentials(state);
         const errors = result.fold(
             errors => errors,
@@ -28,7 +23,9 @@ class LoginBloc extends FormBloc {
         return errors;
     }
 
-    private createCredentials(state: FormState): Either<ValidationErrorsDictionary, Credentials> {
+    private createCredentials(
+        state: FormState
+    ): Either<ValidationError<Credentials>[], Credentials> {
         const loginFields = state.sections.flatMap(section =>
             section.fields.map(field => ({ [field.name]: field.value }))
         );

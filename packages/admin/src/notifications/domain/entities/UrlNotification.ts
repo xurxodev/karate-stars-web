@@ -1,6 +1,6 @@
 import { PushNotification } from "./PushNotification";
-import { Url, Either } from "karate-stars-core";
-import { ValidationErrorsDictionary, validateRequired } from "karate-stars-core";
+import { Url, Either, ValidationError } from "karate-stars-core";
+import { validateRequired } from "karate-stars-core";
 
 export interface NotificationUrlData {
     topic: string;
@@ -29,24 +29,30 @@ export class UrlNotification extends PushNotification {
         title,
         description,
         url,
-    }: NotificationUrlInput): Either<ValidationErrorsDictionary, UrlNotification> {
+    }: NotificationUrlInput): Either<ValidationError<UrlNotification>[], UrlNotification> {
         const urlValue = Url.create(url);
 
-        const errors: ValidationErrorsDictionary = {
-            topic: validateRequired(topic),
-            title: validateRequired(title),
-            description: validateRequired(description),
-            url: urlValue.fold(
-                errors => errors,
-                () => []
-            ),
-        };
+        const errors: ValidationError<UrlNotification>[] = [
+            { property: "topic" as const, errors: validateRequired(topic), value: topic },
+            { property: "title" as const, errors: validateRequired(title), value: title },
+            {
+                property: "description" as const,
+                errors: validateRequired(description),
+                value: description,
+            },
+            {
+                property: "url" as const,
+                errors: urlValue.fold(
+                    errors => errors,
+                    () => []
+                ),
+                value: url,
+            },
+        ]
+            .map(error => ({ ...error, type: UrlNotification.name }))
+            .filter(validation => validation.errors.length > 0);
 
-        Object.keys(errors).forEach(
-            (key: string) => errors[key].length === 0 && delete errors[key]
-        );
-
-        if (Object.keys(errors).length === 0) {
+        if (errors.length === 0) {
             return Either.right(
                 new UrlNotification({ title, description, topic, url: urlValue.getOrThrow() })
             );

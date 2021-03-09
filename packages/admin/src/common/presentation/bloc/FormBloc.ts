@@ -1,9 +1,9 @@
 import Bloc from "./Bloc";
 import { FormState } from "../state/FormState";
-import { validationErrorMessages, ValidationErrorKey } from "karate-stars-core";
+import { validationErrorMessages, ValidationError } from "karate-stars-core";
 
-export default abstract class FormBloc extends Bloc<FormState> {
-    protected abstract validateState(state: FormState): Record<string, ValidationErrorKey[]> | null;
+export default abstract class FormBloc<T> extends Bloc<FormState> {
+    protected abstract validateState(state: FormState): ValidationError<T>[] | null;
 
     onFieldChanged(name: string, value: string) {
         const statePreviousToValidation = {
@@ -26,7 +26,7 @@ export default abstract class FormBloc extends Bloc<FormState> {
                 return {
                     ...section,
                     fields: section.fields.map(field => {
-                        const fieldErrors = errors ? errors[name] : undefined;
+                        const fieldErrors = errors?.find(error => error.property === name)?.errors;
 
                         return field.name === name
                             ? {

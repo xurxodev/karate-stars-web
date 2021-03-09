@@ -6,11 +6,11 @@ import { GetNewsFeedByIdUseCase } from "../domain/usecases/GetNewsFeedByIdUseCas
 import {
     ConflictError,
     UnexpectedError,
-    ValidationError,
     ResourceNotFoundError,
+    ValidationErrors,
 } from "../../common/api/Errors";
 import { DeleteNewsFeedUseCase } from "../domain/usecases/DeleteNewsFeedUseCase";
-import { NewsFeedRawData, validationErrorMessages } from "karate-stars-core";
+import { NewsFeed, NewsFeedRawData, validationErrorMessages } from "karate-stars-core";
 import { CreateNewsFeedUseCase } from "../domain/usecases/CreateNewsFeedUseCase";
 import { UpdateNewsFeedUseCase } from "../domain/usecases/UpdateNewsFeedUseCase";
 import { UpdateNewsFeedImageUseCase } from "../domain/usecases/UpdateNewsFeedImageUseCase";
@@ -154,7 +154,7 @@ export default class NewsFeedsController {
             | ResourceNotFoundError
             | UnexpectedError
             | ConflictError
-            | ValidationError
+            | ValidationErrors<NewsFeed>
     ): hapi.Lifecycle.ReturnValue {
         switch (error.kind) {
             case "Unauthorized": {
@@ -166,12 +166,10 @@ export default class NewsFeedsController {
             case "PermissionError": {
                 return boom.forbidden(error.message);
             }
-            case "ValidationError": {
-                const message = Object.keys(error.errors)
-                    .map(field =>
-                        error.errors[field].map(errorByKey =>
-                            validationErrorMessages[errorByKey](field)
-                        )
+            case "ValidationErrors": {
+                const message = error.errors
+                    .map(error =>
+                        error.errors.map(err => validationErrorMessages[err](error.property))
                     )
                     .flat()
                     .join(", ");

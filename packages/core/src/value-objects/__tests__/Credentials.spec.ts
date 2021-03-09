@@ -21,7 +21,9 @@ describe("Credentials", () => {
 
         result.fold(
             errors => {
-                expect(errors["email"][0]).toBe("field_cannot_be_blank");
+                expect(errors.find(error => error.property === "email").errors[0]).toBe(
+                    "field_cannot_be_blank"
+                );
             },
             () => fail("should be fail")
         );
@@ -32,7 +34,9 @@ describe("Credentials", () => {
 
         result.fold(
             errors => {
-                expect(errors["password"][0]).toBe("field_cannot_be_blank");
+                expect(errors.find(error => error.property === "password").errors[0]).toBe(
+                    "field_cannot_be_blank"
+                );
             },
             () => fail("should be fail")
         );
@@ -46,7 +50,9 @@ describe("Credentials", () => {
 
         result.fold(
             errors => {
-                expect(errors["email"][0]).toBe("invalid_field");
+                expect(errors.find(error => error.property === "email").errors[0]).toBe(
+                    "invalid_field"
+                );
             },
             () => fail("should be fail")
         );

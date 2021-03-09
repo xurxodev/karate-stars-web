@@ -1,9 +1,9 @@
-import { Either, EitherAsync, Id, MaybeAsync } from "karate-stars-core";
+import { Either, EitherAsync, Id, MaybeAsync, NewsFeed } from "karate-stars-core";
 import stream from "stream";
 import {
     ResourceNotFoundError,
     UnexpectedError,
-    ValidationError,
+    ValidationErrors,
 } from "../../../common/api/Errors";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
 import { ImageRepository } from "../../../images/domain/ImageRepository";
@@ -21,7 +21,10 @@ export interface CreateNewsFeedArg extends AdminUseCaseArgs {
     image: stream.Readable;
 }
 
-type UpdateNewsFeedImageError = ResourceNotFoundError | ValidationError | UnexpectedError;
+type UpdateNewsFeedImageError =
+    | ResourceNotFoundError
+    | ValidationErrors<NewsFeed>
+    | UnexpectedError;
 
 export class UpdateNewsFeedImageUseCase extends AdminUseCase<
     CreateNewsFeedArg,
@@ -59,7 +62,7 @@ export class UpdateNewsFeedImageUseCase extends AdminUseCase<
                     .mapLeft(error => error as UpdateNewsFeedImageError)
                     .flatMap(async newImageUrl =>
                         existedFeed.update({ ...item, image: newImageUrl }).mapLeft(error => ({
-                            kind: "ValidationError",
+                            kind: "ValidationErrors",
                             errors: error,
                         }))
                     )

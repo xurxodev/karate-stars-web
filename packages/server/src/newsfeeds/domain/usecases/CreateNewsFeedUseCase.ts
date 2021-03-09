@@ -1,5 +1,5 @@
 import { Either, EitherAsync, NewsFeed, NewsFeedRawData } from "karate-stars-core";
-import { ConflictError, UnexpectedError, ValidationError } from "../../../common/api/Errors";
+import { ConflictError, UnexpectedError, ValidationErrors } from "../../../common/api/Errors";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import NewsFeedsRepository from "../boundaries/NewsFeedRepository";
@@ -13,7 +13,7 @@ export interface CreateNewsFeedArg extends AdminUseCaseArgs {
     item: NewsFeedRawData;
 }
 
-type CreateNewsFeedError = ValidationError | UnexpectedError | ConflictError;
+type CreateNewsFeedError = ValidationErrors<NewsFeed> | UnexpectedError | ConflictError;
 
 export class CreateNewsFeedUseCase extends AdminUseCase<
     CreateNewsFeedArg,
@@ -27,11 +27,11 @@ export class CreateNewsFeedUseCase extends AdminUseCase<
     public async run({
         item,
     }: CreateNewsFeedArg): Promise<Either<CreateNewsFeedError, ActionResult>> {
-        return EitherAsync.fromEither(NewsFeed.create(item, false))
+        return EitherAsync.fromEither(NewsFeed.create(item))
             .mapLeft(
                 error =>
                     ({
-                        kind: "ValidationError",
+                        kind: "ValidationErrors",
                         errors: error,
                     } as CreateNewsFeedError)
             )

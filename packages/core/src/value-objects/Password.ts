@@ -1,6 +1,6 @@
 import { ValueObject } from "./ValueObject";
 import { Either } from "../types/Either";
-import { ValidationErrors } from "../types/Errors";
+import { ValidationErrorKey } from "../types/Errors";
 import { validateRequired } from "../utils/validations";
 
 export interface PasswordProps {
@@ -16,7 +16,7 @@ export class Password extends ValueObject<PasswordProps> {
         super(props);
     }
 
-    public static create(password: string): Either<ValidationErrors, Password> {
+    public static create(password: string): Either<ValidationErrorKey[], Password> {
         const requiredError = validateRequired(password);
 
         if (requiredError.length > 0) {

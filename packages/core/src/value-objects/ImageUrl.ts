@@ -1,7 +1,7 @@
 import { ValueObject } from "./ValueObject";
 import { Either } from "../types/Either";
-import { ValidationErrors } from "../types/Errors";
 import { validateRequired, validateRegexp } from "../utils/validations";
+import { ValidationErrorKey } from "../types/Errors";
 
 export interface UrlProps {
     value: string;
@@ -18,7 +18,7 @@ export class ImageUrl extends ValueObject<UrlProps> {
         super(props);
     }
 
-    public static create(url: string): Either<ValidationErrors, ImageUrl> {
+    public static create(url: string): Either<ValidationErrorKey[], ImageUrl> {
         const requiredError = validateRequired(url);
         const regexpErrors = validateRegexp(url, URL_PATTERN);
 

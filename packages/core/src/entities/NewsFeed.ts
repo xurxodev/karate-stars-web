@@ -1,5 +1,5 @@
 import { Either } from "../types/Either";
-import { ValidationErrorsDictionary } from "../types/Errors";
+import { ValidationError } from "../types/Errors";
 import { validateRequired } from "../utils/validations";
 import { Id } from "../value-objects/Id";
 import { Url } from "../value-objects/Url";
@@ -30,7 +30,7 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
     public readonly image?: Url;
     public readonly url: Url;
 
-    private constructor(private data: NewsFeedData) {
+    private constructor(data: NewsFeedData) {
         super(data.id);
 
         this.url = data.url;
@@ -40,51 +40,18 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
         this.image = data.image;
     }
 
-    public static create(
-        data: NewsFeedRawData,
-        dataUrlIsSupported = true
-    ): Either<ValidationErrorsDictionary, NewsFeed> {
+    public static create(data: NewsFeedRawData): Either<ValidationError<NewsFeed>[], NewsFeed> {
         const finalId = !data.id ? Id.generateId().value : data.id;
-        const errors = validate({ ...data, id: finalId }, dataUrlIsSupported);
 
-        if (Object.keys(errors).length === 0) {
-            return Either.right(
-                new NewsFeed({
-                    id: Id.createExisted(finalId).get(),
-                    name: data.name,
-                    language: data.language,
-                    type: data.type,
-                    url: Url.create(data.url, dataUrlIsSupported).get(),
-                    image: data.image ? Url.create(data.image).get() : undefined,
-                })
-            );
-        } else {
-            return Either.left(errors);
-        }
+        return this.validateAndCreate({ ...data, id: finalId });
     }
 
     public update(
-        dataToUpdate: Partial<Omit<NewsFeedRawData, "id">>,
-        dataUrlIsSupported = true
-    ): Either<ValidationErrorsDictionary, NewsFeed> {
+        dataToUpdate: Partial<Omit<NewsFeedRawData, "id">>
+    ): Either<ValidationError<NewsFeed>[], NewsFeed> {
         const newData = { ...this.toRawData(), ...dataToUpdate };
 
-        const errors = validate(newData, dataUrlIsSupported);
-
-        if (Object.keys(errors).length === 0) {
-            return Either.right(
-                new NewsFeed({
-                    id: this.id,
-                    name: newData.name,
-                    language: newData.language,
-                    type: newData.type,
-                    url: Url.create(newData.url).get(),
-                    image: newData.image ? Url.create(newData.image).get() : undefined,
-                })
-            );
-        } else {
-            return Either.left(errors);
-        }
+        return NewsFeed.validateAndCreate(newData);
     }
 
     public toRawData(): NewsFeedRawData {
@@ -97,30 +64,69 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
             url: this.url.value,
         };
     }
-}
 
-function validate(data: NewsFeedRawData, dataUrlIsSupported: boolean): ValidationErrorsDictionary {
-    const errors: ValidationErrorsDictionary = {
-        id: Id.createExisted(data.id).fold(
-            errors => errors,
-            () => []
-        ),
-        name: validateRequired(data.name),
-        language: validateRequired(data.language),
-        type: validateRequired(data.type),
-        url: Url.create(data.url).fold(
-            errors => errors,
-            () => []
-        ),
-        image: data.image
-            ? Url.create(data.image, dataUrlIsSupported).fold(
-                  errors => errors,
-                  () => []
-              )
-            : [],
-    };
+    private static validateAndCreate(
+        data: NewsFeedRawData
+    ): Either<ValidationError<NewsFeed>[], NewsFeed> {
+        const idResult = Id.createExisted(data.id);
+        const urlResult = Url.create(data.url, false);
+        const imageResult = data.image ? Url.create(data.image, true) : undefined;
 
-    Object.keys(errors).forEach((key: string) => errors[key].length === 0 && delete errors[key]);
+        const errors: ValidationError<NewsFeed>[] = [
+            {
+                property: "id" as const,
+                errors: idResult.fold(
+                    errors => errors,
+                    () => []
+                ),
+                value: data.id,
+            },
+            { property: "name" as const, errors: validateRequired(data.name), value: data.name },
+            {
+                property: "language" as const,
+                errors: validateRequired(data.language),
+                value: data.language,
+            },
+            { property: "type" as const, errors: validateRequired(data.type), value: data.type },
+            {
+                property: "url" as const,
+                errors: urlResult.fold(
+                    errors => errors,
+                    () => []
+                ),
+                value: data.url,
+            },
+            {
+                property: "image" as const,
+                errors: imageResult
+                    ? imageResult.fold(
+                          errors => errors,
+                          () => []
+                      )
+                    : [],
+                value: data.image,
+            },
+        ]
+            .map(error => ({ ...error, type: NewsFeed.name }))
+            .filter(validation => validation.errors.length > 0);
 
-    return errors;
+        Object.keys(errors).forEach(
+            (key: string) => errors[key].length === 0 && delete errors[key]
+        );
+
+        if (Object.keys(errors).length === 0) {
+            return Either.right(
+                new NewsFeed({
+                    id: idResult.get(),
+                    name: data.name,
+                    language: data.language,
+                    type: data.type,
+                    url: urlResult.get(),
+                    image: data.image ? imageResult.get() : undefined,
+                })
+            );
+        } else {
+            return Either.left(errors);
+        }
+    }
 }

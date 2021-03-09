@@ -1,6 +1,6 @@
 import { Password } from "./Password";
 import { Email } from "./Email";
-import { ValidationErrorsDictionary } from "../types/Errors";
+import { ValidationError } from "../types/Errors";
 import { Either } from "../types/Either";
 import { ValueObject } from "./ValueObject";
 
@@ -9,7 +9,7 @@ export interface CredentialsData {
     password: Password;
 }
 
-export interface CredentialsInput {
+export interface CredentialsRawData {
     email: string;
     password: string;
 }
@@ -24,28 +24,36 @@ export class Credentials extends ValueObject<CredentialsData> implements Credent
         this.password = data.password;
     }
 
-    public static create(input: CredentialsInput): Either<ValidationErrorsDictionary, Credentials> {
-        const email = Email.create(input.email);
-        const password = Password.create(input.password);
+    public static create(
+        data: CredentialsRawData
+    ): Either<ValidationError<Credentials>[], Credentials> {
+        const emailResult = Email.create(data.email);
+        const passwordResult = Password.create(data.password);
 
-        const errors: ValidationErrorsDictionary = {
-            email: email.fold(
-                errors => errors,
-                () => []
-            ),
-            password: password.fold(
-                errors => errors,
-                () => []
-            ),
-        };
+        const errors: ValidationError<Credentials>[] = [
+            {
+                property: "email" as const,
+                errors: emailResult.fold(
+                    errors => errors,
+                    () => []
+                ),
+                value: data.email,
+            },
+            {
+                property: "password" as const,
+                errors: passwordResult.fold(
+                    errors => errors,
+                    () => []
+                ),
+                value: data.password,
+            },
+        ]
+            .map(error => ({ ...error, type: Credentials.name }))
+            .filter(validation => validation.errors.length > 0);
 
-        Object.keys(errors).forEach(
-            (key: string) => errors[key].length === 0 && delete errors[key]
-        );
-
-        if (Object.keys(errors).length === 0) {
+        if (errors.length === 0) {
             return Either.right(
-                new Credentials({ email: email.getOrThrow(), password: password.getOrThrow() })
+                new Credentials({ email: emailResult.get(), password: passwordResult.get() })
             );
         } else {
             return Either.left(errors);

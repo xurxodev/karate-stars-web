@@ -1,7 +1,7 @@
 import { ValueObject } from "./ValueObject";
 import { Either } from "../types/Either";
 import { validateRegexp, validateRequired } from "../utils/validations";
-import { ValidationErrors } from "../types/Errors";
+import { ValidationErrorKey } from "../types/Errors";
 
 export interface IdProps {
     value: string;
@@ -47,7 +47,7 @@ export class Id extends ValueObject<IdProps> {
         return new Id({ value: randomChars });
     }
 
-    public static createExisted(id: string): Either<ValidationErrors, Id> {
+    public static createExisted(id: string): Either<ValidationErrorKey[], Id> {
         const requiredError = validateRequired(id);
         const regexpErrors = validateRegexp(id, ID_PATTERN);
 
