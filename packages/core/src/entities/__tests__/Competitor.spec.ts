@@ -63,7 +63,7 @@ describe("Competitor", () => {
 
             result.fold(
                 errors =>
-                    expect(errors.find(error => error.property === "id").errors[0]).toBe(
+                    expect(errors.find(error => error.property === "id")?.errors[0]).toBe(
                         "invalid_field"
                     ),
                 () => fail("should be error")
@@ -74,7 +74,7 @@ describe("Competitor", () => {
 
             result.fold(
                 errors =>
-                    expect(errors.find(error => error.property === "firstName").errors[0]).toBe(
+                    expect(errors.find(error => error.property === "firstName")?.errors[0]).toBe(
                         "field_cannot_be_blank"
                     ),
                 () => fail("should be error")
@@ -85,7 +85,7 @@ describe("Competitor", () => {
 
             result.fold(
                 errors =>
-                    expect(errors.find(error => error.property === "lastName").errors[0]).toBe(
+                    expect(errors.find(error => error.property === "lastName")?.errors[0]).toBe(
                         "field_cannot_be_blank"
                     ),
                 () => fail("should be error")
@@ -96,7 +96,7 @@ describe("Competitor", () => {
 
             result.fold(
                 errors =>
-                    expect(errors.find(error => error.property === "wkfId").errors[0]).toBe(
+                    expect(errors.find(error => error.property === "wkfId")?.errors[0]).toBe(
                         "field_cannot_be_blank"
                     ),
                 () => fail("should be error")
@@ -107,7 +107,7 @@ describe("Competitor", () => {
 
             result.fold(
                 errors =>
-                    expect(errors.find(error => error.property === "biography").errors[0]).toBe(
+                    expect(errors.find(error => error.property === "biography")?.errors[0]).toBe(
                         "field_cannot_be_blank"
                     ),
                 () => fail("should be error")
@@ -118,7 +118,7 @@ describe("Competitor", () => {
 
             result.fold(
                 errors =>
-                    expect(errors.find(error => error.property === "countryId").errors[0]).toBe(
+                    expect(errors.find(error => error.property === "countryId")?.errors[0]).toBe(
                         "field_cannot_be_blank"
                     ),
                 () => fail("should be error")
@@ -129,7 +129,7 @@ describe("Competitor", () => {
 
             result.fold(
                 errors =>
-                    expect(errors.find(error => error.property === "categoryId").errors[0]).toBe(
+                    expect(errors.find(error => error.property === "categoryId")?.errors[0]).toBe(
                         "invalid_field"
                     ),
                 () => fail("should be error")
@@ -140,7 +140,7 @@ describe("Competitor", () => {
 
             result.fold(
                 errors =>
-                    expect(errors.find(error => error.property === "mainImage").errors[0]).toBe(
+                    expect(errors.find(error => error.property === "mainImage")?.errors[0]).toBe(
                         "invalid_field"
                     ),
                 () => fail("should be error")
@@ -157,7 +157,7 @@ describe("Competitor", () => {
                     expect(
                         errors.find(
                             error => error.property === "url" && error.type === "SocialLink"
-                        ).errors[0]
+                        )?.errors[0]
                     ).toBe("invalid_field"),
                 () => fail("should be error")
             );
@@ -187,7 +187,7 @@ describe("Competitor", () => {
 
             result.fold(
                 errors =>
-                    expect(errors.find(error => error.property === "achievements").errors[0]).toBe(
+                    expect(errors.find(error => error.property === "achievements")?.errors[0]).toBe(
                         "field_cannot_be_blank"
                     ),
                 () => fail("should be error")

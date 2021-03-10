@@ -110,11 +110,7 @@ export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements N
             .map(error => ({ ...error, type: NewsFeed.name }))
             .filter(validation => validation.errors.length > 0);
 
-        Object.keys(errors).forEach(
-            (key: string) => errors[key].length === 0 && delete errors[key]
-        );
-
-        if (Object.keys(errors).length === 0) {
+        if (errors.length === 0) {
             return Either.right(
                 new NewsFeed({
                     id: idResult.get(),
