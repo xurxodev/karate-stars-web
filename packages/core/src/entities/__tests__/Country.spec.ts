@@ -1,14 +1,15 @@
-import { EventType } from "../EventType";
+import { Country } from "../Country";
 
-const eventTypeRawData = {
+const CountryRawData = {
     id: "P6pP1rTDNx2",
-    name: "World Championships",
+    name: "Spain",
+    iso2: "es",
 };
 
-describe("EventType", () => {
+describe("Country", () => {
     describe("create validations", () => {
         it("should not return errors if all fields are valid", () => {
-            const result = EventType.create(eventTypeRawData);
+            const result = Country.create(CountryRawData);
 
             result.fold(
                 () => fail("should be success"),
@@ -16,7 +17,7 @@ describe("EventType", () => {
             );
         });
         it("should return invalid field error for id", () => {
-            const result = EventType.create({ ...eventTypeRawData, id: "wrong_id" });
+            const result = Country.create({ ...CountryRawData, id: "wrong_id" });
 
             result.fold(
                 errors =>
@@ -27,11 +28,22 @@ describe("EventType", () => {
             );
         });
         it("should return cannot be blank error for name", () => {
-            const result = EventType.create({ ...eventTypeRawData, name: "" });
+            const result = Country.create({ ...CountryRawData, name: "" });
 
             result.fold(
                 errors =>
                     expect(errors.find(error => error.property === "name")?.errors[0]).toBe(
+                        "field_cannot_be_blank"
+                    ),
+                () => fail("should be error")
+            );
+        });
+        it("should return cannot be blank error for iso2", () => {
+            const result = Country.create({ ...CountryRawData, iso2: "" });
+
+            result.fold(
+                errors =>
+                    expect(errors.find(error => error.property === "iso2")?.errors[0]).toBe(
                         "field_cannot_be_blank"
                     ),
                 () => fail("should be error")

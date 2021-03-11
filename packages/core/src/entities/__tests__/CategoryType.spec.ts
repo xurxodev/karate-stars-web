@@ -1,14 +1,14 @@
-import { EventType } from "../EventType";
+import { CategoryType } from "../CategoryType";
 
-const eventTypeRawData = {
-    id: "P6pP1rTDNx2",
-    name: "World Championships",
+const categoryTypeRawData = {
+    id: "qWPs4i1e78g",
+    name: "Kata",
 };
 
-describe("EventType", () => {
+describe("CategoryType", () => {
     describe("create validations", () => {
         it("should not return errors if all fields are valid", () => {
-            const result = EventType.create(eventTypeRawData);
+            const result = CategoryType.create(categoryTypeRawData);
 
             result.fold(
                 () => fail("should be success"),
@@ -16,7 +16,7 @@ describe("EventType", () => {
             );
         });
         it("should return invalid field error for id", () => {
-            const result = EventType.create({ ...eventTypeRawData, id: "wrong_id" });
+            const result = CategoryType.create({ ...categoryTypeRawData, id: "wrong_id" });
 
             result.fold(
                 errors =>
@@ -27,7 +27,7 @@ describe("EventType", () => {
             );
         });
         it("should return cannot be blank error for name", () => {
-            const result = EventType.create({ ...eventTypeRawData, name: "" });
+            const result = CategoryType.create({ ...categoryTypeRawData, name: "" });
 
             result.fold(
                 errors =>
