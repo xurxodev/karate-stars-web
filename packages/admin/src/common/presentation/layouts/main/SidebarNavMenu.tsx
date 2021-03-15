@@ -24,7 +24,8 @@ const SidebarNavMenu: React.FC<SidebarNavProps> = ({ menu, className }) => {
                 activeClassName={classes.active}
                 className={classes.button}
                 component={NavLink}
-                to={menu.path}>
+                to={menu.path}
+                exact={true}>
                 <div className={classes.icon}>{menu.icon}</div>
                 {menu.title}
             </Button>
