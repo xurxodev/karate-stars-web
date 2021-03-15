@@ -1,4 +1,5 @@
 import { Either, EitherAsync, Id, MaybeAsync, NewsFeed, NewsFeedRawData } from "karate-stars-core";
+import { ActionResult } from "../../../common/api/ActionResult";
 import {
     ConflictError,
     ResourceNotFoundError,
@@ -8,11 +9,6 @@ import {
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import NewsFeedsRepository from "../boundaries/NewsFeedRepository";
-
-export interface ActionResult {
-    ok: boolean;
-    count: number;
-}
 
 export interface CreateNewsFeedArg extends AdminUseCaseArgs {
     itemId: string;
@@ -57,16 +53,7 @@ export class UpdateNewsFeedUseCase extends AdminUseCase<
                         } as ValidationErrors<NewsFeed>)
                 )
             )
-            .flatMap(async entity => {
-                const saveResult = await this.newsFeedsRepository.save(entity);
-
-                return saveResult.ok
-                    ? Either.right(saveResult)
-                    : Either.left<UpdateNewsFeedError, ActionResult>({
-                          kind: "UnexpectedError",
-                          error: new Error("An error has ocurred updating the news feed"),
-                      });
-            })
+            .flatMap(entity => this.newsFeedsRepository.save(entity))
             .run();
     }
 }

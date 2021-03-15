@@ -1,14 +1,10 @@
 import { Either, EitherAsync, Id, MaybeAsync } from "karate-stars-core";
+import { ActionResult } from "../../../common/api/ActionResult";
 import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
 import { ImageRepository } from "../../../images/domain/ImageRepository";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import NewsFeedsRepository from "../boundaries/NewsFeedRepository";
-
-export interface ActionResult {
-    ok: boolean;
-    count: number;
-}
 
 export interface GetNewsFeedByIdArg extends AdminUseCaseArgs {
     id: string;
@@ -47,13 +43,7 @@ export class DeleteNewsFeedUseCase extends AdminUseCase<
                     .map(() => newsFeed.id)
                     .run()
             )
-            .flatMap<ActionResult>(async id => {
-                const deleteResult = await this.newsFeedsRepository.delete(id);
-
-                return deleteResult.count > 0
-                    ? Either.right(deleteResult)
-                    : Either.left(notFoundError);
-            })
+            .flatMap<ActionResult>(id => this.newsFeedsRepository.delete(id))
             .run();
 
         return result;

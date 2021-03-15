@@ -1,9 +1,10 @@
-import { Id, Maybe, NewsFeed, NewsFeedRawData } from "karate-stars-core";
+import { Either, Id, Maybe, NewsFeed, NewsFeedRawData } from "karate-stars-core";
 import { MongoConector } from "../../common/data/MongoConector";
 import { Collection } from "mongodb";
-import { ActionResult } from "../domain/usecases/DeleteNewsFeedUseCase";
 import { MongoCollection } from "../../common/data/Types";
 import NewsFeedRepository from "../domain/boundaries/NewsFeedRepository";
+import { UnexpectedError } from "../../common/api/Errors";
+import { ActionResult } from "../../common/api/ActionResult";
 
 type NewsFeedDB = Omit<NewsFeedRawData, "id"> & MongoCollection;
 
@@ -32,30 +33,25 @@ export default class NewsFeedMongoRepository implements NewsFeedRepository {
 
             return Maybe.fromValue(newsFeedDB).map(newsFeedDB => this.mapToDomain(newsFeedDB));
         } catch (error) {
-            console.log({ error });
             return Maybe.none();
         }
     }
 
-    async delete(id: Id): Promise<ActionResult> {
+    async delete(id: Id): Promise<Either<UnexpectedError, ActionResult>> {
         try {
             const collection = await this.collection();
             const response = await collection.deleteOne({ _id: id.value });
 
-            return {
+            return Either.right({
                 ok: response.result.ok === 1,
                 count: response.result.n || 0,
-            };
+            });
         } catch (error) {
-            console.log({ error });
-            return {
-                ok: false,
-                count: 0,
-            };
+            return Either.left({ kind: "UnexpectedError", error });
         }
     }
 
-    async save(newsFeed: NewsFeed): Promise<ActionResult> {
+    async save(newsFeed: NewsFeed): Promise<Either<UnexpectedError, ActionResult>> {
         try {
             const collection = await this.collection();
 
@@ -70,16 +66,12 @@ export default class NewsFeedMongoRepository implements NewsFeedRepository {
                 { upsert: true }
             );
 
-            return {
+            return Either.right({
                 ok: response.result.ok === 1,
                 count: response.result.ok === 1 ? 1 : 0,
-            };
+            });
         } catch (error) {
-            console.log({ error });
-            return {
-                ok: false,
-                count: 0,
-            };
+            return Either.left({ kind: "UnexpectedError", error });
         }
     }
 
