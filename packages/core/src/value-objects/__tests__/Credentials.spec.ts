@@ -1,8 +1,8 @@
 import { Credentials } from "../Credentials";
 
-const validEmailInput = "info@karatestarsapp.com";
+const validEmailInput = "info@xurxodev.com";
 const validPasswordInput = "39893898";
-const invalidEmailInput = "infokaratestarsapp.com";
+const invalidEmailInput = "xurxodev.com";
 
 describe("Credentials", () => {
     it("should return success reponse if email and password are valid", () => {
@@ -15,6 +15,13 @@ describe("Credentials", () => {
                 expect(credentials.password.value).toEqual(validPasswordInput);
             }
         );
+    });
+    it("should be equals two credentials with same values", () => {
+        const credentials1 = Credentials.create({ email: validEmailInput, password: validPasswordInput }).get();
+        const credentials2 = Credentials.create({ email: validEmailInput, password: validPasswordInput }).get();
+
+        expect(credentials1).toEqual(credentials2);
+        expect(credentials1.equals(credentials2)).toBe(true);
     });
     it("should return Email cannot be blan error if email is empty", () => {
         const result = Credentials.create({ email: "", password: validPasswordInput });

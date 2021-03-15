@@ -9,11 +9,6 @@ export interface CredentialsData {
     password: Password;
 }
 
-export interface CredentialsRawData {
-    email: string;
-    password: string;
-}
-
 export class Credentials extends ValueObject<CredentialsData> implements CredentialsData {
     public readonly email: Email;
     public readonly password: Password;
@@ -25,7 +20,7 @@ export class Credentials extends ValueObject<CredentialsData> implements Credent
     }
 
     public static create(
-        data: CredentialsRawData
+        data: { email: string; password: string; }
     ): Either<ValidationError<Credentials>[], Credentials> {
         const emailResult = Email.create(data.email);
         const passwordResult = Password.create(data.password);

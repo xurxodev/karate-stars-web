@@ -10,12 +10,12 @@ export interface UserEmailProps {
 const EMAIL_PATTERN = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export class Email extends ValueObject<UserEmailProps> {
-    get value(): string {
-        return this.props.value;
-    }
+    public readonly value: string;
 
     private constructor(props: UserEmailProps) {
         super(props);
+
+        this.value = props.value;
     }
 
     public static create(email: string): Either<ValidationErrorKey[], Email> {
