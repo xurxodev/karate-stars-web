@@ -14,7 +14,7 @@ export interface CountryRawData extends EntityRawData {
     iso2: string;
 }
 
-export class Country extends Entity<CountryData, CountryRawData> implements CountryData {
+export class Country extends Entity<CountryRawData> implements CountryData {
     public readonly name: string;
     public readonly iso2: string;
 

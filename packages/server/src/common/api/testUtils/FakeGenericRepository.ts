@@ -1,11 +1,7 @@
-import { Entity, EntityData, EntityRawData, Id, Maybe } from "karate-stars-core";
+import { Entity, EntityRawData, Id, Maybe } from "karate-stars-core";
 import { ActionResult } from "../../../newsfeeds/domain/usecases/DeleteNewsFeedUseCase";
 
-export class FakeGenericRepository<
-    Data extends EntityData,
-    RawData extends EntityRawData,
-    T extends Entity<Data, RawData>
-> {
+export class FakeGenericRepository<RawData extends EntityRawData, T extends Entity<RawData>> {
     constructor(protected items: T[]) {}
 
     getAll(): Promise<T[]> {

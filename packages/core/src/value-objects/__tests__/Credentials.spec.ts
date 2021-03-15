@@ -17,8 +17,14 @@ describe("Credentials", () => {
         );
     });
     it("should be equals two credentials with same values", () => {
-        const credentials1 = Credentials.create({ email: validEmailInput, password: validPasswordInput }).get();
-        const credentials2 = Credentials.create({ email: validEmailInput, password: validPasswordInput }).get();
+        const credentials1 = Credentials.create({
+            email: validEmailInput,
+            password: validPasswordInput,
+        }).get();
+        const credentials2 = Credentials.create({
+            email: validEmailInput,
+            password: validPasswordInput,
+        }).get();
 
         expect(credentials1).toEqual(credentials2);
         expect(credentials1.equals(credentials2)).toBe(true);

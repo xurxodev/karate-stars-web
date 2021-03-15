@@ -23,7 +23,7 @@ export interface NewsFeedRawData extends EntityRawData {
     url: string;
 }
 
-export class NewsFeed extends Entity<NewsFeedData, NewsFeedRawData> implements NewsFeedData {
+export class NewsFeed extends Entity<NewsFeedRawData> implements NewsFeedData {
     public readonly name: string;
     public readonly language: string;
     public readonly type: RssType;

@@ -1,4 +1,4 @@
-import { Email, Entity, EntityData, EntityRawData, Id, Password, User } from "karate-stars-core";
+import { Email, Entity, EntityRawData, Id, Password, User } from "karate-stars-core";
 import request from "supertest";
 import * as CompositionRoot from "../../../CompositionRoot";
 import { initServer, generateToken } from "./serverTest";
@@ -6,11 +6,7 @@ import { FakeImageRepository } from "./FakeImageRepository";
 import { FakeUserRepository } from "./FakeUserRepository";
 import { FakeGenericRepository } from "./FakeGenericRepository";
 
-export interface DataCreator<
-    Data extends EntityData,
-    RawData extends EntityRawData,
-    T extends Entity<Data, RawData>
-> {
+export interface DataCreator<RawData extends EntityRawData, T extends Entity<RawData>> {
     givenAInitialItems: () => T[];
     givenAValidNewItem: () => RawData;
     givenAInvalidNewItem: () => RawData;
@@ -18,20 +14,16 @@ export interface DataCreator<
     givenAInvalidModifiedItem: () => RawData;
 }
 
-export const commonCRUDTests = <
-    Data extends EntityData,
-    RawData extends EntityRawData,
-    T extends Entity<Data, RawData>
->(
+export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<RawData>>(
     endpoint: string,
     repositoryKey: string,
-    dataCreator: DataCreator<Data, RawData, T>
+    dataCreator: DataCreator<RawData, T>
 ) => {
     const givenThereAreAnItems = () => {
         const initialItems = dataCreator.givenAInitialItems();
         CompositionRoot.di.bindLazySingleton(
             repositoryKey,
-            () => new FakeGenericRepository<Data, RawData, T>(initialItems)
+            () => new FakeGenericRepository<RawData, T>(initialItems)
         );
 
         CompositionRoot.di.bindLazySingleton(

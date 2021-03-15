@@ -8,16 +8,16 @@ export interface EntityRawData {
     id: string;
 }
 
-const isEntity = (v: any): v is Entity<any, any> => {
+const isEntity = (v: any): v is Entity<any> => {
     return v instanceof Entity;
 };
 
-export abstract class Entity<Data extends EntityData, RawData extends EntityRawData> {
+export abstract class Entity<RawData extends EntityRawData> implements EntityData {
     constructor(public id: Id) {}
 
     abstract toRawData(): RawData;
 
-    public equals(object?: Entity<Data, RawData>): boolean {
+    public equals(object?: Entity<RawData>): boolean {
         if (object === null || object === undefined) {
             return false;
         }

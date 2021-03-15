@@ -12,9 +12,7 @@ export interface CategoryTypeRawData extends EntityRawData {
     name: string;
 }
 
-export class CategoryType
-    extends Entity<CategoryTypeData, CategoryTypeRawData>
-    implements CategoryTypeData {
+export class CategoryType extends Entity<CategoryTypeRawData> implements CategoryTypeData {
     public readonly name: string;
 
     private constructor(data: CategoryTypeData) {

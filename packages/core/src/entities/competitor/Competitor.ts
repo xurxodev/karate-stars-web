@@ -37,9 +37,7 @@ export interface CompetitorData extends EntityData {
 
 export type ValidationTypes = CompetitorData & AchievementData & SocialLinkData;
 
-export class Competitor
-    extends Entity<CompetitorData, CompetitorRawData>
-    implements CompetitorData {
+export class Competitor extends Entity<CompetitorRawData> implements CompetitorData {
     public readonly firstName: string;
     public readonly lastName: string;
     public readonly wkfId: string;

@@ -1,4 +1,4 @@
-import { Id, NewsFeed, NewsFeedData, NewsFeedRawData } from "karate-stars-core";
+import { Id, NewsFeed, NewsFeedRawData } from "karate-stars-core";
 import * as CompositionRoot from "../../../CompositionRoot";
 import { commonCRUDTests, DataCreator } from "../../../common/api/testUtils/crud.spec";
 
@@ -23,7 +23,7 @@ const newsFeeds = [
     }).get(),
 ];
 
-const newsFeedCreator: DataCreator<NewsFeedData, NewsFeedRawData, NewsFeed> = {
+const newsFeedCreator: DataCreator<NewsFeedRawData, NewsFeed> = {
     givenAInitialItems: (): NewsFeed[] => {
         return newsFeeds;
     },

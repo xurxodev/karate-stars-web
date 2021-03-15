@@ -14,7 +14,7 @@ export interface CategoryRawData extends EntityRawData {
     typeId: string;
 }
 
-export class Category extends Entity<CategoryData, CategoryRawData> implements CategoryData {
+export class Category extends Entity<CategoryRawData> implements CategoryData {
     public readonly name: string;
     public readonly typeId: Id;
 

@@ -19,9 +19,10 @@ export class Credentials extends ValueObject<CredentialsData> implements Credent
         this.password = data.password;
     }
 
-    public static create(
-        data: { email: string; password: string; }
-    ): Either<ValidationError<Credentials>[], Credentials> {
+    public static create(data: {
+        email: string;
+        password: string;
+    }): Either<ValidationError<Credentials>[], Credentials> {
         const emailResult = Email.create(data.email);
         const passwordResult = Password.create(data.password);
 

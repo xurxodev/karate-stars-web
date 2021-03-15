@@ -16,7 +16,7 @@ export interface EventRawData extends EntityRawData {
     typeId: string;
 }
 
-export class Event extends Entity<EventData, EventRawData> implements EventData {
+export class Event extends Entity<EventRawData> implements EventData {
     public readonly name: string;
     public readonly year: number;
     public readonly typeId: Id;

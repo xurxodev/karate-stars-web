@@ -12,7 +12,7 @@ export interface EventTypeRawData extends EntityRawData {
     name: string;
 }
 
-export class EventType extends Entity<EventTypeData, EventTypeRawData> implements EventTypeData {
+export class EventType extends Entity<EventTypeRawData> implements EventTypeData {
     public readonly name: string;
 
     private constructor(data: EventTypeData) {

@@ -20,7 +20,7 @@ export interface UserRawData extends EntityRawData {
     isClientUser: boolean;
 }
 
-export class User extends Entity<User, UserRawData> implements UserData {
+export class User extends Entity<UserRawData> implements UserData {
     public readonly name: string;
     public readonly image: string;
     public readonly email: Email;
