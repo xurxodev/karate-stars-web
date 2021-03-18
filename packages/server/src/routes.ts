@@ -9,6 +9,7 @@ import NewsFeedsRoutes from "./newsfeeds/api/NewsFeedsRoutes";
 import socialNewsRoutes from "./socialnews/api/SocialNewsRoutes";
 import userRoutes from "./users/api/UserRoutes";
 import videoRoutes from "./videos/api/VideoRoutes";
+import eventTypeRoutes from "./event-types/api/EventTypeRoutes";
 
 const initializeRoutes = (server: hapi.Server) => {
     const apiPrefix = "/api/v1";
@@ -62,6 +63,7 @@ const initializeRoutes = (server: hapi.Server) => {
         ...categoryRoutes(apiPrefix),
         ...videoRoutes(apiPrefix),
         ...NewsFeedsRoutes(apiPrefix),
+        ...eventTypeRoutes(apiPrefix),
     ];
 
     allRoutes.forEach(route => {

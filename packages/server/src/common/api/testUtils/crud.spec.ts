@@ -148,48 +148,6 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
                 expect(res.status).toEqual(401);
             });
         });
-        describe(`DELETE /${endpoint}/{id}`, () => {
-            it("should return 200 removing expected news feed if token is of an admin user", async () => {
-                const data = givenThereAreAnItems();
-                const user = givenThereAreAnUser({ admin: true });
-                const server = await initServer();
-                const feedToRemove = data[0];
-
-                const res = await request(server)
-                    .delete(`/api/v1/${endpoint}/${feedToRemove.id}`)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
-
-                expect(res.status).toEqual(200);
-
-                const resAll = await request(server)
-                    .get("/api/v1/news-feeds")
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
-
-                expect(resAll.body).toEqual(data.filter(feed => feed.id !== feedToRemove.id));
-            });
-            it("should return 403 forbidden if token is not of an admin user", async () => {
-                const data = givenThereAreAnItems();
-                const user = givenThereAreAnUser({ admin: false });
-                const server = await initServer();
-
-                const res = await request(server)
-                    .delete(`/api/v1/${endpoint}/${data[0].id}`)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
-
-                expect(res.status).toEqual(403);
-            });
-            it("should return 401 unauthorized if token is of an non existed user", async () => {
-                const data = givenThereAreAnItems();
-                givenThereAreAnUser({ admin: true });
-                const server = await initServer();
-
-                const res = await request(server)
-                    .delete(`/api/v1/${endpoint}/${data[0].id}`)
-                    .set({ Authorization: `Bearer ${generateToken(Id.generateId())}` });
-
-                expect(res.status).toEqual(401);
-            });
-        });
         describe(`POST /${endpoint}`, () => {
             it("should create expected item if token is of an admin user", async () => {
                 givenThereAreAnItems();
@@ -378,6 +336,48 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
                     .set({ Authorization: `Bearer ${generateToken(user.id)}` });
 
                 expect(res.status).toEqual(404);
+            });
+        });
+        describe(`DELETE /${endpoint}/{id}`, () => {
+            it("should return 200 removing expected news feed if token is of an admin user", async () => {
+                const data = givenThereAreAnItems();
+                const user = givenThereAreAnUser({ admin: true });
+                const server = await initServer();
+                const feedToRemove = data[0];
+
+                const res = await request(server)
+                    .delete(`/api/v1/${endpoint}/${feedToRemove.id}`)
+                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+
+                expect(res.status).toEqual(200);
+
+                const resAll = await request(server)
+                    .get(`/api/v1/${endpoint}`)
+                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+
+                expect(resAll.body).toEqual(data.filter(feed => feed.id !== feedToRemove.id));
+            });
+            it("should return 403 forbidden if token is not of an admin user", async () => {
+                const data = givenThereAreAnItems();
+                const user = givenThereAreAnUser({ admin: false });
+                const server = await initServer();
+
+                const res = await request(server)
+                    .delete(`/api/v1/${endpoint}/${data[0].id}`)
+                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+
+                expect(res.status).toEqual(403);
+            });
+            it("should return 401 unauthorized if token is of an non existed user", async () => {
+                const data = givenThereAreAnItems();
+                givenThereAreAnUser({ admin: true });
+                const server = await initServer();
+
+                const res = await request(server)
+                    .delete(`/api/v1/${endpoint}/${data[0].id}`)
+                    .set({ Authorization: `Bearer ${generateToken(Id.generateId())}` });
+
+                expect(res.status).toEqual(401);
             });
         });
     });

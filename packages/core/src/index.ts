@@ -1,8 +1,6 @@
 export * from "./di/DependencyLocator";
 
-export * from "./entities/User";
-export * from "./entities/NewsFeed";
-export * from "./entities/Entity";
+export * from "./entities";
 
 export * from "./types/Either";
 export * from "./types/EitherAsync";

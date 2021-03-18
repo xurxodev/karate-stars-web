@@ -4,7 +4,7 @@ import { validateRequired } from "../utils/validations";
 import { Id } from "../value-objects/Id";
 import { Entity, EntityData, EntityRawData } from "./Entity";
 
-export interface EventTypeData extends EntityData {
+interface EventTypeData extends EntityData {
     name: string;
 }
 
@@ -21,7 +21,9 @@ export class EventType extends Entity<EventTypeRawData> implements EventTypeData
         this.name = data.name;
     }
 
-    public static create(data: EventTypeRawData): Either<ValidationError<EventType>[], EventType> {
+    public static create(
+        data: EventTypeRawData
+    ): Either<ValidationError<EventTypeRawData>[], EventType> {
         const finalId = !data.id ? Id.generateId().value : data.id;
 
         return this.validateAndCreate({ ...data, id: finalId });
@@ -29,7 +31,7 @@ export class EventType extends Entity<EventTypeRawData> implements EventTypeData
 
     public update(
         dataToUpdate: Partial<Omit<EventTypeRawData, "id">>
-    ): Either<ValidationError<EventType>[], EventType> {
+    ): Either<ValidationError<EventTypeRawData>[], EventType> {
         const newData = { ...this.toRawData(), ...dataToUpdate };
 
         return EventType.validateAndCreate(newData);
@@ -44,10 +46,10 @@ export class EventType extends Entity<EventTypeRawData> implements EventTypeData
 
     private static validateAndCreate(
         data: EventTypeRawData
-    ): Either<ValidationError<EventType>[], EventType> {
+    ): Either<ValidationError<EventTypeRawData>[], EventType> {
         const idResult = Id.createExisted(data.id);
 
-        const errors: ValidationError<EventType>[] = [
+        const errors: ValidationError<EventTypeRawData>[] = [
             {
                 property: "id" as const,
                 errors: idResult.fold(
