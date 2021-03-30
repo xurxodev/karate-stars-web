@@ -1,9 +1,20 @@
+import { Country, Either, Id, Maybe } from "karate-stars-core";
 import fetch from "node-fetch";
+import { ActionResult } from "../../common/api/ActionResult";
+import { UnexpectedError } from "../../common/api/Errors";
 import CountryRepository from "../domain/boundaries/CountryRepository";
-import { Country } from "../domain/entities/Country";
 
 export default class CountryJsonRepository implements CountryRepository {
-    public get(): Promise<Country[]> {
+    getById(_id: Id): Promise<Maybe<Country>> {
+        throw new Error("Method not implemented.");
+    }
+    delete(_id: Id): Promise<Either<UnexpectedError, ActionResult>> {
+        throw new Error("Method not implemented.");
+    }
+    save(_entity: Country): Promise<Either<UnexpectedError, ActionResult>> {
+        throw new Error("Method not implemented.");
+    }
+    public getAll(): Promise<Country[]> {
         return new Promise((resolve, reject) => {
             this.getCountries()
                 .then((countries: any) => {

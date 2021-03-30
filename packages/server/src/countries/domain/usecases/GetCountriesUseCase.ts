@@ -1,5 +1,5 @@
+import { Country } from "karate-stars-core";
 import CountryRepository from "../boundaries/CountryRepository";
-import { Country } from "../entities/Country";
 
 export default class GetCountriesUseCase {
     private repository: CountryRepository;
@@ -9,6 +9,6 @@ export default class GetCountriesUseCase {
     }
 
     public execute(): Promise<Country[]> {
-        return this.repository.get();
+        return this.repository.getAll();
     }
 }

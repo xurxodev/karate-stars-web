@@ -1,5 +1,5 @@
+import { Category } from "karate-stars-core";
 import CategoryRepository from "../boundaries/CategoryRepository";
-import { Category } from "../entities/Category";
 
 export default class GetCategoriesUseCase {
     private repository: CategoryRepository;
@@ -9,6 +9,6 @@ export default class GetCategoriesUseCase {
     }
 
     public execute(): Promise<Category[]> {
-        return this.repository.get();
+        return this.repository.getAll();
     }
 }

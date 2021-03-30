@@ -1,9 +1,20 @@
+import { Category, Either, Id, Maybe } from "karate-stars-core";
 import fetch from "node-fetch";
+import { ActionResult } from "../../common/api/ActionResult";
+import { UnexpectedError } from "../../common/api/Errors";
 import CategoryRepository from "../domain/boundaries/CategoryRepository";
-import { Category } from "../domain/entities/Category";
 
 export default class CategoryJsonRepository implements CategoryRepository {
-    public get(): Promise<Category[]> {
+    getById(_id: Id): Promise<Maybe<Category>> {
+        throw new Error("Method not implemented.");
+    }
+    delete(_id: Id): Promise<Either<UnexpectedError, ActionResult>> {
+        throw new Error("Method not implemented.");
+    }
+    save(_entity: Category): Promise<Either<UnexpectedError, ActionResult>> {
+        throw new Error("Method not implemented.");
+    }
+    public getAll(): Promise<Category[]> {
         return new Promise((resolve, reject) => {
             this.getCatgories()
                 .then((categories: Category[]) => {

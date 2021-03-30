@@ -1,5 +1,5 @@
+import { Competitor } from "karate-stars-core";
 import CompetitorRepository from "../boundaries/CompetitorRepository";
-import { Competitor } from "../entities/Competitor";
 
 export default class GetCompetitorsUseCase {
     private repository: CompetitorRepository;
@@ -9,6 +9,6 @@ export default class GetCompetitorsUseCase {
     }
 
     public execute(): Promise<Competitor[]> {
-        return this.repository.get();
+        return this.repository.getAll();
     }
 }
