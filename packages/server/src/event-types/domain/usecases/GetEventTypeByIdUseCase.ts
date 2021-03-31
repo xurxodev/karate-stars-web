@@ -1,6 +1,7 @@
-import { Either, EitherAsync, Id, EventTypeRawData, MaybeAsync } from "karate-stars-core";
-import { ResourceNotFoundError } from "../../../common/api/Errors";
+import { Either, EventTypeRawData } from "karate-stars-core";
+import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
+import { createIdOrResourceNotFound } from "../../../common/domain/utils";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import EventTypesRepository from "../boundaries/EventTypeRepository";
 
@@ -8,9 +9,11 @@ export interface GetEventTypeByIdArg extends AdminUseCaseArgs {
     id: string;
 }
 
+type GetEventTypeByIdErrors = ResourceNotFoundError | UnexpectedError;
+
 export class GetEventTypeByIdUseCase extends AdminUseCase<
     GetEventTypeByIdArg,
-    ResourceNotFoundError,
+    GetEventTypeByIdErrors,
     EventTypeRawData
 > {
     constructor(
@@ -22,20 +25,10 @@ export class GetEventTypeByIdUseCase extends AdminUseCase<
 
     public async run({
         id,
-    }: GetEventTypeByIdArg): Promise<Either<ResourceNotFoundError, EventTypeRawData>> {
-        const notFoundError = {
-            kind: "ResourceNotFound",
-            message: `EventType with id ${id} not found`,
-        } as ResourceNotFoundError;
-
-        const result = await EitherAsync.fromEither(Id.createExisted(id))
-            .mapLeft(() => notFoundError)
-            .flatMap(id =>
-                MaybeAsync.fromPromise(this.EventTypesRepository.getById(id)).toEither(
-                    notFoundError
-                )
-            )
-            .map(EventType => EventType.toRawData())
+    }: GetEventTypeByIdArg): Promise<Either<GetEventTypeByIdErrors, EventTypeRawData>> {
+        const result = await createIdOrResourceNotFound<GetEventTypeByIdErrors>(id)
+            .flatMap(id => this.EventTypesRepository.getById(id))
+            .map(eventType => eventType.toRawData())
             .run();
 
         return result;

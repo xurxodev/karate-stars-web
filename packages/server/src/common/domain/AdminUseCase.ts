@@ -10,9 +10,9 @@ export interface AdminUseCaseArgs {
 export type AdminUseCaseError = UnauthorizedError | PermissionError | UnexpectedError;
 
 export abstract class AdminUseCase<Arguments extends AdminUseCaseArgs, Error, Data> {
-    constructor(private userRepository: UserRepository) {}
+    constructor(private userRepository: UserRepository) { }
 
-    public abstract run(arg: Arguments): Promise<Either<Error, Data>>;
+    protected abstract run(arg: Arguments): Promise<Either<Error, Data>>;
 
     public async execute(arg: Arguments): Promise<Either<AdminUseCaseError | Error, Data>> {
         try {

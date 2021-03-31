@@ -1,4 +1,4 @@
-import { Either, EitherAsync, Id, MaybeAsync, EventTypeRawData } from "karate-stars-core";
+import { Either, EventTypeRawData } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
 import {
     ConflictError,
@@ -7,6 +7,7 @@ import {
     ValidationErrors,
 } from "../../../common/api/Errors";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
+import { createIdOrResourceNotFound } from "../../../common/domain/utils";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import EventTypesRepository from "../boundaries/EventTypeRepository";
 
@@ -37,18 +38,8 @@ export class UpdateEventTypeUseCase extends AdminUseCase<
         itemId,
         item,
     }: UpdateEventTypeArg): Promise<Either<UpdateEventTypeError, ActionResult>> {
-        const notFoundError = {
-            kind: "ResourceNotFound",
-            message: `EventType with id ${itemId} not found`,
-        } as ResourceNotFoundError;
-
-        return await EitherAsync.fromEither(Id.createExisted(itemId))
-            .mapLeft<UpdateEventTypeError>(() => notFoundError)
-            .flatMap(async id =>
-                MaybeAsync.fromPromise(this.EventTypesRepository.getById(id)).toEither(
-                    notFoundError
-                )
-            )
+        return await createIdOrResourceNotFound<UpdateEventTypeError>(itemId)
+            .flatMap(async id => this.EventTypesRepository.getById(id))
             .flatMap(async existedFeed =>
                 existedFeed.update(item).mapLeft(error => ({
                     kind: "ValidationErrors",

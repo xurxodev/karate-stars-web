@@ -1,4 +1,4 @@
-import { Either, EitherAsync, Id, MaybeAsync, NewsFeed } from "karate-stars-core";
+import { Either, EitherAsync, NewsFeed } from "karate-stars-core";
 import stream from "stream";
 import { ActionResult } from "../../../common/api/ActionResult";
 import {
@@ -7,6 +7,7 @@ import {
     ValidationErrors,
 } from "../../../common/api/Errors";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
+import { createIdOrResourceNotFound } from "../../../common/domain/utils";
 import { ImageRepository } from "../../../images/domain/ImageRepository";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import NewsFeedsRepository from "../boundaries/NewsFeedRepository";
@@ -40,16 +41,8 @@ export class UpdateNewsFeedImageUseCase extends AdminUseCase<
         filename,
         image,
     }: CreateNewsFeedArg): Promise<Either<UpdateNewsFeedImageError, ActionResult>> {
-        const notFoundError = {
-            kind: "ResourceNotFound",
-            message: `NewsFeed with id ${itemId} not found`,
-        } as ResourceNotFoundError;
-
-        return await EitherAsync.fromEither(Id.createExisted(itemId))
-            .mapLeft<UpdateNewsFeedImageError>(() => notFoundError)
-            .flatMap(async id =>
-                MaybeAsync.fromPromise(this.newsFeedsRepository.getById(id)).toEither(notFoundError)
-            )
+        return await createIdOrResourceNotFound<UpdateNewsFeedImageError>(itemId)
+            .flatMap(async id => this.newsFeedsRepository.getById(id))
             .flatMap(async existedFeed => {
                 const item = existedFeed.toRawData();
 

@@ -1,6 +1,6 @@
-import { Either, Entity, EntityRawData, Id, Maybe } from "karate-stars-core";
+import { Either, Entity, EntityRawData, Id } from "karate-stars-core";
 import { ActionResult } from "../ActionResult";
-import { UnexpectedError } from "../Errors";
+import { ResourceNotFoundError, UnexpectedError } from "../Errors";
 
 export class FakeGenericRepository<RawData extends EntityRawData, T extends Entity<RawData>> {
     constructor(protected items: T[]) {}
@@ -9,10 +9,19 @@ export class FakeGenericRepository<RawData extends EntityRawData, T extends Enti
         return Promise.resolve(this.items);
     }
 
-    getById(id: Id): Promise<Maybe<T>> {
+    getById(id: Id): Promise<Either<UnexpectedError | ResourceNotFoundError, T>> {
         const item = this.items.find(item => item.id.equals(id));
 
-        return Promise.resolve(Maybe.fromValue(item));
+        if (item) {
+            return Promise.resolve(Either.right(item));
+        } else {
+            return Promise.resolve(
+                Either.left({
+                    kind: "ResourceNotFound",
+                    message: `Id ${id} not found`,
+                })
+            );
+        }
     }
 
     delete(id: Id): Promise<Either<UnexpectedError, ActionResult>> {

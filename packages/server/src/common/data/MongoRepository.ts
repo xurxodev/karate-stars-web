@@ -1,8 +1,8 @@
-import { Either, EntityData, Id, Maybe } from "karate-stars-core";
+import { Either, EntityData, Id } from "karate-stars-core";
 import { MongoConector } from "./MongoConector";
 import { Collection } from "mongodb";
 import { MongoCollection } from "./Types";
-import { UnexpectedError } from "../api/Errors";
+import { ResourceNotFoundError, UnexpectedError } from "../api/Errors";
 import { ActionResult } from "../api/ActionResult";
 
 export default abstract class MongoRepository<
@@ -29,15 +29,22 @@ export default abstract class MongoRepository<
         }
     }
 
-    async getById(id: Id): Promise<Maybe<Entity>> {
+    async getById(id: Id): Promise<Either<ResourceNotFoundError | UnexpectedError, Entity>> {
         try {
             const collection = await this.collection();
 
             const modelDB = await collection.findOne<ModelDB>({ _id: id.value });
 
-            return Maybe.fromValue(modelDB).map(item => this.mapToDomain(item));
+            if (modelDB) {
+                return Either.right(this.mapToDomain(modelDB));
+            } else {
+                return Either.left({
+                    kind: "ResourceNotFound",
+                    message: `Id ${id} not found`,
+                } as ResourceNotFoundError);
+            }
         } catch (error) {
-            return Maybe.none();
+            return Either.left({ kind: "UnexpectedError", error });
         }
     }
 

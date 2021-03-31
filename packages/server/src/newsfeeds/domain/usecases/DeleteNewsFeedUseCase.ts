@@ -1,7 +1,8 @@
-import { Either, EitherAsync, Id, MaybeAsync } from "karate-stars-core";
+import { Either, EitherAsync, Id } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
 import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
+import { createIdOrResourceNotFound } from "../../../common/domain/utils";
 import { ImageRepository } from "../../../images/domain/ImageRepository";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import NewsFeedsRepository from "../boundaries/NewsFeedRepository";
@@ -27,17 +28,9 @@ export class DeleteNewsFeedUseCase extends AdminUseCase<
 
     public async run({
         id,
-    }: GetNewsFeedByIdArg): Promise<Either<DeleteNewsFeedError, ActionResult>> {
-        const notFoundError = {
-            kind: "ResourceNotFound",
-            message: `NewsFeed with id ${id} not found`,
-        } as DeleteNewsFeedError;
-
-        const result = await EitherAsync.fromEither(Id.createExisted(id))
-            .mapLeft(() => notFoundError)
-            .flatMap(async id =>
-                MaybeAsync.fromPromise(this.newsFeedsRepository.getById(id)).toEither(notFoundError)
-            )
+    }: GetNewsFeedByIdArg): Promise<Either<ResourceNotFoundError | UnexpectedError, ActionResult>> {
+        const result = await createIdOrResourceNotFound<DeleteNewsFeedError>(id)
+            .flatMap(async id => this.newsFeedsRepository.getById(id))
             .flatMap<Id>(async newsFeed =>
                 this.deleteImage(newsFeed.image?.value)
                     .map(() => newsFeed.id)

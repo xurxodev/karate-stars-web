@@ -49,7 +49,7 @@ export class EventTypeController extends AdminController<EventTypeRawData> {
     }
 
     protected executeDelete(
-        userId: any,
+        userId: string,
         id: string
     ): Promise<Either<UseCaseErrors<EventTypeRawData>, ActionResult>> {
         return this.deleteEventTypeUseCase.execute({ userId, id });

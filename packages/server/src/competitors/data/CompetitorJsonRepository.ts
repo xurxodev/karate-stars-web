@@ -1,15 +1,15 @@
-import { Competitor, Id, Maybe, Either } from "karate-stars-core";
+import { Competitor, Id, Either } from "karate-stars-core";
 import fetch from "node-fetch";
 import Parser from "rss-parser";
 import { ActionResult } from "../../common/api/ActionResult";
-import { UnexpectedError } from "../../common/api/Errors";
+import { ResourceNotFoundError, UnexpectedError } from "../../common/api/Errors";
 import CompetitorRepository from "../domain/boundaries/CompetitorRepository";
 
 export default class CompetitorJsonRepository implements CompetitorRepository {
-    getAll(): Promise<Competitor[]> {
+    getById(_id: Id): Promise<Either<ResourceNotFoundError | UnexpectedError, Competitor>> {
         throw new Error("Method not implemented.");
     }
-    getById(_id: Id): Promise<Maybe<Competitor>> {
+    getAll(): Promise<Competitor[]> {
         throw new Error("Method not implemented.");
     }
     delete(_id: Id): Promise<Either<UnexpectedError, ActionResult>> {
