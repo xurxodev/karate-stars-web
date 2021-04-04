@@ -20,27 +20,27 @@ export class EventTypeController extends AdminController<EventTypeRawData> {
         super(jwtAuthenticator);
     }
 
-    protected executeGetAll(
+    protected runGetAll(
         userId: any
     ): Promise<Either<UseCaseErrors<EventTypeRawData>, EventTypeRawData[]>> {
         return this.getEventTypesUseCase.execute({ userId });
     }
 
-    protected executeGet(
+    protected runGet(
         userId: any,
         id: string
     ): Promise<Either<UseCaseErrors<EventTypeRawData>, EventTypeRawData>> {
         return this.getEventTypeByIdUseCase.execute({ userId, id });
     }
 
-    protected executePost(
+    protected runPost(
         userId: string,
         item: EventTypeRawData
     ): Promise<Either<UseCaseErrors<EventTypeRawData>, ActionResult>> {
         return this.createEventTypeUseCase.execute({ userId, item });
     }
 
-    protected executePut(
+    protected runPut(
         userId: string,
         itemId: string,
         item: EventTypeRawData
@@ -48,7 +48,7 @@ export class EventTypeController extends AdminController<EventTypeRawData> {
         return this.updateEventTypeUseCase.execute({ userId, item, itemId });
     }
 
-    protected executeDelete(
+    protected runDelete(
         userId: string,
         id: string
     ): Promise<Either<UseCaseErrors<EventTypeRawData>, ActionResult>> {

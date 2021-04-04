@@ -16,18 +16,18 @@ export type UseCaseErrors<T extends EntityRawData> =
 export abstract class AdminController<T extends EntityRawData> {
     constructor(private jwtAuthenticator: JwtAuthenticator) {}
 
-    protected abstract executeGetAll(userId: string): Promise<Either<UseCaseErrors<T>, T[]>>;
-    protected abstract executeGet(userId: string, id: string): Promise<Either<UseCaseErrors<T>, T>>;
-    protected abstract executePost(
+    protected abstract runGetAll(userId: string): Promise<Either<UseCaseErrors<T>, T[]>>;
+    protected abstract runGet(userId: string, id: string): Promise<Either<UseCaseErrors<T>, T>>;
+    protected abstract runPost(
         userId: string,
         item: T
     ): Promise<Either<UseCaseErrors<T>, ActionResult>>;
-    protected abstract executePut(
+    protected abstract runPut(
         userId: string,
         itemId: string,
         item: T
     ): Promise<Either<UseCaseErrors<T>, ActionResult>>;
-    protected abstract executeDelete(
+    protected abstract runDelete(
         userId: string,
         id: string
     ): Promise<Either<UseCaseErrors<T>, ActionResult>>;
@@ -38,7 +38,7 @@ export abstract class AdminController<T extends EntityRawData> {
     ): Promise<hapi.Lifecycle.ReturnValue> {
         const { userId } = this.jwtAuthenticator.decodeTokenData(request.headers.authorization);
 
-        const result = await this.executeGetAll(userId);
+        const result = await this.runGetAll(userId);
 
         return result.fold(
             error => this.handleFailure(error),
@@ -54,7 +54,7 @@ export abstract class AdminController<T extends EntityRawData> {
 
         const id = request.params.id;
 
-        const result = await this.executeGet(userId, id);
+        const result = await this.runGet(userId, id);
 
         return result.fold(
             error => this.handleFailure(error),
@@ -71,7 +71,7 @@ export abstract class AdminController<T extends EntityRawData> {
         const payload = request.payload as T;
 
         if (payload) {
-            const result = await this.executePost(userId, payload);
+            const result = await this.runPost(userId, payload);
 
             return result.fold(
                 error => this.handleFailure(error),
@@ -92,7 +92,7 @@ export abstract class AdminController<T extends EntityRawData> {
         const payload = request.payload as T;
 
         if (payload) {
-            const result = await this.executePut(userId, id, payload);
+            const result = await this.runPut(userId, id, payload);
 
             return result.fold(
                 error => this.handleFailure(error),
@@ -111,7 +111,7 @@ export abstract class AdminController<T extends EntityRawData> {
 
         const id = request.params.id;
 
-        const result = await this.executeDelete(userId, id);
+        const result = await this.runDelete(userId, id);
 
         return result.fold(
             error => this.handleFailure(error),
