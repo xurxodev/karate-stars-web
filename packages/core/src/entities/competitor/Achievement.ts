@@ -4,24 +4,24 @@ import { validateRequiredNumber } from "../../utils/validations";
 import { Id } from "../../value-objects/Id";
 import { ValueObject } from "../../value-objects/ValueObject";
 
-export interface AchievementRawData {
+export interface AchievementData {
     eventId: string;
     categoryId: string;
     position: number;
 }
 
-export interface AchievementData {
+interface AchievementEntityData {
     eventId: Id;
     categoryId: Id;
     position: number;
 }
 
-export class Achievement extends ValueObject<AchievementData> implements AchievementData {
+export class Achievement extends ValueObject<AchievementEntityData> {
     public readonly eventId: Id;
     public readonly categoryId: Id;
     public readonly position: number;
 
-    private constructor(data: AchievementData) {
+    private constructor(data: AchievementEntityData) {
         super(data);
 
         this.eventId = data.eventId;
@@ -30,7 +30,7 @@ export class Achievement extends ValueObject<AchievementData> implements Achieve
     }
 
     public static create(
-        data: AchievementRawData
+        data: AchievementData
     ): Either<ValidationError<Achievement>[], Achievement> {
         const categoryIdResult = Id.createExisted(data.categoryId);
         const eventIdResult = Id.createExisted(data.eventId);

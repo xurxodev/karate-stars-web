@@ -2,26 +2,26 @@ import { Either } from "../types/Either";
 import { ValidationError } from "../types/Errors";
 import { validateRequired } from "../utils/validations";
 import { Id } from "../value-objects/Id";
-import { Entity, EntityData, EntityRawData } from "./Entity";
+import { Entity, EntityObjectData, EntityData } from "./Entity";
 
-export interface EventData extends EntityData {
+interface EventObjectData extends EntityObjectData {
     name: string;
     year: number;
     typeId: Id;
 }
 
-export interface EventRawData extends EntityRawData {
+export interface EventData extends EntityData {
     name: string;
     year: number;
     typeId: string;
 }
 
-export class Event extends Entity<EventRawData> implements EventData {
+export class Event extends Entity<EventData> implements EventObjectData {
     public readonly name: string;
     public readonly year: number;
     public readonly typeId: Id;
 
-    private constructor(data: EventData) {
+    private constructor(data: EventObjectData) {
         super(data.id);
 
         this.name = data.name;
@@ -29,21 +29,21 @@ export class Event extends Entity<EventRawData> implements EventData {
         this.typeId = data.typeId;
     }
 
-    public static create(data: EventRawData): Either<ValidationError<Event>[], Event> {
+    public static create(data: EventData): Either<ValidationError<EventData>[], Event> {
         const finalId = !data.id ? Id.generateId().value : data.id;
 
         return this.validateAndCreate({ ...data, id: finalId });
     }
 
     public update(
-        dataToUpdate: Partial<Omit<EventRawData, "id">>
-    ): Either<ValidationError<Event>[], Event> {
-        const newData = { ...this.toRawData(), ...dataToUpdate };
+        dataToUpdate: Partial<Omit<EventData, "id">>
+    ): Either<ValidationError<EventData>[], Event> {
+        const newData = { ...this.toData(), ...dataToUpdate };
 
         return Event.validateAndCreate(newData);
     }
 
-    public toRawData(): EventRawData {
+    public toData(): EventData {
         return {
             id: this.id.value,
             name: this.name,
@@ -52,11 +52,11 @@ export class Event extends Entity<EventRawData> implements EventData {
         };
     }
 
-    private static validateAndCreate(data: EventRawData): Either<ValidationError<Event>[], Event> {
+    private static validateAndCreate(data: EventData): Either<ValidationError<EventData>[], Event> {
         const idResult = Id.createExisted(data.id);
         const typeIdResult = Id.createExisted(data.typeId);
 
-        const errors: ValidationError<Event>[] = [
+        const errors = [
             {
                 property: "id" as const,
                 errors: idResult.fold(

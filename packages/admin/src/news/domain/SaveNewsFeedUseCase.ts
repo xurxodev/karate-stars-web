@@ -12,7 +12,7 @@ export default class SaveNewsFeedUseCase {
         if (newsFeed.image !== undefined && newsFeed.image.isDataUrl) {
             const imageUrl = newsFeed.image.value;
             const newsFeedWithoutImage = NewsFeed.create({
-                ...newsFeed.toRawData(),
+                ...newsFeed.toData(),
                 image: undefined,
             }).get();
 

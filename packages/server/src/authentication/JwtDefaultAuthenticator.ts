@@ -1,5 +1,4 @@
 import * as jwt from "jsonwebtoken";
-import { Id } from "karate-stars-core";
 import { JwtAuthenticator, TokenData } from "../server";
 import GetUserByIdUseCase from "../users/domain/usecases/GetUserByIdUseCase";
 
@@ -22,9 +21,9 @@ class JwtDefaultAuthenticator implements JwtAuthenticator {
         }
     }
 
-    generateToken(userId: Id): string {
+    generateToken(userId: string): string {
         const tokenData: TokenData = {
-            userId: userId.value,
+            userId: userId,
         };
 
         return jwt.sign(tokenData, this.secretKey, { expiresIn: "24h" });

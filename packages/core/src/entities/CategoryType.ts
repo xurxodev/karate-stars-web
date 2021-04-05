@@ -2,42 +2,42 @@ import { Either } from "../types/Either";
 import { ValidationError } from "../types/Errors";
 import { validateRequired } from "../utils/validations";
 import { Id } from "../value-objects/Id";
-import { Entity, EntityData, EntityRawData } from "./Entity";
+import { Entity, EntityObjectData, EntityData } from "./Entity";
+
+interface CategoryTypeObjectData extends EntityObjectData {
+    name: string;
+}
 
 export interface CategoryTypeData extends EntityData {
     name: string;
 }
 
-export interface CategoryTypeRawData extends EntityRawData {
-    name: string;
-}
-
-export class CategoryType extends Entity<CategoryTypeRawData> implements CategoryTypeData {
+export class CategoryType extends Entity<CategoryTypeData> implements CategoryTypeObjectData {
     public readonly name: string;
 
-    private constructor(data: CategoryTypeData) {
+    private constructor(data: CategoryTypeObjectData) {
         super(data.id);
 
         this.name = data.name;
     }
 
     public static create(
-        data: CategoryTypeRawData
-    ): Either<ValidationError<CategoryType>[], CategoryType> {
+        data: CategoryTypeData
+    ): Either<ValidationError<CategoryTypeData>[], CategoryType> {
         const finalId = !data.id ? Id.generateId().value : data.id;
 
         return this.validateAndCreate({ ...data, id: finalId });
     }
 
     public update(
-        dataToUpdate: Partial<Omit<CategoryTypeRawData, "id">>
-    ): Either<ValidationError<CategoryType>[], CategoryType> {
-        const newData = { ...this.toRawData(), ...dataToUpdate };
+        dataToUpdate: Partial<Omit<CategoryTypeData, "id">>
+    ): Either<ValidationError<CategoryTypeData>[], CategoryType> {
+        const newData = { ...this.toData(), ...dataToUpdate };
 
         return CategoryType.validateAndCreate(newData);
     }
 
-    public toRawData(): CategoryTypeRawData {
+    public toData(): CategoryTypeData {
         return {
             id: this.id.value,
             name: this.name,
@@ -45,11 +45,11 @@ export class CategoryType extends Entity<CategoryTypeRawData> implements Categor
     }
 
     private static validateAndCreate(
-        data: CategoryTypeRawData
-    ): Either<ValidationError<CategoryType>[], CategoryType> {
+        data: CategoryTypeData
+    ): Either<ValidationError<CategoryTypeData>[], CategoryType> {
         const idResult = Id.createExisted(data.id);
 
-        const errors: ValidationError<CategoryType>[] = [
+        const errors = [
             {
                 property: "id" as const,
                 errors: idResult.fold(

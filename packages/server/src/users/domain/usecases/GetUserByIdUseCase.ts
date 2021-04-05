@@ -8,7 +8,9 @@ export default class GetUserByIdUseCase {
         this.repository = resository;
     }
 
-    public execute(userId: string): Promise<Maybe<UserData>> {
-        return this.repository.getById(Id.createExisted(userId).getOrThrow());
+    public async execute(userId: string): Promise<Maybe<UserData>> {
+        const userResult = await this.repository.getById(Id.createExisted(userId).getOrThrow());
+
+        return userResult.map(user => user.toData());
     }
 }

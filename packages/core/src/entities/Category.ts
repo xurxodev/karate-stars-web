@@ -2,44 +2,44 @@ import { Either } from "../types/Either";
 import { ValidationError } from "../types/Errors";
 import { validateRequired } from "../utils/validations";
 import { Id } from "../value-objects/Id";
-import { Entity, EntityData, EntityRawData } from "./Entity";
+import { Entity, EntityObjectData, EntityData } from "./Entity";
 
-export interface CategoryData extends EntityData {
+interface CategoryObjectData extends EntityObjectData {
     name: string;
     typeId: Id;
 }
 
-export interface CategoryRawData extends EntityRawData {
+export interface CategoryData extends EntityData {
     name: string;
     typeId: string;
 }
 
-export class Category extends Entity<CategoryRawData> implements CategoryData {
+export class Category extends Entity<CategoryData> {
     public readonly name: string;
     public readonly typeId: Id;
 
-    private constructor(data: CategoryData) {
+    private constructor(data: CategoryObjectData) {
         super(data.id);
 
         this.name = data.name;
         this.typeId = data.typeId;
     }
 
-    public static create(data: CategoryRawData): Either<ValidationError<Category>[], Category> {
+    public static create(data: CategoryData): Either<ValidationError<Category>[], Category> {
         const finalId = !data.id ? Id.generateId().value : data.id;
 
         return this.validateAndCreate({ ...data, id: finalId });
     }
 
     public update(
-        dataToUpdate: Partial<Omit<CategoryRawData, "id">>
+        dataToUpdate: Partial<Omit<CategoryData, "id">>
     ): Either<ValidationError<Category>[], Category> {
-        const newData = { ...this.toRawData(), ...dataToUpdate };
+        const newData = { ...this.toData(), ...dataToUpdate };
 
         return Category.validateAndCreate(newData);
     }
 
-    public toRawData(): CategoryRawData {
+    public toData(): CategoryData {
         return {
             id: this.id.value,
             name: this.name,
@@ -48,12 +48,12 @@ export class Category extends Entity<CategoryRawData> implements CategoryData {
     }
 
     private static validateAndCreate(
-        data: CategoryRawData
+        data: CategoryData
     ): Either<ValidationError<Category>[], Category> {
         const idResult = Id.createExisted(data.id);
         const typeIdResult = Id.createExisted(data.typeId);
 
-        const errors: ValidationError<Category>[] = [
+        const errors = [
             {
                 property: "id" as const,
                 errors: idResult.fold(

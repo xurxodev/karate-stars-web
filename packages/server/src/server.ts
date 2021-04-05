@@ -5,7 +5,6 @@ import * as inert from "@hapi/inert";
 import * as CompositionRoot from "./CompositionRoot";
 import * as http from "http";
 import { names } from "./CompositionRoot";
-import { Id } from "karate-stars-core";
 
 export interface TokenData {
     userId: string;
@@ -15,7 +14,7 @@ export interface JwtAuthenticator {
     name: string;
     secretKey: string;
     validateTokenData: (tokenData: TokenData) => Promise<{ isValid: boolean }>;
-    generateToken: (userId: Id) => string;
+    generateToken: (userId: string) => string;
     decodeTokenData(token: string): TokenData;
 }
 

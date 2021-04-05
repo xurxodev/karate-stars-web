@@ -1,15 +1,15 @@
 import {
     FormState,
     FormSectionState,
-    stateToRawData,
+    statetoData,
 } from "../../../common/presentation/state/FormState";
 import FormBloc from "../../../common/presentation/bloc/FormBloc";
-import { Either, NewsFeed, NewsFeedRawData, ValidationError } from "karate-stars-core";
+import { Either, NewsFeed, NewsFeedData, ValidationError } from "karate-stars-core";
 import GetNewsFeedByIdUseCase from "../../domain/GetNewsFeedByIdUseCase";
 import { DataError } from "../../../common/domain/Errors";
 import SaveNewsFeedUseCase from "../../domain/SaveNewsFeedUseCase";
 
-class NewsFeedDetailBloc extends FormBloc<NewsFeed> {
+class NewsFeedDetailBloc extends FormBloc<NewsFeedData> {
     constructor(
         private getNewsFeedByIdUseCase: GetNewsFeedByIdUseCase,
         private saveNewsFeedUseCase: SaveNewsFeedUseCase
@@ -64,7 +64,7 @@ class NewsFeedDetailBloc extends FormBloc<NewsFeed> {
         }
     }
 
-    protected validateState(state: FormState): ValidationError<NewsFeed>[] | null {
+    protected validateState(state: FormState): ValidationError<NewsFeedData>[] | null {
         const result = this.mapStateToEntity(state);
         const errors = result.fold(
             errors => errors,
@@ -95,8 +95,8 @@ class NewsFeedDetailBloc extends FormBloc<NewsFeed> {
         }
     }
 
-    private mapStateToEntity(state: FormState): Either<ValidationError<NewsFeed>[], NewsFeed> {
-        const rawData = (stateToRawData(state) as unknown) as NewsFeedRawData;
+    private mapStateToEntity(state: FormState): Either<ValidationError<NewsFeedData>[], NewsFeed> {
+        const rawData = (statetoData(state) as unknown) as NewsFeedData;
 
         return NewsFeed.create(rawData);
     }
@@ -104,7 +104,7 @@ class NewsFeedDetailBloc extends FormBloc<NewsFeed> {
 
 export default NewsFeedDetailBloc;
 
-const initialFieldsState = (newsFeed?: NewsFeedRawData): FormSectionState[] => {
+const initialFieldsState = (newsFeed?: NewsFeedData): FormSectionState[] => {
     return [
         {
             fields: [

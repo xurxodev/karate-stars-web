@@ -1,6 +1,6 @@
-import { Competitor, CompetitorRawData } from "../competitor";
+import { Competitor, CompetitorData } from "../competitor";
 
-const competitorRawData: CompetitorRawData = {
+const competitorRawData: CompetitorData = {
     id: "tjZtIOHwzVJ",
     firstName: "Rafael",
     lastName: "Aghayev",

@@ -1,12 +1,13 @@
-import { Either, EntityData, Id } from "karate-stars-core";
+import { Either, Id } from "karate-stars-core";
 import { MongoConector } from "./MongoConector";
 import { Collection } from "mongodb";
 import { MongoCollection } from "./Types";
 import { ResourceNotFoundError, UnexpectedError } from "../api/Errors";
 import { ActionResult } from "../api/ActionResult";
+import { EntityObjectData } from "karate-stars-core/build/entities/Entity";
 
 export default abstract class MongoRepository<
-    Entity extends EntityData,
+    Entity extends EntityObjectData,
     ModelDB extends MongoCollection
 > {
     constructor(private mongoConector: MongoConector, private collectionName: string) {}

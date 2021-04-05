@@ -56,7 +56,7 @@ export interface FormState {
     cancelName?: string;
 }
 
-export function stateToRawData(state: FormState): Record<string, unknown> {
+export function statetoData(state: FormState): Record<string, unknown> {
     const fields = state.sections.flatMap(section =>
         section.fields.map(field => ({ [field.name]: field.value }))
     );

@@ -3,11 +3,11 @@ import { ValidationError } from "../../types/Errors";
 import { validateRequired } from "../../utils/validations";
 import { Id } from "../../value-objects/Id";
 import { Url } from "../../value-objects/Url";
-import { Entity, EntityData, EntityRawData } from "../Entity";
-import { Achievement, AchievementData, AchievementRawData } from "./Achievement";
-import { SocialLink, SocialLinkData, SocialLinkRawData } from "./SocialLink";
+import { Entity, EntityObjectData, EntityData } from "../Entity";
+import { Achievement, AchievementData } from "./Achievement";
+import { SocialLink, SocialLinkData } from "./SocialLink";
 
-export interface CompetitorRawData extends EntityRawData {
+export interface CompetitorData extends EntityData {
     firstName: string;
     lastName: string;
     wkfId: string;
@@ -17,11 +17,11 @@ export interface CompetitorRawData extends EntityRawData {
     mainImage?: string;
     isActive: boolean;
     isLegend: boolean;
-    links: SocialLinkRawData[];
-    achievements: AchievementRawData[];
+    links: SocialLinkData[];
+    achievements: AchievementData[];
 }
 
-export interface CompetitorData extends EntityData {
+interface CompetitorObjectData extends EntityObjectData {
     firstName: string;
     lastName: string;
     wkfId: string;
@@ -37,7 +37,7 @@ export interface CompetitorData extends EntityData {
 
 export type ValidationTypes = CompetitorData & AchievementData & SocialLinkData;
 
-export class Competitor extends Entity<CompetitorRawData> implements CompetitorData {
+export class Competitor extends Entity<CompetitorData> {
     public readonly firstName: string;
     public readonly lastName: string;
     public readonly wkfId: string;
@@ -50,7 +50,7 @@ export class Competitor extends Entity<CompetitorRawData> implements CompetitorD
     public readonly links: SocialLink[];
     public readonly achievements: Achievement[];
 
-    private constructor(data: CompetitorData) {
+    private constructor(data: CompetitorObjectData) {
         super(data.id);
 
         this.firstName = data.firstName;
@@ -67,7 +67,7 @@ export class Competitor extends Entity<CompetitorRawData> implements CompetitorD
     }
 
     public static create(
-        data: CompetitorRawData
+        data: CompetitorData
     ): Either<ValidationError<ValidationTypes>[], Competitor> {
         const finalId = !data.id ? Id.generateId().value : data.id;
 
@@ -75,14 +75,14 @@ export class Competitor extends Entity<CompetitorRawData> implements CompetitorD
     }
 
     public update(
-        dataToUpdate: Partial<Omit<CompetitorRawData, "id">>
+        dataToUpdate: Partial<Omit<CompetitorData, "id">>
     ): Either<ValidationError<ValidationTypes>[], Competitor> {
-        const newData = { ...this.toRawData(), ...dataToUpdate };
+        const newData = { ...this.toData(), ...dataToUpdate };
 
         return Competitor.validateAndCreate(newData);
     }
 
-    public toRawData(): CompetitorRawData {
+    public toData(): CompetitorData {
         return {
             id: this.id.value,
             firstName: this.firstName,
@@ -111,7 +111,7 @@ export class Competitor extends Entity<CompetitorRawData> implements CompetitorD
     }
 
     private static validateAndCreate(
-        data: CompetitorRawData
+        data: CompetitorData
     ): Either<ValidationError<ValidationTypes>[], Competitor> {
         const idResult = Id.createExisted(data.id);
         const mainImageResult = data.mainImage ? Url.create(data.mainImage, true) : undefined;

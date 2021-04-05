@@ -1,11 +1,11 @@
-import { Competitor, CompetitorRawData } from "karate-stars-core";
+import { Competitor, CompetitorData } from "karate-stars-core";
 import { MongoConector } from "../../common/data/MongoConector";
 import { MongoCollection } from "../../common/data/Types";
 import MongoRepository from "../../common/data/MongoRepository";
 import { renameProp } from "../../common/data/utils";
 import CompetitorRepository from "../domain/boundaries/CompetitorRepository";
 
-type CompetitorDB = Omit<CompetitorRawData, "id"> & MongoCollection;
+type CompetitorDB = Omit<CompetitorData, "id"> & MongoCollection;
 
 export default class CompetitorMongoRepository
     extends MongoRepository<Competitor, CompetitorDB>
@@ -32,7 +32,7 @@ export default class CompetitorMongoRepository
     }
 
     protected mapToDB(entity: Competitor): CompetitorDB {
-        const rawData = entity.toRawData();
+        const rawData = entity.toData();
 
         return renameProp("id", "_id", rawData) as CompetitorDB;
     }

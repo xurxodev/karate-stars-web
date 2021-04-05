@@ -20,7 +20,7 @@ import * as mockServerTest from "../../../../common/testing/mockServerTest";
 import { Method } from "../../../../common/testing/mockServerTest";
 import { Route } from "react-router-dom";
 import { createMemoryHistory } from "history";
-import { NewsFeedRawData, RssType } from "karate-stars-core";
+import { NewsFeedData, RssType } from "karate-stars-core";
 
 beforeEach(() => givenAValidAuthenticatedUser());
 
@@ -110,7 +110,7 @@ describe("News feed detail page", () => {
         });
     });
     describe("to edit", () => {
-        let newsFeed: NewsFeedRawData;
+        let newsFeed: NewsFeedData;
 
         describe("initial values should be the expected values", () => {
             beforeEach(() => (newsFeed = givenANewsFeed(existedId)));
@@ -288,7 +288,7 @@ function givenASuccessServerResponse(
     ]);
 }
 
-function givenANewsFeed(id: string): NewsFeedRawData {
+function givenANewsFeed(id: string): NewsFeedData {
     const newsFeed = {
         id,
         name: "WKF News Center",

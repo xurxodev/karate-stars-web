@@ -1,8 +1,8 @@
-import { Either, Entity, EntityRawData, Id } from "karate-stars-core";
+import { Either, Entity, EntityData, Id } from "karate-stars-core";
 import { ActionResult } from "../ActionResult";
 import { ResourceNotFoundError, UnexpectedError } from "../Errors";
 
-export class FakeGenericRepository<RawData extends EntityRawData, T extends Entity<RawData>> {
+export class FakeGenericRepository<RawData extends EntityData, T extends Entity<RawData>> {
     constructor(protected items: T[]) {}
 
     getAll(): Promise<T[]> {

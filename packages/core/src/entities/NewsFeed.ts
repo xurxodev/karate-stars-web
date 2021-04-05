@@ -3,11 +3,11 @@ import { ValidationError } from "../types/Errors";
 import { validateRequired } from "../utils/validations";
 import { Id } from "../value-objects/Id";
 import { Url } from "../value-objects/Url";
-import { Entity, EntityData, EntityRawData } from "./Entity";
+import { Entity, EntityObjectData, EntityData } from "./Entity";
 
 export type RssType = "rss" | "atom";
 
-export interface NewsFeedData extends EntityData {
+interface NewsFeedObjectData extends EntityObjectData {
     name: string;
     language: string;
     type: RssType;
@@ -15,7 +15,7 @@ export interface NewsFeedData extends EntityData {
     url: Url;
 }
 
-export interface NewsFeedRawData extends EntityRawData {
+export interface NewsFeedData extends EntityData {
     name: string;
     language: string;
     type: RssType;
@@ -23,14 +23,14 @@ export interface NewsFeedRawData extends EntityRawData {
     url: string;
 }
 
-export class NewsFeed extends Entity<NewsFeedRawData> implements NewsFeedData {
+export class NewsFeed extends Entity<NewsFeedData> {
     public readonly name: string;
     public readonly language: string;
     public readonly type: RssType;
     public readonly image?: Url;
     public readonly url: Url;
 
-    private constructor(data: NewsFeedData) {
+    private constructor(data: NewsFeedObjectData) {
         super(data.id);
 
         this.url = data.url;
@@ -40,21 +40,21 @@ export class NewsFeed extends Entity<NewsFeedRawData> implements NewsFeedData {
         this.image = data.image;
     }
 
-    public static create(data: NewsFeedRawData): Either<ValidationError<NewsFeed>[], NewsFeed> {
+    public static create(data: NewsFeedData): Either<ValidationError<NewsFeedData>[], NewsFeed> {
         const finalId = !data.id ? Id.generateId().value : data.id;
 
         return this.validateAndCreate({ ...data, id: finalId });
     }
 
     public update(
-        dataToUpdate: Partial<Omit<NewsFeedRawData, "id">>
-    ): Either<ValidationError<NewsFeed>[], NewsFeed> {
-        const newData = { ...this.toRawData(), ...dataToUpdate };
+        dataToUpdate: Partial<Omit<NewsFeedData, "id">>
+    ): Either<ValidationError<NewsFeedData>[], NewsFeed> {
+        const newData = { ...this.toData(), ...dataToUpdate };
 
         return NewsFeed.validateAndCreate(newData);
     }
 
-    public toRawData(): NewsFeedRawData {
+    public toData(): NewsFeedData {
         return {
             id: this.id.value,
             name: this.name,
@@ -66,13 +66,13 @@ export class NewsFeed extends Entity<NewsFeedRawData> implements NewsFeedData {
     }
 
     private static validateAndCreate(
-        data: NewsFeedRawData
-    ): Either<ValidationError<NewsFeed>[], NewsFeed> {
+        data: NewsFeedData
+    ): Either<ValidationError<NewsFeedData>[], NewsFeed> {
         const idResult = Id.createExisted(data.id);
         const urlResult = Url.create(data.url, false);
         const imageResult = data.image ? Url.create(data.image, true) : undefined;
 
-        const errors: ValidationError<NewsFeed>[] = [
+        const errors = [
             {
                 property: "id" as const,
                 errors: idResult.fold(

@@ -8,10 +8,12 @@ export default class GetUserByUsernameAndPasswordUseCase {
         this.repository = resository;
     }
 
-    public execute(email: string, password: string): Promise<Maybe<UserData>> {
-        return this.repository.getByUsernameAndPassword(
+    public async execute(email: string, password: string): Promise<Maybe<UserData>> {
+        const userResult = await this.repository.getByUsernameAndPassword(
             Email.create(email).getOrThrow(),
             Password.create(password).getOrThrow()
         );
+
+        return userResult.map(user => user.toData());
     }
 }

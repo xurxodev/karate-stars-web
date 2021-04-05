@@ -1,11 +1,11 @@
-import { NewsFeed, NewsFeedRawData } from "karate-stars-core";
+import { NewsFeed, NewsFeedData } from "karate-stars-core";
 import { MongoConector } from "../../common/data/MongoConector";
 import { MongoCollection } from "../../common/data/Types";
 import NewsFeedRepository from "../domain/boundaries/NewsFeedRepository";
 import MongoRepository from "../../common/data/MongoRepository";
 import { renameProp } from "../../common/data/utils";
 
-type NewsFeedDB = Omit<NewsFeedRawData, "id"> & MongoCollection;
+type NewsFeedDB = Omit<NewsFeedData, "id"> & MongoCollection;
 
 export default class NewsFeedMongoRepository
     extends MongoRepository<NewsFeed, NewsFeedDB>
@@ -26,7 +26,7 @@ export default class NewsFeedMongoRepository
     }
 
     protected mapToDB(entity: NewsFeed): NewsFeedDB {
-        const rawData = entity.toRawData();
+        const rawData = entity.toData();
 
         return renameProp("id", "_id", rawData) as NewsFeedDB;
     }

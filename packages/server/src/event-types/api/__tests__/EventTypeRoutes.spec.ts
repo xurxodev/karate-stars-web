@@ -19,20 +19,20 @@ const eventTypeCreator: DataCreator<EventTypeRawData, EventType> = {
         return eventTypes;
     },
     givenAValidNewItem: () => {
-        return { ...eventTypes[0].toRawData(), id: Id.generateId().value };
+        return { ...eventTypes[0].toData(), id: Id.generateId().value };
     },
     givenAInvalidNewItem: () => {
         return {
-            ...eventTypes[0].toRawData(),
+            ...eventTypes[0].toData(),
             id: Id.generateId().value,
             name: "",
         };
     },
     givenAValidModifiedItem: (): EventTypeRawData => {
-        return { ...eventTypes[0].toRawData(), name: eventTypes[0].name + "modified" };
+        return { ...eventTypes[0].toData(), name: eventTypes[0].name + "modified" };
     },
     givenAInvalidModifiedItem: (): EventTypeRawData => {
-        return { ...eventTypes[0].toRawData(), name: "" };
+        return { ...eventTypes[0].toData(), name: "" };
     },
 };
 

@@ -2,13 +2,13 @@ import { Either } from "../types/Either";
 import { ValidationError } from "../types/Errors";
 import { validateRequired } from "../utils/validations";
 import { Id } from "../value-objects/Id";
-import { Entity, EntityData, EntityRawData } from "./Entity";
+import { Entity, EntityObjectData, EntityData } from "./Entity";
 
-interface EventTypeData extends EntityData {
+interface EventTypeData extends EntityObjectData {
     name: string;
 }
 
-export interface EventTypeRawData extends EntityRawData {
+export interface EventTypeRawData extends EntityData {
     name: string;
 }
 
@@ -32,12 +32,12 @@ export class EventType extends Entity<EventTypeRawData> implements EventTypeData
     public update(
         dataToUpdate: Partial<Omit<EventTypeRawData, "id">>
     ): Either<ValidationError<EventTypeRawData>[], EventType> {
-        const newData = { ...this.toRawData(), ...dataToUpdate };
+        const newData = { ...this.toData(), ...dataToUpdate };
 
         return EventType.validateAndCreate(newData);
     }
 
-    public toRawData(): EventTypeRawData {
+    public toData(): EventTypeRawData {
         return {
             id: this.id.value,
             name: this.name,

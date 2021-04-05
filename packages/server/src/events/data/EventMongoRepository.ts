@@ -1,11 +1,11 @@
-import { Event, EventRawData } from "karate-stars-core";
+import { Event, EventData } from "karate-stars-core";
 import { MongoConector } from "../../common/data/MongoConector";
 import { MongoCollection } from "../../common/data/Types";
 import MongoRepository from "../../common/data/MongoRepository";
 import { renameProp } from "../../common/data/utils";
 import EventRepository from "../domain/boundaries/EventRepository";
 
-type EventDB = Omit<EventRawData, "id"> & MongoCollection;
+type EventDB = Omit<EventData, "id"> & MongoCollection;
 
 export default class EventMongoRepository
     extends MongoRepository<Event, EventDB>
@@ -24,7 +24,7 @@ export default class EventMongoRepository
     }
 
     protected mapToDB(entity: Event): EventDB {
-        const rawData = entity.toRawData();
+        const rawData = entity.toData();
 
         return renameProp("id", "_id", rawData) as EventDB;
     }

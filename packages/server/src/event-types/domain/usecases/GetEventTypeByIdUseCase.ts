@@ -28,7 +28,7 @@ export class GetEventTypeByIdUseCase extends AdminUseCase<
     }: GetEventTypeByIdArg): Promise<Either<GetEventTypeByIdErrors, EventTypeRawData>> {
         const result = await createIdOrResourceNotFound<GetEventTypeByIdErrors>(id)
             .flatMap(id => this.EventTypesRepository.getById(id))
-            .map(eventType => eventType.toRawData())
+            .map(eventType => eventType.toData())
             .run();
 
         return result;

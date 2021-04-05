@@ -1,4 +1,4 @@
-import { Either, NewsFeedRawData } from "karate-stars-core";
+import { Either, NewsFeedData } from "karate-stars-core";
 import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
 import { createIdOrResourceNotFound } from "../../../common/domain/utils";
@@ -14,7 +14,7 @@ type GetNewsFeedByIdUError = ResourceNotFoundError | UnexpectedError;
 export class GetNewsFeedByIdUseCase extends AdminUseCase<
     GetNewsFeedByIdArg,
     GetNewsFeedByIdUError,
-    NewsFeedRawData
+    NewsFeedData
 > {
     constructor(private newsFeedsRepository: NewsFeedsRepository, userRepository: UserRepository) {
         super(userRepository);
@@ -22,10 +22,10 @@ export class GetNewsFeedByIdUseCase extends AdminUseCase<
 
     public async run({
         id,
-    }: GetNewsFeedByIdArg): Promise<Either<GetNewsFeedByIdUError, NewsFeedRawData>> {
+    }: GetNewsFeedByIdArg): Promise<Either<GetNewsFeedByIdUError, NewsFeedData>> {
         const result = await createIdOrResourceNotFound<GetNewsFeedByIdUError>(id)
             .flatMap(id => this.newsFeedsRepository.getById(id))
-            .map(newsFeed => newsFeed.toRawData())
+            .map(newsFeed => newsFeed.toData())
             .run();
 
         return result;

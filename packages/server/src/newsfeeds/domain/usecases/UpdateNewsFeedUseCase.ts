@@ -1,4 +1,4 @@
-import { Either, NewsFeed, NewsFeedRawData } from "karate-stars-core";
+import { Either, NewsFeedData } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
 import {
     ConflictError,
@@ -13,14 +13,14 @@ import NewsFeedsRepository from "../boundaries/NewsFeedRepository";
 
 export interface CreateNewsFeedArg extends AdminUseCaseArgs {
     itemId: string;
-    item: NewsFeedRawData;
+    item: NewsFeedData;
 }
 
 type UpdateNewsFeedError =
     | ConflictError
     | ResourceNotFoundError
     | UnexpectedError
-    | ValidationErrors<NewsFeed>;
+    | ValidationErrors<NewsFeedData>;
 
 export class UpdateNewsFeedUseCase extends AdminUseCase<
     CreateNewsFeedArg,
@@ -38,13 +38,10 @@ export class UpdateNewsFeedUseCase extends AdminUseCase<
         return await createIdOrResourceNotFound<UpdateNewsFeedError>(itemId)
             .flatMap(id => this.newsFeedsRepository.getById(id))
             .flatMap(async existedFeed =>
-                existedFeed.update(item).mapLeft(
-                    error =>
-                        ({
-                            kind: "ValidationErrors",
-                            errors: error,
-                        } as ValidationErrors<NewsFeed>)
-                )
+                existedFeed.update(item).mapLeft(error => ({
+                    kind: "ValidationErrors",
+                    errors: error,
+                }))
             )
             .flatMap(entity => this.newsFeedsRepository.save(entity))
             .run();

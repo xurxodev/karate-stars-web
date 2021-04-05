@@ -20,6 +20,6 @@ export class GetEventTypesUseCase extends AdminUseCase<
     public async run(_: AdminUseCaseArgs): Promise<Either<UnexpectedError, EventTypeRawData[]>> {
         const eventType = await this.EventTypesRepository.getAll();
 
-        return Either.right(eventType.map(EventType => EventType.toRawData()));
+        return Either.right(eventType.map(EventType => EventType.toData()));
     }
 }

@@ -1,4 +1,4 @@
-import { NewsFeedRawData } from "karate-stars-core";
+import { NewsFeedData } from "karate-stars-core";
 import React from "react";
 import { BlocBuilder } from "../../../common/presentation/bloc";
 import MainLayout from "../../../common/presentation/layouts/main/MainLayout";
@@ -19,7 +19,7 @@ const NewsFeedListPage: React.FC = () => {
     const handleOnPaginationChange = (page: number, pageSize: number) =>
         bloc.paginationChange(page, pageSize);
 
-    const handleOnSortingChange = (field: keyof NewsFeedRawData, order: SortDirection) =>
+    const handleOnSortingChange = (field: keyof NewsFeedData, order: SortDirection) =>
         bloc.sortingChange(field, order);
 
     const onActionClick = () => {
@@ -37,7 +37,7 @@ const NewsFeedListPage: React.FC = () => {
         <MainLayout title={"News Feed List"}>
             <BlocBuilder
                 bloc={bloc}
-                builder={(state: ListState<NewsFeedRawData>) => {
+                builder={(state: ListState<NewsFeedData>) => {
                     return (
                         <React.Fragment>
                             <TableBuilder

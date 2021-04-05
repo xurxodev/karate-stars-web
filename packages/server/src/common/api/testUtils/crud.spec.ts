@@ -1,4 +1,4 @@
-import { Email, Entity, EntityRawData, Id, Password, User } from "karate-stars-core";
+import { Email, Entity, EntityData, Id, Password, User } from "karate-stars-core";
 import request from "supertest";
 import * as CompositionRoot from "../../../CompositionRoot";
 import { initServer, generateToken } from "./serverTest";
@@ -6,7 +6,7 @@ import { FakeImageRepository } from "./FakeImageRepository";
 import { FakeUserRepository } from "./FakeUserRepository";
 import { FakeGenericRepository } from "./FakeGenericRepository";
 
-export interface DataCreator<RawData extends EntityRawData, T extends Entity<RawData>> {
+export interface DataCreator<RawData extends EntityData, T extends Entity<RawData>> {
     givenAInitialItems: () => T[];
     givenAValidNewItem: () => RawData;
     givenAInvalidNewItem: () => RawData;
@@ -14,7 +14,7 @@ export interface DataCreator<RawData extends EntityRawData, T extends Entity<Raw
     givenAInvalidModifiedItem: () => RawData;
 }
 
-export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<RawData>>(
+export const commonCRUDTests = <RawData extends EntityData, T extends Entity<RawData>>(
     endpoint: string,
     repositoryKey: string,
     dataCreator: DataCreator<RawData, T>
@@ -31,7 +31,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
             () => new FakeImageRepository()
         );
 
-        return initialItems.map(feed => feed.toRawData());
+        return initialItems.map(feed => feed.toData());
     };
 
     const givenThereAreAnUser = (params: { admin: boolean }) => {
@@ -63,7 +63,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
 
                 const res = await request(server)
                     .get(`/api/v1/${endpoint}`)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(200);
                 expect(res.body).toEqual(data);
@@ -76,7 +76,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
 
                 const res = await request(server)
                     .get(`/api/v1/${endpoint}`)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(403);
             });
@@ -89,7 +89,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
 
                 const res = await request(server)
                     .get(`/api/v1/${endpoint}`)
-                    .set({ Authorization: `Bearer ${generateToken(notExistedUserId)}` });
+                    .set({ Authorization: `Bearer ${generateToken(notExistedUserId.value)}` });
 
                 expect(res.status).toEqual(401);
             });
@@ -103,7 +103,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
 
                 const res = await request(server)
                     .get(`/api/v1/${endpoint}/${data[0].id}`)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(200);
                 expect(res.body).toEqual(data[0]);
@@ -117,7 +117,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
 
                 const res = await request(server)
                     .get(`/api/v1/${endpoint}/${notExistedItemId}`)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(404);
             });
@@ -129,7 +129,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
 
                 const res = await request(server)
                     .get(`/api/v1/${endpoint}/${data[0].id}`)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(403);
             });
@@ -143,7 +143,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
 
                 const res = await request(server)
                     .get(`/api/v1/${endpoint}/${data[0].id}`)
-                    .set({ Authorization: `Bearer ${generateToken(notExistedUserId)}` });
+                    .set({ Authorization: `Bearer ${generateToken(notExistedUserId.value)}` });
 
                 expect(res.status).toEqual(401);
             });
@@ -159,14 +159,14 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
                 const res = await request(server)
                     .post(`/api/v1/${endpoint}`)
                     .send(item)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(201);
                 expect(res.body).toEqual({ ok: true, count: 1 });
 
                 const verifyRes = await request(server)
                     .get(`/api/v1/${endpoint}/${item.id}`)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(verifyRes.status).toEqual(200);
                 expect(verifyRes.body).toEqual(item);
@@ -181,7 +181,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
                 const res = await request(server)
                     .post(`/api/v1/${endpoint}`)
                     .send(item)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(403);
             });
@@ -197,7 +197,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
                 const res = await request(server)
                     .post(`/api/v1/${endpoint}`)
                     .send(item)
-                    .set({ Authorization: `Bearer ${generateToken(notExistedUserId)}` });
+                    .set({ Authorization: `Bearer ${generateToken(notExistedUserId.value)}` });
 
                 expect(res.status).toEqual(401);
             });
@@ -211,7 +211,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
                 const res = await request(server)
                     .post(`/api/v1/${endpoint}`)
                     .send(item)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(400);
             });
@@ -223,7 +223,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
 
                 const res = await request(server)
                     .post(`/api/v1/${endpoint}`)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(400);
             });
@@ -236,7 +236,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
                 const res = await request(server)
                     .post(`/api/v1/${endpoint}`)
                     .send(data[0])
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(409);
             });
@@ -252,14 +252,14 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
                 const res = await request(server)
                     .put(`/api/v1/${endpoint}/${item.id}`)
                     .send(item)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(200);
                 expect(res.body).toEqual({ ok: true, count: 1 });
 
                 const verifyRes = await request(server)
                     .get(`/api/v1/${endpoint}/${item.id}`)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(verifyRes.status).toEqual(200);
                 expect(verifyRes.body).toEqual(item);
@@ -274,7 +274,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
                 const res = await request(server)
                     .put(`/api/v1/${endpoint}/${item.id}`)
                     .send(item)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(403);
             });
@@ -290,7 +290,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
                 const res = await request(server)
                     .put(`/api/v1/${endpoint}/${item.id}`)
                     .send(item)
-                    .set({ Authorization: `Bearer ${generateToken(notExistedUserId)}` });
+                    .set({ Authorization: `Bearer ${generateToken(notExistedUserId.value)}` });
 
                 expect(res.status).toEqual(401);
             });
@@ -304,7 +304,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
                 const res = await request(server)
                     .put(`/api/v1/${endpoint}/${item.id}`)
                     .send(item)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(400);
             });
@@ -317,7 +317,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
 
                 const res = await request(server)
                     .put(`/api/v1/${endpoint}/${item.id}`)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(400);
             });
@@ -333,7 +333,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
                 const res = await request(server)
                     .put(`/api/v1/${endpoint}/${notExistedItemId}`)
                     .send(item)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(404);
             });
@@ -347,13 +347,13 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
 
                 const res = await request(server)
                     .delete(`/api/v1/${endpoint}/${feedToRemove.id}`)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(200);
 
                 const resAll = await request(server)
                     .get(`/api/v1/${endpoint}`)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(resAll.body).toEqual(data.filter(feed => feed.id !== feedToRemove.id));
             });
@@ -364,7 +364,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
 
                 const res = await request(server)
                     .delete(`/api/v1/${endpoint}/${data[0].id}`)
-                    .set({ Authorization: `Bearer ${generateToken(user.id)}` });
+                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(403);
             });
@@ -375,7 +375,7 @@ export const commonCRUDTests = <RawData extends EntityRawData, T extends Entity<
 
                 const res = await request(server)
                     .delete(`/api/v1/${endpoint}/${data[0].id}`)
-                    .set({ Authorization: `Bearer ${generateToken(Id.generateId())}` });
+                    .set({ Authorization: `Bearer ${generateToken(Id.generateId().value)}` });
 
                 expect(res.status).toEqual(401);
             });

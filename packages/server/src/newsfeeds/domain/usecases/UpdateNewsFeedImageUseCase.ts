@@ -1,4 +1,4 @@
-import { Either, EitherAsync, NewsFeed } from "karate-stars-core";
+import { Either, EitherAsync, NewsFeedData } from "karate-stars-core";
 import stream from "stream";
 import { ActionResult } from "../../../common/api/ActionResult";
 import {
@@ -20,7 +20,7 @@ export interface CreateNewsFeedArg extends AdminUseCaseArgs {
 
 type UpdateNewsFeedImageError =
     | ResourceNotFoundError
-    | ValidationErrors<NewsFeed>
+    | ValidationErrors<NewsFeedData>
     | UnexpectedError;
 
 export class UpdateNewsFeedImageUseCase extends AdminUseCase<
@@ -44,7 +44,7 @@ export class UpdateNewsFeedImageUseCase extends AdminUseCase<
         return await createIdOrResourceNotFound<UpdateNewsFeedImageError>(itemId)
             .flatMap(async id => this.newsFeedsRepository.getById(id))
             .flatMap(async existedFeed => {
-                const item = existedFeed.toRawData();
+                const item = existedFeed.toData();
 
                 return this.deletePreviousImage(existedFeed.image?.value)
                     .flatMap(() => this.imageRepository.uploadNewImage("feeds", filename, image))

@@ -1,11 +1,11 @@
-import { CategoryType, CategoryTypeRawData } from "karate-stars-core";
+import { CategoryType, CategoryTypeData } from "karate-stars-core";
 import { MongoConector } from "../../common/data/MongoConector";
 import { MongoCollection } from "../../common/data/Types";
 import MongoRepository from "../../common/data/MongoRepository";
 import { renameProp } from "../../common/data/utils";
 import CategoryTypeRepository from "../domain/boundaries/CategoryTypeRepository";
 
-type CategoryTypeDB = Omit<CategoryTypeRawData, "id"> & MongoCollection;
+type CategoryTypeDB = Omit<CategoryTypeData, "id"> & MongoCollection;
 
 export default class CategoryTypeMongoRepository
     extends MongoRepository<CategoryType, CategoryTypeDB>
@@ -22,7 +22,7 @@ export default class CategoryTypeMongoRepository
     }
 
     protected mapToDB(entity: CategoryType): CategoryTypeDB {
-        const rawData = entity.toRawData();
+        const rawData = entity.toData();
 
         return renameProp("id", "_id", rawData) as CategoryTypeDB;
     }

@@ -6,21 +6,21 @@ import { ValueObject } from "../../value-objects/ValueObject";
 
 export type SocialLinkType = "web" | "twitter" | "facebook" | "instagram";
 
-export interface SocialLinkRawData {
+export interface SocialLinkData {
     url: string;
     type: SocialLinkType;
 }
 
-export interface SocialLinkData {
+interface SocialLinkObjectData {
     url: Url;
     type: SocialLinkType;
 }
 
-export class SocialLink extends ValueObject<SocialLinkData> implements SocialLinkData {
+export class SocialLink extends ValueObject<SocialLinkObjectData> {
     public readonly url: Url;
     public readonly type: SocialLinkType;
 
-    private constructor(data: SocialLinkData) {
+    private constructor(data: SocialLinkObjectData) {
         super(data);
 
         this.url = data.url;
@@ -28,11 +28,11 @@ export class SocialLink extends ValueObject<SocialLinkData> implements SocialLin
     }
 
     public static create(
-        data: SocialLinkRawData
-    ): Either<ValidationError<SocialLink>[], SocialLink> {
+        data: SocialLinkData
+    ): Either<ValidationError<SocialLinkData>[], SocialLink> {
         const urlResult = Url.create(data.url);
 
-        const errors: ValidationError<SocialLink>[] = [
+        const errors = [
             {
                 property: "url" as const,
                 errors: urlResult.fold(

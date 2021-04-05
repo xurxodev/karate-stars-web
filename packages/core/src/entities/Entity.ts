@@ -1,10 +1,10 @@
 import { Id } from "../value-objects/Id";
 
-export interface EntityData {
+export interface EntityObjectData {
     id: Id;
 }
 
-export interface EntityRawData {
+export interface EntityData {
     id: string;
 }
 
@@ -12,12 +12,12 @@ const isEntity = (v: any): v is Entity<any> => {
     return v instanceof Entity;
 };
 
-export abstract class Entity<RawData extends EntityRawData> implements EntityData {
+export abstract class Entity<Data extends EntityData> implements EntityObjectData {
     constructor(public id: Id) {}
 
-    abstract toRawData(): RawData;
+    abstract toData(): Data;
 
-    public equals(object?: Entity<RawData>): boolean {
+    public equals(object?: Entity<Data>): boolean {
         if (object === null || object === undefined) {
             return false;
         }

@@ -22,7 +22,7 @@ export default class EventTypeMongoRepository
     }
 
     protected mapToDB(EventType: EventType): EventTypeDB {
-        const rawData = EventType.toRawData();
+        const rawData = EventType.toData();
 
         return renameProp("id", "_id", rawData) as EventTypeDB;
     }

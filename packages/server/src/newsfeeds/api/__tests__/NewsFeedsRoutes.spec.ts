@@ -1,4 +1,4 @@
-import { Id, NewsFeed, NewsFeedRawData } from "karate-stars-core";
+import { Id, NewsFeed, NewsFeedData } from "karate-stars-core";
 import * as CompositionRoot from "../../../CompositionRoot";
 import { commonCRUDTests, DataCreator } from "../../../common/api/testUtils/crud.spec";
 
@@ -23,26 +23,26 @@ const newsFeeds = [
     }).get(),
 ];
 
-const newsFeedCreator: DataCreator<NewsFeedRawData, NewsFeed> = {
+const newsFeedCreator: DataCreator<NewsFeedData, NewsFeed> = {
     givenAInitialItems: (): NewsFeed[] => {
         return newsFeeds;
     },
-    givenAValidNewItem: (): NewsFeedRawData => {
-        return { ...newsFeeds[0].toRawData(), id: Id.generateId().value };
+    givenAValidNewItem: (): NewsFeedData => {
+        return { ...newsFeeds[0].toData(), id: Id.generateId().value };
     },
-    givenAInvalidNewItem: (): NewsFeedRawData => {
+    givenAInvalidNewItem: (): NewsFeedData => {
         return {
-            ...newsFeeds[0].toRawData(),
+            ...newsFeeds[0].toData(),
             id: Id.generateId().value,
             url: "Invalid",
             image: "Invalid",
         };
     },
-    givenAValidModifiedItem: (): NewsFeedRawData => {
-        return { ...newsFeeds[0].toRawData(), name: newsFeeds[0].name + "modified" };
+    givenAValidModifiedItem: (): NewsFeedData => {
+        return { ...newsFeeds[0].toData(), name: newsFeeds[0].name + "modified" };
     },
-    givenAInvalidModifiedItem: (): NewsFeedRawData => {
-        return { ...newsFeeds[0].toRawData(), url: "Invalid" };
+    givenAInvalidModifiedItem: (): NewsFeedData => {
+        return { ...newsFeeds[0].toData(), url: "Invalid" };
     },
 };
 

@@ -2,18 +2,18 @@ import * as hapi from "@hapi/hapi";
 import * as boom from "@hapi/boom";
 import { JwtAuthenticator } from "../../server";
 import { ConflictError, UnexpectedError, ResourceNotFoundError, ValidationErrors } from "./Errors";
-import { Either, EntityRawData, validationErrorMessages } from "karate-stars-core";
+import { Either, EntityData, validationErrorMessages } from "karate-stars-core";
 import { AdminUseCaseError } from "../domain/AdminUseCase";
 import { ActionResult } from "./ActionResult";
 
-export type UseCaseErrors<T extends EntityRawData> =
+export type UseCaseErrors<T extends EntityData> =
     | AdminUseCaseError
     | ResourceNotFoundError
     | UnexpectedError
     | ConflictError
     | ValidationErrors<T>;
 
-export abstract class AdminController<T extends EntityRawData> {
+export abstract class AdminController<T extends EntityData> {
     constructor(private jwtAuthenticator: JwtAuthenticator) {}
 
     protected abstract runGetAll(userId: string): Promise<Either<UseCaseErrors<T>, T[]>>;

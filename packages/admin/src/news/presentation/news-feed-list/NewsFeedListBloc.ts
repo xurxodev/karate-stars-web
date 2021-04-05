@@ -1,11 +1,11 @@
 import { ListAction, ListField } from "../../../common/presentation/state/ListState";
-import { NewsFeedRawData } from "karate-stars-core";
+import { NewsFeedData } from "karate-stars-core";
 import GetNewsFeedsUseCase from "../../domain/GetNewsFeedsUseCase";
 import ListBloc, { defaultPagination } from "../../../common/presentation/bloc/ListBloc";
 import { pages } from "../../../common/presentation/PageRoutes";
 import DeleteNewsFeedsUseCase from "../../domain/DeleteNewsFeedsUseCase";
 
-class NewsFeedListBloc extends ListBloc<NewsFeedRawData> {
+class NewsFeedListBloc extends ListBloc<NewsFeedData> {
     constructor(
         private getNewsFeedsUseCase: GetNewsFeedsUseCase,
         private deleteNewsFeedsUseCase: DeleteNewsFeedsUseCase
@@ -82,7 +82,7 @@ class NewsFeedListBloc extends ListBloc<NewsFeedRawData> {
 
 export default NewsFeedListBloc;
 
-const fields: ListField<NewsFeedRawData>[] = [
+const fields: ListField<NewsFeedData>[] = [
     { name: "id", text: "Id", type: "text" },
     {
         name: "image",

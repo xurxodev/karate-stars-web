@@ -2,7 +2,7 @@ export * from "./competitor";
 export * from "./Category";
 export * from "./CategoryType";
 export * from "./Country";
-export * from "./Entity";
+export { Entity, EntityData } from "./Entity";
 export * from "./Event";
 export * from "./EventType";
 export * from "./NewsFeed";

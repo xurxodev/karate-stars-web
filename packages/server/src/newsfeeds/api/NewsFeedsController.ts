@@ -10,7 +10,7 @@ import {
     ValidationErrors,
 } from "../../common/api/Errors";
 import { DeleteNewsFeedUseCase } from "../domain/usecases/DeleteNewsFeedUseCase";
-import { NewsFeed, NewsFeedRawData, validationErrorMessages } from "karate-stars-core";
+import { NewsFeedData, validationErrorMessages } from "karate-stars-core";
 import { CreateNewsFeedUseCase } from "../domain/usecases/CreateNewsFeedUseCase";
 import { UpdateNewsFeedUseCase } from "../domain/usecases/UpdateNewsFeedUseCase";
 import { UpdateNewsFeedImageUseCase } from "../domain/usecases/UpdateNewsFeedImageUseCase";
@@ -80,7 +80,7 @@ export default class NewsFeedsController {
     ): Promise<hapi.Lifecycle.ReturnValue> {
         const { userId } = this.jwtAuthenticator.decodeTokenData(request.headers.authorization);
 
-        const payload = request.payload as NewsFeedRawData;
+        const payload = request.payload as NewsFeedData;
 
         if (payload) {
             const result = await this.createNewsFeedUseCase.execute({ userId, item: payload });
@@ -101,7 +101,7 @@ export default class NewsFeedsController {
         const { userId } = this.jwtAuthenticator.decodeTokenData(request.headers.authorization);
 
         const id = request.params.id;
-        const payload = request.payload as NewsFeedRawData;
+        const payload = request.payload as NewsFeedData;
 
         if (payload) {
             const result = await this.updateNewsFeedUseCase.execute({
@@ -154,7 +154,7 @@ export default class NewsFeedsController {
             | ResourceNotFoundError
             | UnexpectedError
             | ConflictError
-            | ValidationErrors<NewsFeed>
+            | ValidationErrors<NewsFeedData>
     ): hapi.Lifecycle.ReturnValue {
         switch (error.kind) {
             case "Unauthorized": {

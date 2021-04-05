@@ -1,6 +1,5 @@
 import * as http from "http";
 import * as jwt from "jsonwebtoken";
-import { Id } from "karate-stars-core";
 import * as CompositionRoot from "../../../CompositionRoot";
 import { names } from "../../../CompositionRoot";
 import { Server, JwtAuthenticator, TokenData } from "../../../server";
@@ -15,9 +14,9 @@ export const fakeAuthenticator: JwtAuthenticator = {
     validateTokenData: async (_tokenData: TokenData) => {
         return { isValid: true };
     },
-    generateToken: (userId: Id) => {
+    generateToken: (userId: string) => {
         const tokenData: TokenData = {
-            userId: userId.value,
+            userId: userId,
         };
 
         return jwt.sign(tokenData, fakeSecretKey, { expiresIn: "24h" });
@@ -27,7 +26,7 @@ export const fakeAuthenticator: JwtAuthenticator = {
     },
 };
 
-export const generateToken = (userId: Id) => fakeAuthenticator.generateToken(userId);
+export const generateToken = (userId: string) => fakeAuthenticator.generateToken(userId);
 
 beforeEach(() => {
     CompositionRoot.reset();

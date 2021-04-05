@@ -2,7 +2,6 @@ import * as boom from "@hapi/boom";
 import * as hapi from "@hapi/hapi";
 
 import { Maybe, UserData } from "karate-stars-core";
-import { UserAPI } from "./UserAPI";
 import { JwtAuthenticator } from "../../server";
 import GetUserByUsernameAndPasswordUseCase from "../domain/usecases/GetUserByUsernameAndPasswordUseCase";
 import GetUserByIdUseCase from "../domain/usecases/GetUserByIdUseCase";
@@ -22,7 +21,7 @@ export default class UserController {
                 .execute(credentials.username, credentials.password)
                 .then((result: Maybe<UserData>) => {
                     if (result.isDefined()) {
-                        const response = h.response(this.mapToAPI(result.get()));
+                        const response = h.response(result.get());
                         const token = this.jwtAuthenticator.generateToken(result.get().id);
                         response.header("Authorization", `Bearer ${token}`);
                         return response;
@@ -48,7 +47,7 @@ export default class UserController {
             .execute(userId)
             .then(result => {
                 if (result.isDefined()) {
-                    return h.response(this.mapToAPI(result.get()));
+                    return h.response(result.get());
                 } else {
                     return boom.unauthorized("Invalid credentials");
                 }
@@ -56,17 +55,5 @@ export default class UserController {
             .catch(() => {
                 return boom.unauthorized("Invalid credentials");
             });
-    }
-
-    private mapToAPI(user: UserData): UserAPI {
-        return {
-            id: user.id.value,
-            name: user.name,
-            image: user.image,
-            email: user.email.value,
-            password: user.password.value,
-            isAdmin: user.isAdmin,
-            isClientUser: user.isClientUser,
-        };
     }
 }

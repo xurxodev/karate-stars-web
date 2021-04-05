@@ -1,8 +1,8 @@
-import { Entity, EntityData, EntityRawData } from "./Entity";
+import { Entity, EntityObjectData, EntityData } from "./Entity";
 import { Email } from "../value-objects/Email";
 import { Password } from "../value-objects/Password";
 
-export interface UserData extends EntityData {
+interface UserObjectData extends EntityObjectData {
     name: string;
     image: string;
     email: Email;
@@ -11,7 +11,7 @@ export interface UserData extends EntityData {
     isClientUser: boolean;
 }
 
-export interface UserRawData extends EntityRawData {
+export interface UserData extends EntityData {
     name: string;
     image: string;
     email: string;
@@ -20,7 +20,7 @@ export interface UserRawData extends EntityRawData {
     isClientUser: boolean;
 }
 
-export class User extends Entity<UserRawData> implements UserData {
+export class User extends Entity<UserData> {
     public readonly name: string;
     public readonly image: string;
     public readonly email: Email;
@@ -28,7 +28,7 @@ export class User extends Entity<UserRawData> implements UserData {
     public readonly isAdmin: boolean;
     public readonly isClientUser: boolean;
 
-    constructor(data: UserData) {
+    constructor(data: UserObjectData) {
         super(data.id);
 
         this.name = data.name;
@@ -39,11 +39,12 @@ export class User extends Entity<UserRawData> implements UserData {
         this.isClientUser = data.isClientUser;
     }
 
-    public static createExisted(data: UserData) {
+    //TODO: change param to UserData
+    public static createExisted(data: UserObjectData) {
         return new User(data);
     }
 
-    toRawData(): UserRawData {
+    toData(): UserData {
         return {
             id: this.id.value,
             name: this.name,

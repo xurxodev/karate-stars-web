@@ -1,4 +1,4 @@
-import { Either, EitherAsync, NewsFeed, NewsFeedRawData } from "karate-stars-core";
+import { Either, EitherAsync, NewsFeed, NewsFeedData } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
 import { ConflictError, UnexpectedError, ValidationErrors } from "../../../common/api/Errors";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
@@ -6,10 +6,10 @@ import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import NewsFeedsRepository from "../boundaries/NewsFeedRepository";
 
 export interface CreateNewsFeedArg extends AdminUseCaseArgs {
-    item: NewsFeedRawData;
+    item: NewsFeedData;
 }
 
-type CreateNewsFeedError = ValidationErrors<NewsFeed> | UnexpectedError | ConflictError;
+type CreateNewsFeedError = ValidationErrors<NewsFeedData> | UnexpectedError | ConflictError;
 
 export class CreateNewsFeedUseCase extends AdminUseCase<
     CreateNewsFeedArg,
