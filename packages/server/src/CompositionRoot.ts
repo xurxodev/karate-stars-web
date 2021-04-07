@@ -29,8 +29,9 @@ import { GetEventTypeByIdUseCase } from "./event-types/domain/usecases/GetEventT
 import { CreateEventTypeUseCase } from "./event-types/domain/usecases/CreateEventTypeUseCase";
 import { UpdateEventTypeUseCase } from "./event-types/domain/usecases/UpdateEventTypeUseCase";
 import { DeleteEventTypeUseCase } from "./event-types/domain/usecases/DeleteEventTypeUseCase";
+import { initializeCategories } from "./categories/CategoriesDIModule";
 
-export const names = {
+export const appDIKeys = {
     jwtAuthenticator: "jwtAuthenticator",
     settingsRepository: "settingsRepository",
     newsFeedRepository: "newsFeedRepository",
@@ -46,6 +47,7 @@ export const di = DependencyLocator.getInstance();
 export function init() {
     initApp();
     initUser();
+    initializeCategories();
     initializeSettings();
     initializeNewsFeeds();
     initializeEventTypes();
@@ -69,7 +71,7 @@ function initApp() {
         return new MongoConector(mongoConnection);
     });
 
-    di.bindLazySingleton(names.jwtAuthenticator, () => {
+    di.bindLazySingleton(appDIKeys.jwtAuthenticator, () => {
         const jwtSecretKey = process.env.JWT_SECRET_KEY || "";
 
         return new JwtDefaultAuthenticator(jwtSecretKey, di.get(GetUserByIdUseCase));
@@ -78,37 +80,37 @@ function initApp() {
 
 function initializeSettings() {
     di.bindLazySingleton(
-        names.settingsRepository,
+        appDIKeys.settingsRepository,
         () => new SettingsMongoRepository(di.get(MongoConector))
     );
 
     di.bindLazySingleton(
         GetSettingsUseCase,
-        () => new GetSettingsUseCase(di.get(names.settingsRepository))
+        () => new GetSettingsUseCase(di.get(appDIKeys.settingsRepository))
     );
 }
 
 function initUser() {
     di.bindLazySingleton(
-        names.userRepository,
+        appDIKeys.userRepository,
         () => new UserMongoRepository(di.get(MongoConector))
     );
 
     di.bindLazySingleton(
         GetUserByUsernameAndPasswordUseCase,
-        () => new GetUserByUsernameAndPasswordUseCase(di.get(names.userRepository))
+        () => new GetUserByUsernameAndPasswordUseCase(di.get(appDIKeys.userRepository))
     );
 
     di.bindLazySingleton(
         GetUserByIdUseCase,
-        () => new GetUserByIdUseCase(di.get(names.userRepository))
+        () => new GetUserByIdUseCase(di.get(appDIKeys.userRepository))
     );
 
     di.bindFactory(
         UserController,
         () =>
             new UserController(
-                di.get(names.jwtAuthenticator),
+                di.get(appDIKeys.jwtAuthenticator),
                 di.get(GetUserByUsernameAndPasswordUseCase),
                 di.get(GetUserByIdUseCase)
             )
@@ -117,11 +119,11 @@ function initUser() {
 
 function initializeNewsFeeds() {
     di.bindLazySingleton(
-        names.newsFeedRepository,
+        appDIKeys.newsFeedRepository,
         () => new NewsFeedMongoRepository(di.get(MongoConector))
     );
 
-    di.bindLazySingleton(names.imageRepository, () => {
+    di.bindLazySingleton(appDIKeys.imageRepository, () => {
         const bucketName = process.env.FIREBASE_BUCKET_NAME || "";
         const projectId = process.env.FIREBASE_PROJECT_ID || "";
         const clientEmail = process.env.FIREBASE_CLIENT_EMAIL || "";
@@ -139,15 +141,18 @@ function initializeNewsFeeds() {
     di.bindLazySingleton(
         GetNewsFeedsUseCase,
         () =>
-            new GetNewsFeedsUseCase(di.get(names.newsFeedRepository), di.get(names.userRepository))
+            new GetNewsFeedsUseCase(
+                di.get(appDIKeys.newsFeedRepository),
+                di.get(appDIKeys.userRepository)
+            )
     );
 
     di.bindLazySingleton(
         GetNewsFeedByIdUseCase,
         () =>
             new GetNewsFeedByIdUseCase(
-                di.get(names.newsFeedRepository),
-                di.get(names.userRepository)
+                di.get(appDIKeys.newsFeedRepository),
+                di.get(appDIKeys.userRepository)
             )
     );
 
@@ -155,9 +160,9 @@ function initializeNewsFeeds() {
         DeleteNewsFeedUseCase,
         () =>
             new DeleteNewsFeedUseCase(
-                di.get(names.newsFeedRepository),
-                di.get(names.userRepository),
-                di.get(names.imageRepository)
+                di.get(appDIKeys.newsFeedRepository),
+                di.get(appDIKeys.userRepository),
+                di.get(appDIKeys.imageRepository)
             )
     );
 
@@ -165,8 +170,8 @@ function initializeNewsFeeds() {
         CreateNewsFeedUseCase,
         () =>
             new CreateNewsFeedUseCase(
-                di.get(names.newsFeedRepository),
-                di.get(names.userRepository)
+                di.get(appDIKeys.newsFeedRepository),
+                di.get(appDIKeys.userRepository)
             )
     );
 
@@ -174,8 +179,8 @@ function initializeNewsFeeds() {
         UpdateNewsFeedUseCase,
         () =>
             new UpdateNewsFeedUseCase(
-                di.get(names.newsFeedRepository),
-                di.get(names.userRepository)
+                di.get(appDIKeys.newsFeedRepository),
+                di.get(appDIKeys.userRepository)
             )
     );
 
@@ -183,9 +188,9 @@ function initializeNewsFeeds() {
         UpdateNewsFeedImageUseCase,
         () =>
             new UpdateNewsFeedImageUseCase(
-                di.get(names.newsFeedRepository),
-                di.get(names.userRepository),
-                di.get(names.imageRepository)
+                di.get(appDIKeys.newsFeedRepository),
+                di.get(appDIKeys.userRepository),
+                di.get(appDIKeys.imageRepository)
             )
     );
 
@@ -193,7 +198,7 @@ function initializeNewsFeeds() {
         NewsFeedsController,
         () =>
             new NewsFeedsController(
-                di.get(names.jwtAuthenticator),
+                di.get(appDIKeys.jwtAuthenticator),
                 di.get(GetNewsFeedsUseCase),
                 di.get(GetNewsFeedByIdUseCase),
                 di.get(CreateNewsFeedUseCase),
@@ -206,7 +211,7 @@ function initializeNewsFeeds() {
 
 function initializeEventTypes() {
     di.bindLazySingleton(
-        names.eventTypeRepository,
+        appDIKeys.eventTypeRepository,
         () => new EventTypeMongoRepository(di.get(MongoConector))
     );
 
@@ -214,8 +219,8 @@ function initializeEventTypes() {
         GetEventTypesUseCase,
         () =>
             new GetEventTypesUseCase(
-                di.get(names.eventTypeRepository),
-                di.get(names.userRepository)
+                di.get(appDIKeys.eventTypeRepository),
+                di.get(appDIKeys.userRepository)
             )
     );
 
@@ -223,8 +228,8 @@ function initializeEventTypes() {
         GetEventTypeByIdUseCase,
         () =>
             new GetEventTypeByIdUseCase(
-                di.get(names.eventTypeRepository),
-                di.get(names.userRepository)
+                di.get(appDIKeys.eventTypeRepository),
+                di.get(appDIKeys.userRepository)
             )
     );
 
@@ -232,8 +237,8 @@ function initializeEventTypes() {
         CreateEventTypeUseCase,
         () =>
             new CreateEventTypeUseCase(
-                di.get(names.eventTypeRepository),
-                di.get(names.userRepository)
+                di.get(appDIKeys.eventTypeRepository),
+                di.get(appDIKeys.userRepository)
             )
     );
 
@@ -241,8 +246,8 @@ function initializeEventTypes() {
         UpdateEventTypeUseCase,
         () =>
             new UpdateEventTypeUseCase(
-                di.get(names.eventTypeRepository),
-                di.get(names.userRepository)
+                di.get(appDIKeys.eventTypeRepository),
+                di.get(appDIKeys.userRepository)
             )
     );
 
@@ -250,8 +255,8 @@ function initializeEventTypes() {
         DeleteEventTypeUseCase,
         () =>
             new DeleteEventTypeUseCase(
-                di.get(names.eventTypeRepository),
-                di.get(names.userRepository)
+                di.get(appDIKeys.eventTypeRepository),
+                di.get(appDIKeys.userRepository)
             )
     );
 
@@ -259,7 +264,7 @@ function initializeEventTypes() {
         EventTypeController,
         () =>
             new EventTypeController(
-                di.get(names.jwtAuthenticator),
+                di.get(appDIKeys.jwtAuthenticator),
                 di.get(GetEventTypesUseCase),
                 di.get(GetEventTypeByIdUseCase),
                 di.get(CreateEventTypeUseCase),
@@ -270,7 +275,7 @@ function initializeEventTypes() {
 }
 
 function initializeSocialNews() {
-    di.bindLazySingleton(names.socialNewsRepository, () => {
+    di.bindLazySingleton(appDIKeys.socialNewsRepository, () => {
         const consumerkey = process.env.TWITTER_CONSUMER_KEY_PROP || "";
         const consumer_secret = process.env.TWITTER_CONSUMER_SECRET_PROP || "";
 
@@ -281,8 +286,8 @@ function initializeSocialNews() {
         GetSocialNewsUseCase,
         () =>
             new GetSocialNewsUseCase(
-                di.get(names.socialNewsRepository),
-                di.get(names.settingsRepository)
+                di.get(appDIKeys.socialNewsRepository),
+                di.get(appDIKeys.settingsRepository)
             )
     );
 
@@ -293,14 +298,14 @@ function initializeSocialNews() {
 }
 
 function initializeCurrentNews() {
-    di.bindLazySingleton(names.currentNewsRepository, () => new CurrentNewsRSSRepository());
+    di.bindLazySingleton(appDIKeys.currentNewsRepository, () => new CurrentNewsRSSRepository());
 
     di.bindLazySingleton(
         GetCurrentNewsUseCase,
         () =>
             new GetCurrentNewsUseCase(
-                di.get(names.currentNewsRepository),
-                di.get(names.newsFeedRepository)
+                di.get(appDIKeys.currentNewsRepository),
+                di.get(appDIKeys.newsFeedRepository)
             )
     );
 

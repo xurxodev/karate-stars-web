@@ -4,7 +4,7 @@ import * as jwt from "hapi-auth-jwt2";
 import * as inert from "@hapi/inert";
 import * as CompositionRoot from "./CompositionRoot";
 import * as http from "http";
-import { names } from "./CompositionRoot";
+import { appDIKeys } from "./CompositionRoot";
 
 export interface TokenData {
     userId: string;
@@ -28,7 +28,9 @@ export class Server {
         await this.server.register(jwt);
         await this.server.register(inert);
 
-        const jwtAuthenticator = CompositionRoot.di.get<JwtAuthenticator>(names.jwtAuthenticator);
+        const jwtAuthenticator = CompositionRoot.di.get<JwtAuthenticator>(
+            appDIKeys.jwtAuthenticator
+        );
 
         const validate = function (decoded, _request, _h) {
             return jwtAuthenticator.validateTokenData(decoded);

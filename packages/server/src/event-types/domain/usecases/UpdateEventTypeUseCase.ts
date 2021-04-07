@@ -1,52 +1,35 @@
-import { Either, EventTypeRawData } from "karate-stars-core";
+import { Either, EventType, EventTypeData, Id, ValidationError } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
-import {
-    ConflictError,
-    ResourceNotFoundError,
-    UnexpectedError,
-    ValidationErrors,
-} from "../../../common/api/Errors";
-import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
-import { createIdOrResourceNotFound } from "../../../common/domain/utils";
+import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
+import { UpdateResourceUseCase } from "../../../common/domain/UpdateResourceUseCase";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
-import EventTypesRepository from "../boundaries/EventTypeRepository";
+import EventTypeRepository from "../boundaries/EventTypeRepository";
 
-export interface UpdateEventTypeArg extends AdminUseCaseArgs {
-    itemId: string;
-    item: EventTypeRawData;
-}
-
-type UpdateEventTypeError =
-    | ConflictError
-    | ResourceNotFoundError
-    | UnexpectedError
-    | ValidationErrors<EventTypeRawData>;
-
-export class UpdateEventTypeUseCase extends AdminUseCase<
-    UpdateEventTypeArg,
-    UpdateEventTypeError,
-    ActionResult
-> {
-    constructor(
-        private EventTypesRepository: EventTypesRepository,
-        userRepository: UserRepository
-    ) {
+export class UpdateEventTypeUseCase extends UpdateResourceUseCase<EventTypeData, EventType> {
+    constructor(private eventRepository: EventTypeRepository, userRepository: UserRepository) {
         super(userRepository);
     }
 
-    public async run({
-        itemId,
-        item,
-    }: UpdateEventTypeArg): Promise<Either<UpdateEventTypeError, ActionResult>> {
-        return await createIdOrResourceNotFound<UpdateEventTypeError>(itemId)
-            .flatMap(async id => this.EventTypesRepository.getById(id))
-            .flatMap(async existedFeed =>
-                existedFeed.update(item).mapLeft(error => ({
-                    kind: "ValidationErrors",
-                    errors: error,
-                }))
-            )
-            .flatMap(entity => this.EventTypesRepository.save(entity))
-            .run();
+    protected createEntity(
+        data: EventTypeData
+    ): Either<ValidationError<EventTypeData>[], EventType> {
+        return EventType.create(data);
+    }
+
+    protected getEntityById(
+        id: Id
+    ): Promise<Either<UnexpectedError | ResourceNotFoundError, EventType>> {
+        return this.eventRepository.getById(id);
+    }
+
+    protected saveEntity(entity: EventType): Promise<Either<UnexpectedError, ActionResult>> {
+        return this.eventRepository.save(entity);
+    }
+
+    protected updateEntity(
+        data: EventTypeData,
+        entity: EventType
+    ): Either<ValidationError<EventTypeData>[], EventType> {
+        return entity.update(data);
     }
 }

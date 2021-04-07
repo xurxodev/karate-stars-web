@@ -2,11 +2,11 @@ import * as hapi from "@hapi/hapi";
 
 import * as CompositionRoot from "./../../CompositionRoot";
 import CurrentNewsController from "./CurrentNewsController";
-import { names } from "./../../CompositionRoot";
+import { appDIKeys } from "./../../CompositionRoot";
 import { JwtAuthenticator } from "../../server";
 
 export default function (apiPrefix: string): hapi.ServerRoute[] {
-    const jwtAuthenticator = CompositionRoot.di.get<JwtAuthenticator>(names.jwtAuthenticator);
+    const jwtAuthenticator = CompositionRoot.di.get<JwtAuthenticator>(appDIKeys.jwtAuthenticator);
 
     return [
         {

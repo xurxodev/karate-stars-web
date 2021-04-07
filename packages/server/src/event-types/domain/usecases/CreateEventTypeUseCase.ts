@@ -1,49 +1,28 @@
-import { Either, EitherAsync, EventType, EventTypeRawData } from "karate-stars-core";
+import { Either, EventType, EventTypeData, Id, ValidationError } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
-import { ConflictError, UnexpectedError, ValidationErrors } from "../../../common/api/Errors";
-import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
+import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
+import { CreateResourceUseCase } from "../../../common/domain/CreateResourceUseCase";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import EventTypeRepository from "../boundaries/EventTypeRepository";
 
-export interface CreateEventTypeArg extends AdminUseCaseArgs {
-    item: EventTypeRawData;
-}
-
-type CreateEventTypeError = ValidationErrors<EventTypeRawData> | UnexpectedError | ConflictError;
-
-export class CreateEventTypeUseCase extends AdminUseCase<
-    CreateEventTypeArg,
-    CreateEventTypeError,
-    ActionResult
-> {
-    constructor(private EventTypesRepository: EventTypeRepository, userRepository: UserRepository) {
+export class CreateEventTypeUseCase extends CreateResourceUseCase<EventTypeData, EventType> {
+    constructor(private eventTypeRepository: EventTypeRepository, userRepository: UserRepository) {
         super(userRepository);
     }
 
-    public async run({
-        item,
-    }: CreateEventTypeArg): Promise<Either<CreateEventTypeError, ActionResult>> {
-        return EitherAsync.fromEither(EventType.create(item))
-            .mapLeft(
-                error =>
-                    ({
-                        kind: "ValidationErrors",
-                        errors: error,
-                    } as CreateEventTypeError)
-            )
-            .flatMap(async entity => {
-                const existedItem = await this.EventTypesRepository.getById(entity.id);
+    protected createEntity(
+        data: EventTypeData
+    ): Either<ValidationError<EventTypeData>[], EventType> {
+        return EventType.create(data);
+    }
 
-                return existedItem.fold(
-                    () => Either.right<CreateEventTypeError, EventType>(entity),
-                    () =>
-                        Either.left<CreateEventTypeError, EventType>({
-                            kind: "ConflictError",
-                            message: "Already exist a news feed item with id " + entity.id.value,
-                        } as ConflictError)
-                );
-            })
-            .flatMap(entity => this.EventTypesRepository.save(entity))
-            .run();
+    protected getEntityById(
+        id: Id
+    ): Promise<Either<UnexpectedError | ResourceNotFoundError, EventType>> {
+        return this.eventTypeRepository.getById(id);
+    }
+
+    protected saveEntity(entity: EventType): Promise<Either<UnexpectedError, ActionResult>> {
+        return this.eventTypeRepository.save(entity);
     }
 }

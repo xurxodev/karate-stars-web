@@ -25,7 +25,7 @@ export class Category extends Entity<CategoryData> {
         this.typeId = data.typeId;
     }
 
-    public static create(data: CategoryData): Either<ValidationError<Category>[], Category> {
+    public static create(data: CategoryData): Either<ValidationError<CategoryData>[], Category> {
         const finalId = !data.id ? Id.generateId().value : data.id;
 
         return this.validateAndCreate({ ...data, id: finalId });
@@ -33,7 +33,7 @@ export class Category extends Entity<CategoryData> {
 
     public update(
         dataToUpdate: Partial<Omit<CategoryData, "id">>
-    ): Either<ValidationError<Category>[], Category> {
+    ): Either<ValidationError<CategoryData>[], Category> {
         const newData = { ...this.toData(), ...dataToUpdate };
 
         return Category.validateAndCreate(newData);
@@ -49,7 +49,7 @@ export class Category extends Entity<CategoryData> {
 
     private static validateAndCreate(
         data: CategoryData
-    ): Either<ValidationError<Category>[], Category> {
+    ): Either<ValidationError<CategoryData>[], Category> {
         const idResult = Id.createExisted(data.id);
         const typeIdResult = Id.createExisted(data.typeId);
 

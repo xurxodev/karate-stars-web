@@ -1,14 +1,15 @@
-import { Country } from "karate-stars-core";
-import CountryRepository from "../boundaries/CountryRepository";
+import { CountryData, Country } from "karate-stars-core";
+import { GetResourcesUseCase } from "../../../common/domain/GetResourcesUseCase";
+import UserRepository from "../../../users/domain/boundaries/UserRepository";
 
-export default class GetCountriesUseCase {
-    private repository: CountryRepository;
+import CountrysRepository from "../boundaries/CountryRepository";
 
-    constructor(resository: CountryRepository) {
-        this.repository = resository;
+export class GetCountriesUseCase extends GetResourcesUseCase<CountryData, Country> {
+    constructor(private CountryRepository: CountrysRepository, userRepository: UserRepository) {
+        super(userRepository);
     }
 
-    public execute(): Promise<Country[]> {
-        return this.repository.getAll();
+    protected getEntities(): Promise<Country[]> {
+        return this.CountryRepository.getAll();
     }
 }

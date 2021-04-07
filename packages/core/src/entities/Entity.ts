@@ -15,7 +15,7 @@ const isEntity = (v: any): v is Entity<any> => {
 export abstract class Entity<Data extends EntityData> implements EntityObjectData {
     constructor(public id: Id) {}
 
-    abstract toData(): Data;
+    public abstract toData(): Data;
 
     public equals(object?: Entity<Data>): boolean {
         if (object === null || object === undefined) {

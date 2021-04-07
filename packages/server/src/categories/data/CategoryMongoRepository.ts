@@ -11,7 +11,7 @@ export default class CategoryTypeMongoRepository
     extends MongoRepository<Category, CategoryDB>
     implements CategoryRepository {
     constructor(mongoConector: MongoConector) {
-        super(mongoConector, "categoryTypes");
+        super(mongoConector, "categories");
     }
 
     protected mapToDomain(modelDB: CategoryDB): Category {

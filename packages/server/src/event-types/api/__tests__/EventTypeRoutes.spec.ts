@@ -1,6 +1,6 @@
-import { EventType, EventTypeRawData, Id } from "karate-stars-core";
-import * as CompositionRoot from "../../../CompositionRoot";
+import { EventType, EventTypeData, Id } from "karate-stars-core";
 import { commonCRUDTests, DataCreator } from "../../../common/api/testUtils/crud.spec";
+import { appDIKeys } from "../../../CompositionRoot";
 import { eventTypesEndpoint } from "../EventTypeRoutes";
 
 const eventTypes = [
@@ -14,7 +14,7 @@ const eventTypes = [
     }).get(),
 ];
 
-const eventTypeCreator: DataCreator<EventTypeRawData, EventType> = {
+const eventTypeCreator: DataCreator<EventTypeData, EventType> = {
     givenAInitialItems: () => {
         return eventTypes;
     },
@@ -28,12 +28,12 @@ const eventTypeCreator: DataCreator<EventTypeRawData, EventType> = {
             name: "",
         };
     },
-    givenAValidModifiedItem: (): EventTypeRawData => {
+    givenAValidModifiedItem: (): EventTypeData => {
         return { ...eventTypes[0].toData(), name: eventTypes[0].name + "modified" };
     },
-    givenAInvalidModifiedItem: (): EventTypeRawData => {
+    givenAInvalidModifiedItem: (): EventTypeData => {
         return { ...eventTypes[0].toData(), name: "" };
     },
 };
 
-commonCRUDTests(eventTypesEndpoint, CompositionRoot.names.eventTypeRepository, eventTypeCreator);
+commonCRUDTests(eventTypesEndpoint, appDIKeys.eventTypeRepository, eventTypeCreator);

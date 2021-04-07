@@ -1,11 +1,11 @@
-import { EventType, EventTypeRawData } from "karate-stars-core";
+import { EventType, EventTypeData } from "karate-stars-core";
 import { MongoConector } from "../../common/data/MongoConector";
 import { MongoCollection } from "../../common/data/Types";
 import EventTypeRepository from "../domain/boundaries/EventTypeRepository";
 import MongoRepository from "../../common/data/MongoRepository";
 import { renameProp } from "../../common/data/utils";
 
-type EventTypeDB = Omit<EventTypeRawData, "id"> & MongoCollection;
+type EventTypeDB = Omit<EventTypeData, "id"> & MongoCollection;
 
 export default class EventTypeMongoRepository
     extends MongoRepository<EventType, EventTypeDB>

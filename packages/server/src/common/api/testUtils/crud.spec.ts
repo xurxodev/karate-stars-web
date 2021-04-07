@@ -27,7 +27,7 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
         );
 
         CompositionRoot.di.bindLazySingleton(
-            CompositionRoot.names.imageRepository,
+            CompositionRoot.appDIKeys.imageRepository,
             () => new FakeImageRepository()
         );
 
@@ -46,7 +46,7 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
         });
 
         CompositionRoot.di.bindLazySingleton(
-            CompositionRoot.names.userRepository,
+            CompositionRoot.appDIKeys.userRepository,
             () => new FakeUserRepository([user])
         );
 

@@ -1,7 +1,7 @@
 import * as http from "http";
 import * as jwt from "jsonwebtoken";
 import * as CompositionRoot from "../../../CompositionRoot";
-import { names } from "../../../CompositionRoot";
+import { appDIKeys } from "../../../CompositionRoot";
 import { Server, JwtAuthenticator, TokenData } from "../../../server";
 
 let server: Server;
@@ -30,7 +30,7 @@ export const generateToken = (userId: string) => fakeAuthenticator.generateToken
 
 beforeEach(() => {
     CompositionRoot.reset();
-    CompositionRoot.di.bindLazySingleton(names.jwtAuthenticator, () => fakeAuthenticator);
+    CompositionRoot.di.bindLazySingleton(appDIKeys.jwtAuthenticator, () => fakeAuthenticator);
 });
 
 afterEach(() => {

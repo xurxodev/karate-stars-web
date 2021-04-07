@@ -1,30 +1,69 @@
 import * as hapi from "@hapi/hapi";
 
 import * as CompositionRoot from "../../CompositionRoot";
-import CategoryRepository from "../data/CategoryJsonRepository";
-import GetCategoriesUseCase from "../domain/usecases/GetCategoriesUseCase";
-import CategoryController from "./CategoryController";
-import { names } from "../../CompositionRoot";
+import { appDIKeys } from "../../CompositionRoot";
 import { JwtAuthenticator } from "../../server";
+import { CategoryController } from "./CategoryController";
+
+export const CategorysEndpoint = "categories";
 
 export default function (apiPrefix: string): hapi.ServerRoute[] {
-    const jwtAuthenticator = CompositionRoot.di.get<JwtAuthenticator>(names.jwtAuthenticator);
-    const categoryRepository = new CategoryRepository();
-    const getCategoriesUseCase = new GetCategoriesUseCase(categoryRepository);
-    const categoryController = new CategoryController(getCategoriesUseCase);
+    const jwtAuthenticator = CompositionRoot.di.get<JwtAuthenticator>(appDIKeys.jwtAuthenticator);
 
     return [
         {
             method: "GET",
-            path: `${apiPrefix}/categories`,
-            options: {
-                auth: jwtAuthenticator.name,
-            },
+            path: `${apiPrefix}/${CategorysEndpoint}`,
+            options: { auth: jwtAuthenticator.name },
             handler: (
                 request: hapi.Request,
                 h: hapi.ResponseToolkit
             ): hapi.Lifecycle.ReturnValue => {
-                return categoryController.get(request, h);
+                return CompositionRoot.di.get(CategoryController).getAll(request, h);
+            },
+        },
+        {
+            method: "GET",
+            path: `${apiPrefix}/${CategorysEndpoint}/{id}`,
+            options: { auth: jwtAuthenticator.name },
+            handler: (
+                request: hapi.Request,
+                h: hapi.ResponseToolkit
+            ): hapi.Lifecycle.ReturnValue => {
+                return CompositionRoot.di.get(CategoryController).get(request, h);
+            },
+        },
+        {
+            method: "POST",
+            path: `${apiPrefix}/${CategorysEndpoint}`,
+            options: { auth: jwtAuthenticator.name },
+            handler: (
+                request: hapi.Request,
+                h: hapi.ResponseToolkit
+            ): hapi.Lifecycle.ReturnValue => {
+                return CompositionRoot.di.get(CategoryController).post(request, h);
+            },
+        },
+        {
+            method: "PUT",
+            path: `${apiPrefix}/${CategorysEndpoint}/{id}`,
+            options: { auth: jwtAuthenticator.name },
+            handler: (
+                request: hapi.Request,
+                h: hapi.ResponseToolkit
+            ): hapi.Lifecycle.ReturnValue => {
+                return CompositionRoot.di.get(CategoryController).put(request, h);
+            },
+        },
+        {
+            method: "DELETE",
+            path: `${apiPrefix}/${CategorysEndpoint}/{id}`,
+            options: { auth: jwtAuthenticator.name },
+            handler: (
+                request: hapi.Request,
+                h: hapi.ResponseToolkit
+            ): hapi.Lifecycle.ReturnValue => {
+                return CompositionRoot.di.get(CategoryController).delete(request, h);
             },
         },
     ];

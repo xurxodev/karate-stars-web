@@ -1,6 +1,6 @@
 import { Id, NewsFeed, NewsFeedData } from "karate-stars-core";
-import * as CompositionRoot from "../../../CompositionRoot";
 import { commonCRUDTests, DataCreator } from "../../../common/api/testUtils/crud.spec";
+import { appDIKeys } from "../../../CompositionRoot";
 
 const newsFeeds = [
     NewsFeed.create({
@@ -46,4 +46,4 @@ const newsFeedCreator: DataCreator<NewsFeedData, NewsFeed> = {
     },
 };
 
-commonCRUDTests("news-feeds", CompositionRoot.names.newsFeedRepository, newsFeedCreator);
+commonCRUDTests("news-feeds", appDIKeys.newsFeedRepository, newsFeedCreator);
