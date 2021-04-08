@@ -4,7 +4,7 @@ import UserRepository from "../../../users/domain/boundaries/UserRepository";
 
 import CategoryTypesRepository from "../boundaries/CategoryTypeRepository";
 
-export class GetCategoriesUseCase extends GetResourcesUseCase<CategoryTypeData, CategoryType> {
+export class GetCategoryTypesUseCase extends GetResourcesUseCase<CategoryTypeData, CategoryType> {
     constructor(
         private CategoryTypeRepository: CategoryTypesRepository,
         userRepository: UserRepository

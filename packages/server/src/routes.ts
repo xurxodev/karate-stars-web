@@ -2,6 +2,7 @@ import * as hapi from "@hapi/hapi";
 import * as Path from "path";
 
 import categoryRoutes from "./categories/api/CategoryRoutes";
+import categoryTypeRoutes from "./category-types/api/CategoryTypeRoutes";
 import competitorRoutes from "./competitors/api/CompetitorRoutes";
 import countryRoutes from "./countries/api/CountryRoutes";
 import currentNewsRoutes from "./currentnews/api/CurrentNewsRoutes";
@@ -55,6 +56,7 @@ const initializeRoutes = (server: hapi.Server) => {
                 },
             },
         },
+        ...categoryTypeRoutes(apiPrefix),
         ...userRoutes(apiPrefix),
         ...socialNewsRoutes(apiPrefix),
         ...currentNewsRoutes(apiPrefix),

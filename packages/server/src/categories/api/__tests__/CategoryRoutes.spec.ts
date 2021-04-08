@@ -1,7 +1,7 @@
 import { Category, CategoryData, Id } from "karate-stars-core";
 import { commonCRUDTests, DataCreator } from "../../../common/api/testUtils/crud.spec";
 import { CategorysEndpoint } from "../CategoryRoutes";
-import { categoryDIKeys } from "../../CategoriesDIModule";
+import { categoryDIKeys } from "../../CategoryDIModule";
 
 const Categories = [
     Category.create({
