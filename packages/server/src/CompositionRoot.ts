@@ -22,16 +22,12 @@ import { ImageFirebaseStorageRepository } from "./images/data/ImageFirebaseStora
 import GetCurrentNewsUseCase from "./currentnews/domain/usecases/GetCurrentNewsUseCase";
 import NewsFeedsController from "./newsfeeds/api/NewsFeedsController";
 import SocialNewsController from "./socialnews/api/SocialNewsController";
-import EventTypeMongoRepository from "./event-types/data/EventTypeMongoRepository";
-import { GetEventTypesUseCase } from "./event-types/domain/usecases/GetEventTypesUseCase";
-import { EventTypeController } from "./event-types/api/EventTypeController";
-import { GetEventTypeByIdUseCase } from "./event-types/domain/usecases/GetEventTypeByIdUseCase";
-import { CreateEventTypeUseCase } from "./event-types/domain/usecases/CreateEventTypeUseCase";
-import { UpdateEventTypeUseCase } from "./event-types/domain/usecases/UpdateEventTypeUseCase";
-import { DeleteEventTypeUseCase } from "./event-types/domain/usecases/DeleteEventTypeUseCase";
 import { initializeCategories } from "./categories/CategoryDIModule";
 import { initializeCategoryTypes } from "./category-types/CategoryTypeDIModule";
 import { initializeCompetitors } from "./competitors/CompetitorDIModule";
+import { initializeEventTypes } from "./event-types/EventTypeDIModule";
+import { initializeEvents } from "./events/EventDIModule";
+import { initializeCountries } from "./countries/CountryDIModule";
 
 export const appDIKeys = {
     jwtAuthenticator: "jwtAuthenticator",
@@ -51,10 +47,12 @@ export function init() {
     initUser();
     initializeCategories();
     initializeCategoryTypes();
+    initializeCountries();
+    initializeEvents();
+    initializeEventTypes();
     initializeCompetitors();
     initializeSettings();
     initializeNewsFeeds();
-    initializeEventTypes();
     initializeSocialNews();
     initializeCurrentNews();
 }
@@ -209,71 +207,6 @@ function initializeNewsFeeds() {
                 di.get(UpdateNewsFeedUseCase),
                 di.get(UpdateNewsFeedImageUseCase),
                 di.get(DeleteNewsFeedUseCase)
-            )
-    );
-}
-
-function initializeEventTypes() {
-    di.bindLazySingleton(
-        appDIKeys.eventTypeRepository,
-        () => new EventTypeMongoRepository(di.get(MongoConector))
-    );
-
-    di.bindLazySingleton(
-        GetEventTypesUseCase,
-        () =>
-            new GetEventTypesUseCase(
-                di.get(appDIKeys.eventTypeRepository),
-                di.get(appDIKeys.userRepository)
-            )
-    );
-
-    di.bindLazySingleton(
-        GetEventTypeByIdUseCase,
-        () =>
-            new GetEventTypeByIdUseCase(
-                di.get(appDIKeys.eventTypeRepository),
-                di.get(appDIKeys.userRepository)
-            )
-    );
-
-    di.bindLazySingleton(
-        CreateEventTypeUseCase,
-        () =>
-            new CreateEventTypeUseCase(
-                di.get(appDIKeys.eventTypeRepository),
-                di.get(appDIKeys.userRepository)
-            )
-    );
-
-    di.bindLazySingleton(
-        UpdateEventTypeUseCase,
-        () =>
-            new UpdateEventTypeUseCase(
-                di.get(appDIKeys.eventTypeRepository),
-                di.get(appDIKeys.userRepository)
-            )
-    );
-
-    di.bindLazySingleton(
-        DeleteEventTypeUseCase,
-        () =>
-            new DeleteEventTypeUseCase(
-                di.get(appDIKeys.eventTypeRepository),
-                di.get(appDIKeys.userRepository)
-            )
-    );
-
-    di.bindFactory(
-        EventTypeController,
-        () =>
-            new EventTypeController(
-                di.get(appDIKeys.jwtAuthenticator),
-                di.get(GetEventTypesUseCase),
-                di.get(GetEventTypeByIdUseCase),
-                di.get(CreateEventTypeUseCase),
-                di.get(UpdateEventTypeUseCase),
-                di.get(DeleteEventTypeUseCase)
             )
     );
 }

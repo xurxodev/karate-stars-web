@@ -1,33 +1,32 @@
-import { Either, Event, EventData, Id, ValidationError } from "karate-stars-core";
+import { Either, EventData, Event, Id } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
-import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
-import { UpdateResourceUseCase } from "../../../common/domain/UpdateResourceUseCase";
+import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
+import { updateResource, UpdateResourceError } from "../../../common/domain/UpdateResourceUseCase";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
-import EventsRepository from "../boundaries/EventRepository";
+import EventRepository from "../boundaries/EventRepository";
 
-export class UpdateEventUseCase extends UpdateResourceUseCase<EventData, Event> {
-    constructor(private eventRepository: EventsRepository, userRepository: UserRepository) {
+export interface UpdateResourceArgs extends AdminUseCaseArgs {
+    id: string;
+    data: EventData;
+}
+
+export class UpdateEventUseCase extends AdminUseCase<
+    UpdateResourceArgs,
+    UpdateResourceError<EventData>,
+    ActionResult
+> {
+    constructor(private eventRepository: EventRepository, userRepository: UserRepository) {
         super(userRepository);
     }
 
-    protected createEntity(data: EventData): Either<ValidationError<EventData>[], Event> {
-        return Event.create(data);
-    }
+    protected run({
+        id,
+        data,
+    }: UpdateResourceArgs): Promise<Either<UpdateResourceError<EventData>, ActionResult>> {
+        const updateEntity = (data: EventData, entity: Event) => entity.update(data);
+        const getById = (id: Id) => this.eventRepository.getById(id);
+        const saveEntity = (entity: Event) => this.eventRepository.save(entity);
 
-    protected getEntityById(
-        id: Id
-    ): Promise<Either<UnexpectedError | ResourceNotFoundError, Event>> {
-        return this.eventRepository.getById(id);
-    }
-
-    protected saveEntity(entity: Event): Promise<Either<UnexpectedError, ActionResult>> {
-        return this.eventRepository.save(entity);
-    }
-
-    protected updateEntity(
-        data: EventData,
-        entity: Event
-    ): Either<ValidationError<EventData>[], Event> {
-        return entity.update(data);
+        return updateResource(id, data, getById, updateEntity, saveEntity);
     }
 }

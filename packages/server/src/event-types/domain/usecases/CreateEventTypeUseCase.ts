@@ -1,28 +1,30 @@
-import { Either, EventType, EventTypeData, Id, ValidationError } from "karate-stars-core";
+import { Either, EventTypeData, EventType, Id } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
-import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
-import { CreateResourceUseCase } from "../../../common/domain/CreateResourceUseCase";
+import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
+import { createResource, CreateResourceError } from "../../../common/domain/CreateResourceUseCase";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import EventTypeRepository from "../boundaries/EventTypeRepository";
 
-export class CreateEventTypeUseCase extends CreateResourceUseCase<EventTypeData, EventType> {
-    constructor(private eventTypeRepository: EventTypeRepository, userRepository: UserRepository) {
+export interface CreateResourceArgs extends AdminUseCaseArgs {
+    data: EventTypeData;
+}
+
+export class CreateEventTypeUseCase extends AdminUseCase<
+    CreateResourceArgs,
+    CreateResourceError<EventTypeData>,
+    ActionResult
+> {
+    constructor(private EventTypeRepository: EventTypeRepository, userRepository: UserRepository) {
         super(userRepository);
     }
 
-    protected createEntity(
-        data: EventTypeData
-    ): Either<ValidationError<EventTypeData>[], EventType> {
-        return EventType.create(data);
-    }
+    protected run({
+        data,
+    }: CreateResourceArgs): Promise<Either<CreateResourceError<EventTypeData>, ActionResult>> {
+        const createEntity = (data: EventTypeData) => EventType.create(data);
+        const getById = (id: Id) => this.EventTypeRepository.getById(id);
+        const saveEntity = (entity: EventType) => this.EventTypeRepository.save(entity);
 
-    protected getEntityById(
-        id: Id
-    ): Promise<Either<UnexpectedError | ResourceNotFoundError, EventType>> {
-        return this.eventTypeRepository.getById(id);
-    }
-
-    protected saveEntity(entity: EventType): Promise<Either<UnexpectedError, ActionResult>> {
-        return this.eventTypeRepository.save(entity);
+        return createResource(data, createEntity, getById, saveEntity);
     }
 }

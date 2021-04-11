@@ -1,15 +1,22 @@
-import { CountryData, Country } from "karate-stars-core";
-import { GetResourcesUseCase } from "../../../common/domain/GetResourcesUseCase";
+import { Either, CountryData } from "karate-stars-core";
+import { UnexpectedError } from "../../../common/api/Errors";
+import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 
-import CountrysRepository from "../boundaries/CountryRepository";
+import CountryRepository from "../boundaries/CountryRepository";
 
-export class GetCountriesUseCase extends GetResourcesUseCase<CountryData, Country> {
-    constructor(private CountryRepository: CountrysRepository, userRepository: UserRepository) {
+export class GetCountriesUseCase extends AdminUseCase<
+    AdminUseCaseArgs,
+    UnexpectedError,
+    CountryData[]
+> {
+    constructor(private countryRepository: CountryRepository, userRepository: UserRepository) {
         super(userRepository);
     }
 
-    protected getEntities(): Promise<Country[]> {
-        return this.CountryRepository.getAll();
+    public async run(_: AdminUseCaseArgs): Promise<Either<UnexpectedError, CountryData[]>> {
+        const categories = await this.countryRepository.getAll();
+
+        return Either.right(categories.map(entity => entity.toData()));
     }
 }

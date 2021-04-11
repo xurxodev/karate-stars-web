@@ -1,33 +1,33 @@
-import { Either, Country, CountryData, Id, ValidationError } from "karate-stars-core";
+import { Either, CountryData, Country, Id } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
-import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
-import { UpdateResourceUseCase } from "../../../common/domain/UpdateResourceUseCase";
+import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
+import { updateResource, UpdateResourceError } from "../../../common/domain/UpdateResourceUseCase";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
-import CountrysRepository from "../boundaries/CountryRepository";
+import CountryRepository from "../boundaries/CountryRepository";
 
-export class UpdateCountryUseCase extends UpdateResourceUseCase<CountryData, Country> {
-    constructor(private CountryRepository: CountrysRepository, userRepository: UserRepository) {
+export interface UpdateResourceArgs extends AdminUseCaseArgs {
+    id: string;
+    data: CountryData;
+}
+
+export class UpdateCountryUseCase extends AdminUseCase<
+    UpdateResourceArgs,
+    UpdateResourceError<CountryData>,
+    ActionResult
+> {
+    constructor(private countryRepository: CountryRepository, userRepository: UserRepository) {
         super(userRepository);
     }
 
-    protected createEntity(data: CountryData): Either<ValidationError<CountryData>[], Country> {
-        return Country.create(data);
-    }
+    protected run({
+        id,
+        data,
+    }: UpdateResourceArgs): Promise<Either<UpdateResourceError<CountryData>, ActionResult>> {
+        const updateEntity = (data: CountryData, entity: Country) => entity.update(data);
+        ``;
+        const getById = (id: Id) => this.countryRepository.getById(id);
+        const saveEntity = (entity: Country) => this.countryRepository.save(entity);
 
-    protected getEntityById(
-        id: Id
-    ): Promise<Either<UnexpectedError | ResourceNotFoundError, Country>> {
-        return this.CountryRepository.getById(id);
-    }
-
-    protected saveEntity(entity: Country): Promise<Either<UnexpectedError, ActionResult>> {
-        return this.CountryRepository.save(entity);
-    }
-
-    protected updateEntity(
-        data: CountryData,
-        entity: Country
-    ): Either<ValidationError<CountryData>[], Country> {
-        return entity.update(data);
+        return updateResource(id, data, getById, updateEntity, saveEntity);
     }
 }

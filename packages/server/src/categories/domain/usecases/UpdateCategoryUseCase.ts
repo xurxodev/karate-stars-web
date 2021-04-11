@@ -24,6 +24,7 @@ export class UpdateCategoryUseCase extends AdminUseCase<
         data,
     }: UpdateResourceArgs): Promise<Either<UpdateResourceError<CategoryData>, ActionResult>> {
         const updateEntity = (data: CategoryData, entity: Category) => entity.update(data);
+        ``;
         const getById = (id: Id) => this.categoryRepository.getById(id);
         const saveEntity = (entity: Category) => this.categoryRepository.save(entity);
 

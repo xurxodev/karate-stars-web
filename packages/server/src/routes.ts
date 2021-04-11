@@ -6,11 +6,12 @@ import categoryTypeRoutes from "./category-types/api/CategoryTypeRoutes";
 import competitorRoutes from "./competitors/api/CompetitorRoutes";
 import countryRoutes from "./countries/api/CountryRoutes";
 import currentNewsRoutes from "./currentnews/api/CurrentNewsRoutes";
-import NewsFeedsRoutes from "./newsfeeds/api/NewsFeedsRoutes";
+import newsFeedsRoutes from "./newsfeeds/api/NewsFeedsRoutes";
 import socialNewsRoutes from "./socialnews/api/SocialNewsRoutes";
 import userRoutes from "./users/api/UserRoutes";
 import videoRoutes from "./videos/api/VideoRoutes";
 import eventTypeRoutes from "./event-types/api/EventTypeRoutes";
+import eventRoutes from "./events/api/EventRoutes";
 
 const initializeRoutes = (server: hapi.Server) => {
     const apiPrefix = "/api/v1";
@@ -56,16 +57,17 @@ const initializeRoutes = (server: hapi.Server) => {
                 },
             },
         },
+        ...categoryRoutes(apiPrefix),
         ...categoryTypeRoutes(apiPrefix),
+        ...competitorRoutes(apiPrefix),
+        ...countryRoutes(apiPrefix),
+        ...eventRoutes(apiPrefix),
+        ...eventTypeRoutes(apiPrefix),
+        ...videoRoutes(apiPrefix),
+        ...newsFeedsRoutes(apiPrefix),
         ...userRoutes(apiPrefix),
         ...socialNewsRoutes(apiPrefix),
         ...currentNewsRoutes(apiPrefix),
-        ...competitorRoutes(apiPrefix),
-        ...countryRoutes(apiPrefix),
-        ...categoryRoutes(apiPrefix),
-        ...videoRoutes(apiPrefix),
-        ...NewsFeedsRoutes(apiPrefix),
-        ...eventTypeRoutes(apiPrefix),
     ];
 
     allRoutes.forEach(route => {

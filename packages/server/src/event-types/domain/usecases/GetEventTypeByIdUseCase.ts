@@ -1,17 +1,33 @@
-import { Either, EventTypeData, EventType, Id } from "karate-stars-core";
+import { Either, EventTypeData } from "karate-stars-core";
 import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
-import { GetResourceByIdUseCase } from "../../../common/domain/GetResourceByIdUseCase";
+import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
+import { createIdOrResourceNotFound } from "../../../common/domain/utils";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
-import EventTypesRepository from "../boundaries/EventTypeRepository";
+import EventTypeRepository from "../boundaries/EventTypeRepository";
 
-export class GetEventTypeByIdUseCase extends GetResourceByIdUseCase<EventTypeData, EventType> {
-    constructor(private eventTypeRepository: EventTypesRepository, userRepository: UserRepository) {
+export interface GetEventTypeByIdArg extends AdminUseCaseArgs {
+    id: string;
+}
+
+type GetEventTypeByIdError = ResourceNotFoundError | UnexpectedError;
+
+export class GetEventTypeByIdUseCase extends AdminUseCase<
+    GetEventTypeByIdArg,
+    GetEventTypeByIdError,
+    EventTypeData
+> {
+    constructor(private EventTypeRepository: EventTypeRepository, userRepository: UserRepository) {
         super(userRepository);
     }
 
-    protected getEntityById(
-        id: Id
-    ): Promise<Either<ResourceNotFoundError | UnexpectedError, EventType>> {
-        return this.eventTypeRepository.getById(id);
+    public async run({
+        id,
+    }: GetEventTypeByIdArg): Promise<Either<GetEventTypeByIdError, EventTypeData>> {
+        const result = await createIdOrResourceNotFound<GetEventTypeByIdError>(id)
+            .flatMap(id => this.EventTypeRepository.getById(id))
+            .map(entity => entity.toData())
+            .run();
+
+        return result;
     }
 }

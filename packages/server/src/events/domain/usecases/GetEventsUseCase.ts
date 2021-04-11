@@ -1,15 +1,18 @@
-import { EventData, Event } from "karate-stars-core";
-import { GetResourcesUseCase } from "../../../common/domain/GetResourcesUseCase";
+import { Either, EventData } from "karate-stars-core";
+import { UnexpectedError } from "../../../common/api/Errors";
+import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 
-import EventsRepository from "../boundaries/EventRepository";
+import EventRepository from "../boundaries/EventRepository";
 
-export class GetEventsUseCase extends GetResourcesUseCase<EventData, Event> {
-    constructor(private eventRepository: EventsRepository, userRepository: UserRepository) {
+export class GetEventsUseCase extends AdminUseCase<AdminUseCaseArgs, UnexpectedError, EventData[]> {
+    constructor(private eventRepository: EventRepository, userRepository: UserRepository) {
         super(userRepository);
     }
 
-    protected getEntities(): Promise<Event[]> {
-        return this.eventRepository.getAll();
+    public async run(_: AdminUseCaseArgs): Promise<Either<UnexpectedError, EventData[]>> {
+        const Events = await this.eventRepository.getAll();
+
+        return Either.right(Events.map(entity => entity.toData()));
     }
 }

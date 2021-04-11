@@ -1,26 +1,30 @@
-import { Either, Event, EventData, Id, ValidationError } from "karate-stars-core";
+import { Either, EventData, Event, Id } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
-import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
-import { CreateResourceUseCase } from "../../../common/domain/CreateResourceUseCase";
+import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
+import { createResource, CreateResourceError } from "../../../common/domain/CreateResourceUseCase";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import EventRepository from "../boundaries/EventRepository";
 
-export class CreateEventUseCase extends CreateResourceUseCase<EventData, Event> {
+export interface CreateResourceArgs extends AdminUseCaseArgs {
+    data: EventData;
+}
+
+export class CreateEventUseCase extends AdminUseCase<
+    CreateResourceArgs,
+    CreateResourceError<EventData>,
+    ActionResult
+> {
     constructor(private eventRepository: EventRepository, userRepository: UserRepository) {
         super(userRepository);
     }
 
-    protected createEntity(data: EventData): Either<ValidationError<EventData>[], Event> {
-        return Event.create(data);
-    }
+    protected run({
+        data,
+    }: CreateResourceArgs): Promise<Either<CreateResourceError<EventData>, ActionResult>> {
+        const createEntity = (data: EventData) => Event.create(data);
+        const getById = (id: Id) => this.eventRepository.getById(id);
+        const saveEntity = (entity: Event) => this.eventRepository.save(entity);
 
-    protected getEntityById(
-        id: Id
-    ): Promise<Either<UnexpectedError | ResourceNotFoundError, Event>> {
-        return this.eventRepository.getById(id);
-    }
-
-    protected saveEntity(entity: Event): Promise<Either<UnexpectedError, ActionResult>> {
-        return this.eventRepository.save(entity);
+        return createResource(data, createEntity, getById, saveEntity);
     }
 }

@@ -1,57 +1,63 @@
 import { GetEventTypesUseCase } from "../domain/usecases/GetEventTypesUseCase";
 import { JwtAuthenticator } from "../../server";
-import { Either, EventTypeData } from "karate-stars-core";
-import { AdminController, UseCaseErrors } from "../../common/api/AdminController";
+import { EventTypeData } from "karate-stars-core";
+import { runDelete, runGet, runGetAll, runPost, runPut } from "../../common/api/AdminController";
 import { GetEventTypeByIdUseCase } from "../domain/usecases/GetEventTypeByIdUseCase";
 import { CreateEventTypeUseCase } from "../domain/usecases/CreateEventTypeUseCase";
-import { ActionResult } from "../../common/api/ActionResult";
 import { UpdateEventTypeUseCase } from "../domain/usecases/UpdateEventTypeUseCase";
 import { DeleteEventTypeUseCase } from "../domain/usecases/DeleteEventTypeUseCase";
+import * as hapi from "@hapi/hapi";
 
-export class EventTypeController extends AdminController<EventTypeData> {
+export class EventTypeController {
     constructor(
-        jwtAuthenticator: JwtAuthenticator,
+        private jwtAuthenticator: JwtAuthenticator,
         private getEventTypesUseCase: GetEventTypesUseCase,
         private getEventTypeByIdUseCase: GetEventTypeByIdUseCase,
         private createEventTypeUseCase: CreateEventTypeUseCase,
         private updateEventTypeUseCase: UpdateEventTypeUseCase,
         private deleteEventTypeUseCase: DeleteEventTypeUseCase
-    ) {
-        super(jwtAuthenticator);
+    ) {}
+
+    async getAll(
+        request: hapi.Request,
+        h: hapi.ResponseToolkit
+    ): Promise<hapi.Lifecycle.ReturnValue> {
+        return runGetAll(request, h, this.jwtAuthenticator, userId =>
+            this.getEventTypesUseCase.execute({ userId })
+        );
     }
 
-    protected runGetAll(
-        userId: any
-    ): Promise<Either<UseCaseErrors<EventTypeData>, EventTypeData[]>> {
-        return this.getEventTypesUseCase.execute({ userId });
+    async get(request: hapi.Request, h: hapi.ResponseToolkit): Promise<hapi.Lifecycle.ReturnValue> {
+        return runGet(request, h, this.jwtAuthenticator, (userId: string, id: string) =>
+            this.getEventTypeByIdUseCase.execute({ userId, id })
+        );
     }
 
-    protected runGet(
-        userId: any,
-        id: string
-    ): Promise<Either<UseCaseErrors<EventTypeData>, EventTypeData>> {
-        return this.getEventTypeByIdUseCase.execute({ userId, id });
+    async post(
+        request: hapi.Request,
+        h: hapi.ResponseToolkit
+    ): Promise<hapi.Lifecycle.ReturnValue> {
+        return runPost(request, h, this.jwtAuthenticator, (userId: string, data: EventTypeData) =>
+            this.createEventTypeUseCase.execute({ userId, data })
+        );
     }
 
-    protected runPost(
-        userId: string,
-        data: EventTypeData
-    ): Promise<Either<UseCaseErrors<EventTypeData>, ActionResult>> {
-        return this.createEventTypeUseCase.execute({ userId, data });
+    async put(request: hapi.Request, h: hapi.ResponseToolkit): Promise<hapi.Lifecycle.ReturnValue> {
+        return runPut(
+            request,
+            h,
+            this.jwtAuthenticator,
+            (userId: string, id: string, data: EventTypeData) =>
+                this.updateEventTypeUseCase.execute({ userId, id, data })
+        );
     }
 
-    protected runPut(
-        userId: string,
-        itemId: string,
-        data: EventTypeData
-    ): Promise<Either<UseCaseErrors<EventTypeData>, ActionResult>> {
-        return this.updateEventTypeUseCase.execute({ userId, data, itemId });
-    }
-
-    protected runDelete(
-        userId: string,
-        id: string
-    ): Promise<Either<UseCaseErrors<EventTypeData>, ActionResult>> {
-        return this.deleteEventTypeUseCase.execute({ userId, id });
+    async delete(
+        request: hapi.Request,
+        h: hapi.ResponseToolkit
+    ): Promise<hapi.Lifecycle.ReturnValue> {
+        return runDelete(request, h, this.jwtAuthenticator, (userId: string, id: string) =>
+            this.deleteEventTypeUseCase.execute({ userId, id })
+        );
     }
 }

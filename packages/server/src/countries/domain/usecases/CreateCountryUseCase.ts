@@ -1,26 +1,30 @@
-import { Either, CountryData, Country, Id, ValidationError } from "karate-stars-core";
+import { Either, CountryData, Country, Id } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
-import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
-import { CreateResourceUseCase } from "../../../common/domain/CreateResourceUseCase";
+import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
+import { createResource, CreateResourceError } from "../../../common/domain/CreateResourceUseCase";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import CountryRepository from "../boundaries/CountryRepository";
 
-export class CreateCountryUseCase extends CreateResourceUseCase<CountryData, Country> {
-    constructor(private CountryRepository: CountryRepository, userRepository: UserRepository) {
+export interface CreateResourceArgs extends AdminUseCaseArgs {
+    data: CountryData;
+}
+
+export class CreateCountryUseCase extends AdminUseCase<
+    CreateResourceArgs,
+    CreateResourceError<CountryData>,
+    ActionResult
+> {
+    constructor(private countryRepository: CountryRepository, userRepository: UserRepository) {
         super(userRepository);
     }
 
-    protected createEntity(data: CountryData): Either<ValidationError<CountryData>[], Country> {
-        return Country.create(data);
-    }
+    protected run({
+        data,
+    }: CreateResourceArgs): Promise<Either<CreateResourceError<CountryData>, ActionResult>> {
+        const createEntity = (data: CountryData) => Country.create(data);
+        const getById = (id: Id) => this.countryRepository.getById(id);
+        const saveEntity = (entity: Country) => this.countryRepository.save(entity);
 
-    protected getEntityById(
-        id: Id
-    ): Promise<Either<UnexpectedError | ResourceNotFoundError, Country>> {
-        return this.CountryRepository.getById(id);
-    }
-
-    protected saveEntity(entity: Country): Promise<Either<UnexpectedError, ActionResult>> {
-        return this.CountryRepository.save(entity);
+        return createResource(data, createEntity, getById, saveEntity);
     }
 }
