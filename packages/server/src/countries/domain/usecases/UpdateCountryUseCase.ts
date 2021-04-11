@@ -1,7 +1,7 @@
 import { Either, CountryData, Country, Id } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
-import { updateResource, UpdateResourceError } from "../../../common/domain/UpdateResourceUseCase";
+import { updateResource, UpdateResourceError } from "../../../common/domain/UpdateResource";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import CountryRepository from "../boundaries/CountryRepository";
 

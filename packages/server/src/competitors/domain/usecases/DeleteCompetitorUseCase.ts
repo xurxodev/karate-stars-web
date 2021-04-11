@@ -1,7 +1,7 @@
 import { Either, Id } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
-import { deleteResource, DeleteResourceError } from "../../../common/domain/DeleteResourceUseCase";
+import { deleteResource, DeleteResourceError } from "../../../common/domain/DeleteResource";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import CompetitorRepository from "../boundaries/CompetitorRepository";
 

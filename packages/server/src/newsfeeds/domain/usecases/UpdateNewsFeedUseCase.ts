@@ -7,7 +7,7 @@ import {
     ValidationErrors,
 } from "../../../common/api/Errors";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
-import { updateResource } from "../../../common/domain/UpdateResourceUseCase";
+import { updateResource } from "../../../common/domain/UpdateResource";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import NewsFeedsRepository from "../boundaries/NewsFeedRepository";
 

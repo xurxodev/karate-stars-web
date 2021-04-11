@@ -2,7 +2,7 @@ import { Either, EitherAsync, Id, NewsFeed } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
 import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
-import { deleteResourceWithImage } from "../../../common/domain/DeleteResourceUseCase";
+import { deleteResourceWithImage } from "../../../common/domain/DeleteResource";
 import { ImageRepository } from "../../../images/domain/ImageRepository";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import NewsFeedsRepository from "../boundaries/NewsFeedRepository";

@@ -2,7 +2,7 @@ import { Either, Id, NewsFeed, NewsFeedData } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
 import { ConflictError, UnexpectedError, ValidationErrors } from "../../../common/api/Errors";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
-import { createResource } from "../../../common/domain/CreateResourceUseCase";
+import { createResource } from "../../../common/domain/CreateResource";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import NewsFeedsRepository from "../boundaries/NewsFeedRepository";
 
