@@ -1,33 +1,32 @@
-import { Either, Category, CategoryData, Id, ValidationError } from "karate-stars-core";
+import { Either, CategoryData, Category, Id } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
-import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
-import { UpdateResourceUseCase } from "../../../common/domain/UpdateResourceUseCase";
+import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
+import { updateResource, UpdateResourceError } from "../../../common/domain/UpdateResourceUseCase";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
-import CategorysRepository from "../boundaries/CategoryRepository";
+import CategoryRepository from "../boundaries/CategoryRepository";
 
-export class UpdateCategoryUseCase extends UpdateResourceUseCase<CategoryData, Category> {
-    constructor(private CategoryRepository: CategorysRepository, userRepository: UserRepository) {
+export interface UpdateResourceArgs extends AdminUseCaseArgs {
+    id: string;
+    data: CategoryData;
+}
+
+export class UpdateCategoryUseCase extends AdminUseCase<
+    UpdateResourceArgs,
+    UpdateResourceError<CategoryData>,
+    ActionResult
+> {
+    constructor(private categoryRepository: CategoryRepository, userRepository: UserRepository) {
         super(userRepository);
     }
 
-    protected createEntity(data: CategoryData): Either<ValidationError<CategoryData>[], Category> {
-        return Category.create(data);
-    }
+    protected run({
+        id,
+        data,
+    }: UpdateResourceArgs): Promise<Either<UpdateResourceError<CategoryData>, ActionResult>> {
+        const updateEntity = (data: CategoryData, entity: Category) => entity.update(data);
+        const getById = (id: Id) => this.categoryRepository.getById(id);
+        const saveEntity = (entity: Category) => this.categoryRepository.save(entity);
 
-    protected getEntityById(
-        id: Id
-    ): Promise<Either<UnexpectedError | ResourceNotFoundError, Category>> {
-        return this.CategoryRepository.getById(id);
-    }
-
-    protected saveEntity(entity: Category): Promise<Either<UnexpectedError, ActionResult>> {
-        return this.CategoryRepository.save(entity);
-    }
-
-    protected updateEntity(
-        data: CategoryData,
-        entity: Category
-    ): Either<ValidationError<CategoryData>[], Category> {
-        return entity.update(data);
+        return updateResource(id, data, getById, updateEntity, saveEntity);
     }
 }

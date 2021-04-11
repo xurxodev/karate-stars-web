@@ -1,28 +1,30 @@
-import { Either, CategoryType, CategoryTypeData, Id } from "karate-stars-core";
+import { Either, Id } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
-import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
-import { DeleteResourceUseCase } from "../../../common/domain/DeleteResourceUseCase";
+import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
+import { deleteResource, DeleteResourceError } from "../../../common/domain/DeleteResourceUseCase";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import CategoryTypeRepository from "../boundaries/CategoryTypeRepository";
 
-export class DeleteCategoryTypeUseCase extends DeleteResourceUseCase<
-    CategoryTypeData,
-    CategoryType
+export interface DeleteResourceArgs extends AdminUseCaseArgs {
+    id: string;
+}
+
+export class DeleteCategoryTypeUseCase extends AdminUseCase<
+    DeleteResourceArgs,
+    DeleteResourceError,
+    ActionResult
 > {
     constructor(
-        private CategoryTypeRepository: CategoryTypeRepository,
+        private categoryTypeRepository: CategoryTypeRepository,
         userRepository: UserRepository
     ) {
         super(userRepository);
     }
 
-    protected getEntityById(
-        id: Id
-    ): Promise<Either<UnexpectedError | ResourceNotFoundError, CategoryType>> {
-        return this.CategoryTypeRepository.getById(id);
-    }
+    protected run({ id }: DeleteResourceArgs): Promise<Either<DeleteResourceError, ActionResult>> {
+        const getById = (id: Id) => this.categoryTypeRepository.getById(id);
+        const deleteEntity = (id: Id) => this.categoryTypeRepository.delete(id);
 
-    protected deleteEntity(id: Id): Promise<Either<UnexpectedError, ActionResult>> {
-        return this.CategoryTypeRepository.delete(id);
+        return deleteResource(id, getById, deleteEntity);
     }
 }

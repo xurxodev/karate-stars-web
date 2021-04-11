@@ -1,5 +1,5 @@
 import { Either, Id, ValidationError } from "karate-stars-core";
-import { EntityData, EntityObjectData } from "karate-stars-core/build/entities/Entity";
+import { Entity, EntityData, EntityObjectData } from "karate-stars-core/build/entities/Entity";
 import UserRepository from "../../users/domain/boundaries/UserRepository";
 import { ActionResult } from "../api/ActionResult";
 import { ResourceNotFoundError, UnexpectedError, ValidationErrors } from "../api/Errors";
@@ -11,7 +11,7 @@ export interface UpdateResourceArgs<EntityData> extends AdminUseCaseArgs {
     data: EntityData;
 }
 
-type UpdateResourceError<EntityData> =
+export type UpdateResourceError<EntityData> =
     | ValidationErrors<EntityData>
     | UnexpectedError
     | ResourceNotFoundError;
@@ -49,4 +49,30 @@ export abstract class UpdateResourceUseCase<
             .flatMap(entity => this.saveEntity(entity))
             .run();
     }
+}
+
+export function updateResource<
+    TData extends EntityData,
+    TEntity extends Entity<TData>,
+    TValidationData
+>(
+    id: string,
+    data: TData,
+    getEntityById: (id: Id) => Promise<Either<ResourceNotFoundError | UnexpectedError, TEntity>>,
+    updateEntity: (
+        data: TData,
+        entity: TEntity
+    ) => Either<ValidationError<TValidationData>[], TEntity>,
+    saveEntity: (entity: TEntity) => Promise<Either<UnexpectedError, ActionResult>>
+) {
+    return createIdOrResourceNotFound<UpdateResourceError<TValidationData>>(id)
+        .flatMap(async id => getEntityById(id))
+        .flatMap(async entity =>
+            updateEntity(data, entity).mapLeft(error => ({
+                kind: "ValidationErrors",
+                errors: error,
+            }))
+        )
+        .flatMap(entity => saveEntity(entity))
+        .run();
 }

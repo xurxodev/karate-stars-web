@@ -1,17 +1,33 @@
-import { Either, CategoryData, Category, Id } from "karate-stars-core";
+import { Either, CategoryData } from "karate-stars-core";
 import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
-import { GetResourceByIdUseCase } from "../../../common/domain/GetResourceByIdUseCase";
+import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
+import { createIdOrResourceNotFound } from "../../../common/domain/utils";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
-import CategorysRepository from "../boundaries/CategoryRepository";
+import CategoryRepository from "../boundaries/CategoryRepository";
 
-export class GetCategoryByIdUseCase extends GetResourceByIdUseCase<CategoryData, Category> {
-    constructor(private CategoryRepository: CategorysRepository, userRepository: UserRepository) {
+export interface GetCategoryByIdArg extends AdminUseCaseArgs {
+    id: string;
+}
+
+type GetCategoryByIdError = ResourceNotFoundError | UnexpectedError;
+
+export class GetCategoryByIdUseCase extends AdminUseCase<
+    GetCategoryByIdArg,
+    GetCategoryByIdError,
+    CategoryData
+> {
+    constructor(private categoryRepository: CategoryRepository, userRepository: UserRepository) {
         super(userRepository);
     }
 
-    protected getEntityById(
-        id: Id
-    ): Promise<Either<ResourceNotFoundError | UnexpectedError, Category>> {
-        return this.CategoryRepository.getById(id);
+    public async run({
+        id,
+    }: GetCategoryByIdArg): Promise<Either<GetCategoryByIdError, CategoryData>> {
+        const result = await createIdOrResourceNotFound<GetCategoryByIdError>(id)
+            .flatMap(id => this.categoryRepository.getById(id))
+            .map(entity => entity.toData())
+            .run();
+
+        return result;
     }
 }

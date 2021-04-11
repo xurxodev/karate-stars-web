@@ -31,6 +31,7 @@ import { UpdateEventTypeUseCase } from "./event-types/domain/usecases/UpdateEven
 import { DeleteEventTypeUseCase } from "./event-types/domain/usecases/DeleteEventTypeUseCase";
 import { initializeCategories } from "./categories/CategoryDIModule";
 import { initializeCategoryTypes } from "./category-types/CategoryTypeDIModule";
+import { initializeCompetitors } from "./competitors/CompetitorDIModule";
 
 export const appDIKeys = {
     jwtAuthenticator: "jwtAuthenticator",
@@ -50,6 +51,7 @@ export function init() {
     initUser();
     initializeCategories();
     initializeCategoryTypes();
+    initializeCompetitors();
     initializeSettings();
     initializeNewsFeeds();
     initializeEventTypes();

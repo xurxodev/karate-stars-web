@@ -1,34 +1,33 @@
-import { Either, CategoryTypeData, CategoryType, Id, ValidationError } from "karate-stars-core";
+import { Either, CategoryTypeData, CategoryType, Id } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
-import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
-import { CreateResourceUseCase } from "../../../common/domain/CreateResourceUseCase";
+import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
+import { createResource, CreateResourceError } from "../../../common/domain/CreateResourceUseCase";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
-import categoryTypeRepository from "../boundaries/CategoryTypeRepository";
+import CategoryTypeRepository from "../boundaries/CategoryTypeRepository";
 
-export class CreateCategoryTypeUseCase extends CreateResourceUseCase<
-    CategoryTypeData,
-    CategoryType
+export interface CreateResourceArgs extends AdminUseCaseArgs {
+    data: CategoryTypeData;
+}
+
+export class CreateCategoryTypeUseCase extends AdminUseCase<
+    CreateResourceArgs,
+    CreateResourceError<CategoryTypeData>,
+    ActionResult
 > {
     constructor(
-        private categoryTypeRepository: categoryTypeRepository,
+        private categoryTypeRepository: CategoryTypeRepository,
         userRepository: UserRepository
     ) {
         super(userRepository);
     }
 
-    protected createEntity(
-        data: CategoryTypeData
-    ): Either<ValidationError<CategoryTypeData>[], CategoryType> {
-        return CategoryType.create(data);
-    }
+    protected run({
+        data,
+    }: CreateResourceArgs): Promise<Either<CreateResourceError<CategoryTypeData>, ActionResult>> {
+        const createEntity = (data: CategoryTypeData) => CategoryType.create(data);
+        const getById = (id: Id) => this.categoryTypeRepository.getById(id);
+        const saveEntity = (entity: CategoryType) => this.categoryTypeRepository.save(entity);
 
-    protected getEntityById(
-        id: Id
-    ): Promise<Either<UnexpectedError | ResourceNotFoundError, CategoryType>> {
-        return this.categoryTypeRepository.getById(id);
-    }
-
-    protected saveEntity(entity: CategoryType): Promise<Either<UnexpectedError, ActionResult>> {
-        return this.categoryTypeRepository.save(entity);
+        return createResource(data, createEntity, getById, saveEntity);
     }
 }

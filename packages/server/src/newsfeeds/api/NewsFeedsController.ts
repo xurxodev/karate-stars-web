@@ -2,7 +2,6 @@ import * as hapi from "@hapi/hapi";
 import * as boom from "@hapi/boom";
 import { GetNewsFeedsUseCase } from "../domain/usecases/GetNewsFeedsUseCase";
 import { JwtAuthenticator } from "../../server";
-import { GetNewsFeedByIdUseCase } from "../domain/usecases/GetNewsFeedByIdUseCase";
 import {
     ConflictError,
     UnexpectedError,
@@ -16,6 +15,7 @@ import { UpdateNewsFeedUseCase } from "../domain/usecases/UpdateNewsFeedUseCase"
 import { UpdateNewsFeedImageUseCase } from "../domain/usecases/UpdateNewsFeedImageUseCase";
 import { Readable } from "stream";
 import { AdminUseCaseError } from "../../common/domain/AdminUseCase";
+import { GetNewsFeedByIdUseCase } from "../domain/usecases/GetNewsFeedByIdUseCase";
 
 export default class NewsFeedsController {
     constructor(
@@ -83,7 +83,7 @@ export default class NewsFeedsController {
         const payload = request.payload as NewsFeedData;
 
         if (payload) {
-            const result = await this.createNewsFeedUseCase.execute({ userId, item: payload });
+            const result = await this.createNewsFeedUseCase.execute({ userId, data: payload });
 
             return result.fold(
                 error => this.handleFailure(error),
@@ -106,8 +106,8 @@ export default class NewsFeedsController {
         if (payload) {
             const result = await this.updateNewsFeedUseCase.execute({
                 userId,
-                item: payload,
-                itemId: id,
+                data: payload,
+                id: id,
             });
 
             return result.fold(

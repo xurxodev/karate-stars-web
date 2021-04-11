@@ -1,8 +1,8 @@
-import { Either, EitherAsync, Id } from "karate-stars-core";
+import { Either, EitherAsync, Id, NewsFeed } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
 import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
-import { createIdOrResourceNotFound } from "../../../common/domain/utils";
+import { deleteResourceWithImage } from "../../../common/domain/DeleteResourceUseCase";
 import { ImageRepository } from "../../../images/domain/ImageRepository";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import NewsFeedsRepository from "../boundaries/NewsFeedRepository";
@@ -29,26 +29,18 @@ export class DeleteNewsFeedUseCase extends AdminUseCase<
     public async run({
         id,
     }: GetNewsFeedByIdArg): Promise<Either<ResourceNotFoundError | UnexpectedError, ActionResult>> {
-        const result = await createIdOrResourceNotFound<DeleteNewsFeedError>(id)
-            .flatMap(async id => this.newsFeedsRepository.getById(id))
-            .flatMap<Id>(async newsFeed =>
-                this.deleteImage(newsFeed.image?.value)
-                    .map(() => newsFeed.id)
-                    .run()
-            )
-            .flatMap<ActionResult>(id => this.newsFeedsRepository.delete(id))
-            .run();
+        const getById = (id: Id) => this.newsFeedsRepository.getById(id);
+        const deleteEntity = (id: Id) => this.newsFeedsRepository.delete(id);
+        const deleteImage = (entity: NewsFeed): EitherAsync<UnexpectedError, true> => {
+            const filename = entity.image ? entity.image.value.split("/").pop() : undefined;
 
-        return result;
-    }
+            if (filename) {
+                return EitherAsync.fromPromise(this.imageRepository.deleteImage("feeds", filename));
+            } else {
+                return EitherAsync.fromEither(Either.right(true));
+            }
+        };
 
-    private deleteImage(imageUrl?: string): EitherAsync<UnexpectedError, true> {
-        const filename = imageUrl ? imageUrl.split("/").pop() : undefined;
-
-        if (filename) {
-            return EitherAsync.fromPromise(this.imageRepository.deleteImage("feeds", filename));
-        } else {
-            return EitherAsync.fromEither(Either.right(true));
-        }
+        return deleteResourceWithImage(id, getById, deleteImage, deleteEntity);
     }
 }

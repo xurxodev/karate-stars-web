@@ -1,18 +1,25 @@
-import { CategoryTypeData, CategoryType } from "karate-stars-core";
-import { GetResourcesUseCase } from "../../../common/domain/GetResourcesUseCase";
+import { Either, CategoryTypeData } from "karate-stars-core";
+import { UnexpectedError } from "../../../common/api/Errors";
+import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 
-import CategoryTypesRepository from "../boundaries/CategoryTypeRepository";
+import CategoryTypeRepository from "../boundaries/CategoryTypeRepository";
 
-export class GetCategoryTypesUseCase extends GetResourcesUseCase<CategoryTypeData, CategoryType> {
+export class GetCategoryTypesUseCase extends AdminUseCase<
+    AdminUseCaseArgs,
+    UnexpectedError,
+    CategoryTypeData[]
+> {
     constructor(
-        private CategoryTypeRepository: CategoryTypesRepository,
+        private categoryTypeRepository: CategoryTypeRepository,
         userRepository: UserRepository
     ) {
         super(userRepository);
     }
 
-    protected getEntities(): Promise<CategoryType[]> {
-        return this.CategoryTypeRepository.getAll();
+    public async run(_: AdminUseCaseArgs): Promise<Either<UnexpectedError, CategoryTypeData[]>> {
+        const CategoryTypes = await this.categoryTypeRepository.getAll();
+
+        return Either.right(CategoryTypes.map(categoryType => categoryType.toData()));
     }
 }

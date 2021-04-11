@@ -1,4 +1,4 @@
-import { Either, Id } from "karate-stars-core";
+import { Either, EitherAsync, Id } from "karate-stars-core";
 import { Entity, EntityData } from "karate-stars-core/build/entities/Entity";
 import UserRepository from "../../users/domain/boundaries/UserRepository";
 import { ActionResult } from "../api/ActionResult";
@@ -10,7 +10,7 @@ export interface DeleteResourceArgs extends AdminUseCaseArgs {
     id: string;
 }
 
-type DeleteResourceError = UnexpectedError | ResourceNotFoundError;
+export type DeleteResourceError = UnexpectedError | ResourceNotFoundError;
 
 export abstract class DeleteResourceUseCase<
     TData extends EntityData,
@@ -33,4 +33,32 @@ export abstract class DeleteResourceUseCase<
             .flatMap<ActionResult>(entity => this.deleteEntity(entity.id))
             .run();
     }
+}
+
+export function deleteResource<TData extends EntityData, TEntity extends Entity<TData>>(
+    id: string,
+    getEntityById: (id: Id) => Promise<Either<ResourceNotFoundError | UnexpectedError, TEntity>>,
+    deleteEntity: (id: Id) => Promise<Either<UnexpectedError, ActionResult>>
+) {
+    return createIdOrResourceNotFound<DeleteResourceError>(id)
+        .flatMap(async id => getEntityById(id))
+        .flatMap(entity => deleteEntity(entity.id))
+        .run();
+}
+
+export function deleteResourceWithImage<TData extends EntityData, TEntity extends Entity<TData>>(
+    id: string,
+    getEntityById: (id: Id) => Promise<Either<ResourceNotFoundError | UnexpectedError, TEntity>>,
+    deleteImage: (entity: TEntity) => EitherAsync<UnexpectedError, true>,
+    deleteEntity: (id: Id) => Promise<Either<UnexpectedError, ActionResult>>
+) {
+    return createIdOrResourceNotFound<DeleteResourceError>(id)
+        .flatMap(async id => getEntityById(id))
+        .flatMap<Id>(async entity =>
+            deleteImage(entity)
+                .map(() => entity.id)
+                .run()
+        )
+        .flatMap(id => deleteEntity(id))
+        .run();
 }

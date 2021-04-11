@@ -1,55 +1,63 @@
 import { GetCategoriesUseCase } from "../domain/usecases/GetCategoriesUseCase";
 import { JwtAuthenticator } from "../../server";
-import { Either, CategoryData } from "karate-stars-core";
-import { AdminController, UseCaseErrors } from "../../common/api/AdminController";
+import { CategoryData } from "karate-stars-core";
+import { runDelete, runGet, runGetAll, runPost, runPut } from "../../common/api/AdminController";
 import { GetCategoryByIdUseCase } from "../domain/usecases/GetCategoryByIdUseCase";
 import { CreateCategoryUseCase } from "../domain/usecases/CreateCategoryUseCase";
-import { ActionResult } from "../../common/api/ActionResult";
 import { UpdateCategoryUseCase } from "../domain/usecases/UpdateCategoryUseCase";
 import { DeleteCategoryUseCase } from "../domain/usecases/DeleteCategoryUseCase";
+import * as hapi from "@hapi/hapi";
 
-export class CategoryController extends AdminController<CategoryData> {
+export class CategoryController {
     constructor(
-        jwtAuthenticator: JwtAuthenticator,
+        private jwtAuthenticator: JwtAuthenticator,
         private getCategoriesUseCase: GetCategoriesUseCase,
         private getCategoryByIdUseCase: GetCategoryByIdUseCase,
         private createCategoryUseCase: CreateCategoryUseCase,
         private updateCategoryUseCase: UpdateCategoryUseCase,
         private deleteCategoryUseCase: DeleteCategoryUseCase
-    ) {
-        super(jwtAuthenticator);
+    ) {}
+
+    async getAll(
+        request: hapi.Request,
+        h: hapi.ResponseToolkit
+    ): Promise<hapi.Lifecycle.ReturnValue> {
+        return runGetAll(request, h, this.jwtAuthenticator, userId =>
+            this.getCategoriesUseCase.execute({ userId })
+        );
     }
 
-    protected runGetAll(userId: any): Promise<Either<UseCaseErrors<CategoryData>, CategoryData[]>> {
-        return this.getCategoriesUseCase.execute({ userId });
+    async get(request: hapi.Request, h: hapi.ResponseToolkit): Promise<hapi.Lifecycle.ReturnValue> {
+        return runGet(request, h, this.jwtAuthenticator, (userId: string, id: string) =>
+            this.getCategoryByIdUseCase.execute({ userId, id })
+        );
     }
 
-    protected runGet(
-        userId: any,
-        id: string
-    ): Promise<Either<UseCaseErrors<CategoryData>, CategoryData>> {
-        return this.getCategoryByIdUseCase.execute({ userId, id });
+    async post(
+        request: hapi.Request,
+        h: hapi.ResponseToolkit
+    ): Promise<hapi.Lifecycle.ReturnValue> {
+        return runPost(request, h, this.jwtAuthenticator, (userId: string, data: CategoryData) =>
+            this.createCategoryUseCase.execute({ userId, data })
+        );
     }
 
-    protected runPost(
-        userId: string,
-        data: CategoryData
-    ): Promise<Either<UseCaseErrors<CategoryData>, ActionResult>> {
-        return this.createCategoryUseCase.execute({ userId, data });
+    async put(request: hapi.Request, h: hapi.ResponseToolkit): Promise<hapi.Lifecycle.ReturnValue> {
+        return runPut(
+            request,
+            h,
+            this.jwtAuthenticator,
+            (userId: string, id: string, data: CategoryData) =>
+                this.updateCategoryUseCase.execute({ userId, id, data })
+        );
     }
 
-    protected runPut(
-        userId: string,
-        itemId: string,
-        data: CategoryData
-    ): Promise<Either<UseCaseErrors<CategoryData>, ActionResult>> {
-        return this.updateCategoryUseCase.execute({ userId, data, itemId });
-    }
-
-    protected runDelete(
-        userId: string,
-        id: string
-    ): Promise<Either<UseCaseErrors<CategoryData>, ActionResult>> {
-        return this.deleteCategoryUseCase.execute({ userId, id });
+    async delete(
+        request: hapi.Request,
+        h: hapi.ResponseToolkit
+    ): Promise<hapi.Lifecycle.ReturnValue> {
+        return runDelete(request, h, this.jwtAuthenticator, (userId: string, id: string) =>
+            this.deleteCategoryUseCase.execute({ userId, id })
+        );
     }
 }

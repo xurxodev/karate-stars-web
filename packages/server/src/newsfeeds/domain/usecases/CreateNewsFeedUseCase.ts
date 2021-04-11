@@ -1,12 +1,13 @@
-import { Either, EitherAsync, NewsFeed, NewsFeedData } from "karate-stars-core";
+import { Either, Id, NewsFeed, NewsFeedData } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
 import { ConflictError, UnexpectedError, ValidationErrors } from "../../../common/api/Errors";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
+import { createResource } from "../../../common/domain/CreateResourceUseCase";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import NewsFeedsRepository from "../boundaries/NewsFeedRepository";
 
 export interface CreateNewsFeedArg extends AdminUseCaseArgs {
-    item: NewsFeedData;
+    data: NewsFeedData;
 }
 
 type CreateNewsFeedError = ValidationErrors<NewsFeedData> | UnexpectedError | ConflictError;
@@ -21,29 +22,12 @@ export class CreateNewsFeedUseCase extends AdminUseCase<
     }
 
     public async run({
-        item,
+        data,
     }: CreateNewsFeedArg): Promise<Either<CreateNewsFeedError, ActionResult>> {
-        return EitherAsync.fromEither(NewsFeed.create(item))
-            .mapLeft(
-                error =>
-                    ({
-                        kind: "ValidationErrors",
-                        errors: error,
-                    } as CreateNewsFeedError)
-            )
-            .flatMap(async entity => {
-                const existedItem = await this.newsFeedsRepository.getById(entity.id);
+        const createEntity = (data: NewsFeedData) => NewsFeed.create(data);
+        const getById = (id: Id) => this.newsFeedsRepository.getById(id);
+        const saveEntity = (entity: NewsFeed) => this.newsFeedsRepository.save(entity);
 
-                return existedItem.fold(
-                    () => Either.right<CreateNewsFeedError, NewsFeed>(entity),
-                    () =>
-                        Either.left<CreateNewsFeedError, NewsFeed>({
-                            kind: "ConflictError",
-                            message: "Already exist a news feed item with id " + entity.id.value,
-                        } as ConflictError)
-                );
-            })
-            .flatMap(entity => this.newsFeedsRepository.save(entity))
-            .run();
+        return createResource(data, createEntity, getById, saveEntity);
     }
 }

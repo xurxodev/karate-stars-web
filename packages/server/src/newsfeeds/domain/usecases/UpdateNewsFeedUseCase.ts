@@ -1,4 +1,4 @@
-import { Either, NewsFeedData } from "karate-stars-core";
+import { Either, Id, NewsFeed, NewsFeedData } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
 import {
     ConflictError,
@@ -7,13 +7,13 @@ import {
     ValidationErrors,
 } from "../../../common/api/Errors";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
-import { createIdOrResourceNotFound } from "../../../common/domain/utils";
+import { updateResource } from "../../../common/domain/UpdateResourceUseCase";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import NewsFeedsRepository from "../boundaries/NewsFeedRepository";
 
 export interface CreateNewsFeedArg extends AdminUseCaseArgs {
-    itemId: string;
-    item: NewsFeedData;
+    id: string;
+    data: NewsFeedData;
 }
 
 type UpdateNewsFeedError =
@@ -32,18 +32,13 @@ export class UpdateNewsFeedUseCase extends AdminUseCase<
     }
 
     public async run({
-        itemId,
-        item,
+        id,
+        data,
     }: CreateNewsFeedArg): Promise<Either<UpdateNewsFeedError, ActionResult>> {
-        return await createIdOrResourceNotFound<UpdateNewsFeedError>(itemId)
-            .flatMap(id => this.newsFeedsRepository.getById(id))
-            .flatMap(async existedFeed =>
-                existedFeed.update(item).mapLeft(error => ({
-                    kind: "ValidationErrors",
-                    errors: error,
-                }))
-            )
-            .flatMap(entity => this.newsFeedsRepository.save(entity))
-            .run();
+        const updateEntity = (data: NewsFeedData, entity: NewsFeed) => entity.update(data);
+        const getById = (id: Id) => this.newsFeedsRepository.getById(id);
+        const saveEntity = (entity: NewsFeed) => this.newsFeedsRepository.save(entity);
+
+        return updateResource(id, data, getById, updateEntity, saveEntity);
     }
 }
