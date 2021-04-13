@@ -9,6 +9,8 @@ import { DeleteEventUseCase } from "./domain/usecases/DeleteEventUseCase";
 import { GetEventsUseCase } from "./domain/usecases/GetEventsUseCase";
 import { GetEventByIdUseCase } from "./domain/usecases/GetEventByIdUseCase";
 import { UpdateEventUseCase } from "./domain/usecases/UpdateEventUseCase";
+import { eventTypeDIKeys } from "../event-types/EventTypeDIModule";
+import EventTypeRepository from "../event-types/domain/boundaries/EventTypeRepository";
 
 export const eventDIKeys = {
     eventRepository: "eventRepository",
@@ -43,6 +45,7 @@ export function initializeEvents() {
         () =>
             new CreateEventUseCase(
                 di.get<EventRepository>(eventDIKeys.eventRepository),
+                di.get<EventTypeRepository>(eventTypeDIKeys.eventTypeRepository),
                 di.get<UserRepository>(appDIKeys.userRepository)
             )
     );

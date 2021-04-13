@@ -21,7 +21,10 @@ export function createResource<
     data: TData,
     createEntity: (data: TData) => Either<ValidationError<TValidationData>[], TEntity>,
     getEntityById: (id: Id) => Promise<Either<ResourceNotFoundError | UnexpectedError, TEntity>>,
-    saveEntity: (entity: TEntity) => Promise<Either<UnexpectedError, ActionResult>>
+    saveEntity: (entity: TEntity) => Promise<Either<UnexpectedError, ActionResult>>,
+    validateDependencies?: (
+        entity: TEntity
+    ) => Promise<Either<ValidationError<TValidationData>[], TEntity>>
 ) {
     return EitherAsync.fromEither(createEntity(data))
         .mapLeft(
@@ -42,6 +45,22 @@ export function createResource<
                         message: "Already exist an item with id " + entity.id.value,
                     } as ConflictError)
             );
+        })
+        .flatMap(async entity => {
+            if (validateDependencies) {
+                const existedItem = await validateDependencies(entity);
+
+                return existedItem.fold(
+                    error =>
+                        Either.left<CreateResourceError<TValidationData>, TEntity>({
+                            kind: "ValidationErrors",
+                            errors: error,
+                        } as CreateResourceError<TValidationData>),
+                    () => Either.right<CreateResourceError<TValidationData>, TEntity>(entity)
+                );
+            } else {
+                return Either.right<CreateResourceError<TValidationData>, TEntity>(entity);
+            }
         })
         .flatMap(entity => saveEntity(entity))
         .run();

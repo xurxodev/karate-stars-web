@@ -1,9 +1,10 @@
 import { EventType, EventTypeData, Id } from "karate-stars-core";
-import { commonCRUDTests, DataCreator } from "../../../common/api/testUtils/crud.spec";
-import { appDIKeys } from "../../../CompositionRoot";
+import { commonCRUDTests } from "../../../common/api/testUtils/crud.spec";
+import { ServerDataCreator, TestDataCreator } from "../../../common/api/testUtils/DataCreator";
+import { eventTypeDIKeys } from "../../EventTypeDIModule";
 import { eventTypesEndpoint } from "../EventTypeRoutes";
 
-const eventTypes = [
+const entities = [
     EventType.create({
         id: Id.generateId().value,
         name: "Karate1 Premier League",
@@ -14,26 +15,30 @@ const eventTypes = [
     }).get(),
 ];
 
-const eventTypeCreator: DataCreator<EventTypeData, EventType> = {
-    givenAInitialItems: () => {
-        return eventTypes;
+const principalDataCreator: ServerDataCreator<EventTypeData, EventType> = {
+    repositoryKey: eventTypeDIKeys.eventTypeRepository,
+    items: () => {
+        return entities;
     },
+};
+
+const testDataCreator: TestDataCreator<EventTypeData> = {
     givenAValidNewItem: () => {
-        return { ...eventTypes[0].toData(), id: Id.generateId().value };
+        return { ...entities[0].toData(), id: Id.generateId().value };
     },
     givenAInvalidNewItem: () => {
         return {
-            ...eventTypes[0].toData(),
+            ...entities[0].toData(),
             id: Id.generateId().value,
             name: "",
         };
     },
     givenAValidModifiedItem: (): EventTypeData => {
-        return { ...eventTypes[0].toData(), name: eventTypes[0].name + "modified" };
+        return { ...entities[0].toData(), name: entities[0].name + "modified" };
     },
     givenAInvalidModifiedItem: (): EventTypeData => {
-        return { ...eventTypes[0].toData(), name: "" };
+        return { ...entities[0].toData(), name: "" };
     },
 };
 
-commonCRUDTests(eventTypesEndpoint, appDIKeys.eventTypeRepository, eventTypeCreator);
+commonCRUDTests(eventTypesEndpoint, testDataCreator, principalDataCreator);

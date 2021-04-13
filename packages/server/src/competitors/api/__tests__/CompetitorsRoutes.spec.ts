@@ -1,9 +1,10 @@
 import { Id, Competitor, SocialLinkType, CompetitorData } from "karate-stars-core";
-import { commonCRUDTests, DataCreator } from "../../../common/api/testUtils/crud.spec";
+import { commonCRUDTests } from "../../../common/api/testUtils/crud.spec";
 import { CompetitorsEndpoint } from "../CompetitorRoutes";
 import { competitorDIKeys } from "../../CompetitorDIModule";
+import { ServerDataCreator, TestDataCreator } from "../../../common/api/testUtils/DataCreator";
 
-const competitors = [
+const entities = [
     Competitor.create({
         id: Id.generateId().value,
         firstName: "Iryna",
@@ -76,28 +77,32 @@ const competitors = [
     }).get(),
 ];
 
-const CompetitorCreator: DataCreator<CompetitorData, Competitor> = {
-    givenAInitialItems: () => {
-        return competitors;
+const principalDataCreator: ServerDataCreator<CompetitorData, Competitor> = {
+    repositoryKey: competitorDIKeys.CompetitorRepository,
+    items: () => {
+        return entities;
     },
+};
+
+const testDataCreator: TestDataCreator<CompetitorData> = {
     givenAValidNewItem: () => {
-        return { ...competitors[0].toData(), id: Id.generateId().value };
+        return { ...entities[0].toData(), id: Id.generateId().value };
     },
     givenAInvalidNewItem: () => {
         return {
-            ...competitors[0].toData(),
+            ...entities[0].toData(),
             id: Id.generateId().value,
             firstName: "",
         };
     },
     givenAValidModifiedItem: (): CompetitorData => {
-        return { ...competitors[0].toData(), firstName: competitors[0].firstName + "modified" };
+        return { ...entities[0].toData(), firstName: entities[0].firstName + "modified" };
     },
     givenAInvalidModifiedItem: (): CompetitorData => {
-        return { ...competitors[0].toData(), firstName: "" };
+        return { ...entities[0].toData(), firstName: "" };
     },
 };
 
-commonCRUDTests(CompetitorsEndpoint, competitorDIKeys.CompetitorRepository, CompetitorCreator);
+commonCRUDTests(CompetitorsEndpoint, testDataCreator, principalDataCreator);
 
 // Add especific items

@@ -1,9 +1,10 @@
 import { CategoryTypeData, CategoryType, Id } from "karate-stars-core";
-import { commonCRUDTests, DataCreator } from "../../../common/api/testUtils/crud.spec";
+import { commonCRUDTests } from "../../../common/api/testUtils/crud.spec";
 import { CategoryTypesEndpoint } from "../CategoryTypeRoutes";
 import { categoryTypeDIKeys } from "../../CategoryTypeDIModule";
+import { ServerDataCreator, TestDataCreator } from "../../../common/api/testUtils/DataCreator";
 
-const Categories = [
+const entities = [
     CategoryType.create({
         id: Id.generateId().value,
         name: "Kumite",
@@ -14,28 +15,32 @@ const Categories = [
     }).get(),
 ];
 
-const CategoryCreator: DataCreator<CategoryTypeData, CategoryType> = {
-    givenAInitialItems: () => {
-        return Categories;
+const principalDataCreator: ServerDataCreator<CategoryTypeData, CategoryType> = {
+    repositoryKey: categoryTypeDIKeys.CategoryTypeRepository,
+    items: () => {
+        return entities;
     },
+};
+
+const testDataCreator: TestDataCreator<CategoryTypeData> = {
     givenAValidNewItem: () => {
-        return { ...Categories[0].toData(), id: Id.generateId().value };
+        return { ...entities[0].toData(), id: Id.generateId().value };
     },
     givenAInvalidNewItem: () => {
         return {
-            ...Categories[0].toData(),
+            ...entities[0].toData(),
             id: Id.generateId().value,
             name: "",
         };
     },
     givenAValidModifiedItem: (): CategoryTypeData => {
-        return { ...Categories[0].toData(), name: Categories[0].name + "modified" };
+        return { ...entities[0].toData(), name: entities[0].name + "modified" };
     },
     givenAInvalidModifiedItem: (): CategoryTypeData => {
-        return { ...Categories[0].toData(), name: "" };
+        return { ...entities[0].toData(), name: "" };
     },
 };
 
-commonCRUDTests(CategoryTypesEndpoint, categoryTypeDIKeys.CategoryTypeRepository, CategoryCreator);
+commonCRUDTests(CategoryTypesEndpoint, testDataCreator, principalDataCreator);
 
 // Add especific items

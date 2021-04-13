@@ -33,7 +33,6 @@ export const appDIKeys = {
     jwtAuthenticator: "jwtAuthenticator",
     settingsRepository: "settingsRepository",
     newsFeedRepository: "newsFeedRepository",
-    eventTypeRepository: "eventTypeRepository",
     userRepository: "userRepository",
     socialNewsRepository: "socialNewsRepository",
     currentNewsRepository: "currentNewsRepository",

@@ -1,63 +1,26 @@
-import { Email, Entity, EntityData, Id, Password, User } from "karate-stars-core";
+import { Entity, EntityData, Id } from "karate-stars-core";
 import request from "supertest";
-import * as CompositionRoot from "../../../CompositionRoot";
 import { initServer, generateToken } from "./serverTest";
-import { FakeImageRepository } from "./FakeImageRepository";
-import { FakeUserRepository } from "./FakeUserRepository";
-import { FakeGenericRepository } from "./FakeGenericRepository";
+import { ServerDataCreator, TestDataCreator } from "./DataCreator";
+import {
+    givenThereAreAnUserInServer,
+    givenThereAreAnItemsAndDependenciesInServer,
+} from "./ScenariosFactory";
 
-export interface DataCreator<RawData extends EntityData, T extends Entity<RawData>> {
-    givenAInitialItems: () => T[];
-    givenAValidNewItem: () => RawData;
-    givenAInvalidNewItem: () => RawData;
-    givenAValidModifiedItem: () => RawData;
-    givenAInvalidModifiedItem: () => RawData;
-}
-
-export const commonCRUDTests = <RawData extends EntityData, T extends Entity<RawData>>(
+export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity<TData>>(
     endpoint: string,
-    repositoryKey: string,
-    dataCreator: DataCreator<RawData, T>
+    testDataCreator: TestDataCreator<TData>,
+    principalDataCreator: ServerDataCreator<TData, TEntity>,
+    dependenciesDataCreators?: ServerDataCreator<any, any>[]
 ) => {
-    const givenThereAreAnItems = () => {
-        const initialItems = dataCreator.givenAInitialItems();
-        CompositionRoot.di.bindLazySingleton(
-            repositoryKey,
-            () => new FakeGenericRepository<RawData, T>(initialItems)
-        );
-
-        CompositionRoot.di.bindLazySingleton(
-            CompositionRoot.appDIKeys.imageRepository,
-            () => new FakeImageRepository()
-        );
-
-        return initialItems.map(feed => feed.toData());
-    };
-
-    const givenThereAreAnUser = (params: { admin: boolean }) => {
-        const user: User = User.createExisted({
-            id: Id.generateId(),
-            name: "Example user",
-            image: "https://pbs.twimg.com/profile_images/1151113544362078209/chgA6VO9_400x400.jpg",
-            email: Email.create("info@karatestarsapp.com").get(),
-            password: Password.create("password").get(),
-            isAdmin: params.admin,
-            isClientUser: true,
-        });
-
-        CompositionRoot.di.bindLazySingleton(
-            CompositionRoot.appDIKeys.userRepository,
-            () => new FakeUserRepository([user])
-        );
-
-        return user;
-    };
-
     describe(`CRUD tests for ${endpoint}`, () => {
         describe(`GET /${endpoint}`, () => {
             it("should return expected item if token is of an admin user", async () => {
-                const data = givenThereAreAnItems();
-                const user = givenThereAreAnUser({ admin: true });
+                const data = givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                const user = givenThereAreAnUserInServer({ admin: true });
 
                 const server = await initServer();
 
@@ -69,8 +32,11 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
                 expect(res.body).toEqual(data);
             });
             it("should return 403 forbidden if token is not of an admin user", async () => {
-                givenThereAreAnItems();
-                const user = givenThereAreAnUser({ admin: false });
+                givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                const user = givenThereAreAnUserInServer({ admin: false });
 
                 const server = await initServer();
 
@@ -81,8 +47,11 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
                 expect(res.status).toEqual(403);
             });
             it("should return 401 unauthorized if token is of an non existed user", async () => {
-                givenThereAreAnItems();
-                givenThereAreAnUser({ admin: true });
+                givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                givenThereAreAnUserInServer({ admin: true });
                 const notExistedUserId = Id.generateId();
 
                 const server = await initServer();
@@ -96,8 +65,11 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
         });
         describe(`GET /${endpoint}/{id}`, () => {
             it("should return expected item if token is of an admin user", async () => {
-                const data = givenThereAreAnItems();
-                const user = givenThereAreAnUser({ admin: true });
+                const data = givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                const user = givenThereAreAnUserInServer({ admin: true });
 
                 const server = await initServer();
 
@@ -109,8 +81,11 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
                 expect(res.body).toEqual(data[0]);
             });
             it("should return 404 resource not found if item with id does not exist", async () => {
-                givenThereAreAnItems();
-                const user = givenThereAreAnUser({ admin: true });
+                givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                const user = givenThereAreAnUserInServer({ admin: true });
 
                 const notExistedItemId = Id.generateId();
                 const server = await initServer();
@@ -122,8 +97,11 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
                 expect(res.status).toEqual(404);
             });
             it("should return 403 forbidden if token is not of an admin user", async () => {
-                const data = givenThereAreAnItems();
-                const user = givenThereAreAnUser({ admin: false });
+                const data = givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                const user = givenThereAreAnUserInServer({ admin: false });
 
                 const server = await initServer();
 
@@ -134,9 +112,12 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
                 expect(res.status).toEqual(403);
             });
             it("should return 401 unauthorized if token is of an non existed user", async () => {
-                givenThereAreAnUser({ admin: true });
+                givenThereAreAnUserInServer({ admin: true });
 
-                const data = givenThereAreAnItems();
+                const data = givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
                 const notExistedUserId = Id.generateId();
 
                 const server = await initServer();
@@ -150,9 +131,12 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
         });
         describe(`POST /${endpoint}`, () => {
             it("should create expected item if token is of an admin user", async () => {
-                givenThereAreAnItems();
-                const item = dataCreator.givenAValidNewItem();
-                const user = givenThereAreAnUser({ admin: true });
+                givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                const item = testDataCreator.givenAValidNewItem();
+                const user = givenThereAreAnUserInServer({ admin: true });
 
                 const server = await initServer();
 
@@ -172,9 +156,12 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
                 expect(verifyRes.body).toEqual(item);
             });
             it("should return 403 forbidden if token is not of an admin user", async () => {
-                givenThereAreAnItems();
-                const item = dataCreator.givenAValidNewItem();
-                const user = givenThereAreAnUser({ admin: false });
+                givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                const item = testDataCreator.givenAValidNewItem();
+                const user = givenThereAreAnUserInServer({ admin: false });
 
                 const server = await initServer();
 
@@ -186,10 +173,13 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
                 expect(res.status).toEqual(403);
             });
             it("should return 401 unauthorized if token is of an non existed user", async () => {
-                givenThereAreAnItems();
-                givenThereAreAnUser({ admin: true });
+                givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                givenThereAreAnUserInServer({ admin: true });
 
-                const item = dataCreator.givenAValidNewItem();
+                const item = testDataCreator.givenAValidNewItem();
                 const notExistedUserId = Id.generateId();
 
                 const server = await initServer();
@@ -202,9 +192,12 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
                 expect(res.status).toEqual(401);
             });
             it("should return 400 bad request if body contains invalid field values", async () => {
-                givenThereAreAnItems();
-                const user = givenThereAreAnUser({ admin: true });
-                const item = dataCreator.givenAInvalidNewItem();
+                givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                const user = givenThereAreAnUserInServer({ admin: true });
+                const item = testDataCreator.givenAInvalidNewItem();
 
                 const server = await initServer();
 
@@ -216,8 +209,11 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
                 expect(res.status).toEqual(400);
             });
             it("should return 400 bad request if body does not exist", async () => {
-                givenThereAreAnItems();
-                const user = givenThereAreAnUser({ admin: true });
+                givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                const user = givenThereAreAnUserInServer({ admin: true });
 
                 const server = await initServer();
 
@@ -228,8 +224,11 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
                 expect(res.status).toEqual(400);
             });
             it("should return 409 conflict if already exist a item with the same id", async () => {
-                const data = givenThereAreAnItems();
-                const user = givenThereAreAnUser({ admin: true });
+                const data = givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                const user = givenThereAreAnUserInServer({ admin: true });
 
                 const server = await initServer();
 
@@ -243,9 +242,12 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
         });
         describe(`PUT /${endpoint}/{id}`, () => {
             it("should upate the item if token is of an admin user", async () => {
-                givenThereAreAnItems();
-                const item = dataCreator.givenAValidModifiedItem();
-                const user = givenThereAreAnUser({ admin: true });
+                givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                const item = testDataCreator.givenAValidModifiedItem();
+                const user = givenThereAreAnUserInServer({ admin: true });
 
                 const server = await initServer();
 
@@ -265,9 +267,12 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
                 expect(verifyRes.body).toEqual(item);
             });
             it("should return 403 forbidden if token is not of an admin user", async () => {
-                givenThereAreAnItems();
-                const item = dataCreator.givenAValidModifiedItem();
-                const user = givenThereAreAnUser({ admin: false });
+                givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                const item = testDataCreator.givenAValidModifiedItem();
+                const user = givenThereAreAnUserInServer({ admin: false });
 
                 const server = await initServer();
 
@@ -279,10 +284,13 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
                 expect(res.status).toEqual(403);
             });
             it("should return 401 unauthorized if token is of an non existed user", async () => {
-                givenThereAreAnItems();
-                givenThereAreAnUser({ admin: true });
+                givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                givenThereAreAnUserInServer({ admin: true });
 
-                const item = dataCreator.givenAValidModifiedItem();
+                const item = testDataCreator.givenAValidModifiedItem();
                 const notExistedUserId = Id.generateId();
 
                 const server = await initServer();
@@ -295,9 +303,12 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
                 expect(res.status).toEqual(401);
             });
             it("should return 400 bad request if body contains invalid field values", async () => {
-                givenThereAreAnItems();
-                const user = givenThereAreAnUser({ admin: true });
-                const item = dataCreator.givenAInvalidModifiedItem();
+                givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                const user = givenThereAreAnUserInServer({ admin: true });
+                const item = testDataCreator.givenAInvalidModifiedItem();
 
                 const server = await initServer();
 
@@ -309,9 +320,12 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
                 expect(res.status).toEqual(400);
             });
             it("should return 400 bad request if body does not exist", async () => {
-                givenThereAreAnItems();
-                const user = givenThereAreAnUser({ admin: true });
-                const item = dataCreator.givenAValidModifiedItem();
+                givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                const user = givenThereAreAnUserInServer({ admin: true });
+                const item = testDataCreator.givenAValidModifiedItem();
 
                 const server = await initServer();
 
@@ -322,9 +336,12 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
                 expect(res.status).toEqual(400);
             });
             it("should return 404 resource not found if it does not exist the item", async () => {
-                givenThereAreAnItems();
-                const item = dataCreator.givenAValidModifiedItem();
-                const user = givenThereAreAnUser({ admin: true });
+                givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                const item = testDataCreator.givenAValidModifiedItem();
+                const user = givenThereAreAnUserInServer({ admin: true });
 
                 const notExistedItemId = Id.generateId();
 
@@ -340,8 +357,11 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
         });
         describe(`DELETE /${endpoint}/{id}`, () => {
             it("should return 200 removing expected news feed if token is of an admin user", async () => {
-                const data = givenThereAreAnItems();
-                const user = givenThereAreAnUser({ admin: true });
+                const data = givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                const user = givenThereAreAnUserInServer({ admin: true });
                 const server = await initServer();
                 const feedToRemove = data[0];
 
@@ -358,8 +378,11 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
                 expect(resAll.body).toEqual(data.filter(feed => feed.id !== feedToRemove.id));
             });
             it("should return 403 forbidden if token is not of an admin user", async () => {
-                const data = givenThereAreAnItems();
-                const user = givenThereAreAnUser({ admin: false });
+                const data = givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                const user = givenThereAreAnUserInServer({ admin: false });
                 const server = await initServer();
 
                 const res = await request(server)
@@ -369,8 +392,11 @@ export const commonCRUDTests = <RawData extends EntityData, T extends Entity<Raw
                 expect(res.status).toEqual(403);
             });
             it("should return 401 unauthorized if token is of an non existed user", async () => {
-                const data = givenThereAreAnItems();
-                givenThereAreAnUser({ admin: true });
+                const data = givenThereAreAnItemsAndDependenciesInServer(
+                    principalDataCreator,
+                    dependenciesDataCreators
+                );
+                givenThereAreAnUserInServer({ admin: true });
                 const server = await initServer();
 
                 const res = await request(server)

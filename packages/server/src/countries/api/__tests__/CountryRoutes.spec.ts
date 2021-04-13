@@ -1,9 +1,10 @@
 import { Country, CountryData, Id } from "karate-stars-core";
-import { commonCRUDTests, DataCreator } from "../../../common/api/testUtils/crud.spec";
+import { commonCRUDTests } from "../../../common/api/testUtils/crud.spec";
 import { CountriesEndpoint } from "../CountryRoutes";
 import { countryDIKeys } from "../../CountryDIModule";
+import { ServerDataCreator, TestDataCreator } from "../../../common/api/testUtils/DataCreator";
 
-const Categories = [
+const entities = [
     Country.create({
         id: "ANIgK3ttJDV",
         iso2: "br",
@@ -16,28 +17,32 @@ const Categories = [
     }).get(),
 ];
 
-const CountryCreator: DataCreator<CountryData, Country> = {
-    givenAInitialItems: () => {
-        return Categories;
+const principalDataCreator: ServerDataCreator<CountryData, Country> = {
+    repositoryKey: countryDIKeys.countryRepository,
+    items: () => {
+        return entities;
     },
+};
+
+const testDataCreator: TestDataCreator<CountryData> = {
     givenAValidNewItem: () => {
-        return { ...Categories[0].toData(), id: Id.generateId().value };
+        return { ...entities[0].toData(), id: Id.generateId().value };
     },
     givenAInvalidNewItem: () => {
         return {
-            ...Categories[0].toData(),
+            ...entities[0].toData(),
             id: Id.generateId().value,
             name: "",
         };
     },
     givenAValidModifiedItem: (): CountryData => {
-        return { ...Categories[0].toData(), name: Categories[0].name + "modified" };
+        return { ...entities[0].toData(), name: entities[0].name + "modified" };
     },
     givenAInvalidModifiedItem: (): CountryData => {
-        return { ...Categories[0].toData(), name: "" };
+        return { ...entities[0].toData(), name: "" };
     },
 };
 
-commonCRUDTests(CountriesEndpoint, countryDIKeys.countryRepository, CountryCreator);
+commonCRUDTests(CountriesEndpoint, testDataCreator, principalDataCreator);
 
 // Add especific items

@@ -1,8 +1,9 @@
 import { Id, NewsFeed, NewsFeedData } from "karate-stars-core";
-import { commonCRUDTests, DataCreator } from "../../../common/api/testUtils/crud.spec";
+import { commonCRUDTests } from "../../../common/api/testUtils/crud.spec";
+import { ServerDataCreator, TestDataCreator } from "../../../common/api/testUtils/DataCreator";
 import { appDIKeys } from "../../../CompositionRoot";
 
-const newsFeeds = [
+const entities = [
     NewsFeed.create({
         id: Id.generateId().value,
         name: "WKF News Center",
@@ -23,27 +24,31 @@ const newsFeeds = [
     }).get(),
 ];
 
-const newsFeedCreator: DataCreator<NewsFeedData, NewsFeed> = {
-    givenAInitialItems: (): NewsFeed[] => {
-        return newsFeeds;
+const principalDataCreator: ServerDataCreator<NewsFeedData, NewsFeed> = {
+    repositoryKey: appDIKeys.newsFeedRepository,
+    items: () => {
+        return entities;
     },
+};
+
+const testDataCreator: TestDataCreator<NewsFeedData> = {
     givenAValidNewItem: (): NewsFeedData => {
-        return { ...newsFeeds[0].toData(), id: Id.generateId().value };
+        return { ...entities[0].toData(), id: Id.generateId().value };
     },
     givenAInvalidNewItem: (): NewsFeedData => {
         return {
-            ...newsFeeds[0].toData(),
+            ...entities[0].toData(),
             id: Id.generateId().value,
             url: "Invalid",
             image: "Invalid",
         };
     },
     givenAValidModifiedItem: (): NewsFeedData => {
-        return { ...newsFeeds[0].toData(), name: newsFeeds[0].name + "modified" };
+        return { ...entities[0].toData(), name: entities[0].name + "modified" };
     },
     givenAInvalidModifiedItem: (): NewsFeedData => {
-        return { ...newsFeeds[0].toData(), url: "Invalid" };
+        return { ...entities[0].toData(), url: "Invalid" };
     },
 };
 
-commonCRUDTests("news-feeds", appDIKeys.newsFeedRepository, newsFeedCreator);
+commonCRUDTests("news-feeds", testDataCreator, principalDataCreator);
