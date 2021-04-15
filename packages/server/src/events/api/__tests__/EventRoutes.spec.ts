@@ -82,7 +82,7 @@ describe(`Invalid eventType dependency tests for ${eventsEndpoint}`, () => {
                 dependenciesDataCreators
             );
             const user = givenThereAreAnUserInServer({ admin: true });
-            const item = { ...testDataCreator.givenAValidNewItem(), typeId: "invalid" };
+            const item = { ...testDataCreator.givenAValidNewItem(), typeId: "Aa6N73CZWtE" };
 
             const server = await initServer();
 
@@ -101,7 +101,7 @@ describe(`Invalid eventType dependency tests for ${eventsEndpoint}`, () => {
                 dependenciesDataCreators
             );
             const user = givenThereAreAnUserInServer({ admin: true });
-            const item = { ...testDataCreator.givenAValidModifiedItem(), typeId: "invalid" };
+            const item = { ...testDataCreator.givenAValidModifiedItem(), typeId: "Aa6N73CZWtE" };
 
             const server = await initServer();
 

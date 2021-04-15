@@ -21,7 +21,10 @@ export function updateResource<
         data: TData,
         entity: TEntity
     ) => Either<ValidationError<TValidationData>[], TEntity>,
-    saveEntity: (entity: TEntity) => Promise<Either<UnexpectedError, ActionResult>>
+    saveEntity: (entity: TEntity) => Promise<Either<UnexpectedError, ActionResult>>,
+    validateDependencies?: (
+        entity: TEntity
+    ) => Promise<Either<ValidationError<TValidationData>[], TEntity>>
 ) {
     return createIdOrResourceNotFound<UpdateResourceError<TValidationData>>(id)
         .flatMap(async id => getEntityById(id))
@@ -31,6 +34,22 @@ export function updateResource<
                 errors: error,
             }))
         )
+        .flatMap(async entity => {
+            if (validateDependencies) {
+                const existedItem = await validateDependencies(entity);
+
+                return existedItem.fold(
+                    error =>
+                        Either.left<UpdateResourceError<TValidationData>, TEntity>({
+                            kind: "ValidationErrors",
+                            errors: error,
+                        } as UpdateResourceError<TValidationData>),
+                    () => Either.right<UpdateResourceError<TValidationData>, TEntity>(entity)
+                );
+            } else {
+                return Either.right<UpdateResourceError<TValidationData>, TEntity>(entity);
+            }
+        })
         .flatMap(entity => saveEntity(entity))
         .run();
 }

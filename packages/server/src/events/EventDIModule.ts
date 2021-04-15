@@ -55,6 +55,7 @@ export function initializeEvents() {
         () =>
             new UpdateEventUseCase(
                 di.get<EventRepository>(eventDIKeys.eventRepository),
+                di.get<EventTypeRepository>(eventTypeDIKeys.eventTypeRepository),
                 di.get<UserRepository>(appDIKeys.userRepository)
             )
     );
