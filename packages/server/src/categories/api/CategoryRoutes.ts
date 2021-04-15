@@ -5,7 +5,7 @@ import { appDIKeys } from "../../CompositionRoot";
 import { JwtAuthenticator } from "../../server";
 import { CategoryController } from "./CategoryController";
 
-export const CategorysEndpoint = "categories";
+export const categoriesEndpoint = "categories";
 
 export default function (apiPrefix: string): hapi.ServerRoute[] {
     const jwtAuthenticator = CompositionRoot.di.get<JwtAuthenticator>(appDIKeys.jwtAuthenticator);
@@ -13,7 +13,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
     return [
         {
             method: "GET",
-            path: `${apiPrefix}/${CategorysEndpoint}`,
+            path: `${apiPrefix}/${categoriesEndpoint}`,
             options: { auth: jwtAuthenticator.name },
             handler: (
                 request: hapi.Request,
@@ -24,7 +24,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         },
         {
             method: "GET",
-            path: `${apiPrefix}/${CategorysEndpoint}/{id}`,
+            path: `${apiPrefix}/${categoriesEndpoint}/{id}`,
             options: { auth: jwtAuthenticator.name },
             handler: (
                 request: hapi.Request,
@@ -35,7 +35,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         },
         {
             method: "POST",
-            path: `${apiPrefix}/${CategorysEndpoint}`,
+            path: `${apiPrefix}/${categoriesEndpoint}`,
             options: { auth: jwtAuthenticator.name },
             handler: (
                 request: hapi.Request,
@@ -46,7 +46,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         },
         {
             method: "PUT",
-            path: `${apiPrefix}/${CategorysEndpoint}/{id}`,
+            path: `${apiPrefix}/${categoriesEndpoint}/{id}`,
             options: { auth: jwtAuthenticator.name },
             handler: (
                 request: hapi.Request,
@@ -57,7 +57,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         },
         {
             method: "DELETE",
-            path: `${apiPrefix}/${CategorysEndpoint}/{id}`,
+            path: `${apiPrefix}/${categoriesEndpoint}/{id}`,
             options: { auth: jwtAuthenticator.name },
             handler: (
                 request: hapi.Request,

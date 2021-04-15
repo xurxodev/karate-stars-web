@@ -1,3 +1,4 @@
+import { categoryTypeDIKeys } from "../category-types/CategoryTypeDIModule";
 import { MongoConector } from "../common/data/MongoConector";
 import { appDIKeys, di } from "../CompositionRoot";
 import UserRepository from "../users/domain/boundaries/UserRepository";
@@ -43,6 +44,7 @@ export function initializeCategories() {
         () =>
             new CreateCategoryUseCase(
                 di.get(categoryDIKeys.categoryRepository),
+                di.get(categoryTypeDIKeys.CategoryTypeRepository),
                 di.get(appDIKeys.userRepository)
             )
     );
@@ -52,6 +54,7 @@ export function initializeCategories() {
         () =>
             new UpdateCategoryUseCase(
                 di.get(categoryDIKeys.categoryRepository),
+                di.get(categoryTypeDIKeys.CategoryTypeRepository),
                 di.get(appDIKeys.userRepository)
             )
     );
