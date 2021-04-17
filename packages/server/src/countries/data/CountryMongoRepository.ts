@@ -11,7 +11,7 @@ export default class CountryMongoRepository
     extends MongoRepository<Country, CountryDB>
     implements CountryRepository {
     constructor(mongoConector: MongoConector) {
-        super(mongoConector, "Countries");
+        super(mongoConector, "countries");
     }
 
     protected mapToDomain(modelDB: CountryDB): Country {

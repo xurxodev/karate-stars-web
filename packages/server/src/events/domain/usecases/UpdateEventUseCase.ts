@@ -32,20 +32,16 @@ export class UpdateEventUseCase extends AdminUseCase<
         const getById = (id: Id) => this.eventRepository.getById(id);
         const saveEntity = (entity: Event) => this.eventRepository.save(entity);
         const validateDependencies = async (entity: Event) => {
-            const eventTypeResult = await this.eventTypeRepository.getById(entity.typeId);
-
-            return eventTypeResult.fold(
-                () =>
-                    Either.left<ValidationError<EventData>[], Event>([
-                        {
-                            property: "typeId" as const,
-                            errors: ["invalid_dependency"],
-                            type: "event",
-                            value: entity.typeId,
-                        },
-                    ]),
-                () => Either.right<ValidationError<EventData>[], Event>(entity)
-            );
+            return (await this.eventTypeRepository.getById(entity.typeId))
+                .mapLeft(() => [
+                    {
+                        property: "typeId" as const,
+                        errors: ["invalid_dependency"],
+                        type: Event.name,
+                        value: entity.typeId,
+                    } as ValidationError<EventData>,
+                ])
+                .map(() => entity);
         };
 
         return updateResource(id, data, getById, updateEntity, saveEntity, validateDependencies);

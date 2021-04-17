@@ -7,7 +7,7 @@ const competitorRawData: CompetitorData = {
     wkfId: "AZE133",
     biography:
         "Rafael Aghayev is the first karateka to be a 5-time individual world champion, a record he achieved at the World Championships in 2016 in Linz.\nRafael Agayev was born on March 4, 1985 in the city of Sumgait. He began to play football and study karate at the age of 7 with his first master Rafael Mamedov.\nIn 2007 Rafael graduated from the Azerbaijan State Academy of Physical Culture and Sports, Single combat sports Faculty, chair of “Fight and its methodology”, degree of coach and master in karate. From 2007 to 2008 Rafael passed military service in Agjabedi region of Azerbaijan Republic. After it he was transferred to the Central Sports Club of the Ministry of Defense. At the first national competitions, he was noticed and invited to train in one of the most famous sports clubs of the Republic.",
-    countryId: "az",
+    countryId: "uIaQv0JlN5n",
     categoryId: "Gps5nVcCdjV",
     mainImage: "http://www.karatestarsapp.com/app/images/rafael_aghayev.jpg",
     isActive: true,

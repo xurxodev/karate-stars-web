@@ -1,108 +1,263 @@
-import { Id, Competitor, SocialLinkType, CompetitorData } from "karate-stars-core";
+import { Id, Competitor, CompetitorData, Category, Event, Country } from "karate-stars-core";
 import { commonCRUDTests } from "../../../common/api/testUtils/crud.spec";
 import { CompetitorsEndpoint } from "../CompetitorRoutes";
 import { competitorDIKeys } from "../../CompetitorDIModule";
 import { ServerDataCreator, TestDataCreator } from "../../../common/api/testUtils/DataCreator";
+import data from "./data.json";
+import { categoryDIKeys } from "../../../categories/CategoryDIModule";
+import { countryDIKeys } from "../../../countries/CountryDIModule";
+import { eventDIKeys } from "../../../events/EventDIModule";
+import {
+    givenThereAreAnItemsAndDependenciesInServer,
+    givenThereAreAnUserInServer,
+} from "../../../common/api/testUtils/ScenariosFactory";
+import { generateToken, initServer } from "../../../common/api/testUtils/serverTest";
+import request from "supertest";
 
-const entities = [
-    Competitor.create({
-        id: Id.generateId().value,
-        firstName: "Iryna",
-        lastName: "Zaretska",
-        wkfId: "AZE2043",
-        biography:
-            "Iryna Zaretska (4 March 1996 in Ukraine) is a Ukrainian and Azerbaijani karateka. \nShe won for Ukraine a bronze medal in kumite less than 68 at the 2014 Karate World Championships in Bremen, then for Azerbaijan the gold medal in the same category at the 2015 European Games in Baku and in QihGhQpPpiI at the 2016 European Karate Championships in Montpellier. \nShe is a gold medalist at the 2017 Islamic Solidarity Games in Baku and a silver medalist at the 2018 Karate European Championships in Novi Sad. \nShe was proclaimed World Champion in November 2018 in Madrid.",
-        countryId: "uIaQv0JlN5n",
-        categoryId: "Gps5nVcCdjV",
-        mainImage: "http://www.karatestarsapp.com/app/images/iryna_zaretska.jpg",
-        isActive: true,
-        isLegend: false,
-        links: [
-            {
-                url: "https://twitter.com/IrynaZaretska",
-                type: "twitter",
-            },
-            {
-                url: "https://www.facebook.com/iryna.zaretska.3",
-                type: "facebbok" as SocialLinkType,
-            },
-            {
-                url: "https://www.instagram.com/irynazaretska",
-                type: "instagram" as SocialLinkType,
-            },
-        ],
-        achievements: [
-            {
-                eventId: "gy5jc1IU2mN",
-                categoryId: "vBqpirnDr9q",
-                position: 3,
-            },
-            {
-                eventId: "aliiuRjOllO",
-                categoryId: "vBqpirnDr9q",
-                position: 1,
-            },
-        ],
-    }).get(),
-    Competitor.create({
-        id: Id.generateId().value,
-        firstName: "Giana",
-        lastName: "Lotfy",
-        wkfId: "EGY253",
-        biography:
-            "Gianna Lotfy is an Egyptian karateka who was proclaimed world champion in 2014 at the age of 20 years. He has also been world champion in junior and under-21 categories.",
-        countryId: "AsfJyc10miO",
-        categoryId: "Gps5nVcCdjV",
-        mainImage: "http://www.karatestarsapp.com/app/images/giana_lotfy.jpg",
-        isActive: true,
-        isLegend: false,
-        links: [
-            {
-                url: "https://www.instagram.com/gianafarouk",
-                type: "instagram" as SocialLinkType,
-            },
-        ],
-        achievements: [
-            {
-                eventId: "VYgzwBJyuLz",
-                categoryId: "qtYzfVYc50L",
-                position: 1,
-            },
-            {
-                eventId: "gy5jc1IU2mN",
-                categoryId: "qtYzfVYc50L",
-                position: 1,
-            },
-        ],
-    }).get(),
-];
+const entities = {
+    competitors: data.competitors.map(data => Competitor.create(data as CompetitorData).get()),
+    categories: data.categories.map(data => Category.create(data).get()),
+    events: data.events.map(data => Event.create(data).get()),
+    countries: data.countries.map(data => Country.create(data).get()),
+};
 
 const principalDataCreator: ServerDataCreator<CompetitorData, Competitor> = {
     repositoryKey: competitorDIKeys.CompetitorRepository,
-    items: () => {
-        return entities;
-    },
+    items: () => entities.competitors,
 };
+
+const dependenciesDataCreators = [
+    {
+        repositoryKey: categoryDIKeys.categoryRepository,
+        items: () => entities.categories,
+    },
+    {
+        repositoryKey: eventDIKeys.eventRepository,
+        items: () => entities.events,
+    },
+    {
+        repositoryKey: countryDIKeys.countryRepository,
+        items: () => entities.countries,
+    },
+];
 
 const testDataCreator: TestDataCreator<CompetitorData> = {
     givenAValidNewItem: () => {
-        return { ...entities[0].toData(), id: Id.generateId().value };
+        return { ...entities.competitors[0].toData(), id: Id.generateId().value };
     },
     givenAInvalidNewItem: () => {
         return {
-            ...entities[0].toData(),
+            ...entities.competitors[0].toData(),
             id: Id.generateId().value,
             firstName: "",
         };
     },
     givenAValidModifiedItem: (): CompetitorData => {
-        return { ...entities[0].toData(), firstName: entities[0].firstName + "modified" };
+        return {
+            ...entities.competitors[0].toData(),
+            firstName: data.competitors[0].firstName + "modified",
+        };
     },
     givenAInvalidModifiedItem: (): CompetitorData => {
-        return { ...entities[0].toData(), firstName: "" };
+        return { ...entities.competitors[0].toData(), firstName: "" };
     },
 };
 
-commonCRUDTests(CompetitorsEndpoint, testDataCreator, principalDataCreator);
+commonCRUDTests(
+    CompetitorsEndpoint,
+    testDataCreator,
+    principalDataCreator,
+    dependenciesDataCreators
+);
 
-// Add especific items
+describe(`Invalid category dependency tests for ${CompetitorsEndpoint}`, () => {
+    describe(`POST /${CompetitorsEndpoint}`, () => {
+        it("should return 400 bad request if body contains invalid field values", async () => {
+            givenThereAreAnItemsAndDependenciesInServer(
+                principalDataCreator,
+                dependenciesDataCreators
+            );
+            const user = givenThereAreAnUserInServer({ admin: true });
+            const item = { ...testDataCreator.givenAValidNewItem(), categoryId: "Aa6N73CZWtE" };
+
+            const server = await initServer();
+
+            const res = await request(server)
+                .post(`/api/v1/${CompetitorsEndpoint}`)
+                .send(item)
+                .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
+
+            expect(res.status).toEqual(400);
+        });
+    });
+    describe(`PUT /${CompetitorsEndpoint}/{id}`, () => {
+        it("should return 400 bad request if body contains non existed typeId", async () => {
+            givenThereAreAnItemsAndDependenciesInServer(
+                principalDataCreator,
+                dependenciesDataCreators
+            );
+            const user = givenThereAreAnUserInServer({ admin: true });
+            const item = {
+                ...testDataCreator.givenAValidModifiedItem(),
+                categoryId: "Aa6N73CZWtE",
+            };
+
+            const server = await initServer();
+
+            const res = await request(server)
+                .put(`/api/v1/${CompetitorsEndpoint}/${item.id}`)
+                .send(item)
+                .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
+
+            expect(res.status).toEqual(400);
+        });
+    });
+});
+describe(`Invalid country dependency tests for ${CompetitorsEndpoint}`, () => {
+    describe(`POST /${CompetitorsEndpoint}`, () => {
+        it("should return 400 bad request if body contains invalid field values", async () => {
+            givenThereAreAnItemsAndDependenciesInServer(
+                principalDataCreator,
+                dependenciesDataCreators
+            );
+            const user = givenThereAreAnUserInServer({ admin: true });
+            const item = { ...testDataCreator.givenAValidNewItem(), countryId: "Aa6N73CZWtE" };
+
+            const server = await initServer();
+
+            const res = await request(server)
+                .post(`/api/v1/${CompetitorsEndpoint}`)
+                .send(item)
+                .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
+
+            expect(res.status).toEqual(400);
+        });
+    });
+    describe(`PUT /${CompetitorsEndpoint}/{id}`, () => {
+        it("should return 400 bad request if body contains invalid field values", async () => {
+            givenThereAreAnItemsAndDependenciesInServer(
+                principalDataCreator,
+                dependenciesDataCreators
+            );
+            const user = givenThereAreAnUserInServer({ admin: true });
+            const item = { ...testDataCreator.givenAValidModifiedItem(), countryId: "Aa6N73CZWtE" };
+
+            const server = await initServer();
+
+            const res = await request(server)
+                .put(`/api/v1/${CompetitorsEndpoint}/${item.id}`)
+                .send(item)
+                .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
+
+            expect(res.status).toEqual(400);
+        });
+    });
+});
+describe(`Invalid achievement category dependency tests for ${CompetitorsEndpoint}`, () => {
+    describe(`POST /${CompetitorsEndpoint}`, () => {
+        it("should return 400 bad request if body contains invalid field values", async () => {
+            givenThereAreAnItemsAndDependenciesInServer(
+                principalDataCreator,
+                dependenciesDataCreators
+            );
+            const user = givenThereAreAnUserInServer({ admin: true });
+            const item = testDataCreator.givenAValidNewItem();
+            const invalidItem = {
+                ...item,
+                achievements: item.achievements.map(achievement => ({
+                    ...achievement,
+                    categoryId: "Aa6N73CZWtE",
+                })),
+            };
+
+            const server = await initServer();
+
+            const res = await request(server)
+                .post(`/api/v1/${CompetitorsEndpoint}`)
+                .send(invalidItem)
+                .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
+
+            expect(res.status).toEqual(400);
+        });
+    });
+    describe(`PUT /${CompetitorsEndpoint}/{id}`, () => {
+        it("should return 400 bad request if body contains invalid field values", async () => {
+            givenThereAreAnItemsAndDependenciesInServer(
+                principalDataCreator,
+                dependenciesDataCreators
+            );
+            const user = givenThereAreAnUserInServer({ admin: true });
+            const item = testDataCreator.givenAValidModifiedItem();
+            const invalidItem = {
+                ...item,
+                achievements: item.achievements.map(achievement => ({
+                    ...achievement,
+                    categoryId: "Aa6N73CZWtE",
+                })),
+            };
+
+            const server = await initServer();
+
+            const res = await request(server)
+                .put(`/api/v1/${CompetitorsEndpoint}/${item.id}`)
+                .send(invalidItem)
+                .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
+
+            expect(res.status).toEqual(400);
+        });
+    });
+});
+describe(`Invalid achievement event dependency tests for ${CompetitorsEndpoint}`, () => {
+    describe(`POST /${CompetitorsEndpoint}`, () => {
+        it("should return 400 bad request if body contains invalid field values", async () => {
+            givenThereAreAnItemsAndDependenciesInServer(
+                principalDataCreator,
+                dependenciesDataCreators
+            );
+            const user = givenThereAreAnUserInServer({ admin: true });
+            const item = testDataCreator.givenAValidNewItem();
+            const invalidItem = {
+                ...item,
+                achievements: item.achievements.map(achievement => ({
+                    ...achievement,
+                    eventId: "Aa6N73CZWtE",
+                })),
+            };
+
+            const server = await initServer();
+
+            const res = await request(server)
+                .post(`/api/v1/${CompetitorsEndpoint}`)
+                .send(invalidItem)
+                .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
+
+            expect(res.status).toEqual(400);
+        });
+    });
+    describe(`PUT /${CompetitorsEndpoint}/{id}`, () => {
+        it("should return 400 bad request if body contains invalid field values", async () => {
+            givenThereAreAnItemsAndDependenciesInServer(
+                principalDataCreator,
+                dependenciesDataCreators
+            );
+            const user = givenThereAreAnUserInServer({ admin: true });
+            const item = testDataCreator.givenAValidModifiedItem();
+            const invalidItem = {
+                ...item,
+                achievements: item.achievements.map(achievement => ({
+                    ...achievement,
+                    eventId: "Aa6N73CZWtE",
+                })),
+            };
+
+            const server = await initServer();
+
+            const res = await request(server)
+                .put(`/api/v1/${CompetitorsEndpoint}/${item.id}`)
+                .send(invalidItem)
+                .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
+
+            expect(res.status).toEqual(400);
+        });
+    });
+});

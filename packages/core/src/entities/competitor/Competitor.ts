@@ -26,7 +26,7 @@ interface CompetitorObjectData extends EntityObjectData {
     lastName: string;
     wkfId: string;
     biography: string;
-    countryId: string;
+    countryId: Id;
     categoryId: Id;
     mainImage?: Url;
     isActive: boolean;
@@ -42,7 +42,7 @@ export class Competitor extends Entity<CompetitorData> {
     public readonly lastName: string;
     public readonly wkfId: string;
     public readonly biography: string;
-    public readonly countryId: string;
+    public readonly countryId: Id;
     public readonly categoryId: Id;
     public readonly mainImage: Url;
     public readonly isActive: boolean;
@@ -89,7 +89,7 @@ export class Competitor extends Entity<CompetitorData> {
             lastName: this.lastName,
             wkfId: this.wkfId,
             biography: this.biography,
-            countryId: this.countryId,
+            countryId: this.countryId.value,
             categoryId: this.categoryId.value,
             mainImage: this.mainImage.value,
             isActive: this.isActive,
@@ -116,6 +116,7 @@ export class Competitor extends Entity<CompetitorData> {
         const idResult = Id.createExisted(data.id);
         const mainImageResult = data.mainImage ? Url.create(data.mainImage, true) : undefined;
         const categoryIdResult = Id.createExisted(data.categoryId);
+        const countryIdResult = Id.createExisted(data.countryId);
         const achievementsResult = data.achievements.map(achievementData => {
             return Achievement.create(achievementData);
         });
@@ -179,7 +180,10 @@ export class Competitor extends Entity<CompetitorData> {
                 },
                 {
                     property: "countryId" as const,
-                    errors: validateRequired(data.countryId),
+                    errors: countryIdResult.fold(
+                        errors => errors,
+                        () => []
+                    ),
                     value: data.countryId,
                 },
                 {
@@ -214,7 +218,7 @@ export class Competitor extends Entity<CompetitorData> {
                     lastName: data.lastName,
                     wkfId: data.wkfId,
                     biography: data.biography,
-                    countryId: data.countryId,
+                    countryId: countryIdResult.get(),
                     categoryId: categoryIdResult.get(),
                     mainImage: data.mainImage ? mainImageResult.get() : undefined,
                     isActive: data.isActive,

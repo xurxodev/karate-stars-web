@@ -63,6 +63,17 @@ export class Either<L, R> {
         );
     }
 
+    getLeft(): L {
+        const throwFn = () => {
+            throw Error("The value is right: " + JSON.stringify(this.value));
+        };
+
+        return this.fold(
+            leftValue => leftValue,
+            () => throwFn()
+        );
+    }
+
     getOrElse(defaultValue: R): R {
         return this.fold(
             () => defaultValue,

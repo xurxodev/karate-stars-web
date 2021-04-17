@@ -29,24 +29,19 @@ export class UpdateCategoryUseCase extends AdminUseCase<
         data,
     }: UpdateResourceArgs): Promise<Either<UpdateResourceError<CategoryData>, ActionResult>> {
         const updateEntity = (data: CategoryData, entity: Category) => entity.update(data);
-        ``;
         const getById = (id: Id) => this.categoryRepository.getById(id);
         const saveEntity = (entity: Category) => this.categoryRepository.save(entity);
         const validateDependencies = async (entity: Category) => {
-            const eventTypeResult = await this.categoryTypeRepository.getById(entity.typeId);
-
-            return eventTypeResult.fold(
-                () =>
-                    Either.left<ValidationError<CategoryData>[], Category>([
-                        {
-                            property: "typeId" as const,
-                            errors: ["invalid_dependency"],
-                            type: "event",
-                            value: entity.typeId,
-                        },
-                    ]),
-                () => Either.right<ValidationError<CategoryData>[], Category>(entity)
-            );
+            return (await this.categoryTypeRepository.getById(entity.typeId))
+                .mapLeft(() => [
+                    {
+                        property: "typeId" as const,
+                        errors: ["invalid_dependency"],
+                        type: Category.name,
+                        value: entity.typeId,
+                    } as ValidationError<CategoryData>,
+                ])
+                .map(() => entity);
         };
         return updateResource(id, data, getById, updateEntity, saveEntity, validateDependencies);
     }

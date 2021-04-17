@@ -9,6 +9,12 @@ import { DeleteCompetitorUseCase } from "./domain/usecases/DeleteCompetitorUseCa
 import { GetCompetitorsUseCase } from "./domain/usecases/GetCompetitorsUseCase";
 import { GetCompetitorByIdUseCase } from "./domain/usecases/GetCompetitorByIdUseCase";
 import { UpdateCompetitorUseCase } from "./domain/usecases/UpdateCompetitorUseCase";
+import { categoryDIKeys } from "../categories/CategoryDIModule";
+import { countryDIKeys } from "../countries/CountryDIModule";
+import { eventDIKeys } from "../events/EventDIModule";
+import CategoryRepository from "../categories/domain/boundaries/CategoryRepository";
+import CountryRepository from "../countries/domain/boundaries/CountryRepository";
+import EventRepository from "../events/domain/boundaries/EventRepository";
 
 export const competitorDIKeys = {
     CompetitorRepository: "CompetitorRepository",
@@ -33,8 +39,8 @@ export function initializeCompetitors() {
         GetCompetitorByIdUseCase,
         () =>
             new GetCompetitorByIdUseCase(
-                di.get(competitorDIKeys.CompetitorRepository),
-                di.get(appDIKeys.userRepository)
+                di.get<CompetitorRepository>(competitorDIKeys.CompetitorRepository),
+                di.get<UserRepository>(appDIKeys.userRepository)
             )
     );
 
@@ -42,8 +48,11 @@ export function initializeCompetitors() {
         CreateCompetitorUseCase,
         () =>
             new CreateCompetitorUseCase(
-                di.get(competitorDIKeys.CompetitorRepository),
-                di.get(appDIKeys.userRepository)
+                di.get<CompetitorRepository>(competitorDIKeys.CompetitorRepository),
+                di.get<CategoryRepository>(categoryDIKeys.categoryRepository),
+                di.get<CountryRepository>(countryDIKeys.countryRepository),
+                di.get<EventRepository>(eventDIKeys.eventRepository),
+                di.get<UserRepository>(appDIKeys.userRepository)
             )
     );
 
@@ -51,8 +60,11 @@ export function initializeCompetitors() {
         UpdateCompetitorUseCase,
         () =>
             new UpdateCompetitorUseCase(
-                di.get(competitorDIKeys.CompetitorRepository),
-                di.get(appDIKeys.userRepository)
+                di.get<CompetitorRepository>(competitorDIKeys.CompetitorRepository),
+                di.get<CategoryRepository>(categoryDIKeys.categoryRepository),
+                di.get<CountryRepository>(countryDIKeys.countryRepository),
+                di.get<EventRepository>(eventDIKeys.eventRepository),
+                di.get<UserRepository>(appDIKeys.userRepository)
             )
     );
 
@@ -60,8 +72,8 @@ export function initializeCompetitors() {
         DeleteCompetitorUseCase,
         () =>
             new DeleteCompetitorUseCase(
-                di.get(competitorDIKeys.CompetitorRepository),
-                di.get(appDIKeys.userRepository)
+                di.get<CompetitorRepository>(competitorDIKeys.CompetitorRepository),
+                di.get<UserRepository>(appDIKeys.userRepository)
             )
     );
 
