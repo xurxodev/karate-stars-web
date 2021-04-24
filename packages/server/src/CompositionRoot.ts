@@ -28,6 +28,7 @@ import { initializeCompetitors } from "./competitors/CompetitorDIModule";
 import { initializeEventTypes } from "./event-types/EventTypeDIModule";
 import { initializeEvents } from "./events/EventDIModule";
 import { initializeCountries } from "./countries/CountryDIModule";
+import { initializeVideos } from "./videos/VideoDIModule";
 
 export const appDIKeys = {
     jwtAuthenticator: "jwtAuthenticator",
@@ -54,6 +55,7 @@ export function init() {
     initializeNewsFeeds();
     initializeSocialNews();
     initializeCurrentNews();
+    initializeVideos();
 }
 
 export function reset() {

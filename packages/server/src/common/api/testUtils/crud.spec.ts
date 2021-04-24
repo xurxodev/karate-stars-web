@@ -6,6 +6,7 @@ import {
     givenThereAreAnUserInServer,
     givenThereAreAnItemsAndDependenciesInServer,
 } from "./ScenariosFactory";
+import { jsonParser } from "./jsonParser";
 
 export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity<TData>>(
     endpoint: string,
@@ -26,6 +27,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
 
                 const res = await request(server)
                     .get(`/api/v1/${endpoint}`)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(200);
@@ -42,6 +44,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
 
                 const res = await request(server)
                     .get(`/api/v1/${endpoint}`)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(403);
@@ -58,6 +61,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
 
                 const res = await request(server)
                     .get(`/api/v1/${endpoint}`)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(notExistedUserId.value)}` });
 
                 expect(res.status).toEqual(401);
@@ -75,6 +79,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
 
                 const res = await request(server)
                     .get(`/api/v1/${endpoint}/${data[0].id}`)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(200);
@@ -92,6 +97,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
 
                 const res = await request(server)
                     .get(`/api/v1/${endpoint}/${notExistedItemId}`)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(404);
@@ -107,6 +113,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
 
                 const res = await request(server)
                     .get(`/api/v1/${endpoint}/${data[0].id}`)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(403);
@@ -124,6 +131,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
 
                 const res = await request(server)
                     .get(`/api/v1/${endpoint}/${data[0].id}`)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(notExistedUserId.value)}` });
 
                 expect(res.status).toEqual(401);
@@ -143,6 +151,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 const res = await request(server)
                     .post(`/api/v1/${endpoint}`)
                     .send(item)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(201);
@@ -150,6 +159,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
 
                 const verifyRes = await request(server)
                     .get(`/api/v1/${endpoint}/${item.id}`)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(verifyRes.status).toEqual(200);
@@ -168,6 +178,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 const res = await request(server)
                     .post(`/api/v1/${endpoint}`)
                     .send(item)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(403);
@@ -187,6 +198,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 const res = await request(server)
                     .post(`/api/v1/${endpoint}`)
                     .send(item)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(notExistedUserId.value)}` });
 
                 expect(res.status).toEqual(401);
@@ -204,6 +216,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 const res = await request(server)
                     .post(`/api/v1/${endpoint}`)
                     .send(item)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(400);
@@ -219,6 +232,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
 
                 const res = await request(server)
                     .post(`/api/v1/${endpoint}`)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(400);
@@ -235,6 +249,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 const res = await request(server)
                     .post(`/api/v1/${endpoint}`)
                     .send(data[0])
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(409);
@@ -254,6 +269,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 const res = await request(server)
                     .put(`/api/v1/${endpoint}/${item.id}`)
                     .send(item)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(200);
@@ -261,6 +277,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
 
                 const verifyRes = await request(server)
                     .get(`/api/v1/${endpoint}/${item.id}`)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(verifyRes.status).toEqual(200);
@@ -279,6 +296,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 const res = await request(server)
                     .put(`/api/v1/${endpoint}/${item.id}`)
                     .send(item)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(403);
@@ -298,6 +316,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 const res = await request(server)
                     .put(`/api/v1/${endpoint}/${item.id}`)
                     .send(item)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(notExistedUserId.value)}` });
 
                 expect(res.status).toEqual(401);
@@ -315,6 +334,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 const res = await request(server)
                     .put(`/api/v1/${endpoint}/${item.id}`)
                     .send(item)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(400);
@@ -331,6 +351,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
 
                 const res = await request(server)
                     .put(`/api/v1/${endpoint}/${item.id}`)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(400);
@@ -350,6 +371,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 const res = await request(server)
                     .put(`/api/v1/${endpoint}/${notExistedItemId}`)
                     .send(item)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(404);
@@ -367,12 +389,14 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
 
                 const res = await request(server)
                     .delete(`/api/v1/${endpoint}/${feedToRemove.id}`)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(200);
 
                 const resAll = await request(server)
                     .get(`/api/v1/${endpoint}`)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(resAll.body).toEqual(data.filter(feed => feed.id !== feedToRemove.id));
@@ -387,6 +411,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
 
                 const res = await request(server)
                     .delete(`/api/v1/${endpoint}/${data[0].id}`)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(403);
@@ -401,6 +426,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
 
                 const res = await request(server)
                     .delete(`/api/v1/${endpoint}/${data[0].id}`)
+                    .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(Id.generateId().value)}` });
 
                 expect(res.status).toEqual(401);

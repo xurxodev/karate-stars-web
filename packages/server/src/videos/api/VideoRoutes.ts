@@ -1,30 +1,69 @@
 import * as hapi from "@hapi/hapi";
 
-import * as CompositionRoot from "./../../CompositionRoot";
-import VideoRepository from "../../videos/data/VideosJsonRepository";
-import VideoController from "./VideoController";
-import { appDIKeys } from "./../../CompositionRoot";
+import * as CompositionRoot from "../../CompositionRoot";
+import { appDIKeys } from "../../CompositionRoot";
 import { JwtAuthenticator } from "../../server";
-import GetVideosUseCase from "../domain/usecases/GetVideosUseCase";
+import { VideoController } from "./VideoController";
+
+export const videosEndpoint = "videos";
 
 export default function (apiPrefix: string): hapi.ServerRoute[] {
     const jwtAuthenticator = CompositionRoot.di.get<JwtAuthenticator>(appDIKeys.jwtAuthenticator);
-    const videoRepository = new VideoRepository();
-    const getVideosUseCase = new GetVideosUseCase(videoRepository);
-    const videoController = new VideoController(getVideosUseCase);
 
     return [
         {
             method: "GET",
-            path: `${apiPrefix}/videos`,
-            options: {
-                auth: jwtAuthenticator.name,
-            },
+            path: `${apiPrefix}/${videosEndpoint}`,
+            options: { auth: jwtAuthenticator.name },
             handler: (
                 request: hapi.Request,
                 h: hapi.ResponseToolkit
             ): hapi.Lifecycle.ReturnValue => {
-                return videoController.get(request, h);
+                return CompositionRoot.di.get(VideoController).getAll(request, h);
+            },
+        },
+        {
+            method: "GET",
+            path: `${apiPrefix}/${videosEndpoint}/{id}`,
+            options: { auth: jwtAuthenticator.name },
+            handler: (
+                request: hapi.Request,
+                h: hapi.ResponseToolkit
+            ): hapi.Lifecycle.ReturnValue => {
+                return CompositionRoot.di.get(VideoController).get(request, h);
+            },
+        },
+        {
+            method: "POST",
+            path: `${apiPrefix}/${videosEndpoint}`,
+            options: { auth: jwtAuthenticator.name },
+            handler: (
+                request: hapi.Request,
+                h: hapi.ResponseToolkit
+            ): hapi.Lifecycle.ReturnValue => {
+                return CompositionRoot.di.get(VideoController).post(request, h);
+            },
+        },
+        {
+            method: "PUT",
+            path: `${apiPrefix}/${videosEndpoint}/{id}`,
+            options: { auth: jwtAuthenticator.name },
+            handler: (
+                request: hapi.Request,
+                h: hapi.ResponseToolkit
+            ): hapi.Lifecycle.ReturnValue => {
+                return CompositionRoot.di.get(VideoController).put(request, h);
+            },
+        },
+        {
+            method: "DELETE",
+            path: `${apiPrefix}/${videosEndpoint}/{id}`,
+            options: { auth: jwtAuthenticator.name },
+            handler: (
+                request: hapi.Request,
+                h: hapi.ResponseToolkit
+            ): hapi.Lifecycle.ReturnValue => {
+                return CompositionRoot.di.get(VideoController).delete(request, h);
             },
         },
     ];

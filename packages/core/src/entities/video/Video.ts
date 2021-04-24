@@ -27,7 +27,7 @@ export interface VideoData extends EntityData {
     order: number;
 }
 
-export type ValidationTypes = VideoData & VideoLinkData;
+export type VideoValidationTypes = VideoData & VideoLinkData;
 
 export class Video extends Entity<VideoData> {
     public readonly links: VideoLink[];
@@ -52,7 +52,7 @@ export class Video extends Entity<VideoData> {
         this.order = data.order;
     }
 
-    public static create(data: VideoData): Either<ValidationError<ValidationTypes>[], Video> {
+    public static create(data: VideoData): Either<ValidationError<VideoValidationTypes>[], Video> {
         const finalId = !data.id ? Id.generateId().value : data.id;
 
         return this.validateAndCreate({ ...data, id: finalId });
@@ -60,7 +60,7 @@ export class Video extends Entity<VideoData> {
 
     public update(
         dataToUpdate: Partial<Omit<VideoData, "id">>
-    ): Either<ValidationError<ValidationTypes>[], Video> {
+    ): Either<ValidationError<VideoValidationTypes>[], Video> {
         const newData = { ...this.toData(), ...dataToUpdate };
 
         return Video.validateAndCreate(newData);
@@ -82,7 +82,7 @@ export class Video extends Entity<VideoData> {
 
     private static validateAndCreate(
         data: VideoData
-    ): Either<ValidationError<ValidationTypes>[], Video> {
+    ): Either<ValidationError<VideoValidationTypes>[], Video> {
         const idResult = Id.createExisted(data.id);
         const competitorResults = data.competitors.map(id => Id.createExisted(id));
         const linksResults = data.links.map(linkData => {

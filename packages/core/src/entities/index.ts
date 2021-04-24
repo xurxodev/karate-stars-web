@@ -7,3 +7,4 @@ export * from "./Event";
 export * from "./EventType";
 export * from "./NewsFeed";
 export * from "./User";
+export * from "./video";
