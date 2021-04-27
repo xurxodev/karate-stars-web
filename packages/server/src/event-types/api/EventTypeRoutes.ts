@@ -4,6 +4,7 @@ import * as CompositionRoot from "../../CompositionRoot";
 import { appDIKeys } from "../../CompositionRoot";
 import { JwtAuthenticator } from "../../server";
 import { EventTypeController } from "./EventTypeController";
+import { eventTypeSchema } from "./eventTypeSchema";
 
 export const eventTypesEndpoint = "event-types";
 
@@ -36,7 +37,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         {
             method: "POST",
             path: `${apiPrefix}/${eventTypesEndpoint}`,
-            options: { auth: jwtAuthenticator.name },
+            options: { auth: jwtAuthenticator.name, validate: { payload: eventTypeSchema } },
             handler: (
                 request: hapi.Request,
                 h: hapi.ResponseToolkit
@@ -47,7 +48,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         {
             method: "PUT",
             path: `${apiPrefix}/${eventTypesEndpoint}/{id}`,
-            options: { auth: jwtAuthenticator.name },
+            options: { auth: jwtAuthenticator.name, validate: { payload: eventTypeSchema } },
             handler: (
                 request: hapi.Request,
                 h: hapi.ResponseToolkit

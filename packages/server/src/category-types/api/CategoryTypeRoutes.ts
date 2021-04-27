@@ -4,6 +4,7 @@ import * as CompositionRoot from "../../CompositionRoot";
 import { appDIKeys } from "../../CompositionRoot";
 import { JwtAuthenticator } from "../../server";
 import { CategoryTypeController } from "./CategoryTypeController";
+import { categoryTypeSchema } from "./categoryTypeSchema";
 
 export const CategoryTypesEndpoint = "category-types";
 
@@ -36,7 +37,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         {
             method: "POST",
             path: `${apiPrefix}/${CategoryTypesEndpoint}`,
-            options: { auth: jwtAuthenticator.name },
+            options: { auth: jwtAuthenticator.name, validate: { payload: categoryTypeSchema } },
             handler: (
                 request: hapi.Request,
                 h: hapi.ResponseToolkit
@@ -47,7 +48,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         {
             method: "PUT",
             path: `${apiPrefix}/${CategoryTypesEndpoint}/{id}`,
-            options: { auth: jwtAuthenticator.name },
+            options: { auth: jwtAuthenticator.name, validate: { payload: categoryTypeSchema } },
             handler: (
                 request: hapi.Request,
                 h: hapi.ResponseToolkit

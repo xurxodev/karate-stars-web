@@ -4,6 +4,7 @@ import * as CompositionRoot from "../../CompositionRoot";
 import { appDIKeys } from "../../CompositionRoot";
 import { JwtAuthenticator } from "../../server";
 import { VideoController } from "./VideoController";
+import { videoSchema } from "./videoSchema";
 
 export const videosEndpoint = "videos";
 
@@ -36,7 +37,10 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         {
             method: "POST",
             path: `${apiPrefix}/${videosEndpoint}`,
-            options: { auth: jwtAuthenticator.name },
+            options: {
+                auth: jwtAuthenticator.name,
+                validate: { payload: videoSchema },
+            },
             handler: (
                 request: hapi.Request,
                 h: hapi.ResponseToolkit
@@ -47,7 +51,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         {
             method: "PUT",
             path: `${apiPrefix}/${videosEndpoint}/{id}`,
-            options: { auth: jwtAuthenticator.name },
+            options: { auth: jwtAuthenticator.name, validate: { payload: videoSchema } },
             handler: (
                 request: hapi.Request,
                 h: hapi.ResponseToolkit

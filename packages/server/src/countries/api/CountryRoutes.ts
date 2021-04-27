@@ -4,6 +4,7 @@ import * as CompositionRoot from "../../CompositionRoot";
 import { appDIKeys } from "../../CompositionRoot";
 import { JwtAuthenticator } from "../../server";
 import { CountryController } from "./CountryController";
+import { countrySchema } from "./countrySchema";
 
 export const CountriesEndpoint = "countries";
 
@@ -36,7 +37,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         {
             method: "POST",
             path: `${apiPrefix}/${CountriesEndpoint}`,
-            options: { auth: jwtAuthenticator.name },
+            options: { auth: jwtAuthenticator.name, validate: { payload: countrySchema } },
             handler: (
                 request: hapi.Request,
                 h: hapi.ResponseToolkit
@@ -47,7 +48,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         {
             method: "PUT",
             path: `${apiPrefix}/${CountriesEndpoint}/{id}`,
-            options: { auth: jwtAuthenticator.name },
+            options: { auth: jwtAuthenticator.name, validate: { payload: countrySchema } },
             handler: (
                 request: hapi.Request,
                 h: hapi.ResponseToolkit

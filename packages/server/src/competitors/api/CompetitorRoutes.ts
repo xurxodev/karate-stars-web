@@ -4,6 +4,7 @@ import * as CompositionRoot from "../../CompositionRoot";
 import { appDIKeys } from "../../CompositionRoot";
 import { JwtAuthenticator } from "../../server";
 import { CompetitorController } from "./CompetitorController";
+import { competitorSchema } from "./competitorSchema";
 
 export const CompetitorsEndpoint = "competitors";
 
@@ -36,7 +37,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         {
             method: "POST",
             path: `${apiPrefix}/${CompetitorsEndpoint}`,
-            options: { auth: jwtAuthenticator.name },
+            options: { auth: jwtAuthenticator.name, validate: { payload: competitorSchema } },
             handler: (
                 request: hapi.Request,
                 h: hapi.ResponseToolkit
@@ -47,7 +48,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         {
             method: "PUT",
             path: `${apiPrefix}/${CompetitorsEndpoint}/{id}`,
-            options: { auth: jwtAuthenticator.name },
+            options: { auth: jwtAuthenticator.name, validate: { payload: competitorSchema } },
             handler: (
                 request: hapi.Request,
                 h: hapi.ResponseToolkit

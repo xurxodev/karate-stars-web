@@ -4,6 +4,7 @@ import * as CompositionRoot from "../../CompositionRoot";
 import { appDIKeys } from "../../CompositionRoot";
 import { JwtAuthenticator } from "../../server";
 import NewsFeedsController from "./NewsFeedsController";
+import { newsFeedSchema } from "./newsFeedSchema";
 
 export default function (apiPrefix: string): hapi.ServerRoute[] {
     const jwtAuthenticator = CompositionRoot.di.get<JwtAuthenticator>(appDIKeys.jwtAuthenticator);
@@ -51,9 +52,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         {
             method: "POST",
             path: `${apiPrefix}/news-feeds`,
-            options: {
-                auth: jwtAuthenticator.name,
-            },
+            options: { auth: jwtAuthenticator.name, validate: { payload: newsFeedSchema } },
             handler: (
                 request: hapi.Request,
                 h: hapi.ResponseToolkit
@@ -64,9 +63,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         {
             method: "PUT",
             path: `${apiPrefix}/news-feeds/{id}`,
-            options: {
-                auth: jwtAuthenticator.name,
-            },
+            options: { auth: jwtAuthenticator.name, validate: { payload: newsFeedSchema } },
             handler: (
                 request: hapi.Request,
                 h: hapi.ResponseToolkit

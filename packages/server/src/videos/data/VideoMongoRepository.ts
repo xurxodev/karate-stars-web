@@ -15,8 +15,6 @@ export default class VideoMongoRepository
     }
 
     protected mapToDomain(modelDB: VideoDB): Video {
-        console.log("modelDB", JSON.stringify(modelDB));
-
         return Video.create({
             id: modelDB._id,
             links: modelDB.links,
