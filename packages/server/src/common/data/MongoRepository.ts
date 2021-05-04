@@ -41,7 +41,7 @@ export default abstract class MongoRepository<
             } else {
                 return Either.left({
                     kind: "ResourceNotFound",
-                    message: `Id ${id} not found`,
+                    message: `Id ${id.value} not found`,
                 } as ResourceNotFoundError);
             }
         } catch (error) {

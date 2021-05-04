@@ -385,7 +385,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 );
                 const user = givenThereAreAnUserInServer({ admin: true });
                 const server = await initServer();
-                const feedToRemove = data[0];
+                const feedToRemove = testDataCreator.givenAItemToDelete();
 
                 const res = await request(server)
                     .delete(`/api/v1/${endpoint}/${feedToRemove.id}`)
@@ -402,30 +402,32 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 expect(resAll.body).toEqual(data.filter(feed => feed.id !== feedToRemove.id));
             });
             it("should return 403 forbidden if token is not of an admin user", async () => {
-                const data = givenThereAreAnItemsAndDependenciesInServer(
+                givenThereAreAnItemsAndDependenciesInServer(
                     principalDataCreator,
                     dependenciesDataCreators
                 );
                 const user = givenThereAreAnUserInServer({ admin: false });
                 const server = await initServer();
+                const feedToRemove = testDataCreator.givenAItemToDelete();
 
                 const res = await request(server)
-                    .delete(`/api/v1/${endpoint}/${data[0].id}`)
+                    .delete(`/api/v1/${endpoint}/${feedToRemove.id}`)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
                 expect(res.status).toEqual(403);
             });
             it("should return 401 unauthorized if token is of an non existed user", async () => {
-                const data = givenThereAreAnItemsAndDependenciesInServer(
+                givenThereAreAnItemsAndDependenciesInServer(
                     principalDataCreator,
                     dependenciesDataCreators
                 );
                 givenThereAreAnUserInServer({ admin: true });
                 const server = await initServer();
+                const feedToRemove = testDataCreator.givenAItemToDelete();
 
                 const res = await request(server)
-                    .delete(`/api/v1/${endpoint}/${data[0].id}`)
+                    .delete(`/api/v1/${endpoint}/${feedToRemove.id}`)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(Id.generateId().value)}` });
 

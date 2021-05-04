@@ -61,6 +61,9 @@ const testDataCreator: TestDataCreator<CompetitorData> = {
     givenAInvalidModifiedItem: (): CompetitorData => {
         return { ...entities.competitors[0].toData(), firstName: "" };
     },
+    givenAItemToDelete: (): CompetitorData => {
+        return entities.competitors[0].toData();
+    },
 };
 
 commonCRUDTests(

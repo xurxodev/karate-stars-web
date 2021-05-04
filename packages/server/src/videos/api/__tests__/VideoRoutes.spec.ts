@@ -52,6 +52,9 @@ const testDataCreator: TestDataCreator<VideoData> = {
     givenAInvalidModifiedItem: (): VideoData => {
         return { ...entities.videos[0].toData(), title: "" };
     },
+    givenAItemToDelete: (): VideoData => {
+        return entities.videos[0].toData();
+    },
 };
 
 commonCRUDTests(videosEndpoint, testDataCreator, principalDataCreator, dependenciesDataCreators);

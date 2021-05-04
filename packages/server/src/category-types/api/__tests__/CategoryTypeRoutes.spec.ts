@@ -39,6 +39,9 @@ const testDataCreator: TestDataCreator<CategoryTypeData> = {
     givenAInvalidModifiedItem: (): CategoryTypeData => {
         return { ...entities[0].toData(), name: "" };
     },
+    givenAItemToDelete: (): CategoryTypeData => {
+        return entities[0].toData();
+    },
 };
 
 commonCRUDTests(CategoryTypesEndpoint, testDataCreator, principalDataCreator);

@@ -13,4 +13,5 @@ export interface TestDataCreator<TEntityData extends EntityData> {
     givenAInvalidNewItem: () => TEntityData;
     givenAValidModifiedItem: () => TEntityData;
     givenAInvalidModifiedItem: () => TEntityData;
+    givenAItemToDelete: () => TEntityData;
 }

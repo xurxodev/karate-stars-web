@@ -22,7 +22,7 @@ export default class CompetitorMongoRepository
             wkfId: modelDB.wkfId,
             biography: modelDB.biography,
             countryId: modelDB.countryId,
-            categoryId: modelDB.countryId,
+            categoryId: modelDB.categoryId,
             mainImage: modelDB.mainImage,
             isActive: modelDB.isActive,
             isLegend: modelDB.isLegend,

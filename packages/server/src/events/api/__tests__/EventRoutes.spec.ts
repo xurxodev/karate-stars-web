@@ -70,6 +70,9 @@ const testDataCreator: TestDataCreator<EventData> = {
     givenAInvalidModifiedItem: (): EventData => {
         return { ...entities[0].toData(), name: "" };
     },
+    givenAItemToDelete: (): EventData => {
+        return entities[0].toData();
+    },
 };
 
 commonCRUDTests(eventsEndpoint, testDataCreator, principalDataCreator, dependenciesDataCreators);

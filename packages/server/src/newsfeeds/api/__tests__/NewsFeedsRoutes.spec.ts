@@ -49,6 +49,9 @@ const testDataCreator: TestDataCreator<NewsFeedData> = {
     givenAInvalidModifiedItem: (): NewsFeedData => {
         return { ...entities[0].toData(), url: "Invalid" };
     },
+    givenAItemToDelete: (): NewsFeedData => {
+        return entities[0].toData();
+    },
 };
 
 commonCRUDTests("news-feeds", testDataCreator, principalDataCreator);

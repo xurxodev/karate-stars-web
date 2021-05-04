@@ -1,5 +1,7 @@
 import { categoryTypeDIKeys } from "../category-types/CategoryTypeDIModule";
 import { MongoConector } from "../common/data/MongoConector";
+import { competitorDIKeys } from "../competitors/CompetitorDIModule";
+import CompetitorRepository from "../competitors/domain/boundaries/CompetitorRepository";
 import { appDIKeys, di } from "../CompositionRoot";
 import UserRepository from "../users/domain/boundaries/UserRepository";
 import { CategoryController } from "./api/CategoryController";
@@ -64,6 +66,7 @@ export function initializeCategories() {
         () =>
             new DeleteCategoryUseCase(
                 di.get(categoryDIKeys.categoryRepository),
+                di.get<CompetitorRepository>(competitorDIKeys.CompetitorRepository),
                 di.get(appDIKeys.userRepository)
             )
     );

@@ -41,6 +41,9 @@ const testDataCreator: TestDataCreator<CountryData> = {
     givenAInvalidModifiedItem: (): CountryData => {
         return { ...entities[0].toData(), name: "" };
     },
+    givenAItemToDelete: (): CountryData => {
+        return entities[0].toData();
+    },
 };
 
 commonCRUDTests(CountriesEndpoint, testDataCreator, principalDataCreator);

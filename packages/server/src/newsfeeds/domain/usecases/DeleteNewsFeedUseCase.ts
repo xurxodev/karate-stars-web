@@ -1,8 +1,11 @@
 import { Either, EitherAsync, Id, NewsFeed } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
-import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
+import { UnexpectedError } from "../../../common/api/Errors";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
-import { deleteResourceWithImage } from "../../../common/domain/DeleteResource";
+import {
+    DeleteResourceError,
+    deleteResourceWithImage,
+} from "../../../common/domain/DeleteResource";
 import { ImageRepository } from "../../../images/domain/ImageRepository";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import NewsFeedsRepository from "../boundaries/NewsFeedRepository";
@@ -11,11 +14,9 @@ export interface GetNewsFeedByIdArg extends AdminUseCaseArgs {
     id: string;
 }
 
-type DeleteNewsFeedError = ResourceNotFoundError | UnexpectedError;
-
 export class DeleteNewsFeedUseCase extends AdminUseCase<
     GetNewsFeedByIdArg,
-    DeleteNewsFeedError,
+    DeleteResourceError,
     ActionResult
 > {
     constructor(
@@ -28,7 +29,7 @@ export class DeleteNewsFeedUseCase extends AdminUseCase<
 
     public async run({
         id,
-    }: GetNewsFeedByIdArg): Promise<Either<ResourceNotFoundError | UnexpectedError, ActionResult>> {
+    }: GetNewsFeedByIdArg): Promise<Either<DeleteResourceError, ActionResult>> {
         const getById = (id: Id) => this.newsFeedsRepository.getById(id);
         const deleteEntity = (id: Id) => this.newsFeedsRepository.delete(id);
         const deleteImage = (entity: NewsFeed): EitherAsync<UnexpectedError, true> => {
