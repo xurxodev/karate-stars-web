@@ -9,6 +9,8 @@ import { DeleteCategoryTypeUseCase } from "./domain/usecases/DeleteCategoryTypeU
 import { GetCategoryTypesUseCase } from "./domain/usecases/GetCategoryTypesUseCase";
 import { GetCategoryTypeByIdUseCase } from "./domain/usecases/GetCategoryTypeByIdUseCase";
 import { UpdateCategoryTypeUseCase } from "./domain/usecases/UpdateCategoryTypeUseCase";
+import { categoryDIKeys } from "../categories/CategoryDIModule";
+import CategoryRepository from "../categories/domain/boundaries/CategoryRepository";
 
 export const categoryTypeDIKeys = {
     CategoryTypeRepository: "CategoryTypeRepository",
@@ -33,8 +35,8 @@ export function initializeCategoryTypes() {
         GetCategoryTypeByIdUseCase,
         () =>
             new GetCategoryTypeByIdUseCase(
-                di.get(categoryTypeDIKeys.CategoryTypeRepository),
-                di.get(appDIKeys.userRepository)
+                di.get<CategoryTypeRepository>(categoryTypeDIKeys.CategoryTypeRepository),
+                di.get<UserRepository>(appDIKeys.userRepository)
             )
     );
 
@@ -42,8 +44,8 @@ export function initializeCategoryTypes() {
         CreateCategoryTypeUseCase,
         () =>
             new CreateCategoryTypeUseCase(
-                di.get(categoryTypeDIKeys.CategoryTypeRepository),
-                di.get(appDIKeys.userRepository)
+                di.get<CategoryTypeRepository>(categoryTypeDIKeys.CategoryTypeRepository),
+                di.get<UserRepository>(appDIKeys.userRepository)
             )
     );
 
@@ -51,8 +53,8 @@ export function initializeCategoryTypes() {
         UpdateCategoryTypeUseCase,
         () =>
             new UpdateCategoryTypeUseCase(
-                di.get(categoryTypeDIKeys.CategoryTypeRepository),
-                di.get(appDIKeys.userRepository)
+                di.get<CategoryTypeRepository>(categoryTypeDIKeys.CategoryTypeRepository),
+                di.get<UserRepository>(appDIKeys.userRepository)
             )
     );
 
@@ -60,8 +62,9 @@ export function initializeCategoryTypes() {
         DeleteCategoryTypeUseCase,
         () =>
             new DeleteCategoryTypeUseCase(
-                di.get(categoryTypeDIKeys.CategoryTypeRepository),
-                di.get(appDIKeys.userRepository)
+                di.get<CategoryTypeRepository>(categoryTypeDIKeys.CategoryTypeRepository),
+                di.get<CategoryRepository>(categoryDIKeys.categoryRepository),
+                di.get<UserRepository>(appDIKeys.userRepository)
             )
     );
 

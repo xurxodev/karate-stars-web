@@ -4,7 +4,7 @@ import { initServer, generateToken } from "./serverTest";
 import { ServerDataCreator, TestDataCreator } from "./DataCreator";
 import {
     givenThereAreAnUserInServer,
-    givenThereAreAnItemsAndDependenciesInServer,
+    givenThereAreAPrincipalAndRestItemsInServer,
 } from "./ScenariosFactory";
 import { jsonParser } from "./jsonParser";
 
@@ -12,14 +12,14 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
     endpoint: string,
     testDataCreator: TestDataCreator<TData>,
     principalDataCreator: ServerDataCreator<TData, TEntity>,
-    dependenciesDataCreators?: ServerDataCreator<any, any>[]
+    restDataCreators?: ServerDataCreator<any, any>[]
 ) => {
     describe(`CRUD tests for ${endpoint}`, () => {
         describe(`GET /${endpoint}`, () => {
             it("should return expected item if token is of an admin user", async () => {
-                const data = givenThereAreAnItemsAndDependenciesInServer(
+                const data = givenThereAreAPrincipalAndRestItemsInServer(
                     principalDataCreator,
-                    dependenciesDataCreators
+                    restDataCreators
                 );
                 const user = givenThereAreAnUserInServer({ admin: true });
 
@@ -34,10 +34,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 expect(res.body).toEqual(data);
             });
             it("should return 403 forbidden if token is not of an admin user", async () => {
-                givenThereAreAnItemsAndDependenciesInServer(
-                    principalDataCreator,
-                    dependenciesDataCreators
-                );
+                givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const user = givenThereAreAnUserInServer({ admin: false });
 
                 const server = await initServer();
@@ -50,10 +47,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 expect(res.status).toEqual(403);
             });
             it("should return 401 unauthorized if token is of an non existed user", async () => {
-                givenThereAreAnItemsAndDependenciesInServer(
-                    principalDataCreator,
-                    dependenciesDataCreators
-                );
+                givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 givenThereAreAnUserInServer({ admin: true });
                 const notExistedUserId = Id.generateId();
 
@@ -69,9 +63,9 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
         });
         describe(`GET /${endpoint}/{id}`, () => {
             it("should return expected item if token is of an admin user", async () => {
-                const data = givenThereAreAnItemsAndDependenciesInServer(
+                const data = givenThereAreAPrincipalAndRestItemsInServer(
                     principalDataCreator,
-                    dependenciesDataCreators
+                    restDataCreators
                 );
                 const user = givenThereAreAnUserInServer({ admin: true });
 
@@ -86,10 +80,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 expect(res.body).toEqual(data[0]);
             });
             it("should return 404 resource not found if item with id does not exist", async () => {
-                givenThereAreAnItemsAndDependenciesInServer(
-                    principalDataCreator,
-                    dependenciesDataCreators
-                );
+                givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const user = givenThereAreAnUserInServer({ admin: true });
 
                 const notExistedItemId = Id.generateId();
@@ -103,9 +94,9 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 expect(res.status).toEqual(404);
             });
             it("should return 403 forbidden if token is not of an admin user", async () => {
-                const data = givenThereAreAnItemsAndDependenciesInServer(
+                const data = givenThereAreAPrincipalAndRestItemsInServer(
                     principalDataCreator,
-                    dependenciesDataCreators
+                    restDataCreators
                 );
                 const user = givenThereAreAnUserInServer({ admin: false });
 
@@ -121,9 +112,9 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
             it("should return 401 unauthorized if token is of an non existed user", async () => {
                 givenThereAreAnUserInServer({ admin: true });
 
-                const data = givenThereAreAnItemsAndDependenciesInServer(
+                const data = givenThereAreAPrincipalAndRestItemsInServer(
                     principalDataCreator,
-                    dependenciesDataCreators
+                    restDataCreators
                 );
                 const notExistedUserId = Id.generateId();
 
@@ -139,10 +130,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
         });
         describe(`POST /${endpoint}`, () => {
             it("should create expected item if token is of an admin user", async () => {
-                givenThereAreAnItemsAndDependenciesInServer(
-                    principalDataCreator,
-                    dependenciesDataCreators
-                );
+                givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const item = testDataCreator.givenAValidNewItem();
                 const user = givenThereAreAnUserInServer({ admin: true });
 
@@ -166,10 +154,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 expect(verifyRes.body).toEqual(item);
             });
             it("should return 403 forbidden if token is not of an admin user", async () => {
-                givenThereAreAnItemsAndDependenciesInServer(
-                    principalDataCreator,
-                    dependenciesDataCreators
-                );
+                givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const item = testDataCreator.givenAValidNewItem();
                 const user = givenThereAreAnUserInServer({ admin: false });
 
@@ -184,10 +169,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 expect(res.status).toEqual(403);
             });
             it("should return 401 unauthorized if token is of an non existed user", async () => {
-                givenThereAreAnItemsAndDependenciesInServer(
-                    principalDataCreator,
-                    dependenciesDataCreators
-                );
+                givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 givenThereAreAnUserInServer({ admin: true });
 
                 const item = testDataCreator.givenAValidNewItem();
@@ -204,10 +186,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 expect(res.status).toEqual(401);
             });
             it("should return 400 bad request if body contains invalid field values", async () => {
-                givenThereAreAnItemsAndDependenciesInServer(
-                    principalDataCreator,
-                    dependenciesDataCreators
-                );
+                givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const user = givenThereAreAnUserInServer({ admin: true });
                 const item = testDataCreator.givenAInvalidNewItem();
 
@@ -222,10 +201,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 expect(res.status).toEqual(400);
             });
             it("should return 400 bad request if body does not exist", async () => {
-                givenThereAreAnItemsAndDependenciesInServer(
-                    principalDataCreator,
-                    dependenciesDataCreators
-                );
+                givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const user = givenThereAreAnUserInServer({ admin: true });
 
                 const server = await initServer();
@@ -238,9 +214,9 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 expect(res.status).toEqual(400);
             });
             it("should return 409 conflict if already exist a item with the same id", async () => {
-                const data = givenThereAreAnItemsAndDependenciesInServer(
+                const data = givenThereAreAPrincipalAndRestItemsInServer(
                     principalDataCreator,
-                    dependenciesDataCreators
+                    restDataCreators
                 );
                 const user = givenThereAreAnUserInServer({ admin: true });
 
@@ -257,10 +233,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
         });
         describe(`PUT /${endpoint}/{id}`, () => {
             it("should upate the item if token is of an admin user", async () => {
-                givenThereAreAnItemsAndDependenciesInServer(
-                    principalDataCreator,
-                    dependenciesDataCreators
-                );
+                givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const item = testDataCreator.givenAValidModifiedItem();
                 const user = givenThereAreAnUserInServer({ admin: true });
 
@@ -284,10 +257,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 expect(verifyRes.body).toEqual(item);
             });
             it("should return 403 forbidden if token is not of an admin user", async () => {
-                givenThereAreAnItemsAndDependenciesInServer(
-                    principalDataCreator,
-                    dependenciesDataCreators
-                );
+                givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const item = testDataCreator.givenAValidModifiedItem();
                 const user = givenThereAreAnUserInServer({ admin: false });
 
@@ -302,10 +272,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 expect(res.status).toEqual(403);
             });
             it("should return 401 unauthorized if token is of an non existed user", async () => {
-                givenThereAreAnItemsAndDependenciesInServer(
-                    principalDataCreator,
-                    dependenciesDataCreators
-                );
+                givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 givenThereAreAnUserInServer({ admin: true });
 
                 const item = testDataCreator.givenAValidModifiedItem();
@@ -322,10 +289,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 expect(res.status).toEqual(401);
             });
             it("should return 400 bad request if body contains invalid field values", async () => {
-                givenThereAreAnItemsAndDependenciesInServer(
-                    principalDataCreator,
-                    dependenciesDataCreators
-                );
+                givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const user = givenThereAreAnUserInServer({ admin: true });
                 const item = testDataCreator.givenAInvalidModifiedItem();
 
@@ -340,10 +304,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 expect(res.status).toEqual(400);
             });
             it("should return 400 bad request if body does not exist", async () => {
-                givenThereAreAnItemsAndDependenciesInServer(
-                    principalDataCreator,
-                    dependenciesDataCreators
-                );
+                givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const user = givenThereAreAnUserInServer({ admin: true });
                 const item = testDataCreator.givenAValidModifiedItem();
 
@@ -357,10 +318,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 expect(res.status).toEqual(400);
             });
             it("should return 404 resource not found if it does not exist the item", async () => {
-                givenThereAreAnItemsAndDependenciesInServer(
-                    principalDataCreator,
-                    dependenciesDataCreators
-                );
+                givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const item = testDataCreator.givenAValidModifiedItem();
                 const user = givenThereAreAnUserInServer({ admin: true });
 
@@ -379,9 +337,9 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
         });
         describe(`DELETE /${endpoint}/{id}`, () => {
             it("should return 200 removing expected news feed if token is of an admin user", async () => {
-                const data = givenThereAreAnItemsAndDependenciesInServer(
+                const data = givenThereAreAPrincipalAndRestItemsInServer(
                     principalDataCreator,
-                    dependenciesDataCreators
+                    restDataCreators
                 );
                 const user = givenThereAreAnUserInServer({ admin: true });
                 const server = await initServer();
@@ -402,10 +360,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 expect(resAll.body).toEqual(data.filter(feed => feed.id !== feedToRemove.id));
             });
             it("should return 403 forbidden if token is not of an admin user", async () => {
-                givenThereAreAnItemsAndDependenciesInServer(
-                    principalDataCreator,
-                    dependenciesDataCreators
-                );
+                givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const user = givenThereAreAnUserInServer({ admin: false });
                 const server = await initServer();
                 const feedToRemove = testDataCreator.givenAItemToDelete();
@@ -418,10 +373,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 expect(res.status).toEqual(403);
             });
             it("should return 401 unauthorized if token is of an non existed user", async () => {
-                givenThereAreAnItemsAndDependenciesInServer(
-                    principalDataCreator,
-                    dependenciesDataCreators
-                );
+                givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 givenThereAreAnUserInServer({ admin: true });
                 const server = await initServer();
                 const feedToRemove = testDataCreator.givenAItemToDelete();

@@ -6,7 +6,7 @@ import { competitorDIKeys } from "../../../competitors/CompetitorDIModule";
 import data from "./data.json";
 import { videosEndpoint } from "../VideoRoutes";
 import {
-    givenThereAreAnItemsAndDependenciesInServer,
+    givenThereAreAPrincipalAndRestItemsInServer,
     givenThereAreAnUserInServer,
 } from "../../../common/api/testUtils/ScenariosFactory";
 import { generateToken, initServer } from "../../../common/api/testUtils/serverTest";
@@ -63,7 +63,7 @@ commonCRUDTests(videosEndpoint, testDataCreator, principalDataCreator, dependenc
 describe(`Invalid competitor dependency tests for ${videosEndpoint}`, () => {
     describe(`POST /${videosEndpoint}`, () => {
         it("should return 400 bad request if body contains invalid field values", async () => {
-            givenThereAreAnItemsAndDependenciesInServer(
+            givenThereAreAPrincipalAndRestItemsInServer(
                 principalDataCreator,
                 dependenciesDataCreators
             );
@@ -82,7 +82,7 @@ describe(`Invalid competitor dependency tests for ${videosEndpoint}`, () => {
     });
     describe(`PUT /${videosEndpoint}/{id}`, () => {
         it("should return 400 bad request if body contains non existed typeId", async () => {
-            givenThereAreAnItemsAndDependenciesInServer(
+            givenThereAreAPrincipalAndRestItemsInServer(
                 principalDataCreator,
                 dependenciesDataCreators
             );

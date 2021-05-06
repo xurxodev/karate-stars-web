@@ -12,7 +12,7 @@ import { categoryDIKeys } from "../../CategoryDIModule";
 import { ServerDataCreator, TestDataCreator } from "../../../common/api/testUtils/DataCreator";
 import { categoryTypeDIKeys } from "../../../category-types/CategoryTypeDIModule";
 import {
-    givenThereAreAnItemsAndDependenciesInServer,
+    givenThereAreAPrincipalAndRestItemsInServer,
     givenThereAreAnUserInServer,
 } from "../../../common/api/testUtils/ScenariosFactory";
 import { generateToken, initServer } from "../../../common/api/testUtils/serverTest";
@@ -33,7 +33,7 @@ const principalDataCreator: ServerDataCreator<CategoryData, Category> = {
     },
 };
 
-const dependenciesDataCreators = [
+const restDataCreators = [
     {
         repositoryKey: categoryTypeDIKeys.CategoryTypeRepository,
         items: () => entities.categoryTypes,
@@ -69,21 +69,13 @@ const testDataCreator: TestDataCreator<CategoryData> = {
     },
 };
 
-commonCRUDTests(
-    categoriesEndpoint,
-    testDataCreator,
-    principalDataCreator,
-    dependenciesDataCreators
-);
+commonCRUDTests(categoriesEndpoint, testDataCreator, principalDataCreator, restDataCreators);
 // Add especific items
 
-describe(`Invalid categoryType dependency tests for ${categoriesEndpoint}`, () => {
+describe(`Invalid category dependency tests for ${categoriesEndpoint}`, () => {
     describe(`POST /${categoriesEndpoint}`, () => {
         it("should return 400 bad request if body contains invalid field values", async () => {
-            givenThereAreAnItemsAndDependenciesInServer(
-                principalDataCreator,
-                dependenciesDataCreators
-            );
+            givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
             const user = givenThereAreAnUserInServer({ admin: true });
             const item = { ...testDataCreator.givenAValidNewItem(), typeId: "Aa6N73CZWtE" };
 
@@ -99,10 +91,7 @@ describe(`Invalid categoryType dependency tests for ${categoriesEndpoint}`, () =
     });
     describe(`PUT /${categoriesEndpoint}/{id}`, () => {
         it("should return 400 bad request if body contains non existed typeId", async () => {
-            givenThereAreAnItemsAndDependenciesInServer(
-                principalDataCreator,
-                dependenciesDataCreators
-            );
+            givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
             const user = givenThereAreAnUserInServer({ admin: true });
             const item = { ...testDataCreator.givenAValidModifiedItem(), typeId: "Aa6N73CZWtE" };
 
@@ -118,9 +107,9 @@ describe(`Invalid categoryType dependency tests for ${categoriesEndpoint}`, () =
     });
     describe(`DELETE /${categoriesEndpoint}/{id}`, () => {
         it("should return 409 conflict if the item to deleted is used", async () => {
-            const data = givenThereAreAnItemsAndDependenciesInServer(
+            const data = givenThereAreAPrincipalAndRestItemsInServer(
                 principalDataCreator,
-                dependenciesDataCreators
+                restDataCreators
             );
             const user = givenThereAreAnUserInServer({ admin: true });
             const server = await initServer();

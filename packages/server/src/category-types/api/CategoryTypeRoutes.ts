@@ -6,7 +6,7 @@ import { JwtAuthenticator } from "../../server";
 import { CategoryTypeController } from "./CategoryTypeController";
 import { categoryTypeSchema } from "./categoryTypeSchema";
 
-export const CategoryTypesEndpoint = "category-types";
+export const categoryTypesEndpoint = "category-types";
 
 export default function (apiPrefix: string): hapi.ServerRoute[] {
     const jwtAuthenticator = CompositionRoot.di.get<JwtAuthenticator>(appDIKeys.jwtAuthenticator);
@@ -14,7 +14,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
     return [
         {
             method: "GET",
-            path: `${apiPrefix}/${CategoryTypesEndpoint}`,
+            path: `${apiPrefix}/${categoryTypesEndpoint}`,
             options: { auth: jwtAuthenticator.name },
             handler: (
                 request: hapi.Request,
@@ -25,7 +25,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         },
         {
             method: "GET",
-            path: `${apiPrefix}/${CategoryTypesEndpoint}/{id}`,
+            path: `${apiPrefix}/${categoryTypesEndpoint}/{id}`,
             options: { auth: jwtAuthenticator.name },
             handler: (
                 request: hapi.Request,
@@ -36,7 +36,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         },
         {
             method: "POST",
-            path: `${apiPrefix}/${CategoryTypesEndpoint}`,
+            path: `${apiPrefix}/${categoryTypesEndpoint}`,
             options: { auth: jwtAuthenticator.name, validate: { payload: categoryTypeSchema } },
             handler: (
                 request: hapi.Request,
@@ -47,7 +47,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         },
         {
             method: "PUT",
-            path: `${apiPrefix}/${CategoryTypesEndpoint}/{id}`,
+            path: `${apiPrefix}/${categoryTypesEndpoint}/{id}`,
             options: { auth: jwtAuthenticator.name, validate: { payload: categoryTypeSchema } },
             handler: (
                 request: hapi.Request,
@@ -58,7 +58,7 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
         },
         {
             method: "DELETE",
-            path: `${apiPrefix}/${CategoryTypesEndpoint}/{id}`,
+            path: `${apiPrefix}/${categoryTypesEndpoint}/{id}`,
             options: { auth: jwtAuthenticator.name },
             handler: (
                 request: hapi.Request,

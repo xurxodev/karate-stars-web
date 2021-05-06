@@ -2,7 +2,7 @@ import { Event, EventData, EventType, EventTypeData, Id } from "karate-stars-cor
 import { commonCRUDTests } from "../../../common/api/testUtils/crud.spec";
 import { ServerDataCreator, TestDataCreator } from "../../../common/api/testUtils/DataCreator";
 import {
-    givenThereAreAnItemsAndDependenciesInServer,
+    givenThereAreAPrincipalAndRestItemsInServer,
     givenThereAreAnUserInServer,
 } from "../../../common/api/testUtils/ScenariosFactory";
 import { generateToken, initServer } from "../../../common/api/testUtils/serverTest";
@@ -80,7 +80,7 @@ commonCRUDTests(eventsEndpoint, testDataCreator, principalDataCreator, dependenc
 describe(`Invalid eventType dependency tests for ${eventsEndpoint}`, () => {
     describe(`POST /${eventsEndpoint}`, () => {
         it("should return 400 bad request if body contains invalid field values", async () => {
-            givenThereAreAnItemsAndDependenciesInServer(
+            givenThereAreAPrincipalAndRestItemsInServer(
                 principalDataCreator,
                 dependenciesDataCreators
             );
@@ -99,7 +99,7 @@ describe(`Invalid eventType dependency tests for ${eventsEndpoint}`, () => {
     });
     describe(`PUT /${eventsEndpoint}/{id}`, () => {
         it("should return 400 bad request if body contains non existed typeId", async () => {
-            givenThereAreAnItemsAndDependenciesInServer(
+            givenThereAreAPrincipalAndRestItemsInServer(
                 principalDataCreator,
                 dependenciesDataCreators
             );

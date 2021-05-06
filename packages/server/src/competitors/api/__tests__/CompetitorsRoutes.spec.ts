@@ -8,7 +8,7 @@ import { categoryDIKeys } from "../../../categories/CategoryDIModule";
 import { countryDIKeys } from "../../../countries/CountryDIModule";
 import { eventDIKeys } from "../../../events/EventDIModule";
 import {
-    givenThereAreAnItemsAndDependenciesInServer,
+    givenThereAreAPrincipalAndRestItemsInServer,
     givenThereAreAnUserInServer,
 } from "../../../common/api/testUtils/ScenariosFactory";
 import { generateToken, initServer } from "../../../common/api/testUtils/serverTest";
@@ -76,7 +76,7 @@ commonCRUDTests(
 describe(`Invalid category dependency tests for ${CompetitorsEndpoint}`, () => {
     describe(`POST /${CompetitorsEndpoint}`, () => {
         it("should return 400 bad request if body contains invalid field values", async () => {
-            givenThereAreAnItemsAndDependenciesInServer(
+            givenThereAreAPrincipalAndRestItemsInServer(
                 principalDataCreator,
                 dependenciesDataCreators
             );
@@ -95,7 +95,7 @@ describe(`Invalid category dependency tests for ${CompetitorsEndpoint}`, () => {
     });
     describe(`PUT /${CompetitorsEndpoint}/{id}`, () => {
         it("should return 400 bad request if body contains non existed typeId", async () => {
-            givenThereAreAnItemsAndDependenciesInServer(
+            givenThereAreAPrincipalAndRestItemsInServer(
                 principalDataCreator,
                 dependenciesDataCreators
             );
@@ -119,7 +119,7 @@ describe(`Invalid category dependency tests for ${CompetitorsEndpoint}`, () => {
 describe(`Invalid country dependency tests for ${CompetitorsEndpoint}`, () => {
     describe(`POST /${CompetitorsEndpoint}`, () => {
         it("should return 400 bad request if body contains invalid field values", async () => {
-            givenThereAreAnItemsAndDependenciesInServer(
+            givenThereAreAPrincipalAndRestItemsInServer(
                 principalDataCreator,
                 dependenciesDataCreators
             );
@@ -138,7 +138,7 @@ describe(`Invalid country dependency tests for ${CompetitorsEndpoint}`, () => {
     });
     describe(`PUT /${CompetitorsEndpoint}/{id}`, () => {
         it("should return 400 bad request if body contains invalid field values", async () => {
-            givenThereAreAnItemsAndDependenciesInServer(
+            givenThereAreAPrincipalAndRestItemsInServer(
                 principalDataCreator,
                 dependenciesDataCreators
             );
@@ -159,7 +159,7 @@ describe(`Invalid country dependency tests for ${CompetitorsEndpoint}`, () => {
 describe(`Invalid achievement category dependency tests for ${CompetitorsEndpoint}`, () => {
     describe(`POST /${CompetitorsEndpoint}`, () => {
         it("should return 400 bad request if body contains invalid field values", async () => {
-            givenThereAreAnItemsAndDependenciesInServer(
+            givenThereAreAPrincipalAndRestItemsInServer(
                 principalDataCreator,
                 dependenciesDataCreators
             );
@@ -185,7 +185,7 @@ describe(`Invalid achievement category dependency tests for ${CompetitorsEndpoin
     });
     describe(`PUT /${CompetitorsEndpoint}/{id}`, () => {
         it("should return 400 bad request if body contains invalid field values", async () => {
-            givenThereAreAnItemsAndDependenciesInServer(
+            givenThereAreAPrincipalAndRestItemsInServer(
                 principalDataCreator,
                 dependenciesDataCreators
             );
@@ -213,7 +213,7 @@ describe(`Invalid achievement category dependency tests for ${CompetitorsEndpoin
 describe(`Invalid achievement event dependency tests for ${CompetitorsEndpoint}`, () => {
     describe(`POST /${CompetitorsEndpoint}`, () => {
         it("should return 400 bad request if body contains invalid field values", async () => {
-            givenThereAreAnItemsAndDependenciesInServer(
+            givenThereAreAPrincipalAndRestItemsInServer(
                 principalDataCreator,
                 dependenciesDataCreators
             );
@@ -239,7 +239,7 @@ describe(`Invalid achievement event dependency tests for ${CompetitorsEndpoint}`
     });
     describe(`PUT /${CompetitorsEndpoint}/{id}`, () => {
         it("should return 400 bad request if body contains invalid field values", async () => {
-            givenThereAreAnItemsAndDependenciesInServer(
+            givenThereAreAPrincipalAndRestItemsInServer(
                 principalDataCreator,
                 dependenciesDataCreators
             );

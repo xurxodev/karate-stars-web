@@ -5,17 +5,17 @@ import { FakeGenericRepository } from "./FakeGenericRepository";
 import { FakeImageRepository } from "./FakeImageRepository";
 import { FakeUserRepository } from "./FakeUserRepository";
 
-export const givenThereAreAnItemsAndDependenciesInServer = <
+export const givenThereAreAPrincipalAndRestItemsInServer = <
     TEntityData extends EntityData,
     TEntity extends Entity<TEntityData>
 >(
     principalDataCeator: ServerDataCreator<TEntityData, TEntity>,
-    dependencyDataCreators?: ServerDataCreator<any, any>[]
+    restDataCreators?: ServerDataCreator<any, any>[]
 ) => {
     const principalItems = givenThereAreAnItemsInServer(principalDataCeator);
 
-    if (dependencyDataCreators) {
-        dependencyDataCreators.forEach(dependencyCreator => {
+    if (restDataCreators) {
+        restDataCreators.forEach(dependencyCreator => {
             givenThereAreAnItemsInServer(dependencyCreator);
         });
     }
