@@ -101,5 +101,23 @@
             "year": 2016,
             "typeId": "FEJ08kkHhqi"
         }
+    ],
+    "videos": [
+        {
+            "id": "bShVxNELcUt",
+            "links": [
+                {
+                    "id": "ugSkXzuqDSU",
+                    "type": "youtube"
+                }
+            ],
+            "title": "Karate1 Premier League Dubai 2019",
+            "description": "Kumite -68kg Final",
+            "subtitle": "F. Abdelaziz (EGY) - I. Zaretska(AZE)",
+            "competitors": ["iuPYGqss3Hv"],
+            "eventDate": "2019-02-17T00:00:00Z",
+            "createdDate": "2019-02-19T00:00:00Z",
+            "order": 6
+        }
     ]
 }

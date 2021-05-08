@@ -1,4 +1,13 @@
-import { Id, Competitor, CompetitorData, Category, Event, Country } from "karate-stars-core";
+import {
+    Id,
+    Competitor,
+    CompetitorData,
+    Category,
+    Event,
+    Country,
+    Video,
+    VideoData,
+} from "karate-stars-core";
 import { commonCRUDTests } from "../../../common/api/testUtils/crud.spec";
 import { CompetitorsEndpoint } from "../CompetitorRoutes";
 import { competitorDIKeys } from "../../CompetitorDIModule";
@@ -13,12 +22,20 @@ import {
 } from "../../../common/api/testUtils/ScenariosFactory";
 import { generateToken, initServer } from "../../../common/api/testUtils/serverTest";
 import request from "supertest";
+import { videoDIKeys } from "../../../videos/VideoDIModule";
 
 const entities = {
     competitors: data.competitors.map(data => Competitor.create(data as CompetitorData).get()),
     categories: data.categories.map(data => Category.create(data).get()),
     events: data.events.map(data => Event.create(data).get()),
     countries: data.countries.map(data => Country.create(data).get()),
+    videos: data.videos.map(data =>
+        Video.create({
+            ...data,
+            createdDate: new Date(data.createdDate),
+            eventDate: new Date(data.eventDate),
+        } as VideoData).get()
+    ),
 };
 
 const principalDataCreator: ServerDataCreator<CompetitorData, Competitor> = {
@@ -26,7 +43,7 @@ const principalDataCreator: ServerDataCreator<CompetitorData, Competitor> = {
     items: () => entities.competitors,
 };
 
-const dependenciesDataCreators = [
+const restDataCreators = [
     {
         repositoryKey: categoryDIKeys.categoryRepository,
         items: () => entities.categories,
@@ -38,6 +55,10 @@ const dependenciesDataCreators = [
     {
         repositoryKey: countryDIKeys.countryRepository,
         items: () => entities.countries,
+    },
+    {
+        repositoryKey: videoDIKeys.videoRepository,
+        items: () => entities.videos,
     },
 ];
 
@@ -62,24 +83,16 @@ const testDataCreator: TestDataCreator<CompetitorData> = {
         return { ...entities.competitors[0].toData(), firstName: "" };
     },
     givenAItemToDelete: (): CompetitorData => {
-        return entities.competitors[0].toData();
+        return entities.competitors[1].toData();
     },
 };
 
-commonCRUDTests(
-    CompetitorsEndpoint,
-    testDataCreator,
-    principalDataCreator,
-    dependenciesDataCreators
-);
+commonCRUDTests(CompetitorsEndpoint, testDataCreator, principalDataCreator, restDataCreators);
 
 describe(`Invalid category dependency tests for ${CompetitorsEndpoint}`, () => {
     describe(`POST /${CompetitorsEndpoint}`, () => {
         it("should return 400 bad request if body contains invalid field values", async () => {
-            givenThereAreAPrincipalAndRestItemsInServer(
-                principalDataCreator,
-                dependenciesDataCreators
-            );
+            givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
             const user = givenThereAreAnUserInServer({ admin: true });
             const item = { ...testDataCreator.givenAValidNewItem(), categoryId: "Aa6N73CZWtE" };
 
@@ -95,10 +108,7 @@ describe(`Invalid category dependency tests for ${CompetitorsEndpoint}`, () => {
     });
     describe(`PUT /${CompetitorsEndpoint}/{id}`, () => {
         it("should return 400 bad request if body contains non existed typeId", async () => {
-            givenThereAreAPrincipalAndRestItemsInServer(
-                principalDataCreator,
-                dependenciesDataCreators
-            );
+            givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
             const user = givenThereAreAnUserInServer({ admin: true });
             const item = {
                 ...testDataCreator.givenAValidModifiedItem(),
@@ -119,10 +129,7 @@ describe(`Invalid category dependency tests for ${CompetitorsEndpoint}`, () => {
 describe(`Invalid country dependency tests for ${CompetitorsEndpoint}`, () => {
     describe(`POST /${CompetitorsEndpoint}`, () => {
         it("should return 400 bad request if body contains invalid field values", async () => {
-            givenThereAreAPrincipalAndRestItemsInServer(
-                principalDataCreator,
-                dependenciesDataCreators
-            );
+            givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
             const user = givenThereAreAnUserInServer({ admin: true });
             const item = { ...testDataCreator.givenAValidNewItem(), countryId: "Aa6N73CZWtE" };
 
@@ -138,10 +145,7 @@ describe(`Invalid country dependency tests for ${CompetitorsEndpoint}`, () => {
     });
     describe(`PUT /${CompetitorsEndpoint}/{id}`, () => {
         it("should return 400 bad request if body contains invalid field values", async () => {
-            givenThereAreAPrincipalAndRestItemsInServer(
-                principalDataCreator,
-                dependenciesDataCreators
-            );
+            givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
             const user = givenThereAreAnUserInServer({ admin: true });
             const item = { ...testDataCreator.givenAValidModifiedItem(), countryId: "Aa6N73CZWtE" };
 
@@ -159,10 +163,7 @@ describe(`Invalid country dependency tests for ${CompetitorsEndpoint}`, () => {
 describe(`Invalid achievement category dependency tests for ${CompetitorsEndpoint}`, () => {
     describe(`POST /${CompetitorsEndpoint}`, () => {
         it("should return 400 bad request if body contains invalid field values", async () => {
-            givenThereAreAPrincipalAndRestItemsInServer(
-                principalDataCreator,
-                dependenciesDataCreators
-            );
+            givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
             const user = givenThereAreAnUserInServer({ admin: true });
             const item = testDataCreator.givenAValidNewItem();
             const invalidItem = {
@@ -185,10 +186,7 @@ describe(`Invalid achievement category dependency tests for ${CompetitorsEndpoin
     });
     describe(`PUT /${CompetitorsEndpoint}/{id}`, () => {
         it("should return 400 bad request if body contains invalid field values", async () => {
-            givenThereAreAPrincipalAndRestItemsInServer(
-                principalDataCreator,
-                dependenciesDataCreators
-            );
+            givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
             const user = givenThereAreAnUserInServer({ admin: true });
             const item = testDataCreator.givenAValidModifiedItem();
             const invalidItem = {
@@ -213,10 +211,7 @@ describe(`Invalid achievement category dependency tests for ${CompetitorsEndpoin
 describe(`Invalid achievement event dependency tests for ${CompetitorsEndpoint}`, () => {
     describe(`POST /${CompetitorsEndpoint}`, () => {
         it("should return 400 bad request if body contains invalid field values", async () => {
-            givenThereAreAPrincipalAndRestItemsInServer(
-                principalDataCreator,
-                dependenciesDataCreators
-            );
+            givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
             const user = givenThereAreAnUserInServer({ admin: true });
             const item = testDataCreator.givenAValidNewItem();
             const invalidItem = {
@@ -239,10 +234,7 @@ describe(`Invalid achievement event dependency tests for ${CompetitorsEndpoint}`
     });
     describe(`PUT /${CompetitorsEndpoint}/{id}`, () => {
         it("should return 400 bad request if body contains invalid field values", async () => {
-            givenThereAreAPrincipalAndRestItemsInServer(
-                principalDataCreator,
-                dependenciesDataCreators
-            );
+            givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
             const user = givenThereAreAnUserInServer({ admin: true });
             const item = testDataCreator.givenAValidModifiedItem();
             const invalidItem = {
@@ -261,6 +253,25 @@ describe(`Invalid achievement event dependency tests for ${CompetitorsEndpoint}`
                 .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
             expect(res.status).toEqual(400);
+        });
+    });
+});
+
+describe(`Invalid video dependency tests for ${CompetitorsEndpoint}`, () => {
+    describe(`DELETE /${CompetitorsEndpoint}/{id}`, () => {
+        it("should return 409 conflict if the item to deleted is used", async () => {
+            const data = givenThereAreAPrincipalAndRestItemsInServer(
+                principalDataCreator,
+                restDataCreators
+            );
+            const user = givenThereAreAnUserInServer({ admin: true });
+            const server = await initServer();
+
+            const res = await request(server)
+                .delete(`/api/v1/${CompetitorsEndpoint}/${data[0].id}`)
+                .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
+
+            expect(res.status).toEqual(409);
         });
     });
 });

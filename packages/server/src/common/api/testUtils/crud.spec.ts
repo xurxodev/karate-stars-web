@@ -336,7 +336,7 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
             });
         });
         describe(`DELETE /${endpoint}/{id}`, () => {
-            it("should return 200 removing expected news feed if token is of an admin user", async () => {
+            it("should return 200 removing expected item if token is of an admin user", async () => {
                 const data = givenThereAreAPrincipalAndRestItemsInServer(
                     principalDataCreator,
                     restDataCreators

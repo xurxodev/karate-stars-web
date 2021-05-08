@@ -15,6 +15,8 @@ import { eventDIKeys } from "../events/EventDIModule";
 import CategoryRepository from "../categories/domain/boundaries/CategoryRepository";
 import CountryRepository from "../countries/domain/boundaries/CountryRepository";
 import EventRepository from "../events/domain/boundaries/EventRepository";
+import VideoRepository from "../videos/domain/boundaries/VideoRepository";
+import { videoDIKeys } from "../videos/VideoDIModule";
 
 export const competitorDIKeys = {
     CompetitorRepository: "CompetitorRepository",
@@ -73,6 +75,7 @@ export function initializeCompetitors() {
         () =>
             new DeleteCompetitorUseCase(
                 di.get<CompetitorRepository>(competitorDIKeys.CompetitorRepository),
+                di.get<VideoRepository>(videoDIKeys.videoRepository),
                 di.get<UserRepository>(appDIKeys.userRepository)
             )
     );
