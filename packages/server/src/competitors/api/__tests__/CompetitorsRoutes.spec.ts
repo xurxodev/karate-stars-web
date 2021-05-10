@@ -12,7 +12,6 @@ import { commonCRUDTests } from "../../../common/api/testUtils/crud.spec";
 import { CompetitorsEndpoint } from "../CompetitorRoutes";
 import { competitorDIKeys } from "../../CompetitorDIModule";
 import { ServerDataCreator, TestDataCreator } from "../../../common/api/testUtils/DataCreator";
-import data from "./data.json";
 import { categoryDIKeys } from "../../../categories/CategoryDIModule";
 import { countryDIKeys } from "../../../countries/CountryDIModule";
 import { eventDIKeys } from "../../../events/EventDIModule";
@@ -23,6 +22,7 @@ import {
 import { generateToken, initServer } from "../../../common/api/testUtils/serverTest";
 import request from "supertest";
 import { videoDIKeys } from "../../../videos/VideoDIModule";
+import data from "./data.json";
 
 const entities = {
     competitors: data.competitors.map(data => Competitor.create(data as CompetitorData).get()),

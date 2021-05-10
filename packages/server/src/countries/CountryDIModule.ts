@@ -1,4 +1,6 @@
 import { MongoConector } from "../common/data/MongoConector";
+import { competitorDIKeys } from "../competitors/CompetitorDIModule";
+import CompetitorRepository from "../competitors/domain/boundaries/CompetitorRepository";
 import { appDIKeys, di } from "../CompositionRoot";
 import UserRepository from "../users/domain/boundaries/UserRepository";
 import { CountryController } from "./api/CountryController";
@@ -33,8 +35,8 @@ export function initializeCountries() {
         GetCountryByIdUseCase,
         () =>
             new GetCountryByIdUseCase(
-                di.get(countryDIKeys.countryRepository),
-                di.get(appDIKeys.userRepository)
+                di.get<CountryRepository>(countryDIKeys.countryRepository),
+                di.get<UserRepository>(appDIKeys.userRepository)
             )
     );
 
@@ -42,8 +44,8 @@ export function initializeCountries() {
         CreateCountryUseCase,
         () =>
             new CreateCountryUseCase(
-                di.get(countryDIKeys.countryRepository),
-                di.get(appDIKeys.userRepository)
+                di.get<CountryRepository>(countryDIKeys.countryRepository),
+                di.get<UserRepository>(appDIKeys.userRepository)
             )
     );
 
@@ -51,8 +53,8 @@ export function initializeCountries() {
         UpdateCountryUseCase,
         () =>
             new UpdateCountryUseCase(
-                di.get(countryDIKeys.countryRepository),
-                di.get(appDIKeys.userRepository)
+                di.get<CountryRepository>(countryDIKeys.countryRepository),
+                di.get<UserRepository>(appDIKeys.userRepository)
             )
     );
 
@@ -60,8 +62,9 @@ export function initializeCountries() {
         DeleteCountryUseCase,
         () =>
             new DeleteCountryUseCase(
-                di.get(countryDIKeys.countryRepository),
-                di.get(appDIKeys.userRepository)
+                di.get<CountryRepository>(countryDIKeys.countryRepository),
+                di.get<CompetitorRepository>(competitorDIKeys.CompetitorRepository),
+                di.get<UserRepository>(appDIKeys.userRepository)
             )
     );
 
