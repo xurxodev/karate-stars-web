@@ -257,7 +257,7 @@ describe(`Invalid achievement event dependency tests for ${CompetitorsEndpoint}`
     });
 });
 
-describe(`Invalid video dependency tests for ${CompetitorsEndpoint}`, () => {
+describe(`Delete error by constraint with video tests for ${CompetitorsEndpoint}`, () => {
     describe(`DELETE /${CompetitorsEndpoint}/{id}`, () => {
         it("should return 409 conflict if the item to deleted is used", async () => {
             const data = givenThereAreAPrincipalAndRestItemsInServer(

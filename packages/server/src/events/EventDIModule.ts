@@ -11,6 +11,8 @@ import { GetEventByIdUseCase } from "./domain/usecases/GetEventByIdUseCase";
 import { UpdateEventUseCase } from "./domain/usecases/UpdateEventUseCase";
 import { eventTypeDIKeys } from "../event-types/EventTypeDIModule";
 import EventTypeRepository from "../event-types/domain/boundaries/EventTypeRepository";
+import CompetitorRepository from "../competitors/domain/boundaries/CompetitorRepository";
+import { competitorDIKeys } from "../competitors/CompetitorDIModule";
 
 export const eventDIKeys = {
     eventRepository: "eventRepository",
@@ -65,6 +67,7 @@ export function initializeEvents() {
         () =>
             new DeleteEventUseCase(
                 di.get<EventRepository>(eventDIKeys.eventRepository),
+                di.get<CompetitorRepository>(competitorDIKeys.CompetitorRepository),
                 di.get<UserRepository>(appDIKeys.userRepository)
             )
     );

@@ -1,0 +1,67 @@
+{
+    "competitors": [
+        {
+            "id": "iuPYGqss3Hv",
+            "firstName": "Iryna",
+            "lastName": "Zaretska",
+            "wkfId": "AZE2043",
+            "biography": "Iryna Zaretska (4 March 1996 in Ukraine) is a Ukrainian and Azerbaijani karateka. \nShe won for Ukraine a bronze medal in kumite less than 68 at the 2014 Karate World Championships in Bremen, then for Azerbaijan the gold medal in the same category at the 2015 European Games in Baku and in QihGhQpPpiI at the 2016 European Karate Championships in Montpellier. \nShe is a gold medalist at the 2017 Islamic Solidarity Games in Baku and a silver medalist at the 2018 Karate European Championships in Novi Sad. \nShe was proclaimed World Champion in November 2018 in Madrid.",
+            "countryId": "uIaQv0JlN5n",
+            "categoryId": "wZgo8Vp77gR",
+            "mainImage": "http://www.karatestarsapp.com/app/images/iryna_zaretska.jpg",
+            "isActive": true,
+            "isLegend": false,
+            "links": [
+                {
+                    "url": "https://twitter.com/IrynaZaretska",
+                    "type": "twitter"
+                },
+                {
+                    "url": "https://www.facebook.com/iryna.zaretska.3",
+                    "type": "facebook"
+                },
+                {
+                    "url": "https://www.instagram.com/irynazaretska",
+                    "type": "instagram"
+                }
+            ],
+            "achievements": [
+                {
+                    "eventId": "aSustSmDT6m",
+                    "categoryId": "wZgo8Vp77gR",
+                    "position": 1
+                }
+            ]
+        }
+    ],
+    "eventTypes": [
+        {
+            "id": "Jr6N73CZWtE",
+            "name": "World Championships"
+        },
+        {
+            "id": "FEJ08kkHhqi",
+            "name": "European Championships"
+        }
+    ],
+    "events": [
+        {
+            "id": "CYrgQdA0ZZm",
+            "name": "World Championships Maastricht 1984",
+            "year": 1984,
+            "typeId": "Jr6N73CZWtE"
+        },
+        {
+            "id": "QaFq0Lf2YDR",
+            "name": "uropean Championships Titograd 1989",
+            "year": 1989,
+            "typeId": "FEJ08kkHhqi"
+        },
+        {
+            "id": "aSustSmDT6m",
+            "name": "Karate1 Series A Guadalajara 2018",
+            "year": 2018,
+            "typeId": "ff0tTiLsK9J"
+        }
+    ]
+}

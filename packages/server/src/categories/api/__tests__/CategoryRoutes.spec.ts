@@ -105,6 +105,8 @@ describe(`Invalid category dependency tests for ${categoriesEndpoint}`, () => {
             expect(res.status).toEqual(400);
         });
     });
+});
+describe(`Delete error by constraint with competitor tests for ${categoriesEndpoint}`, () => {
     describe(`DELETE /${categoriesEndpoint}/{id}`, () => {
         it("should return 409 conflict if the item to deleted is used", async () => {
             const data = givenThereAreAPrincipalAndRestItemsInServer(

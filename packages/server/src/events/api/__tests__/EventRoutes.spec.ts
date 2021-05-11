@@ -1,4 +1,4 @@
-import { Event, EventData, EventType, EventTypeData, Id } from "karate-stars-core";
+import { Competitor, Event, EventData, EventType, Id, CompetitorData } from "karate-stars-core";
 import { commonCRUDTests } from "../../../common/api/testUtils/crud.spec";
 import { ServerDataCreator, TestDataCreator } from "../../../common/api/testUtils/DataCreator";
 import {
@@ -10,80 +10,61 @@ import { eventTypeDIKeys } from "../../../event-types/EventTypeDIModule";
 import { eventDIKeys } from "../../EventDIModule";
 import { eventsEndpoint } from "../EventRoutes";
 import request from "supertest";
+import data from "./data.json";
+import { competitorDIKeys } from "../../../competitors/CompetitorDIModule";
 
-const entities = [
-    Event.create({
-        id: "CYrgQdA0ZZm",
-        name: "World Championships Maastricht 1984",
-        year: 1984,
-        typeId: "Jr6N73CZWtE",
-    }).get(),
-    Event.create({
-        id: "QaFq0Lf2YDR",
-        name: "European Championships Titograd 1989",
-        year: 1989,
-        typeId: "FEJ08kkHhqi",
-    }).get(),
-];
-
-const eventTypeDependencies = [
-    EventType.create({
-        id: "Jr6N73CZWtE",
-        name: "World Championships",
-    }).get(),
-    EventType.create({
-        id: "FEJ08kkHhqi",
-        name: "European Championships",
-    }).get(),
-];
+const entities = {
+    competitors: data.competitors.map(data => Competitor.create(data as CompetitorData).get()),
+    eventTypes: data.eventTypes.map(data => EventType.create(data).get()),
+    events: data.events.map(data => Event.create(data).get()),
+};
 
 const principalDataCreator: ServerDataCreator<EventData, Event> = {
     repositoryKey: eventDIKeys.eventRepository,
     items: () => {
-        return entities;
+        return entities.events;
     },
 };
 
-const dependenciesDataCreators: ServerDataCreator<EventTypeData, EventType>[] = [
+const restDataCreators = [
     {
         repositoryKey: eventTypeDIKeys.eventTypeRepository,
-        items: () => {
-            return eventTypeDependencies;
-        },
+        items: () => entities.eventTypes,
+    },
+    {
+        repositoryKey: competitorDIKeys.CompetitorRepository,
+        items: () => entities.competitors,
     },
 ];
 
 const testDataCreator: TestDataCreator<EventData> = {
     givenAValidNewItem: () => {
-        return { ...entities[0].toData(), id: Id.generateId().value };
+        return { ...entities.events[0].toData(), id: Id.generateId().value };
     },
     givenAInvalidNewItem: () => {
         return {
-            ...entities[0].toData(),
+            ...entities.events[0].toData(),
             id: Id.generateId().value,
             name: "",
         };
     },
     givenAValidModifiedItem: (): EventData => {
-        return { ...entities[0].toData(), name: entities[0].name + "modified" };
+        return { ...entities.events[0].toData(), name: entities.events[0].name + "modified" };
     },
     givenAInvalidModifiedItem: (): EventData => {
-        return { ...entities[0].toData(), name: "" };
+        return { ...entities.events[0].toData(), name: "" };
     },
     givenAItemToDelete: (): EventData => {
-        return entities[0].toData();
+        return entities.events[0].toData();
     },
 };
 
-commonCRUDTests(eventsEndpoint, testDataCreator, principalDataCreator, dependenciesDataCreators);
+commonCRUDTests(eventsEndpoint, testDataCreator, principalDataCreator, restDataCreators);
 
 describe(`Invalid eventType dependency tests for ${eventsEndpoint}`, () => {
     describe(`POST /${eventsEndpoint}`, () => {
         it("should return 400 bad request if body contains invalid field values", async () => {
-            givenThereAreAPrincipalAndRestItemsInServer(
-                principalDataCreator,
-                dependenciesDataCreators
-            );
+            givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
             const user = givenThereAreAnUserInServer({ admin: true });
             const item = { ...testDataCreator.givenAValidNewItem(), typeId: "Aa6N73CZWtE" };
 
@@ -99,10 +80,7 @@ describe(`Invalid eventType dependency tests for ${eventsEndpoint}`, () => {
     });
     describe(`PUT /${eventsEndpoint}/{id}`, () => {
         it("should return 400 bad request if body contains non existed typeId", async () => {
-            givenThereAreAPrincipalAndRestItemsInServer(
-                principalDataCreator,
-                dependenciesDataCreators
-            );
+            givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
             const user = givenThereAreAnUserInServer({ admin: true });
             const item = { ...testDataCreator.givenAValidModifiedItem(), typeId: "Aa6N73CZWtE" };
 
@@ -114,6 +92,24 @@ describe(`Invalid eventType dependency tests for ${eventsEndpoint}`, () => {
                 .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
             expect(res.status).toEqual(400);
+        });
+    });
+});
+describe(`Delete error by constraint with competitor tests for ${eventsEndpoint}`, () => {
+    describe(`DELETE /${eventsEndpoint}/{id}`, () => {
+        it("should return 409 conflict if the item to deleted is used", async () => {
+            const data = givenThereAreAPrincipalAndRestItemsInServer(
+                principalDataCreator,
+                restDataCreators
+            );
+            const user = givenThereAreAnUserInServer({ admin: true });
+            const server = await initServer();
+
+            const res = await request(server)
+                .delete(`/api/v1/${eventsEndpoint}/${data[2].id}`)
+                .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
+
+            expect(res.status).toEqual(409);
         });
     });
 });
