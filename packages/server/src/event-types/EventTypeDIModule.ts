@@ -9,6 +9,8 @@ import { DeleteEventTypeUseCase } from "./domain/usecases/DeleteEventTypeUseCase
 import { GetEventTypesUseCase } from "./domain/usecases/GetEventTypesUseCase";
 import { GetEventTypeByIdUseCase } from "./domain/usecases/GetEventTypeByIdUseCase";
 import { UpdateEventTypeUseCase } from "./domain/usecases/UpdateEventTypeUseCase";
+import EventRepository from "../events/domain/boundaries/EventRepository";
+import { eventDIKeys } from "../events/EventDIModule";
 
 export const eventTypeDIKeys = {
     eventTypeRepository: "eventTypeRepository",
@@ -33,8 +35,8 @@ export function initializeEventTypes() {
         GetEventTypeByIdUseCase,
         () =>
             new GetEventTypeByIdUseCase(
-                di.get(eventTypeDIKeys.eventTypeRepository),
-                di.get(appDIKeys.userRepository)
+                di.get<EventTypeRepository>(eventTypeDIKeys.eventTypeRepository),
+                di.get<UserRepository>(appDIKeys.userRepository)
             )
     );
 
@@ -42,8 +44,8 @@ export function initializeEventTypes() {
         CreateEventTypeUseCase,
         () =>
             new CreateEventTypeUseCase(
-                di.get(eventTypeDIKeys.eventTypeRepository),
-                di.get(appDIKeys.userRepository)
+                di.get<EventTypeRepository>(eventTypeDIKeys.eventTypeRepository),
+                di.get<UserRepository>(appDIKeys.userRepository)
             )
     );
 
@@ -51,8 +53,8 @@ export function initializeEventTypes() {
         UpdateEventTypeUseCase,
         () =>
             new UpdateEventTypeUseCase(
-                di.get(eventTypeDIKeys.eventTypeRepository),
-                di.get(appDIKeys.userRepository)
+                di.get<EventTypeRepository>(eventTypeDIKeys.eventTypeRepository),
+                di.get<UserRepository>(appDIKeys.userRepository)
             )
     );
 
@@ -60,8 +62,9 @@ export function initializeEventTypes() {
         DeleteEventTypeUseCase,
         () =>
             new DeleteEventTypeUseCase(
-                di.get(eventTypeDIKeys.eventTypeRepository),
-                di.get(appDIKeys.userRepository)
+                di.get<EventTypeRepository>(eventTypeDIKeys.eventTypeRepository),
+                di.get<EventRepository>(eventDIKeys.eventRepository),
+                di.get<UserRepository>(appDIKeys.userRepository)
             )
     );
 

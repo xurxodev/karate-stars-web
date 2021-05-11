@@ -55,7 +55,7 @@ const testDataCreator: TestDataCreator<CountryData> = {
 
 commonCRUDTests(CountriesEndpoint, testDataCreator, principalDataCreator, restDataCreators);
 
-describe(`Invalid competitor dependency tests for ${CountriesEndpoint}`, () => {
+describe(`Delete error by constraint with competitor tests for ${CountriesEndpoint}`, () => {
     describe(`DELETE /${CountriesEndpoint}/{id}`, () => {
         it("should return 409 conflict if the item to deleted is used", async () => {
             const data = givenThereAreAPrincipalAndRestItemsInServer(

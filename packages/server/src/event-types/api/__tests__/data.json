@@ -1,0 +1,20 @@
+{
+    "eventTypes": [
+        {
+            "id": "ff0tTiLsK9J",
+            "name": "Karate1 Series A"
+        },
+        {
+            "id": "k2CXlzy6h5X",
+            "name": "Karate1 Premier League"
+        }
+    ],
+    "events": [
+        {
+            "id": "aSustSmDT6m",
+            "name": "Karate1 Series A Guadalajara 2018",
+            "year": 2018,
+            "typeId": "ff0tTiLsK9J"
+        }
+    ]
+}

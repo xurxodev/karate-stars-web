@@ -58,7 +58,7 @@ const testDataCreator: TestDataCreator<CategoryTypeData> = {
 
 commonCRUDTests(categoryTypesEndpoint, testDataCreator, principalDataCreator, restDataCreators);
 
-describe(`Invalid category dependency tests for ${categoryTypesEndpoint}`, () => {
+describe(`Delete error by constraint with category tests for ${categoryTypesEndpoint}`, () => {
     describe(`DELETE /${categoryTypesEndpoint}/{id}`, () => {
         it("should return 409 conflict if the item to deleted is used", async () => {
             const data = givenThereAreAPrincipalAndRestItemsInServer(
