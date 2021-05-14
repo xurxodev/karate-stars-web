@@ -1,23 +1,25 @@
 import { ListField } from "../../../common/presentation/state/ListState";
-import { NewsFeedData } from "karate-stars-core";
-import GetNewsFeedsUseCase from "../../domain/GetNewsFeedsUseCase";
+import { CompetitorData } from "karate-stars-core";
 import ListBloc, { defaultPagination } from "../../../common/presentation/bloc/ListBloc";
 import { DetailPageConfig, pages } from "../../../common/presentation/PageRoutes";
-import DeleteNewsFeedsUseCase from "../../domain/DeleteNewsFeedsUseCase";
+import GetCompetitorsUseCase from "../../domain/GetCompetitorsUseCase";
+import DeleteCompetitorUseCase from "../../domain/DeleteCompetitorUseCase";
 
-class NewsFeedListBloc extends ListBloc<NewsFeedData> {
+class NewsFeedListBloc extends ListBloc<CompetitorData> {
     constructor(
-        private getNewsFeedsUseCase: GetNewsFeedsUseCase,
-        private deleteNewsFeedsUseCase: DeleteNewsFeedsUseCase
+        private getCompetitorsUseCase: GetCompetitorsUseCase,
+        private deleteCompetitorUseCase: DeleteCompetitorUseCase
     ) {
-        super(pages.newsFeedDetail as DetailPageConfig);
+        super(pages.competitorDetail as DetailPageConfig);
 
         this.loadData();
     }
 
     async confirmDelete() {
         if (this.state.kind === "ListLoadedState" && this.state.itemsToDelete) {
-            const response = await this.deleteNewsFeedsUseCase.execute(this.state.itemsToDelete[0]);
+            const response = await this.deleteCompetitorUseCase.execute(
+                this.state.itemsToDelete[0]
+            );
 
             response.fold(
                 async error => this.changeState({ ...this.handleError(error) }),
@@ -27,7 +29,7 @@ class NewsFeedListBloc extends ListBloc<NewsFeedData> {
     }
 
     private async loadData() {
-        const response = await this.getNewsFeedsUseCase.execute();
+        const response = await this.getCompetitorsUseCase.execute();
 
         response.fold(
             error => this.changeState(this.handleError(error)),
@@ -38,7 +40,7 @@ class NewsFeedListBloc extends ListBloc<NewsFeedData> {
                     fields: fields,
                     selectedItems: [],
                     pagination: { ...defaultPagination, total: feeds.length },
-                    sorting: { field: "name", order: "asc" },
+                    sorting: { field: "lastName", order: "asc" },
                     actions: this.actions,
                 })
         );
@@ -47,22 +49,19 @@ class NewsFeedListBloc extends ListBloc<NewsFeedData> {
 
 export default NewsFeedListBloc;
 
-const fields: ListField<NewsFeedData>[] = [
+const fields: ListField<CompetitorData>[] = [
     { name: "id", text: "Id", type: "text" },
     {
-        name: "image",
+        name: "mainImage",
         text: "Image",
-        type: "avatar",
-        alt: "name",
+        type: "image",
+        alt: "lastName",
         sortable: false,
         searchable: false,
     },
-    { name: "name", text: "Name", type: "text" },
-    { name: "language", text: "Language", type: "text" },
-    { name: "type", text: "Type", type: "text" },
-    {
-        name: "url",
-        text: "Url",
-        type: "url",
-    },
+    { name: "lastName", text: "Last Name", type: "text" },
+    { name: "firstName", text: "First Name", type: "text" },
+    { name: "wkfId", text: "WKF Id", type: "text" },
+    { name: "isActive", text: "Is Active", type: "boolean", searchable: false },
+    { name: "isLegend", text: "Is Legend", type: "boolean", searchable: false },
 ];

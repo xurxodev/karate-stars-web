@@ -1,6 +1,7 @@
 import Bloc from "./Bloc";
 import {
     IdentifiableObject,
+    ListAction,
     ListField,
     ListLoadedState,
     ListPagination,
@@ -9,19 +10,73 @@ import {
     SortDirection,
 } from "../state/ListState";
 import { DataError } from "../../domain/Errors";
+import { DetailPageConfig } from "../PageRoutes";
 
 export const defaultPagination = { pageSizeOptions: [5, 10, 25], pageSize: 10, page: 0, total: 0 };
 
+const editAction = {
+    name: "edit",
+    text: "Edit",
+    icon: "edit",
+    multiple: false,
+    primary: true,
+    active: true,
+};
+
+const deleteAction = {
+    name: "delete",
+    text: "Delete",
+    icon: "delete",
+    multiple: true,
+    primary: false,
+    active: true,
+};
+
 abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListState<S>> {
     items: S[] = [];
+    actions: ListAction[] = [editAction, deleteAction];
 
-    public abstract actionItemClick(actionName: string, id: string): void;
-    public abstract actionClick(): void;
+    abstract confirmDelete(): Promise<void>;
 
-    constructor() {
+    constructor(private detailPage: DetailPageConfig) {
         super({
             kind: "ListLoadingState",
         });
+    }
+
+    public actionClick(): void {
+        this.changeState({
+            kind: "NavigateTo",
+            route: this.detailPage.generateUrl({ action: "new" }),
+        });
+    }
+
+    public actionItemClick(actionName: string, id: string): void {
+        switch (actionName) {
+            case editAction.name: {
+                this.changeState({
+                    kind: "NavigateTo",
+                    route: this.detailPage.generateUrl({ id, action: "edit" }),
+                });
+                break;
+            }
+            case deleteAction.name: {
+                this.delete(id);
+                break;
+            }
+        }
+    }
+
+    async delete(id: string) {
+        if (this.state.kind === "ListLoadedState") {
+            this.changeState({ ...this.state, itemsToDelete: [id] });
+        }
+    }
+
+    async cancelDelete() {
+        if (this.state.kind === "ListLoadedState") {
+            this.changeState({ ...this.state, itemsToDelete: undefined });
+        }
     }
 
     search(search: string) {
@@ -66,12 +121,13 @@ abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListState<S>>
     }
 
     protected changeState(state: ListState<S>) {
+        const prevItems = this.state.kind === "ListLoadedState" ? this.state.items : [];
+
         super.changeState(state);
 
-        this.items.splice(0, this.items.length);
-
-        if (state.kind === "ListLoadedState") {
-            this.items.push(...state.items);
+        if (state.kind === "ListLoadedState" && prevItems.length !== state.items.length) {
+            this.items = state.items;
+            this.updateItems(state.pagination, state.search, state.sorting);
         }
     }
 
@@ -136,7 +192,11 @@ abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListState<S>>
         );
 
         const itemsBySearch = items.filter(item =>
-            searchableFields.some(field => !search || (item[field.name] as any).includes(search))
+            searchableFields.some(
+                field =>
+                    !search ||
+                    (item[field.name] as any).toLowerCase().includes(search.toLocaleLowerCase())
+            )
         );
 
         return itemsBySearch;

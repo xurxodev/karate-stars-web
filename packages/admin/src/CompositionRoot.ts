@@ -18,14 +18,22 @@ import UserRepository from "./user/domain/Boundaries";
 import GetNewsFeedsUseCase from "./news/domain/GetNewsFeedsUseCase";
 import DeleteNewsFeedsUseCase from "./news/domain/DeleteNewsFeedsUseCase";
 import GetNewsFeedByIdUseCase from "./news/domain/GetNewsFeedByIdUseCase";
-import { base64ImageToFile } from "./news/data/Base64ImageConverter";
+import { base64ImageToFile } from "./common/data/Base64ImageConverter";
 import SaveNewsFeedUseCase from "./news/domain/SaveNewsFeedUseCase";
+import CompetitorApiRepository from "./competitors/data/CompetitorApiRepository";
+import GetCompetitorsUseCase from "./competitors/domain/GetCompetitorsUseCase";
+import { CompetitorRepository } from "./competitors/domain/Boundaries";
+import GetCompetitorByIdUseCase from "./competitors/domain/GetCompetitorByIdUseCase";
+import CompetitorListBloc from "./competitors/presentation/compeltitor-list/CompetitorListBloc";
+import DeleteCompetitorUseCase from "./competitors/domain/DeleteCompetitorUseCase";
+import SaveCompetitorUseCase from "./competitors/domain/SaveCompetitorUseCase";
 
 export const names = {
     axiosInstanceAPI: "axiosInstanceAPI",
     axiosInstancePush: "axiosInstancePush",
     userRepository: "userRepository",
     newsFeedRepository: "newsFeedRepository",
+    competitorRepository: "competitorRepository",
     pushNotificationRepository: "pushNotificationRepository",
     tokenStorage: "tokenStorage",
 };
@@ -37,6 +45,7 @@ export function init() {
     initLogin();
     initSendPushNotifications();
     initNewsFeed();
+    initCompetitors();
 }
 
 export function reset() {
@@ -141,4 +150,46 @@ function initNewsFeed() {
         NewsFeedDetailBloc,
         () => new NewsFeedDetailBloc(di.get(GetNewsFeedByIdUseCase), di.get(SaveNewsFeedUseCase))
     );
+}
+
+function initCompetitors() {
+    di.bindLazySingleton(
+        names.competitorRepository,
+        () =>
+            new CompetitorApiRepository(di.get(names.axiosInstanceAPI), di.get(names.tokenStorage))
+    );
+
+    di.bindLazySingleton(
+        GetCompetitorsUseCase,
+        () => new GetCompetitorsUseCase(di.get<CompetitorRepository>(names.competitorRepository))
+    );
+
+    di.bindLazySingleton(
+        GetCompetitorByIdUseCase,
+        () => new GetCompetitorByIdUseCase(di.get<CompetitorRepository>(names.competitorRepository))
+    );
+
+    di.bindLazySingleton(
+        SaveCompetitorUseCase,
+        () =>
+            new SaveCompetitorUseCase(
+                di.get<CompetitorRepository>(names.competitorRepository),
+                base64ImageToFile
+            )
+    );
+
+    di.bindLazySingleton(
+        DeleteCompetitorUseCase,
+        () => new DeleteCompetitorUseCase(di.get<CompetitorRepository>(names.competitorRepository))
+    );
+
+    di.bindFactory(
+        CompetitorListBloc,
+        () => new CompetitorListBloc(di.get(GetCompetitorsUseCase), di.get(DeleteCompetitorUseCase))
+    );
+
+    // di.bindFactory(
+    //     NewsFeedDetailBloc,
+    //     () => new NewsFeedDetailBloc(di.get(GetNewsFeedByIdUseCase), di.get(SaveNewsFeedUseCase))
+    // );
 }

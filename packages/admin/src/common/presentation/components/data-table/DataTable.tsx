@@ -23,6 +23,7 @@ import SearchInput from "../search-input/SearchInput";
 import { IdentifiableObject } from "../../state/ListState";
 import ContextualMenu, { MenuItemData } from "../contextual-menu/ContextualMenu";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import { formatRowValue } from "./utils";
 
 export interface TableColumn<T> {
     name: keyof T;
@@ -232,9 +233,8 @@ export default function DataTable<T extends IdentifiableObject>({
                                     </TableCell>
 
                                     {columns.map((column, index) => {
-                                        const cellContent = !column.getValue
-                                            ? item[column.name]
-                                            : column.getValue(item);
+                                        const cellContent = formatRowValue(column, item);
+
                                         return (
                                             <TableCell key={`${item.id}-${index}`}>
                                                 {cellContent}

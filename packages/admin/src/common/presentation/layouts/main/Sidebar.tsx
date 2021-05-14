@@ -11,7 +11,7 @@ import SidebarNav, { Menu } from "./SidebarNav";
 import Profile from "./Profile";
 import { useAppBlocContext } from "../../../../app/AppContext";
 import { Description, RssFeed } from "@material-ui/icons";
-import { pages } from "../../PageRoutes";
+import { DetailPageConfig, pages } from "../../PageRoutes";
 
 const useStyles = makeStyles((theme: Theme) => ({
     drawer: {
@@ -78,7 +78,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
         {
             kind: "MenuLeaf",
             level: 0,
-            ...pages.competitors,
+            ...pages.competitorList,
             icon: <PeopleIcon />,
         },
         {
@@ -97,7 +97,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
                     kind: "MenuLeaf",
                     level: 1,
                     title: pages.newsFeedDetail.title,
-                    path: pages.newsFeedDetail.generateUrl({ action: "new" }),
+                    path: (pages.newsFeedDetail as DetailPageConfig).generateUrl({ action: "new" }),
                     icon: <RssFeed />,
                 },
                 {
