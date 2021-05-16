@@ -26,7 +26,13 @@ export const pages: Record<string, PageConfig> = {
         generateUrl: (params: DetailPageParams) =>
             `/competitors/${params.action}${params.id ? "/" + params.id : ""}`,
     },
-    videos: { title: "Videos", path: "/videos" },
+    videoList: { title: "Videos", path: "/videos" },
+    videoDetail: {
+        title: "Create Video",
+        path: "/videos/:action(new|edit)/:id?",
+        generateUrl: (params: DetailPageParams) =>
+            `/videos/${params.action}${params.id ? "/" + params.id : ""}`,
+    },
     newsFeedList: { title: "News Feeds", path: "/news-feeds" },
     newsFeedDetail: {
         title: "Create News Feed",

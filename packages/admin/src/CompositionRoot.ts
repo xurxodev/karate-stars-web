@@ -9,31 +9,16 @@ import RemoveCurrentUserUseCase from "./user/domain/RemoveCurrentUserUseCase";
 import SendPushNotificationBloc from "./notifications/presentation/SendPushNotificationBloc";
 import FcmPushNotificationRepository from "./notifications/data/FcmPushNotificationRepository";
 import SendPushNotificationUseCase from "./notifications/domain/SendPushNotificationUseCase";
-import NewsFeedDetailBloc from "./news/presentation/news-feed-detail/NewsFeedDetailBloc";
 import { DependencyLocator } from "karate-stars-core";
-import NewsFeedListBloc from "./news/presentation/news-feed-list/NewsFeedListBloc";
-import NewsFeedApiRepository from "./news/data/NewsFeedApiRepository";
-import { NewsFeedRepository } from "./news/domain/Boundaries";
 import UserRepository from "./user/domain/Boundaries";
-import GetNewsFeedsUseCase from "./news/domain/GetNewsFeedsUseCase";
-import DeleteNewsFeedsUseCase from "./news/domain/DeleteNewsFeedsUseCase";
-import GetNewsFeedByIdUseCase from "./news/domain/GetNewsFeedByIdUseCase";
-import { base64ImageToFile } from "./common/data/Base64ImageConverter";
-import SaveNewsFeedUseCase from "./news/domain/SaveNewsFeedUseCase";
-import CompetitorApiRepository from "./competitors/data/CompetitorApiRepository";
-import GetCompetitorsUseCase from "./competitors/domain/GetCompetitorsUseCase";
-import { CompetitorRepository } from "./competitors/domain/Boundaries";
-import GetCompetitorByIdUseCase from "./competitors/domain/GetCompetitorByIdUseCase";
-import CompetitorListBloc from "./competitors/presentation/compeltitor-list/CompetitorListBloc";
-import DeleteCompetitorUseCase from "./competitors/domain/DeleteCompetitorUseCase";
-import SaveCompetitorUseCase from "./competitors/domain/SaveCompetitorUseCase";
+import { initCompetitors } from "./competitors/CompetitorDIModule";
+import { initNewsFeed } from "./news/NewsDIModule";
+import { initVideos } from "./videos/VideoDIModule";
 
-export const names = {
+export const appDIKeys = {
     axiosInstanceAPI: "axiosInstanceAPI",
     axiosInstancePush: "axiosInstancePush",
     userRepository: "userRepository",
-    newsFeedRepository: "newsFeedRepository",
-    competitorRepository: "competitorRepository",
     pushNotificationRepository: "pushNotificationRepository",
     tokenStorage: "tokenStorage",
 };
@@ -46,6 +31,7 @@ export function init() {
     initSendPushNotifications();
     initNewsFeed();
     initCompetitors();
+    initVideos();
 }
 
 export function reset() {
@@ -54,25 +40,29 @@ export function reset() {
 }
 
 function initApp() {
-    di.bindLazySingleton(names.axiosInstanceAPI, () =>
+    di.bindLazySingleton(appDIKeys.axiosInstanceAPI, () =>
         axios.create({
             baseURL: "/api/v1/",
         })
     );
 
-    di.bindLazySingleton(names.tokenStorage, () => new TokenLocalStorage());
+    di.bindLazySingleton(appDIKeys.tokenStorage, () => new TokenLocalStorage());
 
     di.bindLazySingleton(
-        names.userRepository,
-        () => new UserApiRepository(di.get(names.axiosInstanceAPI), di.get(names.tokenStorage))
+        appDIKeys.userRepository,
+        () =>
+            new UserApiRepository(
+                di.get(appDIKeys.axiosInstanceAPI),
+                di.get(appDIKeys.tokenStorage)
+            )
     );
     di.bindLazySingleton(
         GetCurrentUserUseCase,
-        () => new GetCurrentUserUseCase(di.get<UserRepository>(names.userRepository))
+        () => new GetCurrentUserUseCase(di.get<UserRepository>(appDIKeys.userRepository))
     );
     di.bindLazySingleton(
         RemoveCurrentUserUseCase,
-        () => new RemoveCurrentUserUseCase(di.get<UserRepository>(names.userRepository))
+        () => new RemoveCurrentUserUseCase(di.get<UserRepository>(appDIKeys.userRepository))
     );
 
     di.bindFactory(
@@ -82,12 +72,12 @@ function initApp() {
 }
 
 function initLogin() {
-    di.bindLazySingleton(LoginUseCase, () => new LoginUseCase(di.get(names.userRepository)));
+    di.bindLazySingleton(LoginUseCase, () => new LoginUseCase(di.get(appDIKeys.userRepository)));
     di.bindFactory(LoginBloc, () => new LoginBloc(di.get(LoginUseCase)));
 }
 
 function initSendPushNotifications() {
-    di.bindLazySingleton(names.axiosInstancePush, () =>
+    di.bindLazySingleton(appDIKeys.axiosInstancePush, () =>
         axios.create({
             baseURL: "https://fcm.googleapis.com/fcm",
         })
@@ -96,100 +86,17 @@ function initSendPushNotifications() {
     const fcmApiToken = process.env.REACT_APP_FCM_API_TOKEN || "";
 
     di.bindLazySingleton(
-        names.pushNotificationRepository,
-        () => new FcmPushNotificationRepository(di.get(names.axiosInstancePush), fcmApiToken)
+        appDIKeys.pushNotificationRepository,
+        () => new FcmPushNotificationRepository(di.get(appDIKeys.axiosInstancePush), fcmApiToken)
     );
 
     di.bindLazySingleton(
         SendPushNotificationUseCase,
-        () => new SendPushNotificationUseCase(di.get(names.pushNotificationRepository))
+        () => new SendPushNotificationUseCase(di.get(appDIKeys.pushNotificationRepository))
     );
 
     di.bindFactory(
         SendPushNotificationBloc,
         () => new SendPushNotificationBloc(di.get(SendPushNotificationUseCase))
     );
-}
-
-function initNewsFeed() {
-    di.bindLazySingleton(
-        names.newsFeedRepository,
-        () => new NewsFeedApiRepository(di.get(names.axiosInstanceAPI), di.get(names.tokenStorage))
-    );
-
-    di.bindLazySingleton(
-        GetNewsFeedsUseCase,
-        () => new GetNewsFeedsUseCase(di.get<NewsFeedRepository>(names.newsFeedRepository))
-    );
-
-    di.bindLazySingleton(
-        GetNewsFeedByIdUseCase,
-        () => new GetNewsFeedByIdUseCase(di.get<NewsFeedRepository>(names.newsFeedRepository))
-    );
-
-    di.bindLazySingleton(
-        SaveNewsFeedUseCase,
-        () =>
-            new SaveNewsFeedUseCase(
-                di.get<NewsFeedRepository>(names.newsFeedRepository),
-                base64ImageToFile
-            )
-    );
-
-    di.bindLazySingleton(
-        DeleteNewsFeedsUseCase,
-        () => new DeleteNewsFeedsUseCase(di.get<NewsFeedRepository>(names.newsFeedRepository))
-    );
-
-    di.bindFactory(
-        NewsFeedListBloc,
-        () => new NewsFeedListBloc(di.get(GetNewsFeedsUseCase), di.get(DeleteNewsFeedsUseCase))
-    );
-
-    di.bindFactory(
-        NewsFeedDetailBloc,
-        () => new NewsFeedDetailBloc(di.get(GetNewsFeedByIdUseCase), di.get(SaveNewsFeedUseCase))
-    );
-}
-
-function initCompetitors() {
-    di.bindLazySingleton(
-        names.competitorRepository,
-        () =>
-            new CompetitorApiRepository(di.get(names.axiosInstanceAPI), di.get(names.tokenStorage))
-    );
-
-    di.bindLazySingleton(
-        GetCompetitorsUseCase,
-        () => new GetCompetitorsUseCase(di.get<CompetitorRepository>(names.competitorRepository))
-    );
-
-    di.bindLazySingleton(
-        GetCompetitorByIdUseCase,
-        () => new GetCompetitorByIdUseCase(di.get<CompetitorRepository>(names.competitorRepository))
-    );
-
-    di.bindLazySingleton(
-        SaveCompetitorUseCase,
-        () =>
-            new SaveCompetitorUseCase(
-                di.get<CompetitorRepository>(names.competitorRepository),
-                base64ImageToFile
-            )
-    );
-
-    di.bindLazySingleton(
-        DeleteCompetitorUseCase,
-        () => new DeleteCompetitorUseCase(di.get<CompetitorRepository>(names.competitorRepository))
-    );
-
-    di.bindFactory(
-        CompetitorListBloc,
-        () => new CompetitorListBloc(di.get(GetCompetitorsUseCase), di.get(DeleteCompetitorUseCase))
-    );
-
-    // di.bindFactory(
-    //     NewsFeedDetailBloc,
-    //     () => new NewsFeedDetailBloc(di.get(GetNewsFeedByIdUseCase), di.get(SaveNewsFeedUseCase))
-    // );
 }

@@ -1,14 +1,14 @@
 import { ListField } from "../../../common/presentation/state/ListState";
-import { CompetitorData } from "karate-stars-core";
+import { VideoData } from "karate-stars-core";
 import ListBloc, { defaultPagination } from "../../../common/presentation/bloc/ListBloc";
 import { DetailPageConfig, pages } from "../../../common/presentation/PageRoutes";
-import GetCompetitorsUseCase from "../../domain/GetCompetitorsUseCase";
-import DeleteCompetitorUseCase from "../../domain/DeleteCompetitorUseCase";
+import GetVideosUseCase from "../../domain/GetVideosUseCase";
+import DeleteVideoUseCase from "../../domain/DeleteVideoUseCase";
 
-class CompetitorListBloc extends ListBloc<CompetitorData> {
+class VideoListBloc extends ListBloc<VideoData> {
     constructor(
-        private getCompetitorsUseCase: GetCompetitorsUseCase,
-        private deleteCompetitorUseCase: DeleteCompetitorUseCase
+        private getVideosUseCase: GetVideosUseCase,
+        private deleteCompetitorUseCase: DeleteVideoUseCase
     ) {
         super(pages.competitorDetail as DetailPageConfig);
 
@@ -29,7 +29,7 @@ class CompetitorListBloc extends ListBloc<CompetitorData> {
     }
 
     private async loadData() {
-        const response = await this.getCompetitorsUseCase.execute();
+        const response = await this.getVideosUseCase.execute();
 
         response.fold(
             error => this.changeState(this.handleError(error)),
@@ -40,28 +40,19 @@ class CompetitorListBloc extends ListBloc<CompetitorData> {
                     fields: fields,
                     selectedItems: [],
                     pagination: { ...defaultPagination, total: feeds.length },
-                    sorting: { field: "lastName", order: "asc" },
+                    sorting: { field: "title", order: "asc" },
                     actions: this.actions,
                 })
         );
     }
 }
 
-export default CompetitorListBloc;
+export default VideoListBloc;
 
-const fields: ListField<CompetitorData>[] = [
+const fields: ListField<VideoData>[] = [
     { name: "id", text: "Id", type: "text" },
-    {
-        name: "mainImage",
-        text: "Image",
-        type: "image",
-        alt: "lastName",
-        sortable: false,
-        searchable: false,
-    },
-    { name: "lastName", text: "Last Name", type: "text" },
-    { name: "firstName", text: "First Name", type: "text" },
-    { name: "wkfId", text: "WKF Id", type: "text" },
-    { name: "isActive", text: "Is Active", type: "boolean", searchable: false },
-    { name: "isLegend", text: "Is Legend", type: "boolean", searchable: false },
+    { name: "title", text: "Title", type: "text" },
+    { name: "subtitle", text: "Subtitle", type: "text" },
+    { name: "description", text: "Description", type: "text" },
+    { name: "eventDate", text: "Event date", type: "text" },
 ];

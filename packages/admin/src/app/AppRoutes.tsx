@@ -2,7 +2,6 @@ import React from "react";
 import { Switch, Redirect, Route, HashRouter } from "react-router-dom";
 import LoginPage from "../user/presentation/LoginPage";
 import DashboardPage from "../dashboard/presentation/DashboardPage";
-import VideosPage from "../videos/presentation/VideosPage";
 import NewsFeedDetailPage from "../news/presentation/news-feed-detail/NewsFeedDetailPage";
 import SendPushNotificationPage from "../notifications/presentation/SendPushNotificationPage";
 import NotFoundPage from "../common/presentation/pages/NotFoundPage";
@@ -11,6 +10,8 @@ import NewsFeedListPage from "../news/presentation/news-feed-list/NewsFeedListPa
 import { pages } from "../common/presentation/PageRoutes";
 import CompetitorListPage from "../competitors/presentation/compeltitor-list/CompetitorListPage";
 import CompetitorsDetailPage from "../competitors/presentation/compeltitor-detail/CompetitorsDetailPage";
+import VideoListPage from "../videos/presentation/video-list/VideoListPage";
+import VideoDetailPage from "../videos/presentation/video-detail/VideoDetailPage";
 
 export const AppRoutes: React.FC = () => {
     return (
@@ -26,7 +27,9 @@ export const AppRoutes: React.FC = () => {
                 />
                 <PrivateRoute path={pages.competitorList.path} component={CompetitorListPage} />
 
-                <PrivateRoute path={pages.videos.path} component={VideosPage} />
+                <PrivateRoute path={pages.videoDetail.path} component={VideoDetailPage} />
+                <PrivateRoute path={pages.videoList.path} component={VideoListPage} />
+
                 <PrivateRoute path={pages.newsFeedDetail.path} component={NewsFeedDetailPage} />
                 <PrivateRoute path={pages.newsFeedList.path} component={NewsFeedListPage} />
                 <PrivateRoute

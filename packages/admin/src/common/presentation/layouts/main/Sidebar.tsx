@@ -84,7 +84,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
         {
             kind: "MenuLeaf",
             level: 0,
-            ...pages.videos,
+            ...pages.videoList,
             icon: <VideoLibrary />,
         },
         {
