@@ -6,12 +6,15 @@ import PeopleIcon from "@material-ui/icons/People";
 import Notifications from "@material-ui/icons/Notifications";
 import VideoLibrary from "@material-ui/icons/VideoLibrary";
 import InputIcon from "@material-ui/icons/Input";
+import EventNoteIcon from "@material-ui/icons/EventNote";
+import EmojiEventsIcon from "@material-ui/icons/EmojiEvents";
+import EventIcon from "@material-ui/icons/Event";
 
 import SidebarNav, { Menu } from "./SidebarNav";
 import Profile from "./Profile";
 import { useAppBlocContext } from "../../../../app/AppContext";
 import { Description, RssFeed } from "@material-ui/icons";
-import { DetailPageConfig, pages } from "../../PageRoutes";
+import { pages } from "../../PageRoutes";
 
 const useStyles = makeStyles((theme: Theme) => ({
     drawer: {
@@ -82,10 +85,24 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
             icon: <PeopleIcon />,
         },
         {
-            kind: "MenuLeaf",
+            kind: "MenuGroup",
             level: 0,
-            ...pages.videoList,
-            icon: <VideoLibrary />,
+            title: "Events",
+            icon: <EmojiEventsIcon />,
+            children: [
+                {
+                    kind: "MenuLeaf",
+                    level: 0,
+                    ...pages.eventList,
+                    icon: <EventIcon />,
+                },
+                {
+                    kind: "MenuLeaf",
+                    level: 0,
+                    ...pages.eventTypeList,
+                    icon: <EventNoteIcon />,
+                },
+            ],
         },
         {
             kind: "MenuGroup",
@@ -93,13 +110,13 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
             title: "News",
             icon: <Description />,
             children: [
-                {
-                    kind: "MenuLeaf",
-                    level: 1,
-                    title: pages.newsFeedDetail.title,
-                    path: (pages.newsFeedDetail as DetailPageConfig).generateUrl({ action: "new" }),
-                    icon: <RssFeed />,
-                },
+                // {
+                //     kind: "MenuLeaf",
+                //     level: 1,
+                //     title: pages.newsFeedDetail.title,
+                //     path: (pages.newsFeedDetail as DetailPageConfig).generateUrl({ action: "new" }),
+                //     icon: <RssFeed />,
+                // },
                 {
                     kind: "MenuLeaf",
                     level: 1,
@@ -109,10 +126,24 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
             ],
         },
         {
+            kind: "MenuGroup",
+            level: 0,
+            title: "Notifications",
+            icon: <Notifications />,
+            children: [
+                {
+                    kind: "MenuLeaf",
+                    level: 0,
+                    ...pages.sendPushNotification,
+                    icon: <Description />,
+                },
+            ],
+        },
+        {
             kind: "MenuLeaf",
             level: 0,
-            ...pages.sendPushNotification,
-            icon: <Notifications />,
+            ...pages.videoList,
+            icon: <VideoLibrary />,
         },
     ];
 

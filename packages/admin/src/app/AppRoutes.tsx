@@ -12,6 +12,8 @@ import CompetitorListPage from "../competitors/presentation/compeltitor-list/Com
 import CompetitorsDetailPage from "../competitors/presentation/compeltitor-detail/CompetitorsDetailPage";
 import VideoListPage from "../videos/presentation/video-list/VideoListPage";
 import VideoDetailPage from "../videos/presentation/video-detail/VideoDetailPage";
+import EventDetailPage from "../events/presentation/event-detail/EventDetailPage";
+import EventListPage from "../events/presentation/event-list/EventListPage";
 
 export const AppRoutes: React.FC = () => {
     return (
@@ -26,6 +28,9 @@ export const AppRoutes: React.FC = () => {
                     component={CompetitorsDetailPage}
                 />
                 <PrivateRoute path={pages.competitorList.path} component={CompetitorListPage} />
+
+                <PrivateRoute path={pages.eventDetail.path} component={EventDetailPage} />
+                <PrivateRoute path={pages.eventList.path} component={EventListPage} />
 
                 <PrivateRoute path={pages.videoDetail.path} component={VideoDetailPage} />
                 <PrivateRoute path={pages.videoList.path} component={VideoListPage} />

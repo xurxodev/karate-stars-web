@@ -14,6 +14,7 @@ import UserRepository from "./user/domain/Boundaries";
 import { initCompetitors } from "./competitors/CompetitorDIModule";
 import { initNewsFeed } from "./news/NewsDIModule";
 import { initVideos } from "./videos/VideoDIModule";
+import { initEvents } from "./events/EventDIModule";
 
 export const appDIKeys = {
     axiosInstanceAPI: "axiosInstanceAPI",
@@ -28,9 +29,10 @@ export const di = DependencyLocator.getInstance();
 export function init() {
     initApp();
     initLogin();
-    initSendPushNotifications();
+    initEvents();
     initNewsFeed();
     initCompetitors();
+    initSendPushNotifications();
     initVideos();
 }
 

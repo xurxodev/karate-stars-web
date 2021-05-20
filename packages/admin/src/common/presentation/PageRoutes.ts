@@ -19,6 +19,20 @@ export type PageConfig = BasicPageConfig | DetailPageConfig;
 export const pages: Record<string, PageConfig> = {
     login: { title: "Login", path: "/login" },
     dashboard: { title: "Dasboard", path: "/dashboard" },
+    eventList: { title: "Events", path: "/events" },
+    eventDetail: {
+        title: "Create event",
+        path: "/events/:action(new|edit)/:id?",
+        generateUrl: (params: DetailPageParams) =>
+            `/events/${params.action}${params.id ? "/" + params.id : ""}`,
+    },
+    eventTypeList: { title: "Event Types", path: "/event-types" },
+    eventTypeDetail: {
+        title: "Create event Type",
+        path: "/event-types/:action(new|edit)/:id?",
+        generateUrl: (params: DetailPageParams) =>
+            `/event-types/${params.action}${params.id ? "/" + params.id : ""}`,
+    },
     competitorList: { title: "Competitors", path: "/competitors" },
     competitorDetail: {
         title: "Create Competitor",
@@ -40,6 +54,6 @@ export const pages: Record<string, PageConfig> = {
         generateUrl: (params: DetailPageParams) =>
             `/news-feeds/${params.action}${params.id ? "/" + params.id : ""}`,
     },
-    sendPushNotification: { title: "Send push notification", path: "/send-push-notification" },
+    sendPushNotification: { title: "Send news", path: "/send-push-notification" },
     notFound: { title: "Not found", path: "/not-found" },
 };
