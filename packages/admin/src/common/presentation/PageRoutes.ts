@@ -19,6 +19,20 @@ export type PageConfig = BasicPageConfig | DetailPageConfig;
 export const pages: Record<string, PageConfig> = {
     login: { title: "Login", path: "/login" },
     dashboard: { title: "Dasboard", path: "/dashboard" },
+    categoryList: { title: "Categories", path: "/categories" },
+    categoryDetail: {
+        title: "Create category",
+        path: "/categories/:action(new|edit)/:id?",
+        generateUrl: (params: DetailPageParams) =>
+            `/categories/${params.action}${params.id ? "/" + params.id : ""}`,
+    },
+    categoryTypeList: { title: "Category Types", path: "/category-types" },
+    categoryTypeDetail: {
+        title: "Create category Type",
+        path: "/category-types/:action(new|edit)/:id?",
+        generateUrl: (params: DetailPageParams) =>
+            `/category-types/${params.action}${params.id ? "/" + params.id : ""}`,
+    },
     eventList: { title: "Events", path: "/events" },
     eventDetail: {
         title: "Create event",

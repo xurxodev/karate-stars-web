@@ -9,6 +9,9 @@ import InputIcon from "@material-ui/icons/Input";
 import EventNoteIcon from "@material-ui/icons/EventNote";
 import EmojiEventsIcon from "@material-ui/icons/EmojiEvents";
 import EventIcon from "@material-ui/icons/Event";
+import CategoryIcon from "@material-ui/icons/Category";
+import ListAltIcon from "@material-ui/icons/ListAlt";
+import ListIcon from "@material-ui/icons/List";
 
 import SidebarNav, { Menu } from "./SidebarNav";
 import Profile from "./Profile";
@@ -77,6 +80,26 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
             level: 0,
             ...pages.dashboard,
             icon: <DashboardIcon />,
+        },
+        {
+            kind: "MenuGroup",
+            level: 0,
+            title: "Categories",
+            icon: <CategoryIcon />,
+            children: [
+                {
+                    kind: "MenuLeaf",
+                    level: 0,
+                    ...pages.categoryList,
+                    icon: <ListAltIcon />,
+                },
+                {
+                    kind: "MenuLeaf",
+                    level: 0,
+                    ...pages.categoryTypeList,
+                    icon: <ListIcon />,
+                },
+            ],
         },
         {
             kind: "MenuLeaf",

@@ -16,6 +16,8 @@ import EventDetailPage from "../events/presentation/event-detail/EventDetailPage
 import EventListPage from "../events/presentation/event-list/EventListPage";
 import EventTypeDetailPage from "../event-types/presentation/event-type-detail/EventTypeDetailPage";
 import EventTypeListPage from "../event-types/presentation/event-type-list/EventListPage";
+import CategoryTypeDetailPage from "../category-types/presentation/category-type-detail/CategoryTypeDetailPage";
+import CategoryTypeListPage from "../category-types/presentation/category-type-list/CategoryTypeListPage";
 
 export const AppRoutes: React.FC = () => {
     return (
@@ -30,6 +32,12 @@ export const AppRoutes: React.FC = () => {
                     component={CompetitorsDetailPage}
                 />
                 <PrivateRoute path={pages.competitorList.path} component={CompetitorListPage} />
+
+                <PrivateRoute
+                    path={pages.categoryTypeDetail.path}
+                    component={CategoryTypeDetailPage}
+                />
+                <PrivateRoute path={pages.categoryTypeList.path} component={CategoryTypeListPage} />
 
                 <PrivateRoute path={pages.eventDetail.path} component={EventDetailPage} />
                 <PrivateRoute path={pages.eventList.path} component={EventListPage} />

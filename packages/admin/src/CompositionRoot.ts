@@ -16,6 +16,7 @@ import { initNewsFeed } from "./news/NewsDIModule";
 import { initVideos } from "./videos/VideoDIModule";
 import { initEvents } from "./events/EventDIModule";
 import { initEventTypes } from "./event-types/EventTypeDIModule";
+import { initCategoryTypes } from "./category-types/CategoryTypeDIModule";
 
 export const appDIKeys = {
     axiosInstanceAPI: "axiosInstanceAPI",
@@ -30,6 +31,7 @@ export const di = DependencyLocator.getInstance();
 export function init() {
     initApp();
     initLogin();
+    initCategoryTypes();
     initEvents();
     initEventTypes();
     initNewsFeed();
