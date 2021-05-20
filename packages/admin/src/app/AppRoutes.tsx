@@ -14,6 +14,8 @@ import VideoListPage from "../videos/presentation/video-list/VideoListPage";
 import VideoDetailPage from "../videos/presentation/video-detail/VideoDetailPage";
 import EventDetailPage from "../events/presentation/event-detail/EventDetailPage";
 import EventListPage from "../events/presentation/event-list/EventListPage";
+import EventTypeDetailPage from "../event-types/presentation/event-type-detail/EventTypeDetailPage";
+import EventTypeListPage from "../event-types/presentation/event-type-list/EventListPage";
 
 export const AppRoutes: React.FC = () => {
     return (
@@ -31,6 +33,9 @@ export const AppRoutes: React.FC = () => {
 
                 <PrivateRoute path={pages.eventDetail.path} component={EventDetailPage} />
                 <PrivateRoute path={pages.eventList.path} component={EventListPage} />
+
+                <PrivateRoute path={pages.eventTypeDetail.path} component={EventTypeDetailPage} />
+                <PrivateRoute path={pages.eventTypeList.path} component={EventTypeListPage} />
 
                 <PrivateRoute path={pages.videoDetail.path} component={VideoDetailPage} />
                 <PrivateRoute path={pages.videoList.path} component={VideoListPage} />

@@ -15,6 +15,7 @@ import { initCompetitors } from "./competitors/CompetitorDIModule";
 import { initNewsFeed } from "./news/NewsDIModule";
 import { initVideos } from "./videos/VideoDIModule";
 import { initEvents } from "./events/EventDIModule";
+import { initEventTypes } from "./event-types/EventTypeDIModule";
 
 export const appDIKeys = {
     axiosInstanceAPI: "axiosInstanceAPI",
@@ -30,6 +31,7 @@ export function init() {
     initApp();
     initLogin();
     initEvents();
+    initEventTypes();
     initNewsFeed();
     initCompetitors();
     initSendPushNotifications();
