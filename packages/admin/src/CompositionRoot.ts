@@ -17,6 +17,7 @@ import { initVideos } from "./videos/VideoDIModule";
 import { initEvents } from "./events/EventDIModule";
 import { initEventTypes } from "./event-types/EventTypeDIModule";
 import { initCategoryTypes } from "./category-types/CategoryTypeDIModule";
+import { initCategories } from "./categories/CategoryDIModule";
 
 export const appDIKeys = {
     axiosInstanceAPI: "axiosInstanceAPI",
@@ -31,6 +32,7 @@ export const di = DependencyLocator.getInstance();
 export function init() {
     initApp();
     initLogin();
+    initCategories();
     initCategoryTypes();
     initEvents();
     initEventTypes();
