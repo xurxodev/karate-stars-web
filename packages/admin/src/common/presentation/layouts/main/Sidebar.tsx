@@ -12,6 +12,7 @@ import EventIcon from "@material-ui/icons/Event";
 import CategoryIcon from "@material-ui/icons/Category";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import ListIcon from "@material-ui/icons/List";
+import FlagIcon from "@material-ui/icons/Flag";
 
 import SidebarNav, { Menu } from "./SidebarNav";
 import Profile from "./Profile";
@@ -106,6 +107,12 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
             level: 0,
             ...pages.competitorList,
             icon: <PeopleIcon />,
+        },
+        {
+            kind: "MenuLeaf",
+            level: 0,
+            ...pages.countryList,
+            icon: <FlagIcon />,
         },
         {
             kind: "MenuGroup",

@@ -18,6 +18,7 @@ import { initEvents } from "./events/EventDIModule";
 import { initEventTypes } from "./event-types/EventTypeDIModule";
 import { initCategoryTypes } from "./category-types/CategoryTypeDIModule";
 import { initCategories } from "./categories/CategoryDIModule";
+import { initCountries } from "./countries/CountryDIModule";
 
 export const appDIKeys = {
     axiosInstanceAPI: "axiosInstanceAPI",
@@ -34,6 +35,7 @@ export function init() {
     initLogin();
     initCategories();
     initCategoryTypes();
+    initCountries();
     initEvents();
     initEventTypes();
     initNewsFeed();

@@ -20,6 +20,8 @@ import CategoryTypeDetailPage from "../category-types/presentation/category-type
 import CategoryTypeListPage from "../category-types/presentation/category-type-list/CategoryTypeListPage";
 import CategoryDetailPage from "../categories/presentation/category-detail/CategoryTypeDetailPage";
 import CategoryListPage from "../categories/presentation/category-list/CategoryListPage";
+import CountryDetailPage from "../countries/presentation/country-detail/CountryDetailPage";
+import CountryListPage from "../countries/presentation/country-list/CountryListPage";
 
 export const AppRoutes: React.FC = () => {
     return (
@@ -43,6 +45,9 @@ export const AppRoutes: React.FC = () => {
                     component={CategoryTypeDetailPage}
                 />
                 <PrivateRoute path={pages.categoryTypeList.path} component={CategoryTypeListPage} />
+
+                <PrivateRoute path={pages.countryDetail.path} component={CountryDetailPage} />
+                <PrivateRoute path={pages.countryList.path} component={CountryListPage} />
 
                 <PrivateRoute path={pages.eventDetail.path} component={EventDetailPage} />
                 <PrivateRoute path={pages.eventList.path} component={EventListPage} />

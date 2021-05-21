@@ -33,6 +33,13 @@ export const pages: Record<string, PageConfig> = {
         generateUrl: (params: DetailPageParams) =>
             `/category-types/${params.action}${params.id ? "/" + params.id : ""}`,
     },
+    countryList: { title: "Countries", path: "/countries" },
+    countryDetail: {
+        title: "Create country",
+        path: "/countries/:action(new|edit)/:id?",
+        generateUrl: (params: DetailPageParams) =>
+            `/countries/${params.action}${params.id ? "/" + params.id : ""}`,
+    },
     eventList: { title: "Events", path: "/events" },
     eventDetail: {
         title: "Create event",
