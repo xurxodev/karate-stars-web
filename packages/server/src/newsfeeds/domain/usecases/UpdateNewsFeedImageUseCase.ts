@@ -1,4 +1,4 @@
-import { Either, EitherAsync, NewsFeedData } from "karate-stars-core";
+import { Either, EitherAsync, Id, NewsFeed, NewsFeedData } from "karate-stars-core";
 import stream from "stream";
 import { ActionResult } from "../../../common/api/ActionResult";
 import {
@@ -7,13 +7,13 @@ import {
     ValidationErrors,
 } from "../../../common/api/Errors";
 import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
-import { createIdOrResourceNotFound } from "../../../common/domain/utils";
+import { updateImageResource } from "../../../common/domain/UpdateImageResource";
 import { ImageRepository } from "../../../images/domain/ImageRepository";
 import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import NewsFeedsRepository from "../boundaries/NewsFeedRepository";
 
 export interface CreateNewsFeedArg extends AdminUseCaseArgs {
-    itemId: string;
+    id: string;
     filename: string;
     image: stream.Readable;
 }
@@ -37,32 +37,27 @@ export class UpdateNewsFeedImageUseCase extends AdminUseCase<
     }
 
     public async run({
-        itemId,
+        id,
         filename,
         image,
     }: CreateNewsFeedArg): Promise<Either<UpdateNewsFeedImageError, ActionResult>> {
-        return await createIdOrResourceNotFound<UpdateNewsFeedImageError>(itemId)
-            .flatMap(async id => this.newsFeedsRepository.getById(id))
-            .flatMap(async existedFeed => {
-                const item = existedFeed.toData();
+        const updateEntity = (entity: NewsFeed, imageUrl: string) =>
+            entity.update({ ...entity.toData(), image: imageUrl });
+        const getById = (id: Id) => this.newsFeedsRepository.getById(id);
+        const saveEntity = (entity: NewsFeed) => this.newsFeedsRepository.save(entity);
+        const uploadNewImage = () => this.imageRepository.uploadNewImage("feeds", filename, image);
 
-                return this.deletePreviousImage(existedFeed.image?.value)
-                    .flatMap(() => this.imageRepository.uploadNewImage("feeds", filename, image))
-                    .mapLeft(error => error as UpdateNewsFeedImageError)
-                    .flatMap(async newImageUrl =>
-                        existedFeed.update({ ...item, image: newImageUrl }).mapLeft(error => ({
-                            kind: "ValidationErrors",
-                            errors: error,
-                        }))
-                    )
-                    .run();
-            })
-            .flatMap(entity => this.newsFeedsRepository.save(entity))
-            .run();
+        return updateImageResource(
+            id,
+            getById,
+            this.deletePreviousImage,
+            uploadNewImage,
+            updateEntity,
+            saveEntity
+        );
     }
-
-    private deletePreviousImage(imageUrl?: string): EitherAsync<UnexpectedError, true> {
-        const filename = imageUrl ? imageUrl.split("/").pop() : undefined;
+    private deletePreviousImage(entity: NewsFeed): EitherAsync<UnexpectedError, true> {
+        const filename = entity.image ? entity.image.value.split("/").pop() : undefined;
 
         if (filename) {
             return EitherAsync.fromPromise(this.imageRepository.deleteImage("feeds", filename));
