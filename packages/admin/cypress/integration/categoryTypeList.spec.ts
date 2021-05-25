@@ -1,15 +1,15 @@
-describe("News Feeds page", () => {
+describe("Category Types page", () => {
     beforeEach(() => {
         cy.login();
-        cy.visit("#/news-feeds");
+        cy.visit("#/category-types");
     });
 
-    it("should show news feeds", () => {
+    it("should show rows", () => {
         cy.findAllByRole("row").should("have.length.greaterThan", 1);
     });
 
     it("should search by text", () => {
-        cy.findByPlaceholderText("Search ...").type("WKF News Center");
+        cy.findByPlaceholderText("Search ...").type("Kumite");
         cy.findAllByRole("row").should("have.length", 2);
     });
 });

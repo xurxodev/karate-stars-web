@@ -1,15 +1,15 @@
-describe("News Feeds page", () => {
+describe("Competitors page", () => {
     beforeEach(() => {
         cy.login();
-        cy.visit("#/news-feeds");
+        cy.visit("#/competitors");
     });
 
-    it("should show news feeds", () => {
+    it("should show rows", () => {
         cy.findAllByRole("row").should("have.length.greaterThan", 1);
     });
 
     it("should search by text", () => {
-        cy.findByPlaceholderText("Search ...").type("WKF News Center");
+        cy.findByPlaceholderText("Search ...").type("Aghayev");
         cy.findAllByRole("row").should("have.length", 2);
     });
 });
