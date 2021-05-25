@@ -2,6 +2,7 @@ import { MongoConector } from "../common/data/MongoConector";
 import { competitorDIKeys } from "../competitors/CompetitorDIModule";
 import CompetitorRepository from "../competitors/domain/boundaries/CompetitorRepository";
 import { appDIKeys, di } from "../CompositionRoot";
+import { ImageRepository } from "../images/domain/ImageRepository";
 import UserRepository from "../users/domain/boundaries/UserRepository";
 import { CountryController } from "./api/CountryController";
 import CountryMongoRepository from "./data/CountryMongoRepository";
@@ -10,6 +11,7 @@ import { CreateCountryUseCase } from "./domain/usecases/CreateCountryUseCase";
 import { DeleteCountryUseCase } from "./domain/usecases/DeleteCountryUseCase";
 import { GetCountriesUseCase } from "./domain/usecases/GetCountriesUseCase";
 import { GetCountryByIdUseCase } from "./domain/usecases/GetCountryByIdUseCase";
+import { UpdateCountryImageUseCase } from "./domain/usecases/UpdateCountryImageUseCase";
 import { UpdateCountryUseCase } from "./domain/usecases/UpdateCountryUseCase";
 
 export const countryDIKeys = {
@@ -68,6 +70,16 @@ export function initializeCountries() {
             )
     );
 
+    di.bindLazySingleton(
+        UpdateCountryImageUseCase,
+        () =>
+            new UpdateCountryImageUseCase(
+                di.get<CountryRepository>(countryDIKeys.countryRepository),
+                di.get<ImageRepository>(appDIKeys.imageRepository),
+                di.get<UserRepository>(appDIKeys.userRepository)
+            )
+    );
+
     di.bindFactory(
         CountryController,
         () =>
@@ -77,7 +89,8 @@ export function initializeCountries() {
                 di.get(GetCountryByIdUseCase),
                 di.get(CreateCountryUseCase),
                 di.get(UpdateCountryUseCase),
-                di.get(DeleteCountryUseCase)
+                di.get(DeleteCountryUseCase),
+                di.get(UpdateCountryImageUseCase)
             )
     );
 }

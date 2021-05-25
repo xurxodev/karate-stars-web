@@ -46,7 +46,7 @@ export interface ListField<T> {
     text: string;
     sortable?: boolean;
     searchable?: boolean;
-    type: "text" | "image" | "avatar" | "url" | "boolean";
+    type: "text" | "image" | "smallImage" | "avatar" | "url" | "boolean";
 }
 
 export interface ListPagination {

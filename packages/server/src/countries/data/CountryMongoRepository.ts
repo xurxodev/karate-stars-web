@@ -19,6 +19,7 @@ export default class CountryMongoRepository
             id: modelDB._id,
             name: modelDB.name,
             iso2: modelDB.iso2,
+            image: modelDB.image,
         }).get();
     }
 

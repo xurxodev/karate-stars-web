@@ -43,12 +43,14 @@
         {
             "id": "uIaQv0JlN5n",
             "iso2": "az",
-            "name": "Azerbaijan"
+            "name": "Azerbaijan",
+            "image": "http://www.karatestarsapp.com/app/flags/az.png"
         },
         {
             "id": "AsfJyc10miO",
             "iso2": "eg",
-            "name": "Egypt"
+            "name": "Egypt",
+            "image": "http://www.karatestarsapp.com/app/flags/eg.png"
         }
     ]
 }

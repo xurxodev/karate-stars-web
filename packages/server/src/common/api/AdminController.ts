@@ -5,6 +5,7 @@ import { ConflictError, UnexpectedError, ResourceNotFoundError, ValidationErrors
 import { Either, validationErrorMessages } from "karate-stars-core";
 import { AdminUseCaseError } from "../domain/AdminUseCase";
 import { ActionResult } from "./ActionResult";
+import { Readable } from "stream";
 
 export type UseCaseErrors<T> =
     | AdminUseCaseError
@@ -96,6 +97,37 @@ export async function runPut<TData, TValidation>(
         );
     } else {
         return boom.badRequest("A body request with the resource to update is required");
+    }
+}
+
+export async function runPutImage<TValidation>(
+    request: hapi.Request,
+    h: hapi.ResponseToolkit,
+    jwtAuthenticator: JwtAuthenticator,
+    action: (
+        userId: string,
+        id: string,
+        image: Readable,
+        filename: string
+    ) => Promise<Either<UseCaseErrors<TValidation>, ActionResult>>
+): Promise<hapi.Lifecycle.ReturnValue> {
+    const { userId } = jwtAuthenticator.decodeTokenData(request.headers.authorization);
+
+    const id = request.params.id;
+    const payload = request.payload;
+
+    if (payload) {
+        const stream = payload["file"] as Readable;
+        const fileName = payload["file"].hapi.filename as string;
+
+        const result = await action(userId, id, stream, fileName);
+
+        return result.fold(
+            error => handleFailure(error),
+            result => result
+        );
+    } else {
+        return boom.badRequest("A body request with the file to edit is required");
     }
 }
 

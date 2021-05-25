@@ -1,12 +1,21 @@
 import { GetCountriesUseCase } from "../domain/usecases/GetCountriesUseCase";
 import { JwtAuthenticator } from "../../server";
 import { CountryData } from "karate-stars-core";
-import { runDelete, runGet, runGetAll, runPost, runPut } from "../../common/api/AdminController";
+import {
+    runDelete,
+    runGet,
+    runGetAll,
+    runPost,
+    runPut,
+    runPutImage,
+} from "../../common/api/AdminController";
 import { GetCountryByIdUseCase } from "../domain/usecases/GetCountryByIdUseCase";
 import { CreateCountryUseCase } from "../domain/usecases/CreateCountryUseCase";
 import { UpdateCountryUseCase } from "../domain/usecases/UpdateCountryUseCase";
 import { DeleteCountryUseCase } from "../domain/usecases/DeleteCountryUseCase";
 import * as hapi from "@hapi/hapi";
+import { Readable } from "stream";
+import { UpdateCountryImageUseCase } from "../domain/usecases/UpdateCountryImageUseCase";
 
 export class CountryController {
     constructor(
@@ -15,7 +24,8 @@ export class CountryController {
         private getCountryByIdUseCase: GetCountryByIdUseCase,
         private createCountryUseCase: CreateCountryUseCase,
         private updateCountryUseCase: UpdateCountryUseCase,
-        private deleteCountryUseCase: DeleteCountryUseCase
+        private deleteCountryUseCase: DeleteCountryUseCase,
+        private updateCountryImageUseCase: UpdateCountryImageUseCase
     ) {}
 
     async getAll(
@@ -37,9 +47,9 @@ export class CountryController {
         request: hapi.Request,
         h: hapi.ResponseToolkit
     ): Promise<hapi.Lifecycle.ReturnValue> {
-        return runPost(request, h, this.jwtAuthenticator, (userId: string, data: CountryData) =>
-            this.createCountryUseCase.execute({ userId, data })
-        );
+        return runPost(request, h, this.jwtAuthenticator, (userId: string, data: CountryData) => {
+            return this.createCountryUseCase.execute({ userId, data });
+        });
     }
 
     async put(request: hapi.Request, h: hapi.ResponseToolkit): Promise<hapi.Lifecycle.ReturnValue> {
@@ -49,6 +59,24 @@ export class CountryController {
             this.jwtAuthenticator,
             (userId: string, id: string, data: CountryData) =>
                 this.updateCountryUseCase.execute({ userId, id, data })
+        );
+    }
+
+    async putImage(
+        request: hapi.Request,
+        h: hapi.ResponseToolkit
+    ): Promise<hapi.Lifecycle.ReturnValue> {
+        return runPutImage(
+            request,
+            h,
+            this.jwtAuthenticator,
+            (userId: string, id: string, image: Readable, filename: string) =>
+                this.updateCountryImageUseCase.execute({
+                    userId,
+                    id,
+                    image,
+                    filename,
+                })
         );
     }
 

@@ -124,10 +124,11 @@ function mapColumns<T extends IdentifiableObject>(fields: ListField<T>[]): Table
         const baseColumn = { name: field.name, text: field.text, sortable: field.sortable };
 
         switch (field.type) {
+            case "smallImage":
             case "image": {
-                const avatar = (row: T) => (
+                const image = (row: T) => (
                     <img
-                        width={"150"}
+                        width={field.type === "image" ? "150" : "60"}
                         style={{ borderRadius: "5%" }}
                         src={(row[field.name] as unknown) as string}
                         alt={field.alt ? ((row[field.alt] as unknown) as string) : undefined}
@@ -136,7 +137,7 @@ function mapColumns<T extends IdentifiableObject>(fields: ListField<T>[]): Table
 
                 return {
                     ...baseColumn,
-                    getValue: avatar,
+                    getValue: image,
                 };
             }
             case "avatar": {
