@@ -8,12 +8,12 @@ import { HashRouter, Router } from "react-router-dom";
 import AppBloc from "../../../app/AppBloc";
 import userEvent from "@testing-library/user-event";
 import * as H from "history";
-import { arr, promiseMap } from "karate-stars-core";
+import { arr } from "karate-stars-core";
 
 // First init the compostion root to be enable to override dependencies in component test
 CompositionRoot.init();
 
-export interface TestAppProps {
+interface TestAppProps {
     history?: H.History;
 }
 
@@ -34,7 +34,7 @@ const TestApp: React.FC<TestAppProps> = ({ history, children }) => {
     );
 };
 
-export interface CustomRenderOptions extends Omit<RenderOptions, "queries"> {
+interface CustomRenderOptions extends Omit<RenderOptions, "queries"> {
     history: H.History;
 }
 
@@ -45,37 +45,29 @@ const customRender = (ui: React.ReactElement, options?: CustomRenderOptions) =>
         ...options,
     });
 
-/* eslint-enable react/display-name */
-
-// re-export everything
-export * from "@testing-library/react";
-
-// override render method
-export { customRender as render };
-
-export function verifyTextExists(text: string) {
+function verifyTextExists(text: string) {
     expect(screen.getByText(text)).toBeInTheDocument();
 }
 
-export async function verifyTextExistsAsync(text: string) {
+async function verifyTextExistsAsync(text: string) {
     await screen.findByText(text);
 }
 
-export function verifyTextNotExists(text: string) {
+function verifyTextNotExists(text: string) {
     expect(screen.queryByText(text)).not.toBeInTheDocument();
 }
 
-export function verifyValueInField(label: string | RegExp, value: string) {
+function verifyValueInField(label: string | RegExp, value: string) {
     const input = screen.getByLabelText(label) as HTMLInputElement;
     expect(input.value).toEqual(value);
 }
 
-export async function verifyTableIsEmptyAsync() {
+async function verifyTableIsEmptyAsync() {
     const rows = await screen.findAllByRole("row");
     expect(rows.length).toBe(1);
 }
 
-export async function verifyTableRowsCountAsync(count: number) {
+async function verifyTableRowsCountAsync(count: number) {
     const pageRows = await screen.findAllByRole("row");
 
     pageRows.shift();
@@ -83,7 +75,7 @@ export async function verifyTableRowsCountAsync(count: number) {
     expect(pageRows.length).toBe(count);
 }
 
-export async function verifyTableRowsAsync<T>(
+async function verifyTableRowsAsync<T>(
     dataRows: T[],
     fields: Array<keyof T>,
     pageSize: number = 10
@@ -125,7 +117,7 @@ export async function verifyTableRowsAsync<T>(
     }
 }
 
-export async function searchAndVerifyAsync(search: string) {
+async function searchAndVerifyAsync(search: string) {
     await typeByPlaceholderTextAsync("Search ...", search);
 
     const table = await screen.findByRole("table");
@@ -135,34 +127,60 @@ export async function searchAndVerifyAsync(search: string) {
     await verifyTableRowsCountAsync(1);
 }
 
-export async function verifyValueInFieldAsync(label: string | RegExp, value: string) {
+async function verifyValueInFieldAsync(label: string | RegExp, value: string) {
     const input = screen.getByLabelText(label) as HTMLInputElement;
 
     await waitFor(() => expect(input.value).toEqual(value));
 }
 
-export function typeAndClear(field: string | RegExp, text: string) {
-    userEvent.type(screen.getByLabelText(field), text);
-    userEvent.clear(screen.getByLabelText(field));
-}
-
-export function clear(label: string | RegExp) {
+function typeAndClear(label: string | RegExp, text: string) {
+    userEvent.type(screen.getByLabelText(label), text);
     userEvent.clear(screen.getByLabelText(label));
 }
 
-export function typeByLabelText(label: string | RegExp, text: string) {
+function clear(label: string | RegExp) {
+    userEvent.clear(screen.getByLabelText(label));
+}
+
+function typeByLabelText(label: string | RegExp, text: string) {
     userEvent.type(screen.getByLabelText(label), text);
 }
 
-export async function typeByPlaceholderTextAsync(placeholder: string, text: string) {
+async function typeByPlaceholderTextAsync(placeholder: string, text: string) {
     const element = await screen.findByPlaceholderText(placeholder);
     userEvent.type(element, text);
 }
 
-export function selectOption(label: string | RegExp, text: string) {
+function selectOption(label: string | RegExp, text: string) {
     userEvent.selectOptions(screen.getByLabelText(label), text);
 }
 
-export function clickOnAccept() {
+function clickOnAccept() {
     userEvent.click(screen.getByRole("button", { name: "Accept" }));
 }
+
+export const tl = {
+    clear,
+    clickOnAccept,
+    searchAndVerifyAsync,
+    selectOption,
+    verifyTableIsEmptyAsync,
+    verifyTableRowsAsync,
+    verifyTableRowsCountAsync,
+    verifyTextNotExists,
+    verifyTextExists,
+    verifyTextExistsAsync,
+    verifyValueInField,
+    verifyValueInFieldAsync,
+    typeAndClear,
+    typeByLabelText,
+    typeByPlaceholderTextAsync,
+};
+
+/* eslint-enable react/display-name */
+
+// re-export everything
+export * from "@testing-library/react";
+
+// override render method
+export { customRender as render };

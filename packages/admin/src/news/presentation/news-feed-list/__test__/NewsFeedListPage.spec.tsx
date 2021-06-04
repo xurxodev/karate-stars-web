@@ -1,12 +1,6 @@
 import "@testing-library/jest-dom/extend-expect";
 
-import {
-    render,
-    searchAndVerifyAsync,
-    verifyTableIsEmptyAsync,
-    verifyTableRowsAsync,
-    verifyTextExistsAsync,
-} from "../../../../common/testing/testing_library/custom";
+import { render, tl } from "../../../../common/testing/testing_library/custom";
 import { givenAValidAuthenticatedUser } from "../../../../common/testing/scenarios/UserTestScenarios";
 import NewsFeedListPage from "../NewsFeedListPage";
 import * as mockServerTest from "../../../../common/testing/mockServerTest";
@@ -24,21 +18,21 @@ describe("News feed list page", () => {
 
         render(<NewsFeedListPage />);
 
-        await verifyTableIsEmptyAsync();
+        await tl.verifyTableIsEmptyAsync();
     });
     it("should render expected rows ", async () => {
         const items = givenANewsFeeds(13);
 
         render(<NewsFeedListPage />);
 
-        await verifyTableRowsAsync(items, verifiableFields);
+        await tl.verifyTableRowsAsync(items, verifiableFields);
     }, 10000);
     it("should render expected error message ", async () => {
         givenAErrorServerResponse();
 
         render(<NewsFeedListPage />);
 
-        await verifyTextExistsAsync(
+        await tl.verifyTextExistsAsync(
             "Sorry, an error has ocurred in the server. Please try later again"
         );
     });
@@ -49,7 +43,7 @@ describe("News feed list page", () => {
 
         const searchTerm = items[12][verifiableFields[0]] as string;
 
-        await searchAndVerifyAsync(searchTerm);
+        await tl.searchAndVerifyAsync(searchTerm);
     });
 });
 
