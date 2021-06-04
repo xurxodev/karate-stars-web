@@ -1,5 +1,5 @@
 import React from "react";
-import { render, RenderOptions, screen, waitFor } from "@testing-library/react";
+import { render, RenderOptions, screen, waitFor, within } from "@testing-library/react";
 import * as CompositionRoot from "../../../CompositionRoot";
 import { ThemeProvider, CssBaseline } from "@material-ui/core";
 import { AppBlocContext } from "../../../app/AppContext";
@@ -8,6 +8,7 @@ import { HashRouter, Router } from "react-router-dom";
 import AppBloc from "../../../app/AppBloc";
 import userEvent from "@testing-library/user-event";
 import * as H from "history";
+import { arr, promiseMap } from "karate-stars-core";
 
 // First init the compostion root to be enable to override dependencies in component test
 CompositionRoot.init();
@@ -64,32 +65,102 @@ export function verifyTextNotExists(text: string) {
     expect(screen.queryByText(text)).not.toBeInTheDocument();
 }
 
-export function verifyValueInField(field: string, value: string) {
-    const input = screen.getByLabelText(field) as HTMLInputElement;
+export function verifyValueInField(label: string | RegExp, value: string) {
+    const input = screen.getByLabelText(label) as HTMLInputElement;
     expect(input.value).toEqual(value);
 }
 
-export async function verifyValueInFieldAsync(field: string, value: string) {
-    const input = screen.getByLabelText(field) as HTMLInputElement;
+export async function verifyTableIsEmptyAsync() {
+    const rows = await screen.findAllByRole("row");
+    expect(rows.length).toBe(1);
+}
+
+export async function verifyTableRowsCountAsync(count: number) {
+    const pageRows = await screen.findAllByRole("row");
+
+    pageRows.shift();
+
+    expect(pageRows.length).toBe(count);
+}
+
+export async function verifyTableRowsAsync<T>(
+    dataRows: T[],
+    fields: Array<keyof T>,
+    pageSize: number = 10
+) {
+    const dataRowsPages = arr.chunk(dataRows, pageSize);
+
+    for (const dataRowsPage of dataRowsPages) {
+        const waitText = (dataRowsPage[0][fields[0]] as any).toString();
+        //console.log({ waitText });
+        await screen.findByText(waitText);
+
+        const pageRows = await screen.findAllByRole("row");
+
+        pageRows.shift();
+
+        expect(pageRows.length).toBe(dataRowsPage.length);
+
+        pageRows.forEach((row, index) => {
+            const rowScope = within(row);
+            const item = dataRowsPage[index];
+
+            fields.forEach(field => {
+                const text = item[field] as any;
+
+                // if (field == "name") {
+                //     console.log({ text });
+                // }
+
+                expect(rowScope.getByText(text)).toBeInTheDocument();
+            });
+        });
+
+        const isLastPage = dataRowsPages.indexOf(dataRowsPage) === dataRowsPages.length - 1;
+
+        if (!isLastPage) {
+            //console.log("click on next");
+            userEvent.click(screen.getByRole("button", { name: /next page/i }));
+        }
+    }
+}
+
+export async function searchAndVerifyAsync(search: string) {
+    await typeByPlaceholderTextAsync("Search ...", search);
+
+    const table = await screen.findByRole("table");
+    const tableScope = within(table);
+    await tableScope.findByText(search);
+
+    await verifyTableRowsCountAsync(1);
+}
+
+export async function verifyValueInFieldAsync(label: string | RegExp, value: string) {
+    const input = screen.getByLabelText(label) as HTMLInputElement;
 
     await waitFor(() => expect(input.value).toEqual(value));
 }
 
-export function typeAndClear(field: string, text: string) {
+export function typeAndClear(field: string | RegExp, text: string) {
     userEvent.type(screen.getByLabelText(field), text);
     userEvent.clear(screen.getByLabelText(field));
 }
 
-export function clear(field: string) {
-    userEvent.clear(screen.getByLabelText(field));
+export function clear(label: string | RegExp) {
+    userEvent.clear(screen.getByLabelText(label));
 }
 
-export function type(field: string, text: string) {
-    userEvent.type(screen.getByLabelText(field), text);
+export function typeByLabelText(label: string | RegExp, text: string) {
+    userEvent.type(screen.getByLabelText(label), text);
 }
 
-export function selectOption(field: string, text: string) {
-    userEvent.selectOptions(screen.getByLabelText(field), text);
+export async function typeByPlaceholderTextAsync(placeholder: string, text: string) {
+    const element = await screen.findByPlaceholderText(placeholder);
+    userEvent.type(element, text);
+}
+
+export function selectOption(label: string | RegExp, text: string) {
+    userEvent.selectOptions(screen.getByLabelText(label), text);
 }
 
 export function clickOnAccept() {

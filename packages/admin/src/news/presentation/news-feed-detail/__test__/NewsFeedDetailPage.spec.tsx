@@ -7,7 +7,7 @@ import {
     render,
     screen,
     selectOption,
-    type,
+    typeByLabelText,
     typeAndClear,
     verifyTextExists,
     verifyTextExistsAsync,
@@ -53,7 +53,7 @@ describe("News feed detail page", () => {
             it("should be visible with text invalid url if url is wrong ", () => {
                 renderComponentToCreate();
 
-                type("Url (*)", "wrong url");
+                typeByLabelText("Url (*)", "wrong url");
 
                 verifyTextExists("Invalid url");
             });
@@ -158,7 +158,7 @@ describe("News feed detail page", () => {
 
                 await verifyValueInFieldAsync("Url (*)", newsFeed.url);
                 clear("Url (*)");
-                type("Url (*)", "wrong url");
+                typeByLabelText("Url (*)", "wrong url");
 
                 verifyTextExists("Invalid url");
             });
@@ -231,9 +231,9 @@ describe("News feed detail page", () => {
 });
 
 function typeValidForm() {
-    type("Name (*)", "Xurxo dev");
-    type("Url (*)", "https://xurxodev.com/");
-    type("Language (*)", "es");
+    typeByLabelText("Name (*)", "Xurxo dev");
+    typeByLabelText("Url (*)", "https://xurxodev.com/");
+    typeByLabelText("Language (*)", "es");
     selectOption("Type (*)", "rss");
 }
 

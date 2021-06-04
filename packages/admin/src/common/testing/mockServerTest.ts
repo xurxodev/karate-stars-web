@@ -7,7 +7,7 @@ export interface MockHandler {
     method: Method;
     endpoint: string;
     httpStatusCode: number;
-    response: Record<string, unknown> | string;
+    response: Record<string, unknown> | string | unknown[];
 }
 
 const server = setupServer();
