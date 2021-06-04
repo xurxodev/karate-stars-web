@@ -75,11 +75,7 @@ async function verifyTableRowsCountAsync(count: number) {
     expect(pageRows.length).toBe(count);
 }
 
-async function verifyTableRowsAsync<T>(
-    dataRows: T[],
-    fields: Array<keyof T>,
-    pageSize: number = 10
-) {
+async function verifyTableRowsAsync<T>(dataRows: T[], fields: Array<keyof T>, pageSize = 10) {
     const dataRowsPages = arr.chunk(dataRows, pageSize);
 
     for (const dataRowsPage of dataRowsPages) {

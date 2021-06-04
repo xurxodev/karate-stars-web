@@ -20,14 +20,14 @@ describe("News feed detail page", () => {
             it("should be disabled the first time", async () => {
                 renderComponentToCreate();
 
-                expect(screen.getByRole("button", { name: "Accept" })).toBeDisabled();
+                tl.clickOnAccept();
             });
             it("should be enabled after type url, title and description", () => {
                 renderComponentToCreate();
 
                 typeValidForm();
 
-                expect(screen.getByRole("button", { name: "Accept" })).toBeEnabled();
+                tl.clickOnAccept();
             });
         });
         describe("validation messages", () => {
@@ -72,27 +72,41 @@ describe("News feed detail page", () => {
         describe("After submit", () => {
             it("should show invalid crentials message if the server response is unauthorized", async () => {
                 givenAErrorServerResponse("get", "/api/v1/news-feeds/:id", 401);
+
                 renderComponentToCreate();
+
                 typeValidForm();
+
                 tl.clickOnAccept();
+
                 await tl.verifyTextExistsAsync("Invalid credentials");
             });
             it("should show generic error if the server response is error", async () => {
                 givenAErrorServerResponse("get", "/api/v1/news-feeds/:id", 404);
+
                 givenAErrorServerResponse("post", "/api/v1/news-feeds/", 500);
+
                 renderComponentToCreate();
+
                 typeValidForm();
+
                 tl.clickOnAccept();
+
                 await tl.verifyTextExistsAsync(
                     "Sorry, an error has ocurred in the server. Please try later again"
                 );
             });
             it("should show success if the server response is success", async () => {
                 givenAErrorServerResponse("get", "/api/v1/news-feeds/:id", 404);
+
                 givenASuccessServerResponse();
+
                 renderComponentToCreate();
+
                 typeValidForm();
+
                 tl.clickOnAccept();
+
                 await tl.verifyTextExistsAsync("News feed saved!");
             });
         });
@@ -137,6 +151,7 @@ describe("News feed detail page", () => {
                 renderComponentToEdit(existedId);
 
                 await tl.verifyValueInFieldAsync("Name (*)", newsFeed.name);
+
                 tl.clear("Name (*)");
 
                 tl.verifyTextExists("Name cannot be blank");
@@ -145,7 +160,9 @@ describe("News feed detail page", () => {
                 renderComponentToEdit(existedId);
 
                 await tl.verifyValueInFieldAsync("Url (*)", newsFeed.url);
+
                 tl.clear("Url (*)");
+
                 tl.typeByLabelText("Url (*)", "wrong url");
 
                 tl.verifyTextExists("Invalid url");
@@ -162,6 +179,7 @@ describe("News feed detail page", () => {
                 renderComponentToEdit(existedId);
 
                 await tl.verifyValueInFieldAsync("Language (*)", newsFeed.language);
+
                 tl.clear("Language (*)");
 
                 tl.verifyTextExists("Language cannot be blank");
@@ -170,9 +188,11 @@ describe("News feed detail page", () => {
                 renderComponentToEdit(existedId);
 
                 await tl.verifyValueInFieldAsync("Name (*)", newsFeed.name);
+
                 typeValidForm();
 
                 tl.verifyTextNotExists("Name cannot be blank");
+
                 tl.verifyTextNotExists("Language cannot be blank");
             });
         });
@@ -181,21 +201,28 @@ describe("News feed detail page", () => {
 
             it("should show invalid crentials message if the server response is unauthorized", async () => {
                 renderComponentToEdit(existedId);
+
                 await tl.verifyValueInFieldAsync("Name (*)", newsFeed.name);
+
                 typeValidForm();
 
                 givenAErrorServerResponse("get", "/api/v1/news-feeds/:id", 401);
 
                 tl.clickOnAccept();
+
                 await tl.verifyTextExistsAsync("Invalid credentials");
             });
             it("should show generic error if the server response is error", async () => {
                 renderComponentToEdit(existedId);
+
                 await tl.verifyValueInFieldAsync("Name (*)", newsFeed.name);
+
                 typeValidForm();
 
                 givenANewsFeed(existedId);
+
                 givenAErrorServerResponse("put", `/api/v1/news-feeds/${newsFeed.id}`, 500);
+
                 tl.clickOnAccept();
 
                 await tl.verifyTextExistsAsync(
@@ -205,12 +232,15 @@ describe("News feed detail page", () => {
             it("should show success if the server response is success", async () => {
                 renderComponentToEdit(existedId);
                 await tl.verifyValueInFieldAsync("Name (*)", newsFeed.name);
+
                 typeValidForm();
 
                 givenANewsFeed(existedId);
+
                 givenASuccessServerResponse("put", `/api/v1/news-feeds/${newsFeed.id}`);
 
                 tl.clickOnAccept();
+
                 await tl.verifyTextExistsAsync("News feed saved!");
             });
         });
