@@ -38,7 +38,7 @@ class EventTypeListBloc extends ListBloc<EventTypeData> {
                     fields: fields,
                     selectedItems: [],
                     pagination: { ...defaultPagination, total: items.length },
-                    sorting: { field: "name", order: "desc" },
+                    sorting: { field: "name", order: "asc" },
                     actions: this.actions,
                 })
         );

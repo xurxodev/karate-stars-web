@@ -40,7 +40,7 @@ class CategoryTypeListBloc extends ListBloc<CategoryTypeData> {
                     fields: fields,
                     selectedItems: [],
                     pagination: { ...defaultPagination, total: items.length },
-                    sorting: { field: "name", order: "desc" },
+                    sorting: { field: "name", order: "asc" },
                     actions: this.actions,
                 })
         );

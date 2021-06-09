@@ -15,7 +15,7 @@ import VideoDetailPage from "../videos/presentation/video-detail/VideoDetailPage
 import EventDetailPage from "../events/presentation/event-detail/EventDetailPage";
 import EventListPage from "../events/presentation/event-list/EventListPage";
 import EventTypeDetailPage from "../event-types/presentation/event-type-detail/EventTypeDetailPage";
-import EventTypeListPage from "../event-types/presentation/event-type-list/EventListPage";
+import EventTypeListPage from "../event-types/presentation/event-type-list/EventTypeListPage";
 import CategoryTypeDetailPage from "../category-types/presentation/category-type-detail/CategoryTypeDetailPage";
 import CategoryTypeListPage from "../category-types/presentation/category-type-list/CategoryTypeListPage";
 import CategoryDetailPage from "../categories/presentation/category-detail/CategoryTypeDetailPage";

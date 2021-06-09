@@ -49,7 +49,7 @@ export class Country extends Entity<CountryData> {
             id: this.id.value,
             name: this.name,
             iso2: this.iso2,
-            image: this.image.value,
+            image: this.image?.value,
         };
     }
 

@@ -187,20 +187,25 @@ abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListState<S>>
     }
 
     private searchItems(items: S[], fields: ListField<S>[], search: string | undefined): S[] {
+        //console.log("searching items using the term:" + search);
+
         const searchableFields = fields.filter(
             field => field.searchable === undefined || field.searchable === true
         );
 
         const itemsBySearch = items.filter(item =>
-            searchableFields.some(
-                field =>
+            searchableFields.some(field => {
+                return (
                     !search ||
                     (item[field.name] as any)
                         .toString()
                         .toLowerCase()
                         .includes(search.toLocaleLowerCase())
-            )
+                );
+            })
         );
+
+        //console.log({ itemsBySearch });
 
         return itemsBySearch;
     }

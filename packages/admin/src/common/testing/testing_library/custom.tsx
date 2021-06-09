@@ -117,6 +117,7 @@ async function searchAndVerifyAsync(search: string) {
     await typeByPlaceholderTextAsync("Search ...", search);
 
     const table = await screen.findByRole("table");
+
     const tableScope = within(table);
     await tableScope.findByText(search);
 

@@ -49,6 +49,6 @@ export default CountryListBloc;
 
 const fields: ListField<CountryData>[] = [
     { name: "id", text: "Id", type: "text" },
-    { name: "image", text: "Image", type: "smallImage" },
+    { name: "image", text: "Image", type: "smallImage", searchable: false },
     { name: "name", text: "Name", type: "text" },
 ];
