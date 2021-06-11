@@ -1,12 +1,12 @@
 import React from "react";
-import MainLayout from "../../../common/presentation/layouts/main/MainLayout";
+import DetailPage from "../../../common/presentation/components/detail-page/DetailPage";
+import { di } from "../../../CompositionRoot";
+import EventTypeDetailBloc from "./EventTypeDetailBloc";
 
-const EventDetailPage: React.FC = () => {
-    return (
-        <MainLayout title={"Event Type Detail"}>
-            <h1>event type Detail!!!</h1>
-        </MainLayout>
-    );
+const EventTypeDetailPage: React.FC = () => {
+    const bloc = di.get(EventTypeDetailBloc);
+
+    return <DetailPage bloc={bloc} />;
 };
 
-export default EventDetailPage;
+export default EventTypeDetailPage;

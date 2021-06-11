@@ -10,7 +10,7 @@ class CategoryTypeListBloc extends ListBloc<CategoryTypeData> {
         private getCategoryTypesUseCase: GetCategoryTypesUseCase,
         private deleteCategoryTypeUseCase: DeleteCategoryTypeUseCase
     ) {
-        super(pages.CategoryTypeDetail as DetailPageConfig);
+        super(pages.categoryTypeDetail as DetailPageConfig);
 
         this.loadData();
     }

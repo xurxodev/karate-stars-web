@@ -5,6 +5,7 @@ import DeleteEventTypeUseCase from "./domain/DeleteEventTypeUseCase";
 import GetEventTypeByIdUseCase from "./domain/GetEventTypeByIdUseCase";
 import GetEventTypesUseCase from "./domain/GetEventTypesUseCase";
 import SaveEventTypeUseCase from "./domain/SaveEventTypeUseCase";
+import EventTypeDetailBloc from "./presentation/event-type-detail/EventTypeDetailBloc";
 import EventTypeListBloc from "./presentation/event-type-list/EventTypeListBloc";
 
 export const eventTypeDIKeys = {
@@ -58,8 +59,8 @@ export function initEventTypes() {
         () => new EventTypeListBloc(di.get(GetEventTypesUseCase), di.get(DeleteEventTypeUseCase))
     );
 
-    // di.bindFactory(
-    //     NewsFeedDetailBloc,
-    //     () => new NewsFeedDetailBloc(di.get(GetNewsFeedByIdUseCase), di.get(SaveNewsFeedUseCase))
-    // );
+    di.bindFactory(
+        EventTypeDetailBloc,
+        () => new EventTypeDetailBloc(di.get(GetEventTypeByIdUseCase), di.get(SaveEventTypeUseCase))
+    );
 }

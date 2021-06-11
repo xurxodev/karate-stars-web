@@ -5,6 +5,7 @@ import DeleteCategoryTypeUseCase from "./domain/DeleteCategoryTypeUseCase";
 import GetCategoryTypeByIdUseCase from "./domain/GetCategoryTypeByIdUseCase";
 import GetCategoryTypesUseCase from "./domain/GetCategoryTypesUseCase";
 import SaveCategoryTypeUseCase from "./domain/SaveCategoryTypeUseCase";
+import CategoryTypeDetailBloc from "./presentation/category-type-detail/CategoryTypeDetailBloc";
 import CategoryTypeListBloc from "./presentation/category-type-list/CategoryTypeListBloc";
 
 export const CategoryTypeDIKeys = {
@@ -62,8 +63,12 @@ export function initCategoryTypes() {
             )
     );
 
-    // di.bindFactory(
-    //     NewsFeedDetailBloc,
-    //     () => new NewsFeedDetailBloc(di.get(GetNewsFeedByIdUseCase), di.get(SaveNewsFeedUseCase))
-    // );
+    di.bindFactory(
+        CategoryTypeDetailBloc,
+        () =>
+            new CategoryTypeDetailBloc(
+                di.get(GetCategoryTypeByIdUseCase),
+                di.get(SaveCategoryTypeUseCase)
+            )
+    );
 }

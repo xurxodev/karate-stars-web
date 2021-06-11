@@ -3,102 +3,38 @@ import {
     FormSectionState,
     statetoData,
 } from "../../../common/presentation/state/FormState";
-import FormBloc from "../../../common/presentation/bloc/FormBloc";
 import { Either, NewsFeed, NewsFeedData, ValidationError } from "karate-stars-core";
 import GetNewsFeedByIdUseCase from "../../domain/GetNewsFeedByIdUseCase";
 import { DataError } from "../../../common/domain/Errors";
 import SaveNewsFeedUseCase from "../../domain/SaveNewsFeedUseCase";
+import DetailBloc from "../../../common/presentation/bloc/DetailBloc";
 
-class NewsFeedDetailBloc extends FormBloc<NewsFeedData> {
+class NewsFeedDetailBloc extends DetailBloc<NewsFeedData> {
     constructor(
         private getNewsFeedByIdUseCase: GetNewsFeedByIdUseCase,
         private saveNewsFeedUseCase: SaveNewsFeedUseCase
     ) {
-        super({
-            submitName: "Accept",
-            isValid: false,
-            showCancel: true,
-            sections: initialFieldsState(),
-        });
+        super("News Feed");
     }
 
-    async init(id?: string) {
-        if (id) {
-            const newsFeedResult = await this.getNewsFeedByIdUseCase.execute(id);
-
-            newsFeedResult.fold(
-                error => this.changeState(this.handleError(error)),
-                newsFeed => {
-                    this.changeState({
-                        ...this.state,
-                        sections: initialFieldsState(newsFeed),
-                    });
-                }
-            );
-        }
+    protected getItem(id: string): Promise<Either<DataError, NewsFeedData>> {
+        return this.getNewsFeedByIdUseCase.execute(id);
+    }
+    protected mapItemToFormSectionsState(item: NewsFeedData): FormSectionState[] {
+        return initialFieldsState(item);
+    }
+    protected saveItem(item: NewsFeedData): Promise<Either<DataError, true>> {
+        return this.saveNewsFeedUseCase.execute(NewsFeed.create(item).get());
     }
 
-    private handleError(error: DataError): FormState {
-        switch (error.kind) {
-            case "Unauthorized":
-                return {
-                    ...this.state,
-                    result: { kind: "FormResultError", message: "Invalid credentials" },
-                };
-            case "ApiError":
-                return {
-                    ...this.state,
-                    result: {
-                        kind: "FormResultError",
-                        message: `Sorry, an error has ocurred in the server. Please try later again`,
-                    },
-                };
-            case "UnexpectedError":
-                return {
-                    ...this.state,
-                    result: {
-                        kind: "FormResultError",
-                        message: `Sorry, an error has ocurred. Please try later again`,
-                    },
-                };
-        }
-    }
-
-    protected validateState(state: FormState): ValidationError<NewsFeedData>[] | null {
-        const result = this.mapStateToEntity(state);
+    protected validateFormState(state: FormState): ValidationError<NewsFeedData>[] | null {
+        const result = NewsFeed.create(statetoData(state));
         const errors = result.fold(
             errors => errors,
             () => null
         );
 
         return errors;
-    }
-
-    async submit() {
-        if (this.state.isValid) {
-            const entityResult = this.mapStateToEntity(this.state);
-            const sendResult = await this.saveNewsFeedUseCase.execute(entityResult.getOrThrow());
-
-            sendResult.fold(
-                (error: DataError) => this.changeState(this.handleError(error)),
-                () =>
-                    this.changeState({
-                        ...this.state,
-                        result: {
-                            kind: "FormResultSuccess",
-                            message: "News feed saved!",
-                        },
-                    })
-            );
-        } else {
-            this.changeState({ ...this.state });
-        }
-    }
-
-    private mapStateToEntity(state: FormState): Either<ValidationError<NewsFeedData>[], NewsFeed> {
-        const rawData = (statetoData(state) as unknown) as NewsFeedData;
-
-        return NewsFeed.create(rawData);
     }
 }
 

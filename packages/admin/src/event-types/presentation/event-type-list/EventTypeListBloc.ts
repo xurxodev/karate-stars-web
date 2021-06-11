@@ -10,7 +10,7 @@ class EventTypeListBloc extends ListBloc<EventTypeData> {
         private getEventTypesUseCase: GetEventTypesUseCase,
         private deleteEventTypeUseCase: DeleteEventTypeUseCase
     ) {
-        super(pages.EventTypeDetail as DetailPageConfig);
+        super(pages.eventTypeDetail as DetailPageConfig);
 
         this.loadData();
     }
