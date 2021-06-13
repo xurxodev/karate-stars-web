@@ -20,14 +20,14 @@ describe("News feed detail page", () => {
             it("should be disabled the first time", async () => {
                 renderComponentToCreate();
 
-                tl.clickOnAccept();
+                expect(screen.getByRole("button", { name: "Accept" })).toBeDisabled();
             });
             it("should be enabled after type url, title and description", () => {
                 renderComponentToCreate();
 
                 typeValidForm();
 
-                tl.clickOnAccept();
+                expect(screen.getByRole("button", { name: "Accept" })).toBeEnabled();
             });
         });
         describe("validation messages", () => {
@@ -256,6 +256,8 @@ function typeValidForm() {
 
 function renderComponentToCreate() {
     render(<NewsFeedDetailPage />);
+
+    screen.findByRole("button", { name: "Accept" });
 }
 
 function renderComponentToEdit(id: string) {
@@ -270,6 +272,8 @@ function renderComponentToEdit(id: string) {
             history,
         }
     );
+
+    screen.findByRole("button", { name: "Accept" });
 }
 
 function givenAErrorServerResponse(method: Method, endpoint: string, httpStatusCode: number) {
