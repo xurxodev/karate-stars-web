@@ -14,7 +14,7 @@ class NewsFeedDetailBloc extends DetailBloc<NewsFeedData> {
         private getNewsFeedByIdUseCase: GetNewsFeedByIdUseCase,
         private saveNewsFeedUseCase: SaveNewsFeedUseCase
     ) {
-        super("News Feed");
+        super("News feed");
     }
 
     protected getItem(id: string): Promise<Either<DataError, NewsFeedData>> {
