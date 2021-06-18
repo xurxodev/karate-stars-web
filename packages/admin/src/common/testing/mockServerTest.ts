@@ -3,11 +3,11 @@ import { setupServer } from "msw/node";
 
 export type Method = "get" | "post" | "put";
 
-export interface MockHandler {
+export interface MockHandler<T> {
     method: Method;
     endpoint: string;
     httpStatusCode: number;
-    response: Record<string, unknown> | string | unknown[];
+    response: T | string | T[];
 }
 
 const server = setupServer();
@@ -16,14 +16,14 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-export function addRequestHandlers(handlers: MockHandler[]) {
+export function addRequestHandlers<T>(handlers: MockHandler<T>[]) {
     const mwsHandlers = handlers.map(handler => createMwsHandler(handler));
     server.use(...mwsHandlers);
 }
 
 export { server, rest };
 
-function createMwsHandler(handler: MockHandler) {
+function createMwsHandler<T>(handler: MockHandler<T>) {
     switch (handler.method) {
         case "get":
             return rest.get(handler.endpoint, (req, res, ctx) =>

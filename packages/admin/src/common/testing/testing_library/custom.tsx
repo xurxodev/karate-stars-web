@@ -4,7 +4,7 @@ import * as CompositionRoot from "../../../CompositionRoot";
 import { ThemeProvider, CssBaseline } from "@material-ui/core";
 import { AppBlocContext } from "../../../app/AppContext";
 import theme from "../../../app/theme";
-import { HashRouter, Router } from "react-router-dom";
+import { HashRouter, Route, Router } from "react-router-dom";
 import AppBloc from "../../../app/AppBloc";
 import userEvent from "@testing-library/user-event";
 import * as H from "history";
@@ -45,12 +45,26 @@ const customRender = (ui: React.ReactElement, options?: CustomRenderOptions) =>
         ...options,
     });
 
+const renderDetailPageToEdit = (endpoint: string, id: string, page: React.ReactElement) => {
+    const history = H.createMemoryHistory();
+    history.push(`${endpoint}/${id}`);
+
+    customRender(<Route path={`/${endpoint}/:id`}>{page}</Route>, {
+        history,
+    });
+};
+
 function verifyTextExists(text: string) {
     expect(screen.getByText(text)).toBeInTheDocument();
 }
 
 async function verifyTextExistsAsync(text: string) {
     await screen.findByText(text);
+}
+
+async function verifyAlertAsync(text: string, exact?: boolean) {
+    // await screen.findByRole("alert", { name: text, exact });
+    await screen.findByText(text, { exact });
 }
 
 function verifyTextNotExists(text: string) {
@@ -161,6 +175,7 @@ export const tl = {
     clickOnAccept,
     searchAndVerifyAsync,
     selectOption,
+    verifyAlertAsync,
     verifyTableIsEmptyAsync,
     verifyTableRowsAsync,
     verifyTableRowsCountAsync,
@@ -180,4 +195,4 @@ export const tl = {
 export * from "@testing-library/react";
 
 // override render method
-export { customRender as render };
+export { customRender as render, renderDetailPageToEdit };
