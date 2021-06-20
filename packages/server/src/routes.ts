@@ -22,7 +22,7 @@ const initializeRoutes = (server: hapi.Server) => {
             path: "/",
             options: { auth: false as const },
             handler: (request: hapi.Request, h: hapi.ResponseToolkit) => {
-                return h.redirect("/landing");
+                return h.redirect("/admin");
             },
         },
         {
@@ -31,18 +31,6 @@ const initializeRoutes = (server: hapi.Server) => {
             options: { auth: false as const },
             handler: () => {
                 return "Welcome to Karate Stars Api!!";
-            },
-        },
-        {
-            method: "GET",
-            path: "/landing/{path*}",
-            options: { auth: false as const },
-            handler: {
-                directory: {
-                    path: Path.join(__dirname, "../../landing"),
-                    listing: false,
-                    index: true,
-                },
             },
         },
         {
