@@ -90,7 +90,7 @@ export class Country extends Entity<CountryData> {
                     id: idResult.get(),
                     name: data.name,
                     iso2: data.iso2,
-                    image: imageResult ? imageResult.get() : undefined,
+                    image: data.image ? imageResult.get() : undefined,
                 })
             );
         } else {

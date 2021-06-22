@@ -48,7 +48,16 @@ const FormFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handleFieldC
             return (
                 <Grid item md={field.md || defaultColumnValue} xs={field.xs || defaultColumnValue}>
                     <Box display="flex" alignItems="center" flexDirection="row">
-                        <Avatar className={classes.avatar} src={field.value} alt={field.alt} />
+                        {field.imageType === "image" ? (
+                            <img
+                                width={"150"}
+                                style={{ borderRadius: "5%", marginRight: "16px" }}
+                                src={field.value}
+                                alt={field.alt}
+                            />
+                        ) : (
+                            <Avatar className={classes.avatar} src={field.value} alt={field.alt} />
+                        )}
                         <label htmlFor={field.name}>
                             <input
                                 style={{ display: "none" }}
@@ -83,6 +92,7 @@ const FormFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handleFieldC
                         helperText={field.errors ? field.errors.join("/n") : ""}
                         variant="outlined"
                         autoComplete={field.autoComplete}
+                        inputProps={{ maxLength: field.maxLength }}
                         type={field.type}>
                         {field.selectOptions &&
                             field.selectOptions.map((option: SelectOption, index: number) => {

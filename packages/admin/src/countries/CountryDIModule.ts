@@ -6,6 +6,8 @@ import GetCountryByIdUseCase from "./domain/GetCountryByIdUseCase";
 import GetCountrysUseCase from "./domain/GetCountriesUseCase";
 import SaveCountryUseCase from "./domain/SaveCountryUseCase";
 import CountryListBloc from "./presentation/country-list/CountryListBloc";
+import CountryDetailBloc from "./presentation/country-detail/CountryDetailBloc";
+import { base64ImageToFile } from "../common/data/Base64ImageConverter";
 
 export const CountryDIKeys = {
     CountryRepository: "CountryRepository",
@@ -33,7 +35,11 @@ export function initCountries() {
 
     di.bindLazySingleton(
         SaveCountryUseCase,
-        () => new SaveCountryUseCase(di.get<CountryRepository>(CountryDIKeys.CountryRepository))
+        () =>
+            new SaveCountryUseCase(
+                di.get<CountryRepository>(CountryDIKeys.CountryRepository),
+                base64ImageToFile
+            )
     );
 
     di.bindLazySingleton(
@@ -46,8 +52,8 @@ export function initCountries() {
         () => new CountryListBloc(di.get(GetCountrysUseCase), di.get(DeleteCountryUseCase))
     );
 
-    // di.bindFactory(
-    //     NewsFeedDetailBloc,
-    //     () => new NewsFeedDetailBloc(di.get(GetNewsFeedByIdUseCase), di.get(SaveNewsFeedUseCase))
-    // );
+    di.bindFactory(
+        CountryDetailBloc,
+        () => new CountryDetailBloc(di.get(GetCountryByIdUseCase), di.get(SaveCountryUseCase))
+    );
 }

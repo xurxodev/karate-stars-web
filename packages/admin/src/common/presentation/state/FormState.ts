@@ -17,6 +17,8 @@ export interface SelectOption {
     name: string;
 }
 
+export type ImageType = "image" | "avatar";
+
 export interface FormFieldState {
     label: string;
     name: string;
@@ -32,8 +34,10 @@ export interface FormFieldState {
     xl?: GridSize;
     autoComplete?: string;
     type?: string;
+    imageType?: ImageType;
     accept?: string;
     hide?: boolean;
+    maxLength?: number;
 }
 
 export interface FormSectionState {

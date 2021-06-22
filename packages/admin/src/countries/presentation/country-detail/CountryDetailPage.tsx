@@ -1,12 +1,12 @@
 import React from "react";
-import MainLayout from "../../../common/presentation/layouts/main/MainLayout";
+import DetailPage from "../../../common/presentation/components/detail-page/DetailPage";
+import { di } from "../../../CompositionRoot";
+import CountryDetailBloc from "./CountryDetailBloc";
 
 const CountryDetailPage: React.FC = () => {
-    return (
-        <MainLayout title={"Country Detail"}>
-            <h1>Country Detail!!!</h1>
-        </MainLayout>
-    );
+    const bloc = di.get(CountryDetailBloc);
+
+    return <DetailPage bloc={bloc} />;
 };
 
 export default CountryDetailPage;

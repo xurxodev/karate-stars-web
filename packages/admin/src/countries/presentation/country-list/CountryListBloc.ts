@@ -10,7 +10,7 @@ class CountryListBloc extends ListBloc<CountryData> {
         private getCountrysUseCase: GetCountrysUseCase,
         private deleteCountryUseCase: DeleteCountryUseCase
     ) {
-        super(pages.CountryDetail as DetailPageConfig);
+        super(pages.countryDetail as DetailPageConfig);
 
         this.loadData();
     }

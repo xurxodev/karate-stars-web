@@ -100,7 +100,7 @@ abstract class ApiRepository<TEntity extends Entity<TEntityData>, TEntityData ex
             const formdata = new FormData();
             formdata.append("file", file);
 
-            await this.axiosInstance.put(`${this.endpoint}/${entityId}/image`, formdata, {
+            await this.axiosInstance.put(`${this.endpoint}/${entityId.value}/image`, formdata, {
                 headers: { authorization: token },
             });
 
