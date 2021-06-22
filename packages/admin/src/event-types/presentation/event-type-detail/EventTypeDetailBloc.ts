@@ -21,7 +21,7 @@ class EventTypeDetailBloc extends DetailBloc<EventTypeData> {
         return this.getEventTypeByIdUseCase.execute(id);
     }
 
-    protected mapItemToFormSectionsState(item?: EventTypeData): FormSectionState[] {
+    protected async mapItemToFormSectionsState(item?: EventTypeData): Promise<FormSectionState[]> {
         return initialFieldsState(item);
     }
 

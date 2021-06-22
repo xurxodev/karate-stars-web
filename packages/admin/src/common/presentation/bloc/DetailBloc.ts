@@ -7,7 +7,7 @@ import { DetailState } from "../state/DetailState";
 export default abstract class DetailBloc<T> extends Bloc<DetailState> {
     protected abstract validateFormState(state: FormState): ValidationError<T>[] | null;
     protected abstract getItem(id: string): Promise<Either<DataError, T>>;
-    protected abstract mapItemToFormSectionsState(item?: T): FormSectionState[];
+    protected abstract mapItemToFormSectionsState(item?: T): Promise<FormSectionState[]>;
     protected abstract saveItem(item?: T): Promise<Either<DataError, true>>;
 
     constructor(private title: string) {
@@ -22,7 +22,7 @@ export default abstract class DetailBloc<T> extends Bloc<DetailState> {
                 submitName: "Accept",
                 isValid: false,
                 showCancel: true,
-                sections: this.mapItemToFormSectionsState(),
+                sections: await this.mapItemToFormSectionsState(),
             },
         };
 
@@ -31,12 +31,12 @@ export default abstract class DetailBloc<T> extends Bloc<DetailState> {
 
             getItemResult.fold(
                 error => this.changeState(this.handleInitError(error)),
-                eventType => {
+                async data => {
                     this.changeState({
                         ...formUpdated,
                         form: {
                             ...formUpdated.form,
-                            sections: this.mapItemToFormSectionsState(eventType),
+                            sections: await this.mapItemToFormSectionsState(data),
                         },
                     });
                 }

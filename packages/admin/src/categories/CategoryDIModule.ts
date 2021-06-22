@@ -1,3 +1,4 @@
+import GetCategoryTypesUseCase from "../category-types/domain/GetCategoryTypesUseCase";
 import { di, appDIKeys } from "../CompositionRoot";
 import CategoryApiRepository from "./data/CategoryApiRepository";
 import { CategoryRepository } from "./domain/Boundaries";
@@ -5,6 +6,7 @@ import DeleteCategoryUseCase from "./domain/DeleteCategoryUseCase";
 import GetCategoryByIdUseCase from "./domain/GetCategoryByIdUseCase";
 import GetCategorysUseCase from "./domain/GetCategoryUseCase";
 import SaveCategoryUseCase from "./domain/SaveCategoryUseCase";
+import CategoryDetailBloc from "./presentation/category-detail/CategoryDetailBloc";
 import CategoryListBloc from "./presentation/category-list/CategoryListBloc";
 
 export const CategoryDIKeys = {
@@ -50,8 +52,13 @@ export function initCategories() {
         () => new CategoryListBloc(di.get(GetCategorysUseCase), di.get(DeleteCategoryUseCase))
     );
 
-    // di.bindFactory(
-    //     NewsFeedDetailBloc,
-    //     () => new NewsFeedDetailBloc(di.get(GetNewsFeedByIdUseCase), di.get(SaveNewsFeedUseCase))
-    // );
+    di.bindFactory(
+        CategoryDetailBloc,
+        () =>
+            new CategoryDetailBloc(
+                di.get(GetCategoryByIdUseCase),
+                di.get(SaveCategoryUseCase),
+                di.get(GetCategoryTypesUseCase)
+            )
+    );
 }

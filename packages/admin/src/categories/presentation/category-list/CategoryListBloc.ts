@@ -10,7 +10,7 @@ class CategoryListBloc extends ListBloc<CategoryData> {
         private getCategorysUseCase: GetCategorysUseCase,
         private deleteCategoryUseCase: DeleteCategoryUseCase
     ) {
-        super(pages.CategoryDetail as DetailPageConfig);
+        super(pages.categoryDetail as DetailPageConfig);
 
         this.loadData();
     }

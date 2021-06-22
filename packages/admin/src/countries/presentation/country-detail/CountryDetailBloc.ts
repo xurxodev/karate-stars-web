@@ -21,7 +21,7 @@ class CountryDetailBloc extends DetailBloc<CountryData> {
         return this.getCountryByIdUseCase.execute(id);
     }
 
-    protected mapItemToFormSectionsState(item?: CountryData): FormSectionState[] {
+    protected async mapItemToFormSectionsState(item?: CountryData): Promise<FormSectionState[]> {
         return initialFieldsState(item);
     }
 

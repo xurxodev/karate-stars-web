@@ -20,7 +20,7 @@ class NewsFeedDetailBloc extends DetailBloc<NewsFeedData> {
     protected getItem(id: string): Promise<Either<DataError, NewsFeedData>> {
         return this.getNewsFeedByIdUseCase.execute(id);
     }
-    protected mapItemToFormSectionsState(item: NewsFeedData): FormSectionState[] {
+    protected async mapItemToFormSectionsState(item: NewsFeedData): Promise<FormSectionState[]> {
         return initialFieldsState(item);
     }
     protected saveItem(item: NewsFeedData): Promise<Either<DataError, true>> {
