@@ -7,33 +7,43 @@ import {
     screen,
     renderDetailPageToEdit,
 } from "../../../../common/testing/testing_library/custom";
-import CategoryTypeDetailPage from "../CategoryTypeDetailPage";
-import { CategoryTypeData } from "karate-stars-core";
+import CategoryDetailPage from "../CategoryDetailPage";
+import { CategoryData } from "karate-stars-core";
 import { commonDetailPageTests } from "../../../../common/testing/commonDetailPageTests.spec";
 import * as mockServerTest from "../../../../common/testing/mockServerTest";
 import { givenAValidAuthenticatedUser } from "../../../../common/testing/scenarios/UserTestScenarios";
-
-function typeValidForm() {
-    tl.typeByLabelText("Name (*)", "Example Example");
-}
+import data from "./data.json";
+import { givenADependencies } from "../../../../common/testing/scenarios/GenericScenarios";
 
 const dataCreator = {
-    givenAItem: (): CategoryTypeData => {
-        return {
-            id: "BDnednvQ1Db",
-            name: "Example",
-        };
+    givenAItem: (): CategoryData => {
+        return data.categories[0];
     },
 };
 
-const component = <CategoryTypeDetailPage />;
-const endpoint = "category-types";
+const dependenciesCreators = [
+    {
+        endpoint: "category-types",
+        items: () => data.categoryTypes,
+    },
+];
+
+function typeValidForm() {
+    tl.typeByLabelText("Name (*)", "Example Example");
+    tl.selectOption("Type (*)", data.categoryTypes[1].id);
+}
+
+const component = <CategoryDetailPage />;
+const endpoint = "categories";
 const apiEndpoint = `/api/v1/${endpoint}`;
 
-commonDetailPageTests(endpoint, dataCreator, typeValidForm, component);
+commonDetailPageTests(endpoint, dataCreator, typeValidForm, component, dependenciesCreators);
 
 describe(`${endpoint} detail page`, () => {
-    beforeEach(() => givenAValidAuthenticatedUser());
+    beforeEach(() => {
+        givenAValidAuthenticatedUser();
+        givenADependencies(dependenciesCreators);
+    });
 
     describe("to create", () => {
         describe("validation messages", () => {
@@ -47,7 +57,7 @@ describe(`${endpoint} detail page`, () => {
         });
     });
     describe("to edit", () => {
-        let item: CategoryTypeData;
+        let item: CategoryData;
 
         beforeEach(() => (item = givenAItem()));
 
@@ -56,6 +66,7 @@ describe(`${endpoint} detail page`, () => {
                 await renderComponentToEdit(item.id);
 
                 tl.verifyValueInField("Name (*)", item.name);
+                tl.verifyValueInField("Type (*)", item.typeId);
             });
         });
         describe("validation messages", () => {
@@ -77,7 +88,7 @@ describe(`${endpoint} detail page`, () => {
     });
 });
 
-function givenAItem(): CategoryTypeData {
+function givenAItem(): CategoryData {
     const item = dataCreator.givenAItem();
 
     mockServerTest.addRequestHandlers([

@@ -1,0 +1,19 @@
+{
+    "categories": [
+        {
+            "id": "wZgo8Vp77gR",
+            "name": "Female Kumite -68 Kg",
+            "typeId": "Gps5nVcCdjV"
+        }
+    ],
+    "categoryTypes": [
+        {
+            "id": "Gps5nVcCdjV",
+            "name": "Kumite"
+        },
+        {
+            "id": "qWPs4i1e78g",
+            "name": "Kata"
+        }
+    ]
+}

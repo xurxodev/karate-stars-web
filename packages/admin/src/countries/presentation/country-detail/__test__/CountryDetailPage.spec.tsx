@@ -19,9 +19,9 @@ function typeValidForm() {
 }
 
 const dataCreator = {
-    givenAItem: (id: string): CountryData => {
+    givenAItem: (): CountryData => {
         return {
-            id,
+            id: "BDnednvQ1Db",
             name: "Example",
             iso2: "2",
         };
@@ -31,7 +31,6 @@ const dataCreator = {
 const component = <CountryDetailPage />;
 const endpoint = "countries";
 const apiEndpoint = `/api/v1/${endpoint}`;
-const existedId = "BDnednvQ1Db";
 
 commonDetailPageTests(endpoint, dataCreator, typeValidForm, component);
 
@@ -59,11 +58,11 @@ describe(`${endpoint} detail page`, () => {
     describe("to edit", () => {
         let item: CountryData;
 
-        beforeEach(() => (item = givenAItem(existedId)));
+        beforeEach(() => (item = givenAItem()));
 
         describe("initial values should be the expected values", () => {
             it("should have he expected values to load", async () => {
-                await renderComponentToEdit(existedId);
+                await renderComponentToEdit(item.id);
 
                 tl.verifyValueInField("Name (*)", item.name);
                 tl.verifyValueInField("Iso2 (*)", item.iso2);
@@ -71,21 +70,21 @@ describe(`${endpoint} detail page`, () => {
         });
         describe("validation messages", () => {
             it("should be visible with text name is required if name has value and then is clear it", async () => {
-                await renderComponentToEdit(existedId);
+                await renderComponentToEdit(item.id);
 
                 await tl.verifyValueInFieldAsync("Name (*)", item.name);
                 tl.clear("Name (*)");
                 tl.verifyTextExists("Name cannot be blank");
             });
             it("should be visible with text iso2 is required if iso2 has value and then is clear it", async () => {
-                await renderComponentToEdit(existedId);
+                await renderComponentToEdit(item.id);
 
                 await tl.verifyValueInFieldAsync("Iso2 (*)", item.iso2);
                 tl.clear("Iso2 (*)");
                 tl.verifyTextExists("Iso2 cannot be blank");
             });
             it("should any validation text visible if type valid all mandatory fields", async () => {
-                await renderComponentToEdit(existedId);
+                await renderComponentToEdit(item.id);
 
                 typeValidForm();
                 tl.verifyTextNotExists("Name cannot be blank");
@@ -95,13 +94,13 @@ describe(`${endpoint} detail page`, () => {
     });
 });
 
-function givenAItem(id: string): CountryData {
-    const item = dataCreator.givenAItem(id);
+function givenAItem(): CountryData {
+    const item = dataCreator.givenAItem();
 
     mockServerTest.addRequestHandlers([
         {
             method: "get",
-            endpoint: `${apiEndpoint}/${id}`,
+            endpoint: `${apiEndpoint}/${item.id}`,
             httpStatusCode: 200,
             response: item,
         },

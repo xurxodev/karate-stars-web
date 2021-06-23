@@ -1,10 +1,10 @@
 import React from "react";
 import DetailPage from "../../../common/presentation/components/detail-page/DetailPage";
 import { di } from "../../../CompositionRoot";
-import CategoryTypeDetailBloc from "./CategoryDetailBloc";
+import CategoryDetailBloc from "./CategoryDetailBloc";
 
 const CategoryDetailPage: React.FC = () => {
-    const bloc = di.get(CategoryTypeDetailBloc);
+    const bloc = di.get(CategoryDetailBloc);
 
     return <DetailPage bloc={bloc} />;
 };

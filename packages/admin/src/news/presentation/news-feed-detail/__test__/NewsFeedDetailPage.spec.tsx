@@ -21,9 +21,9 @@ function typeValidForm() {
 }
 
 const dataCreator = {
-    givenAItem: (id: string): NewsFeedData => {
+    givenAItem: (): NewsFeedData => {
         return {
-            id,
+            id: "BDnednvQ1Db",
             name: "WKF News Center",
             language: "en",
             type: "rss" as RssType,
@@ -37,7 +37,6 @@ const dataCreator = {
 const component = <NewsFeedDetailPage />;
 const endpoint = "news-feeds";
 const apiEndpoint = `/api/v1/${endpoint}`;
-const existedId = "BDnednvQ1Db";
 
 commonDetailPageTests(endpoint, dataCreator, typeValidForm, component);
 
@@ -88,11 +87,11 @@ describe(`${endpoint} detail page`, () => {
     describe("to edit", () => {
         let item: NewsFeedData;
 
-        beforeEach(() => (item = givenAItem(existedId)));
+        beforeEach(() => (item = givenAItem()));
 
         describe("initial values should be the expected values", () => {
             it("should have he expected values to load", async () => {
-                await renderComponentToEdit(existedId);
+                await renderComponentToEdit(item.id);
 
                 tl.verifyValueInField("Name (*)", item.name);
                 tl.verifyValueInField("Url (*)", item.url);
@@ -102,14 +101,14 @@ describe(`${endpoint} detail page`, () => {
         });
         describe("validation messages", () => {
             it("should be visible with text name is required if name has value and then is clear it", async () => {
-                await renderComponentToEdit(existedId);
+                await renderComponentToEdit(item.id);
 
                 await tl.verifyValueInFieldAsync("Name (*)", item.name);
                 tl.clear("Name (*)");
                 tl.verifyTextExists("Name cannot be blank");
             });
             it("should be visible with text invalid url if url is wrong ", async () => {
-                await renderComponentToEdit(existedId);
+                await renderComponentToEdit(item.id);
 
                 await tl.verifyValueInFieldAsync("Url (*)", item.url);
                 tl.clear("Url (*)");
@@ -117,21 +116,21 @@ describe(`${endpoint} detail page`, () => {
                 tl.verifyTextExists("Invalid url");
             });
             it("should be visible with text url is required if url has value and then is clear it", async () => {
-                await renderComponentToEdit(existedId);
+                await renderComponentToEdit(item.id);
 
                 await tl.verifyValueInFieldAsync("Url (*)", item.url);
                 tl.clear("Url (*)");
                 tl.verifyTextExists("Url cannot be blank");
             });
             it("should be visible with text language is required if language has value and then is clear it", async () => {
-                await renderComponentToEdit(existedId);
+                await renderComponentToEdit(item.id);
 
                 await tl.verifyValueInFieldAsync("Language (*)", item.language);
                 tl.clear("Language (*)");
                 tl.verifyTextExists("Language cannot be blank");
             });
             it("should any validation text visible if type valid all mandatory fields", async () => {
-                await renderComponentToEdit(existedId);
+                await renderComponentToEdit(item.id);
 
                 await tl.verifyValueInFieldAsync("Name (*)", item.name);
                 typeValidForm();
@@ -142,13 +141,13 @@ describe(`${endpoint} detail page`, () => {
     });
 });
 
-function givenAItem(id: string): NewsFeedData {
-    const item = dataCreator.givenAItem(id);
+function givenAItem(): NewsFeedData {
+    const item = dataCreator.givenAItem();
 
     mockServerTest.addRequestHandlers([
         {
             method: "get",
-            endpoint: `${apiEndpoint}/${id}`,
+            endpoint: `${apiEndpoint}/${item.id}`,
             httpStatusCode: 200,
             response: item,
         },

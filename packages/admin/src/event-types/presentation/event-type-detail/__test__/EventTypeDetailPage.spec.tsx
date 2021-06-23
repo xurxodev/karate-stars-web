@@ -18,9 +18,9 @@ function typeValidForm() {
 }
 
 const dataCreator = {
-    givenAItem: (id: string): CategoryTypeData => {
+    givenAItem: (): CategoryTypeData => {
         return {
-            id,
+            id: "BDnednvQ1Db",
             name: "Example",
         };
     },
@@ -29,7 +29,6 @@ const dataCreator = {
 const component = <EventTypeDetailPage />;
 const endpoint = "event-types";
 const apiEndpoint = `/api/v1/${endpoint}`;
-const existedId = "BDnednvQ1Db";
 
 commonDetailPageTests(endpoint, dataCreator, typeValidForm, component);
 
@@ -50,25 +49,25 @@ describe(`${endpoint} detail page`, () => {
     describe("to edit", () => {
         let item: CategoryTypeData;
 
-        beforeEach(() => (item = givenAItem(existedId)));
+        beforeEach(() => (item = givenAItem()));
 
         describe("initial values should be the expected values", () => {
             it("should have he expected values to load", async () => {
-                await renderComponentToEdit(existedId);
+                await renderComponentToEdit(item.id);
 
                 tl.verifyValueInField("Name (*)", item.name);
             });
         });
         describe("validation messages", () => {
             it("should be visible with text name is required if name has value and then is clear it", async () => {
-                await renderComponentToEdit(existedId);
+                await renderComponentToEdit(item.id);
 
                 await tl.verifyValueInFieldAsync("Name (*)", item.name);
                 tl.clear("Name (*)");
                 tl.verifyTextExists("Name cannot be blank");
             });
             it("should any validation text visible if type valid all mandatory fields", async () => {
-                await renderComponentToEdit(existedId);
+                await renderComponentToEdit(item.id);
 
                 await tl.verifyValueInFieldAsync("Name (*)", item.name);
                 typeValidForm();
@@ -78,13 +77,13 @@ describe(`${endpoint} detail page`, () => {
     });
 });
 
-function givenAItem(id: string): CategoryTypeData {
-    const item = dataCreator.givenAItem(id);
+function givenAItem(): CategoryTypeData {
+    const item = dataCreator.givenAItem();
 
     mockServerTest.addRequestHandlers([
         {
             method: "get",
-            endpoint: `${apiEndpoint}/${id}`,
+            endpoint: `${apiEndpoint}/${item.id}`,
             httpStatusCode: 200,
             response: item,
         },

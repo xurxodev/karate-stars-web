@@ -4,21 +4,26 @@ import { Method } from "./mockServerTest";
 import { render, tl, screen, renderDetailPageToEdit } from "./testing_library/custom";
 import * as mockServerTest from "./mockServerTest";
 import { givenAValidAuthenticatedUser } from "./scenarios/UserTestScenarios";
+import { DependenciesCreator, givenADependencies } from "./scenarios/GenericScenarios";
 
 interface DataDetailCreator<TData extends EntityData> {
-    givenAItem: (id: string) => TData;
+    givenAItem: () => TData;
 }
 
 export const commonDetailPageTests = <TData extends EntityData>(
     endpoint: string,
     dataCreator: DataDetailCreator<TData>,
     typeValidForm: () => void,
-    component: React.ReactElement
+    component: React.ReactElement,
+    dependenciesCreators?: DependenciesCreator<any>[]
 ) => {
     const apiEndpoint = `/api/v1/${endpoint}`;
-    const existedId = "BDnednvQ1Db";
 
-    beforeEach(() => givenAValidAuthenticatedUser());
+    beforeEach(() => {
+        givenAValidAuthenticatedUser();
+
+        if (dependenciesCreators) givenADependencies(dependenciesCreators);
+    });
 
     describe(`${endpoint} detail page`, () => {
         describe("to create", () => {
@@ -67,16 +72,16 @@ export const commonDetailPageTests = <TData extends EntityData>(
         describe("to edit", () => {
             let item: TData;
 
-            beforeEach(() => (item = givenAItem(existedId)));
+            beforeEach(() => (item = givenAItem()));
 
             describe("Accept button", () => {
                 it("should be disabled the first time", async () => {
-                    await renderComponentToEdit(existedId);
+                    await renderComponentToEdit(item.id);
 
                     expect(screen.getByRole("button", { name: "Accept" })).toBeDisabled();
                 });
                 it("should be enabled after type required field", async () => {
-                    await renderComponentToEdit(existedId);
+                    await renderComponentToEdit(item.id);
 
                     typeValidForm();
 
@@ -85,14 +90,14 @@ export const commonDetailPageTests = <TData extends EntityData>(
             });
             describe("After submit", () => {
                 it("should show invalid crentials message if the server response is unauthorized", async () => {
-                    await renderComponentToEdit(existedId);
+                    await renderComponentToEdit(item.id);
                     typeValidForm();
                     givenAErrorServerResponse("get", `${apiEndpoint}/:id`, 401);
                     tl.clickOnAccept();
                     await tl.verifyTextExistsAsync("Invalid credentials");
                 });
                 it("should show generic error if the server response is error", async () => {
-                    await renderComponentToEdit(existedId);
+                    await renderComponentToEdit(item.id);
 
                     typeValidForm();
 
@@ -103,7 +108,7 @@ export const commonDetailPageTests = <TData extends EntityData>(
                     );
                 });
                 it("should show success if the server response is success", async () => {
-                    await renderComponentToEdit(existedId);
+                    await renderComponentToEdit(item.id);
                     typeValidForm();
 
                     givenASuccessServerResponse("put", `${apiEndpoint}/${item.id}`);
@@ -159,13 +164,13 @@ export const commonDetailPageTests = <TData extends EntityData>(
         ]);
     }
 
-    function givenAItem(id: string): TData {
-        const item = dataCreator.givenAItem(id);
+    function givenAItem(): TData {
+        const item = dataCreator.givenAItem();
 
         mockServerTest.addRequestHandlers([
             {
                 method: "get",
-                endpoint: `${apiEndpoint}/${id}`,
+                endpoint: `${apiEndpoint}/${item.id}`,
                 httpStatusCode: 200,
                 response: item,
             },
