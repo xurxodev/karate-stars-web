@@ -1,10 +1,12 @@
 import { di, appDIKeys } from "../CompositionRoot";
+import GetEventTypesUseCase from "../event-types/domain/GetEventTypesUseCase";
 import EventApiRepository from "./data/EventApiRepository";
 import { EventRepository } from "./domain/Boundaries";
 import DeleteEventUseCase from "./domain/DeleteEventUseCase";
 import GetEventByIdUseCase from "./domain/GetEventByIdUseCase";
 import GetEventsUseCase from "./domain/GetEventsUseCase";
 import SaveEventUseCase from "./domain/SaveEventUseCase";
+import EventDetailBloc from "./presentation/event-detail/EventDetailBloc";
 import EventListBloc from "./presentation/event-list/EventListBloc";
 
 export const eventDIKeys = {
@@ -46,8 +48,13 @@ export function initEvents() {
         () => new EventListBloc(di.get(GetEventsUseCase), di.get(DeleteEventUseCase))
     );
 
-    // di.bindFactory(
-    //     NewsFeedDetailBloc,
-    //     () => new NewsFeedDetailBloc(di.get(GetNewsFeedByIdUseCase), di.get(SaveNewsFeedUseCase))
-    // );
+    di.bindFactory(
+        EventDetailBloc,
+        () =>
+            new EventDetailBloc(
+                di.get(GetEventByIdUseCase),
+                di.get(SaveEventUseCase),
+                di.get(GetEventTypesUseCase)
+            )
+    );
 }
