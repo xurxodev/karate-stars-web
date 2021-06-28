@@ -4,13 +4,16 @@ import ListBloc, { defaultPagination } from "../../../common/presentation/bloc/L
 import { DetailPageConfig, pages } from "../../../common/presentation/PageRoutes";
 import GetVideosUseCase from "../../domain/GetVideosUseCase";
 import DeleteVideoUseCase from "../../domain/DeleteVideoUseCase";
+import moment from "moment";
 
-class VideoListBloc extends ListBloc<VideoData> {
+type VideoState = Omit<VideoData, "eventDate"> & { eventDate: string };
+
+class VideoListBloc extends ListBloc<VideoState> {
     constructor(
         private getVideosUseCase: GetVideosUseCase,
         private deleteCompetitorUseCase: DeleteVideoUseCase
     ) {
-        super(pages.competitorDetail as DetailPageConfig);
+        super(pages.videoDetail as DetailPageConfig);
 
         this.loadData();
     }
@@ -33,13 +36,16 @@ class VideoListBloc extends ListBloc<VideoData> {
 
         response.fold(
             error => this.changeState(this.handleError(error)),
-            feeds =>
+            items =>
                 this.changeState({
                     kind: "ListLoadedState",
-                    items: feeds,
+                    items: items.map(item => ({
+                        ...item,
+                        eventDate: moment(item.eventDate).format("YYYY-MM-DD"),
+                    })),
                     fields: fields,
                     selectedItems: [],
-                    pagination: { ...defaultPagination, total: feeds.length },
+                    pagination: { ...defaultPagination, total: items.length },
                     sorting: { field: "title", order: "asc" },
                     actions: this.actions,
                 })
@@ -49,7 +55,7 @@ class VideoListBloc extends ListBloc<VideoData> {
 
 export default VideoListBloc;
 
-const fields: ListField<VideoData>[] = [
+const fields: ListField<VideoState>[] = [
     { name: "id", text: "Id", type: "text" },
     { name: "title", text: "Title", type: "text" },
     { name: "subtitle", text: "Subtitle", type: "text" },

@@ -88,9 +88,12 @@ const FormFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handleFieldC
                         name={field.name}
                         value={field.value || ""}
                         onChange={handleChange}
-                        SelectProps={{ native: true }}
+                        SelectProps={{ native: true, multiple: field.multiple }}
                         helperText={field.errors ? field.errors.join("/n") : ""}
                         variant="outlined"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
                         autoComplete={field.autoComplete}
                         inputProps={{ maxLength: field.maxLength }}
                         type={field.type}>

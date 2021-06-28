@@ -25,7 +25,13 @@ abstract class ApiRepository<TEntity extends Entity<TEntityData>, TEntityData ex
                 headers: { authorization: token },
             });
 
-            return Either.right(response.data.map(item => this.mapToDomain(item)));
+            debugger;
+            const result = Either.right<DataError, TEntity[]>(
+                response.data.map(item => this.mapToDomain(item))
+            );
+            debugger;
+
+            return result;
         } catch (error) {
             return Either.left(this.handleError(error));
         }

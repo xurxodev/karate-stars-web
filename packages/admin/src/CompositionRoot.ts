@@ -50,11 +50,37 @@ export function reset() {
 }
 
 function initApp() {
-    di.bindLazySingleton(appDIKeys.axiosInstanceAPI, () =>
-        axios.create({
+    di.bindLazySingleton(appDIKeys.axiosInstanceAPI, () => {
+        const axiosInstance = axios.create({
             baseURL: "/api/v1/",
-        })
-    );
+        });
+
+        const isoDateFormat = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/;
+
+        const isIsoDateString = (value: any) => {
+            return value && typeof value === "string" && isoDateFormat.test(value);
+        };
+
+        const handleDates = (body: any) => {
+            if (body === null || body === undefined || typeof body !== "object") return body;
+
+            for (const key of Object.keys(body)) {
+                const value = body[key];
+                if (isIsoDateString(value)) {
+                    body[key] = new Date(value);
+                } else if (typeof value === "object") {
+                    handleDates(value);
+                }
+            }
+        };
+
+        axiosInstance.interceptors.response.use(originalResponse => {
+            handleDates(originalResponse.data);
+            return originalResponse;
+        });
+
+        return axiosInstance;
+    });
 
     di.bindLazySingleton(appDIKeys.tokenStorage, () => new TokenLocalStorage());
 

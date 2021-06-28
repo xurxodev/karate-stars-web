@@ -1,3 +1,4 @@
+import GetCompetitorsUseCase from "../competitors/domain/GetCompetitorsUseCase";
 import { di, appDIKeys } from "../CompositionRoot";
 import VideoApiRepository from "./data/VideoApiRepository";
 import { VideoRepository } from "./domain/Boundaries";
@@ -5,6 +6,7 @@ import DeleteVideoUseCase from "./domain/DeleteVideoUseCase";
 import GetVideoByIdUseCase from "./domain/GetVideoByIdUseCase";
 import GetVideosUseCase from "./domain/GetVideosUseCase";
 import SaveVideoUseCase from "./domain/SaveVideoUseCase";
+import VideoDetailBloc from "./presentation/video-detail/VideoDetailBloc";
 import VideoListBloc from "./presentation/video-list/VideoListBloc";
 
 export const videoDIKeys = {
@@ -46,8 +48,13 @@ export function initVideos() {
         () => new VideoListBloc(di.get(GetVideosUseCase), di.get(DeleteVideoUseCase))
     );
 
-    // di.bindFactory(
-    //     NewsFeedDetailBloc,
-    //     () => new NewsFeedDetailBloc(di.get(GetNewsFeedByIdUseCase), di.get(SaveNewsFeedUseCase))
-    // );
+    di.bindFactory(
+        VideoDetailBloc,
+        () =>
+            new VideoDetailBloc(
+                di.get(GetVideoByIdUseCase),
+                di.get(SaveVideoUseCase),
+                di.get(GetCompetitorsUseCase)
+            )
+    );
 }

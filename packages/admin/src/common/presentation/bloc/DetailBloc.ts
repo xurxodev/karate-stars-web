@@ -1,14 +1,21 @@
 import Bloc from "./Bloc";
 import { FormResult, FormSectionState, FormState, statetoData } from "../state/FormState";
-import { validationErrorMessages, ValidationError, Either } from "karate-stars-core";
+import { validationErrorMessages, Either, ValidationErrorKey } from "karate-stars-core";
 import { DataError } from "../../domain/Errors";
 import { DetailState } from "../state/DetailState";
 
-export default abstract class DetailBloc<T> extends Bloc<DetailState> {
-    protected abstract validateFormState(state: FormState): ValidationError<T>[] | null;
-    protected abstract getItem(id: string): Promise<Either<DataError, T>>;
-    protected abstract mapItemToFormSectionsState(item?: T): Promise<FormSectionState[]>;
-    protected abstract saveItem(item?: T): Promise<Either<DataError, true>>;
+export declare type ValidationBlocError = {
+    type: string;
+    property: string;
+    value: unknown;
+    errors: ValidationErrorKey[];
+};
+
+export default abstract class DetailBloc<TData> extends Bloc<DetailState> {
+    protected abstract validateFormState(state: FormState): ValidationBlocError[] | null;
+    protected abstract getItem(id: string): Promise<Either<DataError, TData>>;
+    protected abstract mapItemToFormSectionsState(item?: TData): Promise<FormSectionState[]>;
+    protected abstract saveItem(item?: TData): Promise<Either<DataError, true>>;
 
     constructor(private title: string) {
         super({ kind: "DetailLoadingState", title });
