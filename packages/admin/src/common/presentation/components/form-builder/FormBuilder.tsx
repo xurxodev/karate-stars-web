@@ -19,7 +19,7 @@ interface FormBuilderProps {
     formState: FormState;
     onSubmit?: () => void;
     onCancel?: () => void;
-    handleFieldChange: (name: string, value: string) => void;
+    handleFieldChange: (name: string, value: string | string[]) => void;
     classes?: Record<string, string>;
 }
 

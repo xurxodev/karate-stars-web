@@ -9,7 +9,7 @@ import SendPushNotificationBloc from "./SendPushNotificationBloc";
 const SendPushNotificationPage: React.FC = () => {
     const bloc = di.get(SendPushNotificationBloc);
 
-    const handleFieldChange = (name: string, value: string) => {
+    const handleFieldChange = (name: string, value: string | string[]) => {
         bloc.onFieldChanged(name, value);
     };
 

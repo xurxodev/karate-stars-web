@@ -49,43 +49,67 @@ class VideoDetailBloc extends DetailBloc<VideoData> {
 export default VideoDetailBloc;
 
 const initialFieldsState = (
-    _competitors: CompetitorData[],
+    competitors: CompetitorData[],
     entity?: VideoData
 ): FormSectionState[] => {
-    // const competitorOptions = competitors.map(competitor => ({
-    //     id: competitor.id,
-    //     name: `${competitor.firstName} ${competitor.lastName}`,
-    // }));
+    const competitorOptions = competitors.map(competitor => ({
+        id: competitor.id,
+        name: `${competitor.firstName} ${competitor.lastName}`,
+    }));
 
     return [
         {
             fields: [
                 { label: "Id", name: "id", value: entity?.id, hide: true },
-                { label: "Title", name: "title", required: true, value: entity?.title },
-                { label: "Subtitle", name: "subtitle", required: true, value: entity?.subtitle },
+                {
+                    label: "Title",
+                    name: "title",
+                    required: true,
+                    value: entity?.title,
+                    md: 6,
+                    xs: 12,
+                },
+                {
+                    label: "Subtitle",
+                    name: "subtitle",
+                    required: true,
+                    value: entity?.subtitle,
+                    md: 6,
+                    xs: 12,
+                },
                 {
                     label: "Description",
                     name: "description",
                     required: true,
                     value: entity?.description,
                 },
-                { label: "Order", name: "order", required: true, value: entity?.order.toString() },
+                {
+                    label: "Order",
+                    name: "order",
+                    required: true,
+                    value: entity?.order.toString(),
+                    md: 6,
+                    xs: 12,
+                },
                 {
                     label: "Event Date",
                     name: "eventDate",
                     required: true,
                     type: "date",
                     value: moment(entity?.eventDate).format("YYYY-MM-DD"),
+                    md: 6,
+                    xs: 12,
                 },
-                // {
-                //     label: "Competitors",
-                //     name: "",
-                //     required: true,
-                //     value: entity?.competitors,
-                //     selectOptions: competitorOptions,
-                //     md: 6,
-                //     xs: 12,
-                // },
+                {
+                    label: "Competitors",
+                    name: "competitors",
+                    required: true,
+                    value: entity?.competitors,
+                    selectOptions: competitorOptions,
+                    multiple: true,
+                    md: 6,
+                    xs: 12,
+                },
             ],
         },
     ];

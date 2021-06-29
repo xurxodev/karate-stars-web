@@ -5,7 +5,7 @@ import { makeStyles, Grid, TextField, Theme, Button, Icon, Avatar, Box } from "@
 
 interface FormFieldBuilderProps {
     field: FormFieldState;
-    handleFieldChange: (name: string, value: string) => void;
+    handleFieldChange: (name: string, value: string | string[]) => void;
 }
 
 const createPreviewUrl = (file: File): Promise<string> => {
@@ -32,12 +32,17 @@ const FormFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handleFieldC
     const classes = useStyles();
     const defaultColumnValue = 12;
 
-    const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = async (event: React.ChangeEvent<any>) => {
         event.persist();
 
         if (event.target.type === "file" && event.target.files) {
             const imageUrlPreview = await createPreviewUrl(event.target.files[0]);
             handleFieldChange(event.target.name, imageUrlPreview);
+        } else if (event.target.type === "select-multiple" && event.target.selectedOptions) {
+            handleFieldChange(
+                event.target.name,
+                Array.from(event.target.selectedOptions, (item: any) => item.value)
+            );
         } else {
             handleFieldChange(event.target.name, event.target.value);
         }
@@ -52,11 +57,15 @@ const FormFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handleFieldC
                             <img
                                 width={"150"}
                                 style={{ borderRadius: "5%", marginRight: "16px" }}
-                                src={field.value}
+                                src={field.value?.toString()}
                                 alt={field.alt}
                             />
                         ) : (
-                            <Avatar className={classes.avatar} src={field.value} alt={field.alt} />
+                            <Avatar
+                                className={classes.avatar}
+                                src={field.value?.toString()}
+                                alt={field.alt}
+                            />
                         )}
                         <label htmlFor={field.name}>
                             <input

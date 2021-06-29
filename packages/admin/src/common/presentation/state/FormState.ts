@@ -24,7 +24,7 @@ export interface FormFieldState {
     name: string;
     alt?: string;
     errors?: string[];
-    value?: string;
+    value?: string | string[];
     selectOptions?: SelectOption[];
     multiple?: boolean;
     required?: boolean;

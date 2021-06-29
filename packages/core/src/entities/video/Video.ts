@@ -84,29 +84,42 @@ export class Video extends Entity<VideoData> {
         data: VideoData
     ): Either<ValidationError<VideoValidationTypes>[], Video> {
         const idResult = Id.createExisted(data.id);
-        const competitorResults = data.competitors.map(id => Id.createExisted(id));
-        const linksResults = data.links.map(linkData => {
-            return VideoLink.create(linkData);
-        });
+        const competitorResults = data.competitors
+            ? data.competitors.map(id => Id.createExisted(id))
+            : undefined;
+
+        const linksResults = data.links
+            ? data.links.map(linkData => {
+                  return VideoLink.create(linkData);
+              })
+            : undefined;
 
         const linkErrors: ValidationError<VideoLinkData>[] = linksResults
-            .map(linkResult =>
-                linkResult.fold(
-                    errors => errors,
-                    () => []
-                )
-            )
-            .flat();
+            ? linksResults
+                  .map(linkResult =>
+                      linkResult.fold(
+                          errors => errors,
+                          () => []
+                      )
+                  )
+                  .flat()
+            : [];
 
-        const competitorErrors: ValidationError<VideoData>[] = [
-            ...competitorResults.map(competitorResult => ({
-                property: "competitors" as const,
-                errors: competitorResult.fold(
-                    errors => errors,
-                    () => []
-                ),
-                value: data.competitors,
-            })),
+        const competitorErrors = competitorResults
+            ? competitorResults.map(competitorResult => {
+                  return {
+                      property: "competitors" as const,
+                      errors: competitorResult.fold(
+                          errors => errors,
+                          () => []
+                      ),
+                      value: data.competitors,
+                      type: Video.name,
+                  };
+              })
+            : [];
+
+        const videoErrors: ValidationError<VideoData>[] = [
             {
                 property: "title" as const,
                 errors: validateRequired(data.title),
@@ -142,7 +155,7 @@ export class Video extends Entity<VideoData> {
             },
         ].map(error => ({ ...error, type: Video.name }));
 
-        const errors = [...competitorErrors, ...linkErrors].filter(
+        const errors = [...videoErrors, ...linkErrors, ...competitorErrors].filter(
             validation => validation.errors.length > 0
         );
 

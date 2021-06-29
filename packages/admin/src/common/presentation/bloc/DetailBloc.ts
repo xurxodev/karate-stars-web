@@ -53,7 +53,7 @@ export default abstract class DetailBloc<TData> extends Bloc<DetailState> {
         }
     }
 
-    onFieldChanged(name: string, value: string) {
+    onFieldChanged(name: string, value: string | string[]) {
         if (this.state.kind === "DetailFormUpdatedState") {
             const formState = this.state.form;
             const formStatePreviousToValidation = {

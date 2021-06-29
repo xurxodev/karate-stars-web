@@ -18,7 +18,7 @@ const LoginPage: React.FC = () => {
 
     const loginBloc = di.get(LoginBloc);
 
-    const handleFieldChange = (name: string, value: string) => {
+    const handleFieldChange = (name: string, value: string | string[]) => {
         loginBloc.onFieldChanged(name, value);
     };
 

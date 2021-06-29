@@ -19,7 +19,7 @@ export default function DetailPage<Data extends EntityData>({ bloc }: DetailPage
     const params = useParams<DetailPageParams>();
     const history = useHistory();
 
-    const handleFieldChange = (name: string, value: string) => {
+    const handleFieldChange = (name: string, value: string | string[]) => {
         bloc.onFieldChanged(name, value);
     };
 
