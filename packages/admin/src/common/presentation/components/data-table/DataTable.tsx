@@ -20,10 +20,13 @@ import {
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import clsx from "clsx";
 import SearchInput from "../search-input/SearchInput";
-import { IdentifiableObject } from "../../state/ListState";
 import ContextualMenu, { MenuItemData } from "../contextual-menu/ContextualMenu";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { formatRowValue } from "./utils";
+
+interface IdentifiableObject {
+    id: string;
+}
 
 export interface TableColumn<T> {
     name: keyof T;

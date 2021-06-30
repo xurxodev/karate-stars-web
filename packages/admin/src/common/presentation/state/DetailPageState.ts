@@ -14,6 +14,6 @@ export interface DetailErrorState {
     message: string;
 }
 
-export type DetailState = (DetailLoadingState | DetailFormUpdatedState | DetailErrorState) & {
+export type DetailPageState = (DetailLoadingState | DetailFormUpdatedState | DetailErrorState) & {
     title: string;
 };

@@ -1,16 +1,15 @@
 import Bloc from "./Bloc";
+import { ListLoadedState, ListPageState } from "../state/ListPageState";
+import { DataError } from "../../domain/Errors";
+import { DetailPageConfig } from "../PageRoutes";
 import {
     IdentifiableObject,
     ListAction,
     ListField,
-    ListLoadedState,
     ListPagination,
     ListSorting,
-    ListState,
     SortDirection,
 } from "../state/ListState";
-import { DataError } from "../../domain/Errors";
-import { DetailPageConfig } from "../PageRoutes";
 
 export const defaultPagination = { pageSizeOptions: [5, 10, 25], pageSize: 10, page: 0, total: 0 };
 
@@ -32,7 +31,7 @@ const deleteAction = {
     active: true,
 };
 
-abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListState<S>> {
+abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListPageState<S>> {
     items: S[] = [];
     actions: ListAction[] = [editAction, deleteAction];
 
@@ -120,7 +119,7 @@ abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListState<S>>
         }
     }
 
-    protected changeState(state: ListState<S>) {
+    protected changeState(state: ListPageState<S>) {
         const prevItems = this.state.kind === "ListLoadedState" ? this.state.items : [];
 
         super.changeState(state);
@@ -131,7 +130,7 @@ abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListState<S>>
         }
     }
 
-    protected handleError(error: DataError): ListState<S> {
+    protected handleError(error: DataError): ListPageState<S> {
         switch (error.kind) {
             case "Unauthorized": {
                 return {

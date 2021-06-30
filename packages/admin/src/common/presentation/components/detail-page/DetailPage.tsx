@@ -6,7 +6,7 @@ import { BlocBuilder } from "../../bloc";
 import MainLayout from "../../layouts/main/MainLayout";
 import FormBuilder from "../form-builder/FormBuilder";
 import DetailBloc from "../../bloc/DetailBloc";
-import { DetailState } from "../../state/DetailState";
+import { DetailPageState } from "../../state/DetailPageState";
 import { CircularProgress, makeStyles } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 
@@ -38,7 +38,7 @@ export default function DetailPage<Data extends EntityData>({ bloc }: DetailPage
     return (
         <BlocBuilder
             bloc={bloc}
-            builder={(state: DetailState) => {
+            builder={(state: DetailPageState) => {
                 switch (state.kind) {
                     case "DetailLoadingState": {
                         return (

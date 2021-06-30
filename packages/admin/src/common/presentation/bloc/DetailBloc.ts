@@ -2,7 +2,7 @@ import Bloc from "./Bloc";
 import { FormResult, FormSectionState, FormState, statetoData } from "../state/FormState";
 import { validationErrorMessages, Either, ValidationErrorKey } from "karate-stars-core";
 import { DataError } from "../../domain/Errors";
-import { DetailState } from "../state/DetailState";
+import { DetailPageState } from "../state/DetailPageState";
 
 export declare type ValidationBlocError = {
     type: string;
@@ -11,7 +11,7 @@ export declare type ValidationBlocError = {
     errors: ValidationErrorKey[];
 };
 
-export default abstract class DetailBloc<TData> extends Bloc<DetailState> {
+export default abstract class DetailBloc<TData> extends Bloc<DetailPageState> {
     protected abstract validateFormState(state: FormState): ValidationBlocError[] | null;
     protected abstract getItem(id: string): Promise<Either<DataError, TData>>;
     protected abstract mapItemToFormSectionsState(item?: TData): Promise<FormSectionState[]>;
@@ -22,7 +22,7 @@ export default abstract class DetailBloc<TData> extends Bloc<DetailState> {
     }
 
     async init(id?: string) {
-        const formUpdated: DetailState = {
+        const formUpdated: DetailPageState = {
             kind: "DetailFormUpdatedState",
             title: this.title,
             form: {
@@ -127,7 +127,7 @@ export default abstract class DetailBloc<TData> extends Bloc<DetailState> {
         }
     }
 
-    private handleInitError(error: DataError): DetailState {
+    private handleInitError(error: DataError): DetailPageState {
         switch (error.kind) {
             case "Unauthorized":
                 return {

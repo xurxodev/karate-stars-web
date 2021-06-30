@@ -1,9 +1,4 @@
-export interface ListLoadingState {
-    kind: "ListLoadingState";
-}
-
-export interface ListLoadedState<T extends IdentifiableObject> {
-    kind: "ListLoadedState";
+export type ListState<T extends IdentifiableObject> = {
     items: Array<T>;
     fields: ListField<T>[];
     search?: string;
@@ -12,17 +7,7 @@ export interface ListLoadedState<T extends IdentifiableObject> {
     sorting?: ListSorting<T>;
     actions?: ListAction[];
     itemsToDelete?: string[];
-}
-
-export interface ListErrorState {
-    kind: "ListErrorState";
-    message: string;
-}
-
-export interface NavigateTo {
-    kind: "NavigateTo";
-    route: string;
-}
+};
 
 export type SortDirection = "asc" | "desc";
 
@@ -64,9 +49,3 @@ export interface ListSorting<T extends IdentifiableObject> {
 export interface IdentifiableObject {
     id: string;
 }
-
-export type ListState<T extends IdentifiableObject> =
-    | ListLoadingState
-    | ListLoadedState<T>
-    | ListErrorState
-    | NavigateTo;

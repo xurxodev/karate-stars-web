@@ -1,20 +1,9 @@
 import React from "react";
-import { Avatar, CircularProgress, makeStyles } from "@material-ui/core";
-import { ListField, ListState } from "../../state/ListState";
-import { Alert } from "@material-ui/lab";
+import { Avatar } from "@material-ui/core";
 import DataTable, { TableColumn, TablePager, TableSorting } from "../data-table/DataTable";
-import { Redirect } from "react-router-dom";
 import FabButton from "../add-fab-button/AddFabButton";
 import ConfirmationDialog from "../confirmation-dialog/ConfirmationDialog";
-
-const useStyles = makeStyles({
-    loading: {
-        height: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-});
+import { ListField, ListState } from "../../state/ListState";
 
 interface TableBuilderProps<T extends IdentifiableObject> {
     className?: string;
@@ -48,8 +37,6 @@ export default function TableBuilder<T extends IdentifiableObject>({
     onConfirmDelete,
     onCancelDelete,
 }: TableBuilderProps<T>): JSX.Element {
-    const classes = useStyles();
-
     const handlePaginationChange = (pagination: TablePager) => {
         if (onPaginationChange) {
             onPaginationChange(pagination.page, pagination.pageSize);
@@ -62,61 +49,44 @@ export default function TableBuilder<T extends IdentifiableObject>({
         }
     };
 
-    switch (state.kind) {
-        case "ListLoadingState": {
-            return (
-                <div className={classes.loading}>
-                    <CircularProgress />
-                </div>
-            );
-        }
-        case "ListErrorState": {
-            return <Alert severity="error">{state.message}</Alert>;
-        }
-        case "NavigateTo": {
-            return <Redirect push to={state.route} />;
-        }
-        case "ListLoadedState": {
-            const columns = mapColumns<T>(state.fields);
+    const columns = mapColumns<T>(state.fields);
 
-            return (
-                <React.Fragment>
-                    <DataTable
-                        columns={columns}
-                        rows={state.items}
-                        search={state.search}
-                        selectedRows={state.selectedItems}
-                        paginationOptions={state.pagination.pageSizeOptions}
-                        pagination={{
-                            pageSize: state.pagination.pageSize,
-                            page: state.pagination.page,
-                            total: state.pagination.total,
-                        }}
-                        sorting={state.sorting}
-                        actions={state.actions}
-                        onSearchChange={onSearchChange}
-                        onSelectionChange={onSelectionChange}
-                        onSelectionAllChange={onSelectionAllChange}
-                        onPaginationChange={handlePaginationChange}
-                        onSortingChange={handleSortingChange}
-                        onItemActionClick={onItemActionClick}
-                        onRowClick={onItemClick}
-                    />
-                    {onActionClick && <FabButton action={onActionClick} />}
+    return (
+        <React.Fragment>
+            <DataTable
+                columns={columns}
+                rows={state.items}
+                search={state.search}
+                selectedRows={state.selectedItems}
+                paginationOptions={state.pagination.pageSizeOptions}
+                pagination={{
+                    pageSize: state.pagination.pageSize,
+                    page: state.pagination.page,
+                    total: state.pagination.total,
+                }}
+                sorting={state.sorting}
+                actions={state.actions}
+                onSearchChange={onSearchChange}
+                onSelectionChange={onSelectionChange}
+                onSelectionAllChange={onSelectionAllChange}
+                onPaginationChange={handlePaginationChange}
+                onSortingChange={handleSortingChange}
+                onItemActionClick={onItemActionClick}
+                onRowClick={onItemClick}
+            />
+            {onActionClick && <FabButton action={onActionClick} />}
 
-                    {state.itemsToDelete && (
-                        <ConfirmationDialog
-                            open={true}
-                            title={"Delete confirmation"}
-                            description={`Are you sure you want to delete ${state.itemsToDelete.length} items`}
-                            onSave={onConfirmDelete}
-                            onCancel={onCancelDelete}
-                        />
-                    )}
-                </React.Fragment>
-            );
-        }
-    }
+            {state.itemsToDelete && (
+                <ConfirmationDialog
+                    open={true}
+                    title={"Delete confirmation"}
+                    description={`Are you sure you want to delete ${state.itemsToDelete.length} items`}
+                    onSave={onConfirmDelete}
+                    onCancel={onCancelDelete}
+                />
+            )}
+        </React.Fragment>
+    );
 }
 
 function mapColumns<T extends IdentifiableObject>(fields: ListField<T>[]): TableColumn<T>[] {
