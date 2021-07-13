@@ -20,7 +20,7 @@ export default function DetailPage<Data extends EntityData>({ bloc }: DetailPage
     const history = useHistory();
 
     const handleFieldChange = (name: string, value: string | string[]) => {
-        bloc.onFieldChanged(name, value);
+        bloc.onFieldChanged(name as keyof Data, value);
     };
 
     useEffect(() => {
@@ -33,6 +33,24 @@ export default function DetailPage<Data extends EntityData>({ bloc }: DetailPage
 
     const handleCancel = () => {
         history.goBack();
+    };
+
+    const handleChildrenListItemActionClick = (field: string, actionName: string, id: string) => {
+        bloc.onChildrenListItemActionClick(field as keyof Data, actionName, id);
+    };
+
+    const handleChildrenActionClick = (field: string) => {
+        bloc.onChildrenActionClick(field as keyof Data);
+    };
+    const handleChildrenFormSave = (field: string) => {
+        bloc.onChildrenFormSave(field as keyof Data);
+    };
+    const handleChildrenFormCancel = (field: string) => {
+        bloc.onChildrenFormCancel(field as keyof Data);
+    };
+
+    const handleChildrenFieldChange = (field: string, name: string, value: string | string[]) => {
+        bloc.onChildrenFieldChange(field as keyof Data, name, value);
     };
 
     return (
@@ -58,6 +76,13 @@ export default function DetailPage<Data extends EntityData>({ bloc }: DetailPage
                                     onSubmit={handleSubmit}
                                     onCancel={handleCancel}
                                     handleFieldChange={handleFieldChange}
+                                    onChildrenListItemActionClick={
+                                        handleChildrenListItemActionClick
+                                    }
+                                    onChildrenActionClick={handleChildrenActionClick}
+                                    onChildrenFormSave={handleChildrenFormSave}
+                                    onChildrenFormCancel={handleChildrenFormCancel}
+                                    onChildrenFieldChange={handleChildrenFieldChange}
                                 />
                             </MainLayout>
                         );

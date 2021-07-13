@@ -4,9 +4,11 @@ import DataTable, { TableColumn, TablePager, TableSorting } from "../data-table/
 import FabButton from "../add-fab-button/AddFabButton";
 import ConfirmationDialog from "../confirmation-dialog/ConfirmationDialog";
 import { ListField, ListState } from "../../state/ListState";
+import { ClassNameMap } from "@material-ui/styles";
 
 interface TableBuilderProps<T extends IdentifiableObject> {
     className?: string;
+    classes?: Partial<ClassNameMap<"fab">>;
     state: ListState<T>;
     onSearchChange?: (search: string) => void;
     onSelectionChange?: (id: string) => void;
@@ -36,6 +38,7 @@ export default function TableBuilder<T extends IdentifiableObject>({
     onActionClick,
     onConfirmDelete,
     onCancelDelete,
+    classes,
 }: TableBuilderProps<T>): JSX.Element {
     const handlePaginationChange = (pagination: TablePager) => {
         if (onPaginationChange) {
@@ -53,17 +56,23 @@ export default function TableBuilder<T extends IdentifiableObject>({
 
     return (
         <React.Fragment>
+            {onActionClick && <FabButton action={onActionClick} className={classes?.fab} />}
             <DataTable
                 columns={columns}
                 rows={state.items}
                 search={state.search}
+                searchEnable={state.searchEnable}
                 selectedRows={state.selectedItems}
-                paginationOptions={state.pagination.pageSizeOptions}
-                pagination={{
-                    pageSize: state.pagination.pageSize,
-                    page: state.pagination.page,
-                    total: state.pagination.total,
-                }}
+                paginationOptions={state.pagination?.pageSizeOptions}
+                pagination={
+                    state.pagination
+                        ? {
+                              pageSize: state.pagination.pageSize,
+                              page: state.pagination.page,
+                              total: state.pagination.total,
+                          }
+                        : undefined
+                }
                 sorting={state.sorting}
                 actions={state.actions}
                 onSearchChange={onSearchChange}
@@ -74,7 +83,6 @@ export default function TableBuilder<T extends IdentifiableObject>({
                 onItemActionClick={onItemActionClick}
                 onRowClick={onItemClick}
             />
-            {onActionClick && <FabButton action={onActionClick} />}
 
             {state.itemsToDelete && (
                 <ConfirmationDialog

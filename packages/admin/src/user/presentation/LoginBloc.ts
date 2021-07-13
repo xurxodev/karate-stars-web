@@ -2,7 +2,11 @@ import { Credentials, Either, ValidationError } from "karate-stars-core";
 import LoginUseCase from "../domain/LoginUseCase";
 import { GetUserError } from "../domain/Errors";
 import FormBloc from "../../common/presentation/bloc/FormBloc";
-import { FormState, FormSectionState } from "../../common/presentation/state/FormState";
+import {
+    FormState,
+    FormSectionState,
+    statetoData,
+} from "../../common/presentation/state/FormState";
 
 class LoginBloc extends FormBloc<Credentials> {
     constructor(private loginUseCase: LoginUseCase) {
@@ -26,13 +30,7 @@ class LoginBloc extends FormBloc<Credentials> {
     private createCredentials(
         state: FormState
     ): Either<ValidationError<Credentials>[], Credentials> {
-        const loginFields = state.sections.flatMap(section =>
-            section.fields.map(field => ({ [field.name]: field.value }))
-        );
-
-        const loginData = Object.assign({}, ...loginFields);
-
-        return Credentials.create(loginData);
+        return Credentials.create(statetoData(state));
     }
 
     async submit() {
@@ -93,8 +91,14 @@ export default LoginBloc;
 const initialFieldsState: FormSectionState[] = [
     {
         fields: [
-            { label: "Email", name: "email", autoComplete: "username" },
             {
+                kind: "FormSingleFieldState",
+                label: "Email",
+                name: "email",
+                autoComplete: "username",
+            },
+            {
+                kind: "FormSingleFieldState",
                 label: "Password",
                 name: "password",
                 autoComplete: "current-password",

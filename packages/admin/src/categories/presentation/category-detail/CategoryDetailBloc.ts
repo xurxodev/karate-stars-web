@@ -62,9 +62,24 @@ const initialFieldsState = (
     return [
         {
             fields: [
-                { label: "Id", name: "id", value: entity?.id, hide: true },
-                { label: "Name", name: "name", required: true, value: entity?.name, md: 6, xs: 12 },
                 {
+                    kind: "FormSingleFieldState",
+                    label: "Id",
+                    name: "id",
+                    value: entity?.id,
+                    hide: true,
+                },
+                {
+                    kind: "FormSingleFieldState",
+                    label: "Name",
+                    name: "name",
+                    required: true,
+                    value: entity?.name,
+                    md: 6,
+                    xs: 12,
+                },
+                {
+                    kind: "FormSingleFieldState",
                     label: "Type",
                     name: "typeId",
                     required: true,

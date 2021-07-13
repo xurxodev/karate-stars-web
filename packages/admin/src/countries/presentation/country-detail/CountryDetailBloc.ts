@@ -47,8 +47,15 @@ const initialFieldsState = (data?: CountryData): FormSectionState[] => {
     return [
         {
             fields: [
-                { label: "Id", name: "id", value: data?.id, hide: true },
                 {
+                    kind: "FormSingleFieldState",
+                    label: "Id",
+                    name: "id",
+                    value: data?.id,
+                    hide: true,
+                },
+                {
+                    kind: "FormSingleFieldState",
                     label: "Image",
                     name: "image",
                     type: "file",
@@ -57,8 +64,17 @@ const initialFieldsState = (data?: CountryData): FormSectionState[] => {
                     value: data?.image,
                     accept: "image/*",
                 },
-                { label: "Name", name: "name", required: true, value: data?.name, md: 6, xs: 12 },
                 {
+                    kind: "FormSingleFieldState",
+                    label: "Name",
+                    name: "name",
+                    required: true,
+                    value: data?.name,
+                    md: 6,
+                    xs: 12,
+                },
+                {
+                    kind: "FormSingleFieldState",
                     label: "Iso2",
                     name: "iso2",
                     required: true,

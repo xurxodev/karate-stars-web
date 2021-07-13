@@ -44,8 +44,15 @@ const initialFieldsState = (newsFeed?: NewsFeedData): FormSectionState[] => {
     return [
         {
             fields: [
-                { label: "Id", name: "id", value: newsFeed?.id, hide: true },
                 {
+                    kind: "FormSingleFieldState",
+                    label: "Id",
+                    name: "id",
+                    value: newsFeed?.id,
+                    hide: true,
+                },
+                {
+                    kind: "FormSingleFieldState",
                     label: "Image",
                     name: "image",
                     type: "file",
@@ -53,9 +60,22 @@ const initialFieldsState = (newsFeed?: NewsFeedData): FormSectionState[] => {
                     value: newsFeed?.image,
                     accept: "image/*",
                 },
-                { label: "Name", name: "name", required: true, value: newsFeed?.name },
-                { label: "Url", name: "url", required: true, value: newsFeed?.url },
                 {
+                    kind: "FormSingleFieldState",
+                    label: "Name",
+                    name: "name",
+                    required: true,
+                    value: newsFeed?.name,
+                },
+                {
+                    kind: "FormSingleFieldState",
+                    label: "Url",
+                    name: "url",
+                    required: true,
+                    value: newsFeed?.url,
+                },
+                {
+                    kind: "FormSingleFieldState",
                     label: "Language",
                     name: "language",
                     required: true,
@@ -64,6 +84,7 @@ const initialFieldsState = (newsFeed?: NewsFeedData): FormSectionState[] => {
                     xs: 12,
                 },
                 {
+                    kind: "FormSingleFieldState",
                     label: "Type",
                     name: "type",
                     value: "rss",

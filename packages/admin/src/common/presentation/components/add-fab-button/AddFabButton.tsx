@@ -1,9 +1,10 @@
 import React from "react";
 import { makeStyles, Fab, Theme } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
+import clsx from "clsx";
 
 const useStyles = makeStyles((theme: Theme) => ({
-    fab: {
+    root: {
         position: "fixed",
         bottom: theme.spacing(4),
         right: theme.spacing(4),
@@ -12,13 +13,18 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface AddFabButtonProps {
     action: () => void;
+    className?: string;
 }
 
-const AddFabButton: React.FC<AddFabButtonProps> = ({ action }) => {
+const AddFabButton: React.FC<AddFabButtonProps> = ({ action, className }) => {
     const classes = useStyles();
 
     return (
-        <Fab color="primary" aria-label="add" className={classes.fab} onClick={action}>
+        <Fab
+            color="primary"
+            aria-label="add"
+            className={clsx(classes.root, className)}
+            onClick={action}>
             <AddIcon />
         </Fab>
     );

@@ -60,8 +60,8 @@ export interface DataTableProps<T> {
     columns: TableColumn<T>[];
     rows: T[];
     selectedRows: string[];
-    paginationOptions: number[];
-    pagination: TablePager;
+    paginationOptions?: number[];
+    pagination?: TablePager;
     sorting?: TableSorting<T>;
     search?: string;
     searchEnable?: boolean;
@@ -96,7 +96,7 @@ export default function DataTable<T extends IdentifiableObject>({
 }: DataTableProps<T>) {
     const classes = useStyles();
 
-    const [searchVisible] = useState(searchEnable || true);
+    const [searchVisible] = useState(searchEnable ?? true);
     const [contextualMenuPosition, setContextualMenuPosition] = useState<PopoverPosition>();
     const [menus] = useState<MenuItemData[]>(
         actions
@@ -136,7 +136,7 @@ export default function DataTable<T extends IdentifiableObject>({
     };
 
     const handlePageChange = (_event: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
-        if (onPaginationChange) {
+        if (onPaginationChange && pagination) {
             onPaginationChange({ ...pagination, page });
         }
     };
@@ -144,7 +144,7 @@ export default function DataTable<T extends IdentifiableObject>({
     const handleRowsPerPageChange = (
         event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
     ) => {
-        if (onPaginationChange) {
+        if (onPaginationChange && pagination) {
             onPaginationChange({ ...pagination, pageSize: +event.target.value });
         }
     };
@@ -261,15 +261,17 @@ export default function DataTable<T extends IdentifiableObject>({
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <TablePagination
-                    component="div"
-                    count={pagination.total}
-                    onChangePage={handlePageChange}
-                    onChangeRowsPerPage={handleRowsPerPageChange}
-                    page={pagination.page}
-                    rowsPerPage={pagination.pageSize}
-                    rowsPerPageOptions={paginationOptions}
-                />
+                {pagination && (
+                    <TablePagination
+                        component="div"
+                        count={pagination.total}
+                        onChangePage={handlePageChange}
+                        onChangeRowsPerPage={handleRowsPerPageChange}
+                        page={pagination.page}
+                        rowsPerPage={pagination.pageSize}
+                        rowsPerPageOptions={paginationOptions}
+                    />
+                )}
             </Paper>
             {contextualMenuPosition && (
                 <ContextualMenu

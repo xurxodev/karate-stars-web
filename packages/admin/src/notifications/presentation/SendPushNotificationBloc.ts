@@ -1,4 +1,8 @@
-import { FormState, FormSectionState } from "../../common/presentation/state/FormState";
+import {
+    FormState,
+    FormSectionState,
+    statetoData,
+} from "../../common/presentation/state/FormState";
 import { URL_NEWS_TOPIC, DEBUG_URL_NEWS_TOPIC } from "../domain/entities/PushNotification";
 import { UrlNotification } from "../domain/entities/UrlNotification";
 import SendPushNotificationUseCase from "../domain/SendPushNotificationUseCase";
@@ -76,12 +80,7 @@ class SendPushNotificationBloc extends FormBloc<UrlNotification> {
     private createNotification(
         state: FormState
     ): Either<ValidationError<UrlNotification>[], UrlNotification> {
-        const notificationDataFields = state.sections.flatMap(section =>
-            section.fields.map(field => ({ [field.name]: field.value }))
-        );
-        const notificationData = Object.assign({}, ...notificationDataFields);
-
-        return UrlNotification.create(notificationData);
+        return UrlNotification.create(statetoData(state));
     }
 }
 
@@ -91,6 +90,7 @@ const initialFieldsState: FormSectionState[] = [
     {
         fields: [
             {
+                kind: "FormSingleFieldState",
                 label: "Type",
                 name: "type",
                 value: "news",
@@ -104,6 +104,7 @@ const initialFieldsState: FormSectionState[] = [
                 required: true,
             },
             {
+                kind: "FormSingleFieldState",
                 label: "Topic",
                 name: "topic",
                 value: DEBUG_URL_NEWS_TOPIC,
@@ -115,9 +116,14 @@ const initialFieldsState: FormSectionState[] = [
                 xs: 12,
                 required: true,
             },
-            { label: "Url", name: "url", required: true },
-            { label: "Title", name: "title", required: true },
-            { label: "Description", name: "description", required: true },
+            { kind: "FormSingleFieldState", label: "Url", name: "url", required: true },
+            { kind: "FormSingleFieldState", label: "Title", name: "title", required: true },
+            {
+                kind: "FormSingleFieldState",
+                label: "Description",
+                name: "description",
+                required: true,
+            },
         ],
     },
 ];

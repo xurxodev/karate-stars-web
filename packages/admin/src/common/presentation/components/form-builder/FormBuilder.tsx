@@ -13,7 +13,8 @@ import {
     Box,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import FormFieldBuilder from "./FormFieldBuilder";
+import FormSingleFieldBuilder from "./FormSingleFieldBuilder";
+import FormComplexFieldBuilder from "./FormComplexFieldBuilder";
 
 interface FormBuilderProps {
     formState: FormState;
@@ -21,12 +22,22 @@ interface FormBuilderProps {
     onCancel?: () => void;
     handleFieldChange: (name: string, value: string | string[]) => void;
     classes?: Record<string, string>;
+    onChildrenListItemActionClick?: (field: string, actionName: string, id: string) => void;
+    onChildrenActionClick?: (field: string) => void;
+    onChildrenFormSave?: (field: string) => void;
+    onChildrenFormCancel?: (field: string) => void;
+    onChildrenFieldChange?: (field: string, name: string, value: string | string[]) => void;
 }
 
 const FormBuilder: React.FC<FormBuilderProps> = ({
     onSubmit,
     onCancel,
     handleFieldChange,
+    onChildrenListItemActionClick,
+    onChildrenActionClick,
+    onChildrenFormSave,
+    onChildrenFormCancel,
+    onChildrenFieldChange,
     formState,
     classes,
 }) => {
@@ -42,6 +53,33 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
 
     const handleCancel = () => {
         if (onCancel) onCancel();
+    };
+
+    const renderField = (field: FormFieldState) => {
+        switch (field.kind) {
+            case "FormSingleFieldState": {
+                return (
+                    <FormSingleFieldBuilder
+                        key={field.name}
+                        field={field}
+                        handleFieldChange={handleFieldChange}
+                    />
+                );
+            }
+            case "FormComplexFieldState": {
+                return (
+                    <FormComplexFieldBuilder
+                        key={field.name}
+                        field={field}
+                        onChildrenListItemActionClick={onChildrenListItemActionClick}
+                        onChildrenActionClick={onChildrenActionClick}
+                        onChildrenFormSave={onChildrenFormSave}
+                        onChildrenFormCancel={onChildrenFormCancel}
+                        onChildrenFieldChange={onChildrenFieldChange}
+                    />
+                );
+            }
+        }
     };
 
     return (
@@ -76,15 +114,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
                                                 section.fields
                                                     .filter(field => !field.hide === true)
                                                     .map((field: FormFieldState) => {
-                                                        return (
-                                                            <FormFieldBuilder
-                                                                key={field.name}
-                                                                field={field}
-                                                                handleFieldChange={
-                                                                    handleFieldChange
-                                                                }
-                                                            />
-                                                        );
+                                                        return renderField(field);
                                                     })}
                                         </Grid>
                                     </CardContent>

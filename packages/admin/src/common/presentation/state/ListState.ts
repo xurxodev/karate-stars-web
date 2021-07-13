@@ -2,8 +2,9 @@ export type ListState<T extends IdentifiableObject> = {
     items: Array<T>;
     fields: ListField<T>[];
     search?: string;
+    searchEnable?: boolean;
     selectedItems: string[];
-    pagination: ListPagination;
+    pagination?: ListPagination;
     sorting?: ListSorting<T>;
     actions?: ListAction[];
     itemsToDelete?: string[];
@@ -35,7 +36,7 @@ export interface ListField<T> {
 }
 
 export interface ListPagination {
-    pageSizeOptions: number[];
+    pageSizeOptions?: number[];
     pageSize: number;
     total: number;
     page: number;

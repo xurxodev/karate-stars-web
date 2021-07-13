@@ -47,8 +47,20 @@ const initialFieldsState = (eventType?: EventTypeData): FormSectionState[] => {
     return [
         {
             fields: [
-                { label: "Id", name: "id", value: eventType?.id, hide: true },
-                { label: "Name", name: "name", required: true, value: eventType?.name },
+                {
+                    kind: "FormSingleFieldState",
+                    label: "Id",
+                    name: "id",
+                    value: eventType?.id,
+                    hide: true,
+                },
+                {
+                    kind: "FormSingleFieldState",
+                    label: "Name",
+                    name: "name",
+                    required: true,
+                    value: eventType?.name,
+                },
             ],
         },
     ];

@@ -1,3 +1,5 @@
+import { ListState } from "./ListState";
+
 export interface FormResultError {
     kind: "FormResultError";
     message: string;
@@ -19,7 +21,24 @@ export interface SelectOption {
 
 export type ImageType = "image" | "avatar";
 
-export interface FormFieldState {
+export interface FormComplexFieldState {
+    kind: "FormComplexFieldState";
+    name: string;
+    required?: boolean;
+    xs?: GridSize;
+    sm?: GridSize;
+    md?: GridSize;
+    lg?: GridSize;
+    xl?: GridSize;
+    hide?: boolean;
+    list: ListState<any>;
+    listLabel: string;
+    formLabel: string;
+    form?: FormChildrenState;
+}
+
+export interface FormSingleFieldState {
+    kind: "FormSingleFieldState";
     label: string;
     name: string;
     alt?: string;
@@ -41,6 +60,8 @@ export interface FormFieldState {
     maxLength?: number;
 }
 
+export type FormFieldState = FormComplexFieldState | FormSingleFieldState;
+
 export interface FormSectionState {
     title?: string;
     xs?: GridSize;
@@ -61,10 +82,29 @@ export interface FormState {
     cancelName?: string;
 }
 
+export interface FormChildrenState {
+    title: string;
+    fields: FormSingleFieldState[];
+}
+
 export function statetoData<T>(state: FormState): T {
     const fields = state.sections.flatMap(section =>
-        section.fields.map(field => ({ [field.name]: field.value }))
+        section.fields.map(field => {
+            if (field.kind === "FormSingleFieldState") {
+                return { [field.name]: field.value };
+            } else {
+                return { [field.name]: field.list.items };
+            }
+        })
     );
+
+    return Object.assign({}, ...fields);
+}
+
+export function formChildrenStatetoData<T>(state: FormChildrenState): T {
+    const fields = state.fields.map(field => {
+        return { [field.name]: field.value };
+    });
 
     return Object.assign({}, ...fields);
 }

@@ -10,30 +10,13 @@ import {
     ListSorting,
     SortDirection,
 } from "../state/ListState";
+import { basicActions, deleteAction, editAction } from "./basicActions";
 
 export const defaultPagination = { pageSizeOptions: [5, 10, 25], pageSize: 10, page: 0, total: 0 };
 
-const editAction = {
-    name: "edit",
-    text: "Edit",
-    icon: "edit",
-    multiple: false,
-    primary: true,
-    active: true,
-};
-
-const deleteAction = {
-    name: "delete",
-    text: "Delete",
-    icon: "delete",
-    multiple: true,
-    primary: false,
-    active: true,
-};
-
 abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListPageState<S>> {
     items: S[] = [];
-    actions: ListAction[] = [editAction, deleteAction];
+    actions: ListAction[] = basicActions;
 
     abstract confirmDelete(): Promise<void>;
 
@@ -81,15 +64,22 @@ abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListPageState
     search(search: string) {
         const currentstate = this.state as ListLoadedState<S>;
 
-        const pagination = { ...currentstate.pagination, page: 0 };
+        const pagination = currentstate.pagination
+            ? { ...currentstate.pagination, page: 0 }
+            : undefined;
         this.updateItems(pagination, search, currentstate.sorting);
     }
 
     paginationChange(page: number, pageSize: number) {
         const currentstate = this.state as ListLoadedState<S>;
 
-        const pagination = { ...currentstate.pagination, page, pageSize };
-        this.updateItems(pagination, currentstate.search, currentstate.sorting);
+        if (currentstate.pagination) {
+            this.updateItems(
+                { ...currentstate.pagination, page, pageSize },
+                currentstate.search,
+                currentstate.sorting
+            );
+        }
     }
 
     sortingChange(field: keyof S, order: SortDirection) {
@@ -153,21 +143,21 @@ abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListPageState
         }
     }
 
-    private updateItems(pagination: ListPagination, search?: string, sorting?: ListSorting<S>) {
+    private updateItems(pagination?: ListPagination, search?: string, sorting?: ListSorting<S>) {
         const currentstate = this.state as ListLoadedState<S>;
 
         const itemsBySearch = this.searchItems(this.items, currentstate.fields, search);
 
         const sortedItems = this.sortItems(itemsBySearch, sorting);
 
-        const currentItems = this.paginateItems(sortedItems, pagination);
+        const currentItems = pagination ? this.paginateItems(sortedItems, pagination) : sortedItems;
 
         const state: ListLoadedState<S> = {
             ...currentstate,
             search,
             items: currentItems,
             sorting,
-            pagination: { ...pagination, total: sortedItems.length },
+            pagination: pagination ? { ...pagination, total: sortedItems.length } : undefined,
         };
 
         super.changeState(state);

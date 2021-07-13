@@ -60,14 +60,15 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
                         {infoActionText}
                     </Button>
                 )}
-                {onCancel && (
-                    <Button key={"cancel"} onClick={onCancel} autoFocus>
-                        {cancelText}
-                    </Button>
-                )}
+
                 {onSave && (
                     <Button key={"save"} onClick={onSave} color="primary" disabled={disableSave}>
                         {saveText}
+                    </Button>
+                )}
+                {onCancel && (
+                    <Button key={"cancel"} onClick={onCancel} autoFocus>
+                        {cancelText}
                     </Button>
                 )}
             </DialogActions>

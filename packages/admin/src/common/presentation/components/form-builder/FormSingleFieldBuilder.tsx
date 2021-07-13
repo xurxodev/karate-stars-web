@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 
-import { FormFieldState, SelectOption } from "../../state/FormState";
+import { FormSingleFieldState, SelectOption } from "../../state/FormState";
 import { makeStyles, Grid, TextField, Theme, Button, Icon, Avatar, Box } from "@material-ui/core";
+import MultiSelect from "./MultiSelect";
 
 interface FormFieldBuilderProps {
-    field: FormFieldState;
+    field: FormSingleFieldState;
     handleFieldChange: (name: string, value: string | string[]) => void;
 }
 
@@ -28,7 +29,7 @@ const createPreviewUrl = (file: File): Promise<string> => {
     });
 };
 
-const FormFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handleFieldChange }) => {
+const FormSingleFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handleFieldChange }) => {
     const classes = useStyles();
     const defaultColumnValue = 12;
 
@@ -47,6 +48,24 @@ const FormFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handleFieldC
             handleFieldChange(event.target.name, event.target.value);
         }
     };
+
+    const handleMultiChange = useCallback(
+        () => (value: string[]) => {
+            handleFieldChange(field.name, value);
+        },
+        [handleFieldChange]
+    );
+
+    const options = useMemo(
+        () =>
+            field.selectOptions
+                ? field.selectOptions.map(option => ({
+                      value: option.id,
+                      label: option.name,
+                  }))
+                : undefined,
+        []
+    );
 
     switch (field.type) {
         case "file": {
@@ -87,41 +106,50 @@ const FormFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handleFieldC
         default: {
             return (
                 <Grid item md={field.md || defaultColumnValue} xs={field.xs || defaultColumnValue}>
-                    <TextField
-                        id={field.name}
-                        className={classes.textField}
-                        error={field.errors && field.errors.length > 0}
-                        select={field.selectOptions ? true : false}
-                        fullWidth={true}
-                        label={field.label.concat(field.required ? " (*)" : "")}
-                        name={field.name}
-                        value={field.value || ""}
-                        onChange={handleChange}
-                        SelectProps={{ native: true, multiple: field.multiple }}
-                        helperText={field.errors ? field.errors.join("/n") : ""}
-                        variant="outlined"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        autoComplete={field.autoComplete}
-                        inputProps={{ maxLength: field.maxLength }}
-                        type={field.type}>
-                        {field.selectOptions &&
-                            field.selectOptions.map((option: SelectOption, index: number) => {
-                                return (
-                                    <option key={index} value={option.id}>
-                                        {option.name}
-                                    </option>
-                                );
-                            })}
-                    </TextField>
+                    {field.multiple && options && Array.isArray(field.value) ? (
+                        <MultiSelect
+                            values={field.value || []}
+                            name={field.name}
+                            options={options}
+                            onChange={handleMultiChange}
+                        />
+                    ) : (
+                        <TextField
+                            id={field.name}
+                            className={classes.textField}
+                            error={field.errors && field.errors.length > 0}
+                            select={field.selectOptions ? true : false}
+                            fullWidth={true}
+                            label={field.label.concat(field.required ? " (*)" : "")}
+                            name={field.name}
+                            value={field.value || ""}
+                            onChange={handleChange}
+                            SelectProps={{ native: true, multiple: field.multiple }}
+                            helperText={field.errors ? field.errors.join("/n") : ""}
+                            variant="outlined"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            autoComplete={field.autoComplete}
+                            inputProps={{ maxLength: field.maxLength }}
+                            type={field.type}>
+                            {field.selectOptions &&
+                                field.selectOptions.map((option: SelectOption, index: number) => {
+                                    return (
+                                        <option key={index} value={option.id}>
+                                            {option.name}
+                                        </option>
+                                    );
+                                })}
+                        </TextField>
+                    )}
                 </Grid>
             );
         }
     }
 };
 
-export default FormFieldBuilder;
+export default FormSingleFieldBuilder;
 
 const useStyles = makeStyles((theme: Theme) => ({
     textField: {

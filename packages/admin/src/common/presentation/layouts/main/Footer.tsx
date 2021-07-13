@@ -18,7 +18,7 @@ const Footer: React.FC = () => {
                 <Link component="a" href="http://karatestarsap.com" target="_blank">
                     Karate stars
                 </Link>{" "}
-                2020
+                2021
             </Typography>
             <Typography variant="caption">Created by xurxodev</Typography>
         </div>
