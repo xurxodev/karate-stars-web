@@ -10,18 +10,19 @@ type IsMulti = true;
 
 interface MultiSelectProps {
     options: Option[];
+    label: string;
     name: string;
     values: string[];
     onChange: (value: string[]) => void;
 }
 
-const MultiSelect: React.FC<MultiSelectProps> = ({ options, name, values, onChange }) => {
+const MultiSelect: React.FC<MultiSelectProps> = ({ options, name, values, label, onChange }) => {
     const value = options.filter(option => values.includes(option.value));
 
     const customStyles: StylesConfig<Option, IsMulti> = {
         control: base => ({
             ...base,
-            height: 53,
+            minHeight: 53,
             marginTop: 16,
         }),
     };
@@ -30,19 +31,33 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options, name, values, onChan
         onChange(value.map(value => value.value));
     };
 
-    console.log("render multiselect");
-
     return (
-        <Select
-            defaultValue={value}
-            isMulti
-            name={name}
-            options={options}
-            className="basic-multi-select"
-            classNamePrefix="select"
-            styles={customStyles}
-            onChange={handleMultiChange}
-        />
+        <div style={{ marginTop: 16 }}>
+            {label && (
+                <label id={name} htmlFor={name} style={{ fontSize: 20, fontWeight: "bold" }}>
+                    {label}
+                </label>
+            )}
+
+            <Select
+                aria-labelledby={name}
+                inputId={name}
+                defaultValue={value}
+                isMulti
+                name={name}
+                options={options}
+                className="basic-multi-select"
+                classNamePrefix="select"
+                styles={customStyles}
+                onChange={handleMultiChange}
+                textFieldProps={{
+                    label,
+                    InputLabelProps: {
+                        shrink: true,
+                    },
+                }}
+            />
+        </div>
     );
 };
 

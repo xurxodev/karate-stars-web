@@ -110,6 +110,7 @@ const FormSingleFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handle
                         <MultiSelect
                             values={field.value || []}
                             name={field.name}
+                            label={field.label}
                             options={options}
                             onChange={handleMultiChange}
                         />

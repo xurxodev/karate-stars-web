@@ -137,7 +137,7 @@ const initialFieldsState = (
                     name: "title",
                     required: true,
                     value: entity?.title,
-                    md: 6,
+                    md: 4,
                     xs: 12,
                 },
                 {
@@ -146,7 +146,7 @@ const initialFieldsState = (
                     name: "subtitle",
                     required: true,
                     value: entity?.subtitle,
-                    md: 6,
+                    md: 4,
                     xs: 12,
                 },
                 {
@@ -155,7 +155,7 @@ const initialFieldsState = (
                     name: "description",
                     required: true,
                     value: entity?.description,
-                    md: 6,
+                    md: 4,
                     xs: 12,
                 },
                 {
@@ -185,8 +185,6 @@ const initialFieldsState = (
                     value: entity?.competitors,
                     selectOptions: competitorOptions,
                     multiple: true,
-                    md: 6,
-                    xs: 12,
                 },
                 {
                     kind: "FormComplexFieldState",
@@ -194,8 +192,6 @@ const initialFieldsState = (
                     formLabel: "Add link",
                     name: "links",
                     required: true,
-                    md: 6,
-                    xs: 12,
                     list: {
                         fields: [
                             { name: "id", text: "Id", type: "text" },
