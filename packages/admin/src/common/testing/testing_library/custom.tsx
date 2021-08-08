@@ -166,13 +166,29 @@ function selectOption(label: string | RegExp, text: string) {
     userEvent.selectOptions(screen.getByLabelText(label), text);
 }
 
+async function selectMultiOption(label: string | RegExp, text: string) {
+    userEvent.click(screen.getByLabelText(label));
+    const element = await screen.findByText(text);
+    userEvent.click(element);
+}
+
 function clickOnAccept() {
-    userEvent.click(screen.getByRole("button", { name: "Accept" }));
+    userEvent.click(screen.getByRole("button", { name: /accept/i }));
+}
+
+function clickOnOk() {
+    userEvent.click(screen.getByRole("button", { name: /ok/i }));
+}
+
+function clickOnAdd() {
+    userEvent.click(screen.getByRole("button", { name: /add/i }));
 }
 
 export const tl = {
     clear,
     clickOnAccept,
+    clickOnOk,
+    clickOnAdd,
     searchAndVerifyAsync,
     selectOption,
     verifyAlertAsync,
@@ -187,6 +203,7 @@ export const tl = {
     typeAndClear,
     typeByLabelText,
     typeByPlaceholderTextAsync,
+    selectMultiOption,
 };
 
 /* eslint-enable react/display-name */

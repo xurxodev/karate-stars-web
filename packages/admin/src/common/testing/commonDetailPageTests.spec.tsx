@@ -13,7 +13,7 @@ interface DataDetailCreator<TData extends EntityData> {
 export const commonDetailPageTests = <TData extends EntityData>(
     endpoint: string,
     dataCreator: DataDetailCreator<TData>,
-    typeValidForm: () => void,
+    typeValidForm: () => Promise<void>,
     component: React.ReactElement,
     dependenciesCreators?: DependenciesCreator<any>[]
 ) => {
@@ -36,7 +36,7 @@ export const commonDetailPageTests = <TData extends EntityData>(
                 it("should be enabled after type required fields", async () => {
                     await renderComponentToCreate();
 
-                    typeValidForm();
+                    await typeValidForm();
 
                     expect(screen.getByRole("button", { name: "Accept" })).toBeEnabled();
                 });
@@ -45,7 +45,7 @@ export const commonDetailPageTests = <TData extends EntityData>(
                 it("should show invalid crentials message if the server response is unauthorized", async () => {
                     givenAErrorServerResponse("get", `${apiEndpoint}/:id`, 401);
                     await renderComponentToCreate();
-                    typeValidForm();
+                    await typeValidForm();
                     tl.clickOnAccept();
                     await tl.verifyTextExistsAsync("Invalid credentials");
                 });
@@ -53,7 +53,7 @@ export const commonDetailPageTests = <TData extends EntityData>(
                     givenAErrorServerResponse("get", `${apiEndpoint}/:id`, 404);
                     givenAErrorServerResponse("post", apiEndpoint, 500);
                     await renderComponentToCreate();
-                    typeValidForm();
+                    await typeValidForm();
                     tl.clickOnAccept();
                     await tl.verifyTextExistsAsync(
                         "Sorry, an error has ocurred in the server. Please try later again"
@@ -63,7 +63,7 @@ export const commonDetailPageTests = <TData extends EntityData>(
                     givenAErrorServerResponse("get", `${apiEndpoint}/:id`, 404);
                     givenASuccessServerResponse();
                     await renderComponentToCreate();
-                    typeValidForm();
+                    await typeValidForm();
                     tl.clickOnAccept();
                     await tl.verifyAlertAsync("saved!", false);
                 });
@@ -83,7 +83,7 @@ export const commonDetailPageTests = <TData extends EntityData>(
                 it("should be enabled after type required field", async () => {
                     await renderComponentToEdit(item.id);
 
-                    typeValidForm();
+                    await typeValidForm();
 
                     expect(screen.getByRole("button", { name: "Accept" })).toBeEnabled();
                 });
@@ -91,7 +91,7 @@ export const commonDetailPageTests = <TData extends EntityData>(
             describe("After submit", () => {
                 it("should show invalid crentials message if the server response is unauthorized", async () => {
                     await renderComponentToEdit(item.id);
-                    typeValidForm();
+                    await typeValidForm();
                     givenAErrorServerResponse("get", `${apiEndpoint}/:id`, 401);
                     tl.clickOnAccept();
                     await tl.verifyTextExistsAsync("Invalid credentials");
@@ -99,7 +99,7 @@ export const commonDetailPageTests = <TData extends EntityData>(
                 it("should show generic error if the server response is error", async () => {
                     await renderComponentToEdit(item.id);
 
-                    typeValidForm();
+                    await typeValidForm();
 
                     givenAErrorServerResponse("put", `${apiEndpoint}/${item.id}`, 500);
                     tl.clickOnAccept();
@@ -109,7 +109,7 @@ export const commonDetailPageTests = <TData extends EntityData>(
                 });
                 it("should show success if the server response is success", async () => {
                     await renderComponentToEdit(item.id);
-                    typeValidForm();
+                    await typeValidForm();
 
                     givenASuccessServerResponse("put", `${apiEndpoint}/${item.id}`);
                     tl.clickOnAccept();

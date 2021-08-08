@@ -49,12 +49,9 @@ const FormSingleFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handle
         }
     };
 
-    const handleMultiChange = useCallback(
-        () => (value: string[]) => {
-            handleFieldChange(field.name, value);
-        },
-        [handleFieldChange]
-    );
+    const handleMultiChange = useCallback((value: string[]) => {
+        handleFieldChange(field.name, value);
+    }, []);
 
     const options = useMemo(
         () =>
@@ -110,7 +107,7 @@ const FormSingleFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handle
                         <MultiSelect
                             values={field.value || []}
                             name={field.name}
-                            label={field.label}
+                            label={field.label.concat(field.required ? " (*)" : "")}
                             options={options}
                             onChange={handleMultiChange}
                         />

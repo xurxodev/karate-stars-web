@@ -87,7 +87,6 @@ const initialChildrenFormState = (
     item?: VideoData
 ): FormChildrenState => {
     if (field === "links") {
-        debugger;
         const videoLink = item?.links.find(link => link.id === childrenId);
         return {
             title: "link",
@@ -97,6 +96,7 @@ const initialChildrenFormState = (
                     name: "id",
                     label: "Id",
                     value: videoLink?.id,
+                    required: true,
                 },
                 {
                     kind: "FormSingleFieldState",
@@ -104,6 +104,7 @@ const initialChildrenFormState = (
                     label: "Type",
                     selectOptions: linkTypeOptions,
                     value: videoLink?.type ?? linkTypeOptions[0].id,
+                    required: true,
                 },
             ],
         };
@@ -160,15 +161,6 @@ const initialFieldsState = (
                 },
                 {
                     kind: "FormSingleFieldState",
-                    label: "Order",
-                    name: "order",
-                    required: true,
-                    value: entity?.order.toString(),
-                    md: 6,
-                    xs: 12,
-                },
-                {
-                    kind: "FormSingleFieldState",
                     label: "Event Date",
                     name: "eventDate",
                     required: true,
@@ -179,10 +171,19 @@ const initialFieldsState = (
                 },
                 {
                     kind: "FormSingleFieldState",
+                    label: "Order",
+                    name: "order",
+                    required: true,
+                    value: entity?.order.toString(),
+                    md: 6,
+                    xs: 12,
+                },
+                {
+                    kind: "FormSingleFieldState",
                     label: "Competitors",
                     name: "competitors",
                     required: true,
-                    value: entity?.competitors,
+                    value: entity?.competitors || [],
                     selectOptions: competitorOptions,
                     multiple: true,
                 },

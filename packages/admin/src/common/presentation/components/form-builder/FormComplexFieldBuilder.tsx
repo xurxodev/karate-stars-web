@@ -58,7 +58,7 @@ const FormComplexFieldBuilder: React.FC<FormFieldBuilderProps> = ({
     return (
         <Grid item md={12} xs={12}>
             <Typography variant="h4" component="h2" className={classes.title}>
-                {field.listLabel}
+                {field.listLabel.concat(field.required ? " (*)" : "")}
             </Typography>
             <TableBuilder
                 state={field.list}
