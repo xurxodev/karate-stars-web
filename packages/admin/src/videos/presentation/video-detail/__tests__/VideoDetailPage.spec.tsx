@@ -1,11 +1,11 @@
 import React from "react";
-import "@testing-library/jest-dom/extend-expect";
 
 import {
     render,
     tl,
     screen,
     renderDetailPageToEdit,
+    waitFor,
 } from "../../../../common/testing/testing_library/custom";
 import { VideoData, VideoLinkData } from "karate-stars-core";
 import { commonDetailPageTests } from "../../../../common/testing/commonDetailPageTests.spec";
@@ -48,9 +48,11 @@ async function typeValidForm() {
     );
 
     tl.clickOnAdd();
+
     await screen.findByRole("heading", {
         name: /add link/i,
     });
+
     tl.typeByLabelText("Id (*)", "example");
     tl.selectOption("Type (*)", "youtube");
 
@@ -60,7 +62,7 @@ async function typeValidForm() {
         name: /accept/i,
     });
 
-    expect(acceptButton).toBeEnabled();
+    await waitFor(() => expect(acceptButton).toBeEnabled());
 }
 
 const component = <VideoDetailPage />;

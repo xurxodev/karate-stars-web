@@ -131,7 +131,7 @@ class CompetitorDetailBloc extends DetailBloc<CompetitorState> {
         return this.initialChildrenFormState(field, childrenId, item);
     }
 
-    private mapDataToState(data: CompetitorState) {
+    private mapDataToState(data: CompetitorData): CompetitorState {
         const links = data.links.map(
             link => ({ ...link, id: Id.generateId().value } as SocialLinkState)
         );
@@ -143,7 +143,7 @@ class CompetitorDetailBloc extends DetailBloc<CompetitorState> {
                 } as AchievementState)
         );
 
-        return { ...data, links, achievements } as CompetitorState;
+        return { ...data, links, achievements };
     }
 
     private async initialChildrenFormState(
