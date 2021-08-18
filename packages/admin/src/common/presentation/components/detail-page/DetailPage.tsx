@@ -19,7 +19,7 @@ export default function DetailPage<Data extends EntityData>({ bloc }: DetailPage
     const params = useParams<DetailPageParams>();
     const history = useHistory();
 
-    const handleFieldChange = (name: string, value: string | string[]) => {
+    const handleFieldChange = (name: string, value: string | string[] | boolean) => {
         bloc.onFieldChanged(name as keyof Data, value);
     };
 
@@ -49,7 +49,11 @@ export default function DetailPage<Data extends EntityData>({ bloc }: DetailPage
         bloc.onChildrenFormCancel(field as keyof Data);
     };
 
-    const handleChildrenFieldChange = (field: string, name: string, value: string | string[]) => {
+    const handleChildrenFieldChange = (
+        field: string,
+        name: string,
+        value: string | string[] | boolean
+    ) => {
         bloc.onChildrenFieldChange(field as keyof Data, name, value);
     };
 

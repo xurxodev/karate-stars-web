@@ -17,6 +17,8 @@ import CountryRepository from "../countries/domain/boundaries/CountryRepository"
 import EventRepository from "../events/domain/boundaries/EventRepository";
 import VideoRepository from "../videos/domain/boundaries/VideoRepository";
 import { videoDIKeys } from "../videos/VideoDIModule";
+import { UpdateCompetitorImageUseCase } from "./domain/usecases/UpdateCompetitorImageUseCase";
+import { ImageRepository } from "../images/domain/ImageRepository";
 
 export const competitorDIKeys = {
     CompetitorRepository: "CompetitorRepository",
@@ -80,6 +82,16 @@ export function initializeCompetitors() {
             )
     );
 
+    di.bindLazySingleton(
+        UpdateCompetitorImageUseCase,
+        () =>
+            new UpdateCompetitorImageUseCase(
+                di.get<CompetitorRepository>(competitorDIKeys.CompetitorRepository),
+                di.get<ImageRepository>(appDIKeys.imageRepository),
+                di.get<UserRepository>(appDIKeys.userRepository)
+            )
+    );
+
     di.bindFactory(
         CompetitorController,
         () =>
@@ -89,7 +101,8 @@ export function initializeCompetitors() {
                 di.get(GetCompetitorByIdUseCase),
                 di.get(CreateCompetitorUseCase),
                 di.get(UpdateCompetitorUseCase),
-                di.get(DeleteCompetitorUseCase)
+                di.get(DeleteCompetitorUseCase),
+                di.get(UpdateCompetitorImageUseCase)
             )
     );
 }

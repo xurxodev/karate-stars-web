@@ -4,7 +4,7 @@ import CategoryApiRepository from "./data/CategoryApiRepository";
 import { CategoryRepository } from "./domain/Boundaries";
 import DeleteCategoryUseCase from "./domain/DeleteCategoryUseCase";
 import GetCategoryByIdUseCase from "./domain/GetCategoryByIdUseCase";
-import GetCategorysUseCase from "./domain/GetCategoryUseCase";
+import GetCategorysUseCase from "./domain/GetCategoriesUseCase";
 import SaveCategoryUseCase from "./domain/SaveCategoryUseCase";
 import CategoryDetailBloc from "./presentation/category-detail/CategoryDetailBloc";
 import CategoryListBloc from "./presentation/category-list/CategoryListBloc";

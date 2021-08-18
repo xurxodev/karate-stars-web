@@ -2,7 +2,7 @@ import { CategoryRepository } from "./Boundaries";
 import { CategoryData, Either } from "karate-stars-core";
 import { DataError } from "../../common/domain/Errors";
 
-export default class GetCategorysUseCase {
+export default class GetCategoriesUseCase {
     constructor(private CategoryRepository: CategoryRepository) {}
 
     async execute(): Promise<Either<DataError, CategoryData[]>> {

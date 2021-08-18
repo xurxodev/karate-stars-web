@@ -62,7 +62,7 @@ export default abstract class DetailBloc<TData> extends Bloc<DetailPageState> {
         }
     }
 
-    onFieldChanged(name: keyof TData, value: string | string[]) {
+    onFieldChanged(name: keyof TData, value: string | string[] | boolean) {
         if (this.state.kind === "DetailFormUpdatedState") {
             const formState = this.state.form;
 
@@ -195,7 +195,11 @@ export default abstract class DetailBloc<TData> extends Bloc<DetailPageState> {
         this.updateChildrenForm(field, await this.mapItemToFormChildrenState(field));
     };
 
-    onChildrenFieldChange = (field: keyof TData, name: string, value: string | string[]) => {
+    onChildrenFieldChange = (
+        field: keyof TData,
+        name: string,
+        value: string | string[] | boolean
+    ) => {
         const complexField = this.getComplexField(field);
 
         if (complexField && complexField.form) {
@@ -229,10 +233,12 @@ export default abstract class DetailBloc<TData> extends Bloc<DetailPageState> {
         }
     };
 
-    onChildrenFormSave = (field: keyof TData) => {
+    onChildrenFormSave = async (field: keyof TData) => {
+        debugger;
         if (this.state.kind === "DetailFormUpdatedState") {
             const complexField = this.getComplexField(field);
 
+            debugger;
             if (complexField && complexField.form) {
                 const newItem: any = formChildrenStatetoData(complexField?.form);
 
@@ -252,6 +258,14 @@ export default abstract class DetailBloc<TData> extends Bloc<DetailPageState> {
             }
 
             this.updateChildrenForm(field, undefined);
+
+            this.changeState({
+                ...this.state,
+                form: {
+                    ...this.state.form,
+                    sections: await this.mapItemToFormSectionsState(statetoData(this.state.form)),
+                },
+            });
 
             this.validateFormAndChangeState(this.state.form, field);
         }

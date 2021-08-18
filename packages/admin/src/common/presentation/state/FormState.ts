@@ -43,7 +43,7 @@ export interface FormSingleFieldState {
     name: string;
     alt?: string;
     errors?: string[];
-    value?: string | string[];
+    value?: string | string[] | boolean;
     selectOptions?: SelectOption[];
     multiple?: boolean;
     required?: boolean;
@@ -58,6 +58,8 @@ export interface FormSingleFieldState {
     accept?: string;
     hide?: boolean;
     maxLength?: number;
+    multiline?: boolean;
+    checked?: boolean;
 }
 
 export type FormFieldState = FormComplexFieldState | FormSingleFieldState;

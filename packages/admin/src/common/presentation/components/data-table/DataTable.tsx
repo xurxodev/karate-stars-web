@@ -33,6 +33,7 @@ export interface TableColumn<T> {
     text: string;
     sortable?: boolean;
     getValue?: (row: T) => JSX.Element;
+    hide?: boolean;
 }
 
 export interface TablePager {
@@ -193,26 +194,28 @@ export default function DataTable<T extends IdentifiableObject>({
                                     />
                                 </TableCell>
 
-                                {columns.map((column, index) => {
-                                    return (
-                                        <TableCell
-                                            key={index}
-                                            sortDirection={
-                                                column.name === sorting?.field
-                                                    ? sorting?.order
-                                                    : false
-                                            }>
-                                            <TableSortLabel
-                                                active={column.name === sorting?.field}
-                                                direction={sorting?.order}
-                                                onClick={handleSortChange(column.name)}
-                                                IconComponent={ExpandMoreIcon}
-                                                disabled={column.sortable === false}>
-                                                {column.text}
-                                            </TableSortLabel>
-                                        </TableCell>
-                                    );
-                                })}
+                                {columns
+                                    .filter(column => !column.hide)
+                                    .map((column, index) => {
+                                        return (
+                                            <TableCell
+                                                key={index}
+                                                sortDirection={
+                                                    column.name === sorting?.field
+                                                        ? sorting?.order
+                                                        : false
+                                                }>
+                                                <TableSortLabel
+                                                    active={column.name === sorting?.field}
+                                                    direction={sorting?.order}
+                                                    onClick={handleSortChange(column.name)}
+                                                    IconComponent={ExpandMoreIcon}
+                                                    disabled={column.sortable === false}>
+                                                    {column.text}
+                                                </TableSortLabel>
+                                            </TableCell>
+                                        );
+                                    })}
 
                                 <TableCell></TableCell>
                             </TableRow>
@@ -235,15 +238,17 @@ export default function DataTable<T extends IdentifiableObject>({
                                         />
                                     </TableCell>
 
-                                    {columns.map((column, index) => {
-                                        const cellContent = formatRowValue(column, item);
+                                    {columns
+                                        .filter(column => !column.hide)
+                                        .map((column, index) => {
+                                            const cellContent = formatRowValue(column, item);
 
-                                        return (
-                                            <TableCell key={`${item.id}-${index}`}>
-                                                {cellContent}
-                                            </TableCell>
-                                        );
-                                    })}
+                                            return (
+                                                <TableCell key={`${item.id}-${index}`}>
+                                                    {cellContent}
+                                                </TableCell>
+                                            );
+                                        })}
 
                                     <TableCell
                                         key={`${item.id}-actions`}

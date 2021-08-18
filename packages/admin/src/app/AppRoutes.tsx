@@ -9,7 +9,7 @@ import PrivateRoute from "../common/presentation/components/private-route/Privat
 import NewsFeedListPage from "../news/presentation/news-feed-list/NewsFeedListPage";
 import { pages } from "../common/presentation/PageRoutes";
 import CompetitorListPage from "../competitors/presentation/compeltitor-list/CompetitorListPage";
-import CompetitorsDetailPage from "../competitors/presentation/compeltitor-detail/CompetitorsDetailPage";
+import CompetitorDetailPage from "../competitors/presentation/compeltitor-detail/CompetitorDetailPage";
 import VideoListPage from "../videos/presentation/video-list/VideoListPage";
 import VideoDetailPage from "../videos/presentation/video-detail/VideoDetailPage";
 import EventDetailPage from "../events/presentation/event-detail/EventDetailPage";
@@ -31,10 +31,7 @@ export const AppRoutes: React.FC = () => {
 
                 <Route path={pages.login.path} component={LoginPage} />
                 <PrivateRoute path={pages.dashboard.path} component={DashboardPage} />
-                <PrivateRoute
-                    path={pages.competitorDetail.path}
-                    component={CompetitorsDetailPage}
-                />
+                <PrivateRoute path={pages.competitorDetail.path} component={CompetitorDetailPage} />
                 <PrivateRoute path={pages.competitorList.path} component={CompetitorListPage} />
 
                 <PrivateRoute path={pages.categoryDetail.path} component={CategoryDetailPage} />

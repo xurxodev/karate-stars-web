@@ -20,13 +20,17 @@ interface FormBuilderProps {
     formState: FormState;
     onSubmit?: () => void;
     onCancel?: () => void;
-    handleFieldChange: (name: string, value: string | string[]) => void;
+    handleFieldChange: (name: string, value: string | string[] | boolean) => void;
     classes?: Record<string, string>;
     onChildrenListItemActionClick?: (field: string, actionName: string, id: string) => void;
     onChildrenActionClick?: (field: string) => void;
     onChildrenFormSave?: (field: string) => void;
     onChildrenFormCancel?: (field: string) => void;
-    onChildrenFieldChange?: (field: string, name: string, value: string | string[]) => void;
+    onChildrenFieldChange?: (
+        field: string,
+        name: string,
+        value: string | string[] | boolean
+    ) => void;
 }
 
 const FormBuilder: React.FC<FormBuilderProps> = ({

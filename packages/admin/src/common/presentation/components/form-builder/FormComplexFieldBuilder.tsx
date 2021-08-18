@@ -12,7 +12,11 @@ interface FormFieldBuilderProps {
     onChildrenActionClick?: (field: string) => void;
     onChildrenFormSave?: (field: string) => void;
     onChildrenFormCancel?: (field: string) => void;
-    onChildrenFieldChange?: (field: string, name: string, value: string | string[]) => void;
+    onChildrenFieldChange?: (
+        field: string,
+        name: string,
+        value: string | string[] | boolean
+    ) => void;
 }
 
 const FormComplexFieldBuilder: React.FC<FormFieldBuilderProps> = ({
@@ -49,7 +53,7 @@ const FormComplexFieldBuilder: React.FC<FormFieldBuilderProps> = ({
         }
     };
 
-    const handleChildrenFieldChange = (name: string, value: string | string[]) => {
+    const handleChildrenFieldChange = (name: string, value: string | string[] | boolean) => {
         if (onChildrenFieldChange) {
             onChildrenFieldChange(field.name, name, value);
         }
@@ -73,15 +77,17 @@ const FormComplexFieldBuilder: React.FC<FormFieldBuilderProps> = ({
                     title={field.formLabel}
                     onSave={handleChildrenFormSave}
                     onCancel={handleChildrenFormCancel}>
-                    {field.form.fields.map((field: FormSingleFieldState) => {
-                        return (
-                            <FormSingleFieldBuilder
-                                key={field.name}
-                                field={field}
-                                handleFieldChange={handleChildrenFieldChange}
-                            />
-                        );
-                    })}
+                    {field.form.fields
+                        .filter(field => !field.hide === true)
+                        .map((field: FormSingleFieldState) => {
+                            return (
+                                <FormSingleFieldBuilder
+                                    key={field.name}
+                                    field={field}
+                                    handleFieldChange={handleChildrenFieldChange}
+                                />
+                            );
+                        })}
                 </ConfirmationDialog>
             )}
         </Grid>

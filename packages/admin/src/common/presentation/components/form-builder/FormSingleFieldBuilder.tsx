@@ -1,12 +1,23 @@
 import React, { useCallback, useMemo } from "react";
 
 import { FormSingleFieldState, SelectOption } from "../../state/FormState";
-import { makeStyles, Grid, TextField, Theme, Button, Icon, Avatar, Box } from "@material-ui/core";
+import {
+    makeStyles,
+    Grid,
+    TextField,
+    Theme,
+    Button,
+    Icon,
+    Avatar,
+    Box,
+    Checkbox,
+    FormControlLabel,
+} from "@material-ui/core";
 import MultiSelect from "./MultiSelect";
 
 interface FormFieldBuilderProps {
     field: FormSingleFieldState;
-    handleFieldChange: (name: string, value: string | string[]) => void;
+    handleFieldChange: (name: string, value: string | string[] | boolean) => void;
 }
 
 const createPreviewUrl = (file: File): Promise<string> => {
@@ -44,6 +55,8 @@ const FormSingleFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handle
                 event.target.name,
                 Array.from(event.target.selectedOptions, (item: any) => item.value)
             );
+        } else if (event.target.type === "checkbox") {
+            handleFieldChange(event.target.name, event.target.checked);
         } else {
             handleFieldChange(event.target.name, event.target.value);
         }
@@ -71,7 +84,7 @@ const FormSingleFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handle
                     <Box display="flex" alignItems="center" flexDirection="row">
                         {field.imageType === "image" ? (
                             <img
-                                width={"150"}
+                                width={"40%"}
                                 style={{ borderRadius: "5%", marginRight: "16px" }}
                                 src={field.value?.toString()}
                                 alt={field.alt}
@@ -97,6 +110,28 @@ const FormSingleFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handle
                             </Button>
                         </label>
                     </Box>
+                </Grid>
+            );
+        }
+        case "checkbox": {
+            return (
+                <Grid item md={field.md || defaultColumnValue} xs={field.xs || defaultColumnValue}>
+                    <FormControlLabel
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            height: "100%",
+                            justifyContent: "center",
+                        }}
+                        control={
+                            <Checkbox
+                                checked={typeof field.value == "boolean" ? field.value : undefined}
+                                onChange={handleChange}
+                                name={field.name}
+                            />
+                        }
+                        label={field.label}
+                    />
                 </Grid>
             );
         }
@@ -130,7 +165,8 @@ const FormSingleFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handle
                             }}
                             autoComplete={field.autoComplete}
                             inputProps={{ maxLength: field.maxLength }}
-                            type={field.type}>
+                            type={field.type}
+                            multiline={field.multiline}>
                             {field.selectOptions &&
                                 field.selectOptions.map((option: SelectOption, index: number) => {
                                     return (

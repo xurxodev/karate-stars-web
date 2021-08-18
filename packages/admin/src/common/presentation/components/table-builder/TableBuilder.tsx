@@ -99,7 +99,12 @@ export default function TableBuilder<T extends IdentifiableObject>({
 
 function mapColumns<T extends IdentifiableObject>(fields: ListField<T>[]): TableColumn<T>[] {
     return fields.map(field => {
-        const baseColumn = { name: field.name, text: field.text, sortable: field.sortable };
+        const baseColumn = {
+            name: field.name,
+            text: field.text,
+            sortable: field.sortable,
+            hide: field.hide,
+        };
 
         switch (field.type) {
             case "smallImage":

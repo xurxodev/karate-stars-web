@@ -54,8 +54,9 @@ export class Video extends Entity<VideoData> {
 
     public static create(data: VideoData): Either<ValidationError<VideoValidationTypes>[], Video> {
         const finalId = !data.id ? Id.generateId().value : data.id;
+        const createdDate = !data.createdDate ? new Date() : data.createdDate;
 
-        return this.validateAndCreate({ ...data, id: finalId });
+        return this.validateAndCreate({ ...data, id: finalId, createdDate });
     }
 
     public update(

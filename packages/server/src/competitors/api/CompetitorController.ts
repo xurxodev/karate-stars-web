@@ -1,12 +1,21 @@
 import { GetCompetitorsUseCase } from "../domain/usecases/GetCompetitorsUseCase";
 import { JwtAuthenticator } from "../../server";
 import { CompetitorData } from "karate-stars-core";
-import { runDelete, runGet, runGetAll, runPost, runPut } from "../../common/api/AdminController";
+import {
+    runDelete,
+    runGet,
+    runGetAll,
+    runPost,
+    runPut,
+    runPutImage,
+} from "../../common/api/AdminController";
 import { GetCompetitorByIdUseCase } from "../domain/usecases/GetCompetitorByIdUseCase";
 import { CreateCompetitorUseCase } from "../domain/usecases/CreateCompetitorUseCase";
 import { UpdateCompetitorUseCase } from "../domain/usecases/UpdateCompetitorUseCase";
 import { DeleteCompetitorUseCase } from "../domain/usecases/DeleteCompetitorUseCase";
 import * as hapi from "@hapi/hapi";
+import { Readable } from "stream";
+import { UpdateCompetitorImageUseCase } from "../domain/usecases/UpdateCompetitorImageUseCase";
 
 export class CompetitorController {
     constructor(
@@ -15,7 +24,8 @@ export class CompetitorController {
         private getCompetitorByIdUseCase: GetCompetitorByIdUseCase,
         private createCompetitorUseCase: CreateCompetitorUseCase,
         private updateCompetitorUseCase: UpdateCompetitorUseCase,
-        private deleteCompetitorUseCase: DeleteCompetitorUseCase
+        private deleteCompetitorUseCase: DeleteCompetitorUseCase,
+        private updateCountryImageUseCase: UpdateCompetitorImageUseCase
     ) {}
 
     async getAll(
@@ -49,6 +59,24 @@ export class CompetitorController {
             this.jwtAuthenticator,
             (userId: string, id: string, data: CompetitorData) =>
                 this.updateCompetitorUseCase.execute({ userId, id, data })
+        );
+    }
+
+    async putImage(
+        request: hapi.Request,
+        h: hapi.ResponseToolkit
+    ): Promise<hapi.Lifecycle.ReturnValue> {
+        return runPutImage(
+            request,
+            h,
+            this.jwtAuthenticator,
+            (userId: string, id: string, image: Readable, filename: string) =>
+                this.updateCountryImageUseCase.execute({
+                    userId,
+                    id,
+                    image,
+                    filename,
+                })
         );
     }
 

@@ -63,6 +63,8 @@ const initialFieldsState = (data?: CountryData): FormSectionState[] => {
                     alt: data?.name,
                     value: data?.image,
                     accept: "image/*",
+                    md: 4,
+                    xs: 12,
                 },
                 {
                     kind: "FormSingleFieldState",
@@ -70,7 +72,7 @@ const initialFieldsState = (data?: CountryData): FormSectionState[] => {
                     name: "name",
                     required: true,
                     value: data?.name,
-                    md: 6,
+                    md: 4,
                     xs: 12,
                 },
                 {
@@ -80,7 +82,7 @@ const initialFieldsState = (data?: CountryData): FormSectionState[] => {
                     required: true,
                     value: data?.iso2,
                     maxLength: 2,
-                    md: 6,
+                    md: 4,
                     xs: 12,
                 },
             ],

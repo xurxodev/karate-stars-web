@@ -2,6 +2,7 @@ import React from "react";
 import { di } from "../../../CompositionRoot";
 import CompetitorListBloc from "./CompetitorListBloc";
 import ListPage from "../../../common/presentation/components/list-page/ListPage";
+import { withRouter } from "react-router-dom";
 
 const CompetitorListPage: React.FC = () => {
     const bloc = di.get(CompetitorListBloc);
@@ -9,4 +10,4 @@ const CompetitorListPage: React.FC = () => {
     return <ListPage title={"Competitor List"} bloc={bloc} />;
 };
 
-export default CompetitorListPage;
+export default withRouter(CompetitorListPage);

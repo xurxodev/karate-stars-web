@@ -44,7 +44,7 @@ export class Competitor extends Entity<CompetitorData> {
     public readonly biography: string;
     public readonly countryId: Id;
     public readonly categoryId: Id;
-    public readonly mainImage: Url;
+    public readonly mainImage?: Url;
     public readonly isActive: boolean;
     public readonly isLegend: boolean;
     public readonly links: SocialLink[];
@@ -91,7 +91,7 @@ export class Competitor extends Entity<CompetitorData> {
             biography: this.biography,
             countryId: this.countryId.value,
             categoryId: this.categoryId.value,
-            mainImage: this.mainImage.value,
+            mainImage: this.mainImage?.value,
             isActive: this.isActive,
             isLegend: this.isLegend,
             links: this.links.map(link => {

@@ -2,7 +2,7 @@ import { ListField } from "../../../common/presentation/state/ListState";
 import { CategoryData } from "karate-stars-core";
 import ListBloc, { defaultPagination } from "../../../common/presentation/bloc/ListBloc";
 import { DetailPageConfig, pages } from "../../../common/presentation/PageRoutes";
-import GetCategorysUseCase from "../../domain/GetCategoryUseCase";
+import GetCategorysUseCase from "../../domain/GetCategoriesUseCase";
 import DeleteCategoryUseCase from "../../domain/DeleteCategoryUseCase";
 
 class CategoryListBloc extends ListBloc<CategoryData> {

@@ -57,6 +57,22 @@ export default function (apiPrefix: string): hapi.ServerRoute[] {
             },
         },
         {
+            method: "PUT",
+            path: `${apiPrefix}/${CompetitorsEndpoint}/{id}/image`,
+            options: {
+                payload: {
+                    maxBytes: 1024 * 1024 * 5,
+                    multipart: {
+                        output: "stream",
+                    },
+                    parse: true,
+                },
+                handler: async (request, h) => {
+                    return CompositionRoot.di.get(CompetitorController).putImage(request, h);
+                },
+            },
+        },
+        {
             method: "DELETE",
             path: `${apiPrefix}/${CompetitorsEndpoint}/{id}`,
             options: { auth: jwtAuthenticator.name },
