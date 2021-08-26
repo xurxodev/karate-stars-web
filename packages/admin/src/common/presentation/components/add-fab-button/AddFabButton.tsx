@@ -13,16 +13,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface AddFabButtonProps {
     action: () => void;
+    ariaLabel?: string;
     className?: string;
 }
 
-const AddFabButton: React.FC<AddFabButtonProps> = ({ action, className }) => {
+const AddFabButton: React.FC<AddFabButtonProps> = ({ action, className, ariaLabel = "add" }) => {
     const classes = useStyles();
 
     return (
         <Fab
             color="primary"
-            aria-label="add"
+            aria-label={ariaLabel}
             className={clsx(classes.root, className)}
             onClick={action}>
             <AddIcon />

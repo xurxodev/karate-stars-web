@@ -9,6 +9,7 @@ import { ClassNameMap } from "@material-ui/styles";
 interface TableBuilderProps<T extends IdentifiableObject> {
     className?: string;
     classes?: Partial<ClassNameMap<"fab">>;
+    actionAriaLabel?: string;
     state: ListState<T>;
     onSearchChange?: (search: string) => void;
     onSelectionChange?: (id: string) => void;
@@ -27,6 +28,7 @@ interface IdentifiableObject {
 }
 
 export default function TableBuilder<T extends IdentifiableObject>({
+    actionAriaLabel,
     state,
     onSearchChange,
     onSelectionChange,
@@ -56,7 +58,13 @@ export default function TableBuilder<T extends IdentifiableObject>({
 
     return (
         <React.Fragment>
-            {onActionClick && <FabButton action={onActionClick} className={classes?.fab} />}
+            {onActionClick && (
+                <FabButton
+                    ariaLabel={actionAriaLabel}
+                    action={onActionClick}
+                    className={classes?.fab}
+                />
+            )}
             <DataTable
                 columns={columns}
                 rows={state.items}

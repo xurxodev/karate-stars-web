@@ -80,7 +80,6 @@ class CompetitorDetailBloc extends DetailBloc<CompetitorState> {
         return this.initialFieldsState(countries, categories, events, item);
     }
     protected saveItem(item: CompetitorState): Promise<Either<DataError, true>> {
-        debugger;
         const competitor = Competitor.create(item).get();
         return this.saveCompetitorUseCase.execute(competitor);
     }
@@ -93,7 +92,6 @@ class CompetitorDetailBloc extends DetailBloc<CompetitorState> {
             () => null
         );
 
-        debugger;
         return errors;
     }
 
@@ -101,7 +99,6 @@ class CompetitorDetailBloc extends DetailBloc<CompetitorState> {
         field: keyof CompetitorState,
         state: FormChildrenState
     ): ValidationBlocError[] | null {
-        debugger;
         if (field === "links") {
             const result = SocialLink.create(formChildrenStatetoData(state));
             const errors = result.fold(
@@ -155,7 +152,8 @@ class CompetitorDetailBloc extends DetailBloc<CompetitorState> {
             const socialLink = item?.links.find(link => link.id === childrenId);
 
             return {
-                title: "link",
+                isValid: false,
+                title: "Link",
                 fields: [
                     {
                         kind: "FormSingleFieldState",
@@ -194,7 +192,8 @@ class CompetitorDetailBloc extends DetailBloc<CompetitorState> {
 
             const achievement = item?.achievements.find(link => link.id === childrenId);
             return {
-                title: "achievement",
+                isValid: false,
+                title: "Achievement",
                 fields: [
                     {
                         kind: "FormSingleFieldState",
@@ -206,7 +205,7 @@ class CompetitorDetailBloc extends DetailBloc<CompetitorState> {
                     {
                         kind: "FormSingleFieldState",
                         name: "categoryId",
-                        label: "Category",
+                        label: "Achievement Category",
                         value: achievement?.categoryId || categories[0].id,
                         selectOptions: categories,
                         required: true,
@@ -214,7 +213,7 @@ class CompetitorDetailBloc extends DetailBloc<CompetitorState> {
                     {
                         kind: "FormSingleFieldState",
                         name: "eventId",
-                        label: "Events",
+                        label: "Event",
                         value: achievement?.eventId || events[0].id,
                         selectOptions: events,
                         required: true,
@@ -355,9 +354,9 @@ class CompetitorDetailBloc extends DetailBloc<CompetitorState> {
                     {
                         kind: "FormComplexFieldState",
                         listLabel: "Links",
-                        formLabel: "Add link",
                         name: "links",
                         required: true,
+                        addActionLabel: "Add link",
                         list: {
                             fields: [
                                 { name: "url", text: "Url", type: "text" },
@@ -373,9 +372,9 @@ class CompetitorDetailBloc extends DetailBloc<CompetitorState> {
                     {
                         kind: "FormComplexFieldState",
                         listLabel: "Achievements",
-                        formLabel: "Add achievement",
                         name: "achievements",
                         required: true,
+                        addActionLabel: "Add achievement",
                         list: {
                             fields: [
                                 { name: "eventId", text: "Event Id", type: "text", hide: true },

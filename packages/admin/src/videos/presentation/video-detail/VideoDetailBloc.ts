@@ -89,7 +89,8 @@ const initialChildrenFormState = (
     if (field === "links") {
         const videoLink = item?.links.find(link => link.id === childrenId);
         return {
-            title: "link",
+            isValid: false,
+            title: "Link",
             fields: [
                 {
                     kind: "FormSingleFieldState",
@@ -190,7 +191,6 @@ const initialFieldsState = (
                 {
                     kind: "FormComplexFieldState",
                     listLabel: "Links",
-                    formLabel: "Add link",
                     name: "links",
                     required: true,
                     list: {

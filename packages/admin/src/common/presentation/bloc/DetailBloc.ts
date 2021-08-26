@@ -227,6 +227,7 @@ export default abstract class DetailBloc<TData> extends Bloc<DetailPageState> {
                           }
                         : field;
                 }),
+                isValid: !errors ? true : false,
             };
 
             this.updateChildrenForm(field, validatedForm);
@@ -234,11 +235,9 @@ export default abstract class DetailBloc<TData> extends Bloc<DetailPageState> {
     };
 
     onChildrenFormSave = async (field: keyof TData) => {
-        debugger;
         if (this.state.kind === "DetailFormUpdatedState") {
             const complexField = this.getComplexField(field);
 
-            debugger;
             if (complexField && complexField.form) {
                 const newItem: any = formChildrenStatetoData(complexField?.form);
 

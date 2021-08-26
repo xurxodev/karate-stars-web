@@ -1,5 +1,14 @@
 import React from "react";
-import { render, RenderOptions, screen, waitFor, within } from "@testing-library/react";
+import {
+    BoundFunctions,
+    Queries,
+    queries,
+    render,
+    RenderOptions,
+    screen,
+    waitFor,
+    within,
+} from "@testing-library/react";
 import * as CompositionRoot from "../../../CompositionRoot";
 import { ThemeProvider, CssBaseline } from "@material-ui/core";
 import { AppBlocContext } from "../../../app/AppContext";
@@ -157,9 +166,29 @@ function typeByLabelText(label: string | RegExp, text: string) {
     userEvent.type(screen.getByLabelText(label), text);
 }
 
+function typeByLabelTextAndScope(
+    label: string | RegExp,
+    text: string,
+    scope: BoundFunctions<typeof queries>
+) {
+    userEvent.type(scope.getByLabelText(label), text);
+}
+
+function clickByLabelText(label: string | RegExp) {
+    userEvent.click(screen.getByLabelText(label));
+}
+
 async function typeByPlaceholderTextAsync(placeholder: string, text: string) {
     const element = await screen.findByPlaceholderText(placeholder);
     userEvent.type(element, text);
+}
+
+function selectOptionByLabelTextAndScope(
+    label: string | RegExp,
+    text: string,
+    scope: BoundFunctions<typeof queries>
+) {
+    userEvent.selectOptions(scope.getByLabelText(label), text);
 }
 
 function selectOption(label: string | RegExp, text: string) {
@@ -176,8 +205,17 @@ function clickOnAccept() {
     userEvent.click(screen.getByRole("button", { name: /accept/i }));
 }
 
-function clickOnOk() {
-    userEvent.click(screen.getByRole("button", { name: /ok/i }));
+function clickOnButtonByLabelTextAndScope(
+    label: string | RegExp,
+    scope: BoundFunctions<typeof queries>
+) {
+    var regex = new RegExp(label, "i");
+    userEvent.click(scope.getByRole("button", { name: regex }));
+}
+
+function clickOnButtonByLabel(label: string | RegExp) {
+    var regex = new RegExp(label, "i");
+    userEvent.click(screen.getByRole("button", { name: regex }));
 }
 
 function clickOnAdd() {
@@ -186,11 +224,14 @@ function clickOnAdd() {
 
 export const tl = {
     clear,
+    clickByLabelText,
     clickOnAccept,
-    clickOnOk,
+    clickOnButtonByLabel,
+    clickOnButtonByLabelTextAndScope,
     clickOnAdd,
     searchAndVerifyAsync,
     selectOption,
+    selectOptionByLabelTextAndScope,
     verifyAlertAsync,
     verifyTableIsEmptyAsync,
     verifyTableRowsAsync,
@@ -202,6 +243,7 @@ export const tl = {
     verifyValueInFieldAsync,
     typeAndClear,
     typeByLabelText,
+    typeByLabelTextAndScope,
     typeByPlaceholderTextAsync,
     selectMultiOption,
 };

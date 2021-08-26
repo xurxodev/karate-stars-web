@@ -221,11 +221,11 @@ export default function DataTable<T extends IdentifiableObject>({
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map(item => (
+                            {rows.map((item: T, index: number) => (
                                 <TableRow
                                     className={classes.tableRow}
                                     hover
-                                    key={item.id}
+                                    key={index}
                                     selected={selectedRows.includes(item.id)}
                                     onClick={event => handleClick(event, item)}
                                     onContextMenu={event => handleContextMenu(event, item)}>

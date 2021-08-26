@@ -65,6 +65,7 @@ const FormComplexFieldBuilder: React.FC<FormFieldBuilderProps> = ({
                 {field.listLabel.concat(field.required ? " (*)" : "")}
             </Typography>
             <TableBuilder
+                actionAriaLabel={field.addActionLabel}
                 state={field.list}
                 classes={classes}
                 onItemActionClick={handleListItemActionClick}
@@ -74,9 +75,10 @@ const FormComplexFieldBuilder: React.FC<FormFieldBuilderProps> = ({
             {field.form && (
                 <ConfirmationDialog
                     open={true}
-                    title={field.formLabel}
+                    title={field.form.title}
                     onSave={handleChildrenFormSave}
-                    onCancel={handleChildrenFormCancel}>
+                    onCancel={handleChildrenFormCancel}
+                    disableSave={!field.form.isValid}>
                     {field.form.fields
                         .filter(field => !field.hide === true)
                         .map((field: FormSingleFieldState) => {

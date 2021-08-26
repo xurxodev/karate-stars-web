@@ -32,8 +32,8 @@ export interface FormComplexFieldState {
     xl?: GridSize;
     hide?: boolean;
     list: ListState<any>;
+    addActionLabel?: string;
     listLabel: string;
-    formLabel: string;
     form?: FormChildrenState;
 }
 
@@ -87,6 +87,7 @@ export interface FormState {
 export interface FormChildrenState {
     title: string;
     fields: FormSingleFieldState[];
+    isValid: boolean;
 }
 
 export function statetoData<T>(state: FormState): T {

@@ -1,0 +1,69 @@
+{
+    "competitors": [
+        {
+            "id": "FSzEMcRjMwF",
+            "firstName": "Giana",
+            "lastName": "Lotfy",
+            "wkfId": "EGY253",
+            "biography": "Gianna Lotfy is an Egyptian karateka who was proclaimed world champion in 2014 at the age of 20 years. He has also been world champion in junior and under-21 categories.",
+            "countryId": "AsfJyc10miO",
+            "categoryId": "kMe2wqSvf2O",
+            "mainImage": "http://www.karatestarsapp.com/app/images/giana_lotfy.jpg",
+            "isActive": true,
+            "isLegend": false,
+            "links": [
+                {
+                    "url": "https://www.instagram.com/gianafarouk",
+                    "type": "instagram"
+                }
+            ],
+            "achievements": [
+                {
+                    "eventId": "CYrgQdA0ZZm",
+                    "categoryId": "kMe2wqSvf2O",
+                    "position": 1
+                }
+            ]
+        }
+    ],
+    "categories": [
+        {
+            "id": "kMe2wqSvf2O",
+            "name": "Female Kumite -61 Kg",
+            "typeId": "Gps5nVcCdjV"
+        },
+        {
+            "id": "wZgo8Vp77gR",
+            "name": "Female Kumite -68 Kg",
+            "typeId": "Gps5nVcCdjV"
+        }
+    ],
+    "countries": [
+        {
+            "id": "uIaQv0JlN5n",
+            "iso2": "az",
+            "name": "Azerbaijan",
+            "image": "http://www.karatestarsapp.com/app/flags/az.png"
+        },
+        {
+            "id": "AsfJyc10miO",
+            "iso2": "eg",
+            "name": "Egypt",
+            "image": "http://www.karatestarsapp.com/app/flags/eg.png"
+        }
+    ],
+    "events": [
+        {
+            "id": "CYrgQdA0ZZm",
+            "name": "World Championships Bremen 2014",
+            "year": 2014,
+            "typeId": "Jr6N73CZWtE"
+        },
+        {
+            "id": "QaFq0Lf2YDR",
+            "name": "European Championships Montpellier 2016",
+            "year": 2016,
+            "typeId": "FEJ08kkHhqi"
+        }
+    ]
+}

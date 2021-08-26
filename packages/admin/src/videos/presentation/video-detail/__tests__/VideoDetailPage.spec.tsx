@@ -6,6 +6,7 @@ import {
     screen,
     renderDetailPageToEdit,
     waitFor,
+    within,
 } from "../../../../common/testing/testing_library/custom";
 import { VideoData, VideoLinkData } from "karate-stars-core";
 import { commonDetailPageTests } from "../../../../common/testing/commonDetailPageTests.spec";
@@ -47,22 +48,27 @@ async function typeValidForm() {
         `${data.competitors[1].firstName} ${data.competitors[1].lastName}`
     );
 
-    tl.clickOnAdd();
+    await typeValidLinkForm();
 
-    await screen.findByRole("heading", {
-        name: /add link/i,
+    await waitFor(() => expect(screen.getByRole("button", { name: "Accept" })).toBeEnabled(), {
+        timeout: 10000,
     });
+}
+
+async function typeValidLinkForm() {
+    tl.clickOnButtonByLabel("add");
+
+    const linkDialog = await screen.findByRole("dialog");
+    expect(linkDialog).toBeInTheDocument();
+
+    const dialogScope = within(linkDialog);
 
     tl.typeByLabelText("Id (*)", "example");
     tl.selectOption("Type (*)", "youtube");
 
-    tl.clickOnOk();
+    tl.clickOnButtonByLabelTextAndScope("ok", dialogScope);
 
-    const acceptButton = await screen.findByRole("button", {
-        name: /accept/i,
-    });
-
-    await waitFor(() => expect(acceptButton).toBeEnabled());
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 }
 
 const component = <VideoDetailPage />;

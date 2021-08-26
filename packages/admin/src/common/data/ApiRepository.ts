@@ -76,7 +76,6 @@ abstract class ApiRepository<TEntity extends Entity<TEntityData>, TEntityData ex
 
     async save(entity: TEntity): Promise<Either<DataError, true>> {
         try {
-            debugger;
             const result = await this.getById(entity.id);
 
             return result.fold<Promise<Either<DataError, true>>>(
