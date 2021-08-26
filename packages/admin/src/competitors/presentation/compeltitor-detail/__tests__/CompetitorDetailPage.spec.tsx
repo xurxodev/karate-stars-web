@@ -6,7 +6,6 @@ import {
     screen,
     renderDetailPageToEdit,
     waitFor,
-    prettyDOM,
     within,
 } from "../../../../common/testing/testing_library/custom";
 import { AchievementData, CompetitorData, SocialLinkData } from "karate-stars-core";
@@ -16,7 +15,6 @@ import { givenAValidAuthenticatedUser } from "../../../../common/testing/scenari
 import data from "./data.json";
 import { givenADependencies } from "../../../../common/testing/scenarios/GenericScenarios";
 import CompetitorDetailPage from "../CompetitorDetailPage";
-import userEvent from "@testing-library/user-event";
 
 const dataCreator = {
     givenAItem: (): CompetitorData => {

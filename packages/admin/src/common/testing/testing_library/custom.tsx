@@ -1,7 +1,6 @@
 import React from "react";
 import {
     BoundFunctions,
-    Queries,
     queries,
     render,
     RenderOptions,
@@ -209,12 +208,12 @@ function clickOnButtonByLabelTextAndScope(
     label: string | RegExp,
     scope: BoundFunctions<typeof queries>
 ) {
-    var regex = new RegExp(label, "i");
+    const regex = new RegExp(label, "i");
     userEvent.click(scope.getByRole("button", { name: regex }));
 }
 
 function clickOnButtonByLabel(label: string | RegExp) {
-    var regex = new RegExp(label, "i");
+    const regex = new RegExp(label, "i");
     userEvent.click(screen.getByRole("button", { name: regex }));
 }
 

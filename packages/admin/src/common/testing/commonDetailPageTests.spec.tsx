@@ -1,14 +1,7 @@
 import "@testing-library/jest-dom/extend-expect";
 import { EntityData } from "karate-stars-core";
 import { Method } from "./mockServerTest";
-import {
-    render,
-    tl,
-    screen,
-    renderDetailPageToEdit,
-    prettyDOM,
-    waitFor,
-} from "./testing_library/custom";
+import { render, tl, screen, renderDetailPageToEdit, waitFor } from "./testing_library/custom";
 import * as mockServerTest from "./mockServerTest";
 import { givenAValidAuthenticatedUser } from "./scenarios/UserTestScenarios";
 import { DependenciesCreator, givenADependencies } from "./scenarios/GenericScenarios";
