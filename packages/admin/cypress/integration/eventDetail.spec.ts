@@ -1,10 +1,10 @@
-describe("News Feeds page", () => {
+describe("event detail page", () => {
     describe("New", () => {
         beforeEach(() => {
             cy.login();
-            cy.visit("#/news-feeds/new");
+            cy.visit("#/events/new");
 
-            cy.intercept("POST", "/api/v1/news-feeds", {
+            cy.intercept("POST", "/api/v1/events", {
                 statusCode: 201,
                 body: {
                     ok: true,
@@ -21,9 +21,9 @@ describe("News Feeds page", () => {
     describe("Edit", () => {
         beforeEach(() => {
             cy.login();
-            cy.visit("#/news-feeds/edit/llMKGYg0Ri1");
+            cy.visit("#/events/edit/lTWNoZjuBqd");
 
-            cy.intercept("PUT", "/api/v1/news-feeds/llMKGYg0Ri1", {
+            cy.intercept("PUT", "/api/v1/events/lTWNoZjuBqd", {
                 statusCode: 200,
                 body: {
                     ok: true,
@@ -37,15 +37,11 @@ describe("News Feeds page", () => {
     });
 
     function typeValidForm() {
-        cy.findByLabelText("Name (*)").clear().type("WKF News Center");
-        cy.findByLabelText("Url (*)")
-            .clear()
-            .type("http://fetchrss.com/rss/59baa0d28a93f8a1048b4567777611407.xml");
-        cy.findByLabelText("Language (*)").clear().type("en");
-        cy.findByLabelText("Type (*)").select("RSS");
+        cy.findByLabelText("Name (*)").clear().type("Olympic Games Tokyo 2020");
+        cy.findByLabelText("Year (*)").clear().type("2021");
+        cy.findByLabelText("Type (*)").select("Z8JRebUhjRB");
 
         cy.findByRole("button", { name: /accept/i }).click();
-
-        cy.findByText("News feed saved!");
+        cy.findByText("Event saved!");
     }
 });

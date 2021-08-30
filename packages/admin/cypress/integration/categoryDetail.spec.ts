@@ -1,10 +1,10 @@
-describe("News Feeds page", () => {
+describe("Category detail page", () => {
     describe("New", () => {
         beforeEach(() => {
             cy.login();
-            cy.visit("#/news-feeds/new");
+            cy.visit("#/categories/new");
 
-            cy.intercept("POST", "/api/v1/news-feeds", {
+            cy.intercept("POST", "/api/v1/categories", {
                 statusCode: 201,
                 body: {
                     ok: true,
@@ -21,9 +21,9 @@ describe("News Feeds page", () => {
     describe("Edit", () => {
         beforeEach(() => {
             cy.login();
-            cy.visit("#/news-feeds/edit/llMKGYg0Ri1");
+            cy.visit("#/categories/edit/uAwCwvaoUgg");
 
-            cy.intercept("PUT", "/api/v1/news-feeds/llMKGYg0Ri1", {
+            cy.intercept("PUT", "/api/v1/categories/uAwCwvaoUgg", {
                 statusCode: 200,
                 body: {
                     ok: true,
@@ -37,15 +37,10 @@ describe("News Feeds page", () => {
     });
 
     function typeValidForm() {
-        cy.findByLabelText("Name (*)").clear().type("WKF News Center");
-        cy.findByLabelText("Url (*)")
-            .clear()
-            .type("http://fetchrss.com/rss/59baa0d28a93f8a1048b4567777611407.xml");
-        cy.findByLabelText("Language (*)").clear().type("en");
-        cy.findByLabelText("Type (*)").select("RSS");
+        cy.findByLabelText("Name (*)").clear().type("Female Kata");
+        cy.findByLabelText("Type (*)").select("qWPs4i1e78g");
 
         cy.findByRole("button", { name: /accept/i }).click();
-
-        cy.findByText("News feed saved!");
+        cy.findByText("Category saved!");
     }
 });

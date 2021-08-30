@@ -175,7 +175,7 @@ const initialFieldsState = (
                     label: "Order",
                     name: "order",
                     required: true,
-                    value: entity?.order.toString(),
+                    value: entity?.order?.toString() || "",
                     md: 6,
                     xs: 12,
                 },

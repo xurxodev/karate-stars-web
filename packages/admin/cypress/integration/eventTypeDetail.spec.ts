@@ -1,10 +1,10 @@
-describe("News Feeds page", () => {
+describe("Event type detail page", () => {
     describe("New", () => {
         beforeEach(() => {
             cy.login();
-            cy.visit("#/news-feeds/new");
+            cy.visit("#/event-types/new");
 
-            cy.intercept("POST", "/api/v1/news-feeds", {
+            cy.intercept("POST", "/api/v1/event-types", {
                 statusCode: 201,
                 body: {
                     ok: true,
@@ -21,9 +21,9 @@ describe("News Feeds page", () => {
     describe("Edit", () => {
         beforeEach(() => {
             cy.login();
-            cy.visit("#/news-feeds/edit/llMKGYg0Ri1");
+            cy.visit("#/event-types/edit/Jr6N73CZWtE");
 
-            cy.intercept("PUT", "/api/v1/news-feeds/llMKGYg0Ri1", {
+            cy.intercept("PUT", "/api/v1/event-types/Jr6N73CZWtE", {
                 statusCode: 200,
                 body: {
                     ok: true,
@@ -37,15 +37,10 @@ describe("News Feeds page", () => {
     });
 
     function typeValidForm() {
-        cy.findByLabelText("Name (*)").clear().type("WKF News Center");
-        cy.findByLabelText("Url (*)")
-            .clear()
-            .type("http://fetchrss.com/rss/59baa0d28a93f8a1048b4567777611407.xml");
-        cy.findByLabelText("Language (*)").clear().type("en");
-        cy.findByLabelText("Type (*)").select("RSS");
+        cy.findByLabelText("Name (*)").clear().type("World Championships");
 
         cy.findByRole("button", { name: /accept/i }).click();
 
-        cy.findByText("News feed saved!");
+        cy.findByText("Event Type saved!");
     }
 });
