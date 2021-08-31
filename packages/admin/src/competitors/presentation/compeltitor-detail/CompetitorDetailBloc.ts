@@ -41,6 +41,10 @@ type CompetitorState = Omit<CompetitorData, "links" | "achievements"> & {
 };
 
 class CompetitorDetailBloc extends DetailBloc<CompetitorState> {
+    private countries: CountryData[] = [];
+    private categories: CategoryData[] = [];
+    private events: EventData[] = [];
+
     constructor(
         private getCompetitorByIdUseCase: GetCompetitorByIdUseCase,
         private saveCompetitorUseCase: SaveCompetitorUseCase,
@@ -49,6 +53,24 @@ class CompetitorDetailBloc extends DetailBloc<CompetitorState> {
         private getEventsUseCase: GetEventsUseCase
     ) {
         super("Competitor");
+    }
+
+    async init(id?: string) {
+        this.countries = (await this.getCountriesUseCase.execute()).fold(
+            () => [],
+            countries => countries
+        );
+
+        this.categories = (await this.getCategoriesUseCase.execute()).fold(
+            () => [],
+            categories => categories
+        );
+
+        this.events = (await this.getEventsUseCase.execute()).fold(
+            () => [],
+            events => events
+        );
+        super.init(id);
     }
 
     protected async getItem(id: string): Promise<Either<DataError, CompetitorState>> {
@@ -62,22 +84,7 @@ class CompetitorDetailBloc extends DetailBloc<CompetitorState> {
     protected async mapItemToFormSectionsState(
         item?: CompetitorState
     ): Promise<FormSectionState[]> {
-        const countries = (await this.getCountriesUseCase.execute()).fold(
-            () => [],
-            countries => countries
-        );
-
-        const categories = (await this.getCategoriesUseCase.execute()).fold(
-            () => [],
-            categories => categories
-        );
-
-        const events = (await this.getEventsUseCase.execute()).fold(
-            () => [],
-            events => events
-        );
-
-        return this.initialFieldsState(countries, categories, events, item);
+        return this.initialFieldsState(this.countries, this.categories, this.events, item);
     }
     protected saveItem(item: CompetitorState): Promise<Either<DataError, true>> {
         const competitor = Competitor.create(item).get();
@@ -180,16 +187,6 @@ class CompetitorDetailBloc extends DetailBloc<CompetitorState> {
                 ],
             };
         } else if (field === "achievements") {
-            const categories = (await this.getCategoriesUseCase.execute()).fold(
-                () => [],
-                categories => categories
-            );
-
-            const events = (await this.getEventsUseCase.execute()).fold(
-                () => [],
-                categories => categories
-            );
-
             const achievement = item?.achievements.find(link => link.id === childrenId);
             return {
                 isValid: false,
@@ -206,16 +203,16 @@ class CompetitorDetailBloc extends DetailBloc<CompetitorState> {
                         kind: "FormSingleFieldState",
                         name: "categoryId",
                         label: "Achievement Category",
-                        value: achievement?.categoryId || categories[0].id,
-                        selectOptions: categories,
+                        value: achievement?.categoryId || this.categories[0].id,
+                        selectOptions: this.categories,
                         required: true,
                     },
                     {
                         kind: "FormSingleFieldState",
                         name: "eventId",
                         label: "Event",
-                        value: achievement?.eventId || events[0].id,
-                        selectOptions: events,
+                        value: achievement?.eventId || this.events[0].id,
+                        selectOptions: this.events,
                         required: true,
                     },
                     {

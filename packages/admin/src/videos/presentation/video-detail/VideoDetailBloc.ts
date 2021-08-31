@@ -15,6 +15,8 @@ import moment from "moment";
 import { basicActions } from "../../../common/presentation/bloc/basicActions";
 
 class VideoDetailBloc extends DetailBloc<VideoData> {
+    private competitors: CompetitorData[] = [];
+
     constructor(
         private getVideoByIdUseCase: GetVideoByIdUseCase,
         private saveVideoUseCase: SaveVideoUseCase,
@@ -23,16 +25,19 @@ class VideoDetailBloc extends DetailBloc<VideoData> {
         super("Video");
     }
 
+    async init(id?: string) {
+        this.competitors = (await this.getCompetitorsUseCase.execute()).fold(
+            () => [],
+            competitors => competitors
+        );
+        super.init(id);
+    }
+
     protected getItem(id: string): Promise<Either<DataError, VideoData>> {
         return this.getVideoByIdUseCase.execute(id);
     }
     protected async mapItemToFormSectionsState(item?: VideoData): Promise<FormSectionState[]> {
-        const competitors = (await this.getCompetitorsUseCase.execute()).fold(
-            () => [],
-            competitors => competitors
-        );
-
-        return initialFieldsState(competitors, item);
+        return initialFieldsState(this.competitors, item);
     }
     protected saveItem(item: VideoData): Promise<Either<DataError, true>> {
         return this.saveVideoUseCase.execute(Video.create(item).get());

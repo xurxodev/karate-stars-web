@@ -37,24 +37,23 @@ export class UpdateCountryImageUseCase extends AdminUseCase<
         const getById = (id: Id) => this.countryRepository.getById(id);
         const saveEntity = (entity: Country) => this.countryRepository.save(entity);
         const uploadNewImage = () => this.imageRepository.uploadNewImage("flags", filename, image);
+        const deletePreviousImage = (entity: Country): EitherAsync<UnexpectedError, true> => {
+            const filename = entity.image ? entity.image.value.split("/").pop() : undefined;
+
+            if (filename) {
+                return EitherAsync.fromPromise(this.imageRepository.deleteImage("flags", filename));
+            } else {
+                return EitherAsync.fromEither(Either.right(true));
+            }
+        };
 
         return updateImageResource(
             id,
             getById,
-            this.deletePreviousImage,
+            deletePreviousImage,
             uploadNewImage,
             updateEntity,
             saveEntity
         );
-    }
-
-    private deletePreviousImage(entity: Country): EitherAsync<UnexpectedError, true> {
-        const filename = entity.image ? entity.image.value.split("/").pop() : undefined;
-
-        if (filename) {
-            return EitherAsync.fromPromise(this.imageRepository.deleteImage("feeds", filename));
-        } else {
-            return EitherAsync.fromEither(Either.right(true));
-        }
     }
 }
