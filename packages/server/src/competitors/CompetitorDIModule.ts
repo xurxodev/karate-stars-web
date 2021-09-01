@@ -44,6 +44,7 @@ export function initializeCompetitors() {
         () =>
             new GetCompetitorByIdUseCase(
                 di.get<CompetitorRepository>(competitorDIKeys.CompetitorRepository),
+                di.get<EventRepository>(eventDIKeys.eventRepository),
                 di.get<UserRepository>(appDIKeys.userRepository)
             )
     );

@@ -38,7 +38,8 @@ export class UpdateCompetitorImageUseCase extends AdminUseCase<
             entity.update({ ...entity.toData(), mainImage: imageUrl });
         const getById = (id: Id) => this.competitorRepository.getById(id);
         const saveEntity = (entity: Competitor) => this.competitorRepository.save(entity);
-        const uploadNewImage = () => this.imageRepository.uploadNewImage("flags", filename, image);
+        const uploadNewImage = () =>
+            this.imageRepository.uploadNewImage("competitors", filename, image);
         const deletePreviousImage = (entity: Competitor): EitherAsync<UnexpectedError, true> => {
             const filename = entity.mainImage ? entity.mainImage.value.split("/").pop() : undefined;
 

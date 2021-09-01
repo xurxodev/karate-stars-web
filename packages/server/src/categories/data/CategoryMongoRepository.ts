@@ -14,6 +14,23 @@ export default class CategoryTypeMongoRepository
         super(mongoConector, "categories");
     }
 
+    async getAll(): Promise<Category[]> {
+        const categories = await super.getAll();
+
+        const orderedCategories = categories.sort((a, b) => {
+            if (a.name > b.name) {
+                return -1;
+            }
+            if (a.name < b.name) {
+                return 1;
+            }
+            // a must be equal to b
+            return 0;
+        });
+
+        return orderedCategories;
+    }
+
     protected mapToDomain(modelDB: CategoryDB): Category {
         return Category.create({
             id: modelDB._id,

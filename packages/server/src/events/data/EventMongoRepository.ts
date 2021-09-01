@@ -14,6 +14,23 @@ export default class EventMongoRepository
         super(mongoConector, "events");
     }
 
+    async getAll(): Promise<Event[]> {
+        const events = await super.getAll();
+
+        const orderedEvents = events.sort((a, b) => {
+            if (a.year > b.year) {
+                return -1;
+            }
+            if (a.year < b.year) {
+                return 1;
+            }
+            // a must be equal to b
+            return 0;
+        });
+
+        return orderedEvents;
+    }
+
     protected mapToDomain(modelDB: EventDB): Event {
         return Event.create({
             id: modelDB._id,
