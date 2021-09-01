@@ -27,14 +27,14 @@
             ],
             "achievements": [
                 {
-                    "eventId": "CYrgQdA0ZZm",
-                    "categoryId": "wZgo8Vp77gR",
-                    "position": 3
-                },
-                {
                     "eventId": "QaFq0Lf2YDR",
                     "categoryId": "wZgo8Vp77gR",
                     "position": 1
+                },
+                {
+                    "eventId": "CYrgQdA0ZZm",
+                    "categoryId": "wZgo8Vp77gR",
+                    "position": 3
                 }
             ]
         },
