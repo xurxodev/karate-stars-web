@@ -32,14 +32,14 @@ export class CompetitorController {
         request: hapi.Request,
         h: hapi.ResponseToolkit
     ): Promise<hapi.Lifecycle.ReturnValue> {
-        return runGetAll(request, h, this.jwtAuthenticator, userId =>
-            this.getCompetitorsUseCase.execute({ userId })
+        return runGetAll(request, h, this.jwtAuthenticator, (_userId: string) =>
+            this.getCompetitorsUseCase.execute()
         );
     }
 
     async get(request: hapi.Request, h: hapi.ResponseToolkit): Promise<hapi.Lifecycle.ReturnValue> {
-        return runGet(request, h, this.jwtAuthenticator, (userId: string, id: string) =>
-            this.getCompetitorByIdUseCase.execute({ userId, id })
+        return runGet(request, h, this.jwtAuthenticator, (_userId: string, id: string) =>
+            this.getCompetitorByIdUseCase.execute({ id })
         );
     }
 

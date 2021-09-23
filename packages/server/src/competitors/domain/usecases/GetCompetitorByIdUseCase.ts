@@ -1,31 +1,22 @@
 import { Either, CompetitorData, Competitor, Event } from "karate-stars-core";
 import { ResourceNotFoundError, UnexpectedError } from "../../../common/api/Errors";
-import { AdminUseCase, AdminUseCaseArgs } from "../../../common/domain/AdminUseCase";
 import { createIdOrResourceNotFound } from "../../../common/domain/utils";
 import EventRepository from "../../../events/domain/boundaries/EventRepository";
-import UserRepository from "../../../users/domain/boundaries/UserRepository";
 import CompetitorRepository from "../boundaries/CompetitorRepository";
 
-export interface GetCompetitorByIdArg extends AdminUseCaseArgs {
+export interface GetCompetitorByIdArg {
     id: string;
 }
 
 type GetCompetitorByIdError = ResourceNotFoundError | UnexpectedError;
 
-export class GetCompetitorByIdUseCase extends AdminUseCase<
-    GetCompetitorByIdArg,
-    GetCompetitorByIdError,
-    CompetitorData
-> {
+export class GetCompetitorByIdUseCase {
     constructor(
         private competitorRepository: CompetitorRepository,
-        private eventsRepository: EventRepository,
-        userRepository: UserRepository
-    ) {
-        super(userRepository);
-    }
+        private eventsRepository: EventRepository
+    ) {}
 
-    public async run({
+    public async execute({
         id,
     }: GetCompetitorByIdArg): Promise<Either<GetCompetitorByIdError, CompetitorData>> {
         const events = await this.eventsRepository.getAll();

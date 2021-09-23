@@ -32,14 +32,14 @@ export class CountryController {
         request: hapi.Request,
         h: hapi.ResponseToolkit
     ): Promise<hapi.Lifecycle.ReturnValue> {
-        return runGetAll(request, h, this.jwtAuthenticator, userId =>
-            this.getCountriesUseCase.execute({ userId })
+        return runGetAll(request, h, this.jwtAuthenticator, _userId =>
+            this.getCountriesUseCase.execute()
         );
     }
 
     async get(request: hapi.Request, h: hapi.ResponseToolkit): Promise<hapi.Lifecycle.ReturnValue> {
-        return runGet(request, h, this.jwtAuthenticator, (userId: string, id: string) =>
-            this.getCountryByIdUseCase.execute({ userId, id })
+        return runGet(request, h, this.jwtAuthenticator, (_userId: string, id: string) =>
+            this.getCountryByIdUseCase.execute({ id })
         );
     }
 

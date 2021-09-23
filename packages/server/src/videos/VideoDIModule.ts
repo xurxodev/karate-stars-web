@@ -24,20 +24,12 @@ export function initializeVideos() {
 
     di.bindLazySingleton(
         GetVideosUseCase,
-        () =>
-            new GetVideosUseCase(
-                di.get<VideoRepository>(videoDIKeys.videoRepository),
-                di.get<UserRepository>(appDIKeys.userRepository)
-            )
+        () => new GetVideosUseCase(di.get<VideoRepository>(videoDIKeys.videoRepository))
     );
 
     di.bindLazySingleton(
         GetVideoByIdUseCase,
-        () =>
-            new GetVideoByIdUseCase(
-                di.get<VideoRepository>(videoDIKeys.videoRepository),
-                di.get<UserRepository>(appDIKeys.userRepository)
-            )
+        () => new GetVideoByIdUseCase(di.get<VideoRepository>(videoDIKeys.videoRepository))
     );
 
     di.bindLazySingleton(

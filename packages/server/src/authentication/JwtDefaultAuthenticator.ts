@@ -12,13 +12,12 @@ class JwtDefaultAuthenticator implements JwtAuthenticator {
     }
 
     async validateTokenData(tokenData: TokenData): Promise<{ isValid: boolean }> {
-        const user = await this.getUserByIdUseCase.execute(tokenData.userId);
+        const userResult = await this.getUserByIdUseCase.execute(tokenData.userId);
 
-        if (user) {
-            return { isValid: true };
-        } else {
-            return { isValid: false };
-        }
+        return userResult.fold<{ isValid: boolean }>(
+            () => ({ isValid: false }),
+            () => ({ isValid: true })
+        );
     }
 
     generateToken(userId: string): string {

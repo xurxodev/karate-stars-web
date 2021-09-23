@@ -22,14 +22,12 @@ export class VideoController {
         request: hapi.Request,
         h: hapi.ResponseToolkit
     ): Promise<hapi.Lifecycle.ReturnValue> {
-        return runGetAll(request, h, this.jwtAuthenticator, userId =>
-            this.getVideosUseCase.execute({ userId })
-        );
+        return runGetAll(request, h, this.jwtAuthenticator, _userId => this.getVideosUseCase.run());
     }
 
     async get(request: hapi.Request, h: hapi.ResponseToolkit): Promise<hapi.Lifecycle.ReturnValue> {
-        return runGet(request, h, this.jwtAuthenticator, (userId: string, id: string) =>
-            this.getVideoByIdUseCase.execute({ userId, id })
+        return runGet(request, h, this.jwtAuthenticator, (_userId: string, id: string) =>
+            this.getVideoByIdUseCase.execute({ id })
         );
     }
 

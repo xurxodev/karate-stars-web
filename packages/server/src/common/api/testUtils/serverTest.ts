@@ -3,6 +3,7 @@ import * as jwt from "jsonwebtoken";
 import * as CompositionRoot from "../../../CompositionRoot";
 import { appDIKeys } from "../../../CompositionRoot";
 import { Server, JwtAuthenticator, TokenData } from "../../../server";
+import GetUserByIdUseCase from "../../../users/domain/usecases/GetUserByIdUseCase";
 
 let server: Server;
 
@@ -11,8 +12,15 @@ const fakeSecretKey = "fakeSecretKey";
 export const fakeAuthenticator: JwtAuthenticator = {
     name: "jwt Authentication",
     secretKey: fakeSecretKey,
-    validateTokenData: async (_tokenData: TokenData) => {
-        return { isValid: true };
+    validateTokenData: async (tokenData: TokenData) => {
+        const userResult = await CompositionRoot.di
+            .get(GetUserByIdUseCase)
+            .execute(tokenData.userId);
+
+        return userResult.fold<{ isValid: boolean }>(
+            () => ({ isValid: false }),
+            () => ({ isValid: true })
+        );
     },
     generateToken: (userId: string) => {
         const tokenData: TokenData = {

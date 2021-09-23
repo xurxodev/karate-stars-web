@@ -26,8 +26,7 @@ export function initializeCategoryTypes() {
         GetCategoryTypesUseCase,
         () =>
             new GetCategoryTypesUseCase(
-                di.get<CategoryTypeRepository>(categoryTypeDIKeys.CategoryTypeRepository),
-                di.get<UserRepository>(appDIKeys.userRepository)
+                di.get<CategoryTypeRepository>(categoryTypeDIKeys.CategoryTypeRepository)
             )
     );
 
@@ -35,8 +34,7 @@ export function initializeCategoryTypes() {
         GetCategoryTypeByIdUseCase,
         () =>
             new GetCategoryTypeByIdUseCase(
-                di.get<CategoryTypeRepository>(categoryTypeDIKeys.CategoryTypeRepository),
-                di.get<UserRepository>(appDIKeys.userRepository)
+                di.get<CategoryTypeRepository>(categoryTypeDIKeys.CategoryTypeRepository)
             )
     );
 

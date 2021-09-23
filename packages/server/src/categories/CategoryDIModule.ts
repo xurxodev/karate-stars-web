@@ -3,7 +3,6 @@ import { MongoConector } from "../common/data/MongoConector";
 import { competitorDIKeys } from "../competitors/CompetitorDIModule";
 import CompetitorRepository from "../competitors/domain/boundaries/CompetitorRepository";
 import { appDIKeys, di } from "../CompositionRoot";
-import UserRepository from "../users/domain/boundaries/UserRepository";
 import { CategoryController } from "./api/CategoryController";
 import CategoryMongoRepository from "./data/CategoryMongoRepository";
 import CategoryRepository from "./domain/boundaries/CategoryRepository";
@@ -26,19 +25,12 @@ export function initializeCategories() {
     di.bindLazySingleton(
         GetCategoriesUseCase,
         () =>
-            new GetCategoriesUseCase(
-                di.get<CategoryRepository>(categoryDIKeys.categoryRepository),
-                di.get<UserRepository>(appDIKeys.userRepository)
-            )
+            new GetCategoriesUseCase(di.get<CategoryRepository>(categoryDIKeys.categoryRepository))
     );
 
     di.bindLazySingleton(
         GetCategoryByIdUseCase,
-        () =>
-            new GetCategoryByIdUseCase(
-                di.get(categoryDIKeys.categoryRepository),
-                di.get(appDIKeys.userRepository)
-            )
+        () => new GetCategoryByIdUseCase(di.get(categoryDIKeys.categoryRepository))
     );
 
     di.bindLazySingleton(

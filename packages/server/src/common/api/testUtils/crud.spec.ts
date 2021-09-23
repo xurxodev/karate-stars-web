@@ -12,7 +12,8 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
     endpoint: string,
     testDataCreator: TestDataCreator<TData>,
     principalDataCreator: ServerDataCreator<TData, TEntity>,
-    restDataCreators?: ServerDataCreator<any, any>[]
+    restDataCreators?: ServerDataCreator<any, any>[],
+    getAdmin?: boolean
 ) => {
     describe(`CRUD tests for ${endpoint}`, () => {
         describe(`GET /${endpoint}`, () => {
@@ -33,19 +34,25 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 expect(res.status).toEqual(200);
                 expect(res.body).toEqual(data);
             });
-            it("should return 403 forbidden if token is not of an admin user", async () => {
-                givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
-                const user = givenThereAreAnUserInServer({ admin: false });
+            (getAdmin === true ? it : it.skip)(
+                "should return 403 forbidden if token is not of an admin user",
+                async () => {
+                    givenThereAreAPrincipalAndRestItemsInServer(
+                        principalDataCreator,
+                        restDataCreators
+                    );
+                    const user = givenThereAreAnUserInServer({ admin: false });
 
-                const server = await initServer();
+                    const server = await initServer();
 
-                const res = await request(server)
-                    .get(`/api/v1/${endpoint}`)
-                    .parse(jsonParser)
-                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
+                    const res = await request(server)
+                        .get(`/api/v1/${endpoint}`)
+                        .parse(jsonParser)
+                        .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
 
-                expect(res.status).toEqual(403);
-            });
+                    expect(res.status).toEqual(403);
+                }
+            );
             it("should return 401 unauthorized if token is of an non existed user", async () => {
                 givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 givenThereAreAnUserInServer({ admin: true });
@@ -68,63 +75,53 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                     restDataCreators
                 );
                 const user = givenThereAreAnUserInServer({ admin: true });
-
                 const server = await initServer();
-
                 const res = await request(server)
                     .get(`/api/v1/${endpoint}/${data[0].id}`)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
-
                 expect(res.status).toEqual(200);
                 expect(res.body).toEqual(data[0]);
             });
             it("should return 404 resource not found if item with id does not exist", async () => {
                 givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const user = givenThereAreAnUserInServer({ admin: true });
-
                 const notExistedItemId = Id.generateId();
                 const server = await initServer();
-
                 const res = await request(server)
                     .get(`/api/v1/${endpoint}/${notExistedItemId}`)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
-
                 expect(res.status).toEqual(404);
             });
-            it("should return 403 forbidden if token is not of an admin user", async () => {
-                const data = givenThereAreAPrincipalAndRestItemsInServer(
-                    principalDataCreator,
-                    restDataCreators
-                );
-                const user = givenThereAreAnUserInServer({ admin: false });
-
-                const server = await initServer();
-
-                const res = await request(server)
-                    .get(`/api/v1/${endpoint}/${data[0].id}`)
-                    .parse(jsonParser)
-                    .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
-
-                expect(res.status).toEqual(403);
-            });
+            (getAdmin === true ? it : it.skip)(
+                "should return 403 forbidden if token is not of an admin user",
+                async () => {
+                    const data = givenThereAreAPrincipalAndRestItemsInServer(
+                        principalDataCreator,
+                        restDataCreators
+                    );
+                    const user = givenThereAreAnUserInServer({ admin: false });
+                    const server = await initServer();
+                    const res = await request(server)
+                        .get(`/api/v1/${endpoint}/${data[0].id}`)
+                        .parse(jsonParser)
+                        .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
+                    expect(res.status).toEqual(403);
+                }
+            );
             it("should return 401 unauthorized if token is of an non existed user", async () => {
                 givenThereAreAnUserInServer({ admin: true });
-
                 const data = givenThereAreAPrincipalAndRestItemsInServer(
                     principalDataCreator,
                     restDataCreators
                 );
                 const notExistedUserId = Id.generateId();
-
                 const server = await initServer();
-
                 const res = await request(server)
                     .get(`/api/v1/${endpoint}/${data[0].id}`)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(notExistedUserId.value)}` });
-
                 expect(res.status).toEqual(401);
             });
         });
@@ -133,23 +130,18 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const item = testDataCreator.givenAValidNewItem();
                 const user = givenThereAreAnUserInServer({ admin: true });
-
                 const server = await initServer();
-
                 const res = await request(server)
                     .post(`/api/v1/${endpoint}`)
                     .send(item)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
-
                 expect(res.status).toEqual(201);
                 expect(res.body).toEqual({ ok: true, count: 1 });
-
                 const verifyRes = await request(server)
                     .get(`/api/v1/${endpoint}/${item.id}`)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
-
                 expect(verifyRes.status).toEqual(200);
                 expect(verifyRes.body).toEqual(item);
             });
@@ -157,60 +149,47 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const item = testDataCreator.givenAValidNewItem();
                 const user = givenThereAreAnUserInServer({ admin: false });
-
                 const server = await initServer();
-
                 const res = await request(server)
                     .post(`/api/v1/${endpoint}`)
                     .send(item)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
-
                 expect(res.status).toEqual(403);
             });
             it("should return 401 unauthorized if token is of an non existed user", async () => {
                 givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 givenThereAreAnUserInServer({ admin: true });
-
                 const item = testDataCreator.givenAValidNewItem();
                 const notExistedUserId = Id.generateId();
-
                 const server = await initServer();
-
                 const res = await request(server)
                     .post(`/api/v1/${endpoint}`)
                     .send(item)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(notExistedUserId.value)}` });
-
                 expect(res.status).toEqual(401);
             });
             it("should return 400 bad request if body contains invalid field values", async () => {
                 givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const user = givenThereAreAnUserInServer({ admin: true });
                 const item = testDataCreator.givenAInvalidNewItem();
-
                 const server = await initServer();
-
                 const res = await request(server)
                     .post(`/api/v1/${endpoint}`)
                     .send(item)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
-
                 expect(res.status).toEqual(400);
             });
             it("should return 400 bad request if body does not exist", async () => {
                 givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const user = givenThereAreAnUserInServer({ admin: true });
-
                 const server = await initServer();
-
                 const res = await request(server)
                     .post(`/api/v1/${endpoint}`)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
-
                 expect(res.status).toEqual(400);
             });
             it("should return 409 conflict if already exist a item with the same id", async () => {
@@ -219,15 +198,12 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                     restDataCreators
                 );
                 const user = givenThereAreAnUserInServer({ admin: true });
-
                 const server = await initServer();
-
                 const res = await request(server)
                     .post(`/api/v1/${endpoint}`)
                     .send(data[0])
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
-
                 expect(res.status).toEqual(409);
             });
         });
@@ -236,23 +212,18 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const item = testDataCreator.givenAValidModifiedItem();
                 const user = givenThereAreAnUserInServer({ admin: true });
-
                 const server = await initServer();
-
                 const res = await request(server)
                     .put(`/api/v1/${endpoint}/${item.id}`)
                     .send(item)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
-
                 expect(res.status).toEqual(200);
                 expect(res.body).toEqual({ ok: true, count: 1 });
-
                 const verifyRes = await request(server)
                     .get(`/api/v1/${endpoint}/${item.id}`)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
-
                 expect(verifyRes.status).toEqual(200);
                 expect(verifyRes.body).toEqual(item);
             });
@@ -260,78 +231,61 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const item = testDataCreator.givenAValidModifiedItem();
                 const user = givenThereAreAnUserInServer({ admin: false });
-
                 const server = await initServer();
-
                 const res = await request(server)
                     .put(`/api/v1/${endpoint}/${item.id}`)
                     .send(item)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
-
                 expect(res.status).toEqual(403);
             });
             it("should return 401 unauthorized if token is of an non existed user", async () => {
                 givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 givenThereAreAnUserInServer({ admin: true });
-
                 const item = testDataCreator.givenAValidModifiedItem();
                 const notExistedUserId = Id.generateId();
-
                 const server = await initServer();
-
                 const res = await request(server)
                     .put(`/api/v1/${endpoint}/${item.id}`)
                     .send(item)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(notExistedUserId.value)}` });
-
                 expect(res.status).toEqual(401);
             });
             it("should return 400 bad request if body contains invalid field values", async () => {
                 givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const user = givenThereAreAnUserInServer({ admin: true });
                 const item = testDataCreator.givenAInvalidModifiedItem();
-
                 const server = await initServer();
-
                 const res = await request(server)
                     .put(`/api/v1/${endpoint}/${item.id}`)
                     .send(item)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
-
                 expect(res.status).toEqual(400);
             });
             it("should return 400 bad request if body does not exist", async () => {
                 givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const user = givenThereAreAnUserInServer({ admin: true });
                 const item = testDataCreator.givenAValidModifiedItem();
-
                 const server = await initServer();
-
                 const res = await request(server)
                     .put(`/api/v1/${endpoint}/${item.id}`)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
-
                 expect(res.status).toEqual(400);
             });
             it("should return 404 resource not found if it does not exist the item", async () => {
                 givenThereAreAPrincipalAndRestItemsInServer(principalDataCreator, restDataCreators);
                 const item = testDataCreator.givenAValidModifiedItem();
                 const user = givenThereAreAnUserInServer({ admin: true });
-
                 const notExistedItemId = Id.generateId();
-
                 const server = await initServer();
-
                 const res = await request(server)
                     .put(`/api/v1/${endpoint}/${notExistedItemId}`)
                     .send(item)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
-
                 expect(res.status).toEqual(404);
             });
         });
@@ -344,19 +298,15 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 const user = givenThereAreAnUserInServer({ admin: true });
                 const server = await initServer();
                 const feedToRemove = testDataCreator.givenAItemToDelete();
-
                 const res = await request(server)
                     .delete(`/api/v1/${endpoint}/${feedToRemove.id}`)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
-
                 expect(res.status).toEqual(200);
-
                 const resAll = await request(server)
                     .get(`/api/v1/${endpoint}`)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
-
                 expect(resAll.body).toEqual(data.filter(feed => feed.id !== feedToRemove.id));
             });
             it("should return 403 forbidden if token is not of an admin user", async () => {
@@ -364,12 +314,10 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 const user = givenThereAreAnUserInServer({ admin: false });
                 const server = await initServer();
                 const feedToRemove = testDataCreator.givenAItemToDelete();
-
                 const res = await request(server)
                     .delete(`/api/v1/${endpoint}/${feedToRemove.id}`)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(user.id.value)}` });
-
                 expect(res.status).toEqual(403);
             });
             it("should return 401 unauthorized if token is of an non existed user", async () => {
@@ -377,12 +325,10 @@ export const commonCRUDTests = <TData extends EntityData, TEntity extends Entity
                 givenThereAreAnUserInServer({ admin: true });
                 const server = await initServer();
                 const feedToRemove = testDataCreator.givenAItemToDelete();
-
                 const res = await request(server)
                     .delete(`/api/v1/${endpoint}/${feedToRemove.id}`)
                     .parse(jsonParser)
                     .set({ Authorization: `Bearer ${generateToken(Id.generateId().value)}` });
-
                 expect(res.status).toEqual(401);
             });
         });

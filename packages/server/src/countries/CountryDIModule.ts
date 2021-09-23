@@ -26,20 +26,12 @@ export function initializeCountries() {
 
     di.bindLazySingleton(
         GetCountriesUseCase,
-        () =>
-            new GetCountriesUseCase(
-                di.get<CountryRepository>(countryDIKeys.countryRepository),
-                di.get<UserRepository>(appDIKeys.userRepository)
-            )
+        () => new GetCountriesUseCase(di.get<CountryRepository>(countryDIKeys.countryRepository))
     );
 
     di.bindLazySingleton(
         GetCountryByIdUseCase,
-        () =>
-            new GetCountryByIdUseCase(
-                di.get<CountryRepository>(countryDIKeys.countryRepository),
-                di.get<UserRepository>(appDIKeys.userRepository)
-            )
+        () => new GetCountryByIdUseCase(di.get<CountryRepository>(countryDIKeys.countryRepository))
     );
 
     di.bindLazySingleton(

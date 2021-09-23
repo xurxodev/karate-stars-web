@@ -22,14 +22,14 @@ export class CategoryTypeController {
         request: hapi.Request,
         h: hapi.ResponseToolkit
     ): Promise<hapi.Lifecycle.ReturnValue> {
-        return runGetAll(request, h, this.jwtAuthenticator, userId =>
-            this.getCategoryTypesUseCase.execute({ userId })
+        return runGetAll(request, h, this.jwtAuthenticator, _userId =>
+            this.getCategoryTypesUseCase.execute()
         );
     }
 
     async get(request: hapi.Request, h: hapi.ResponseToolkit): Promise<hapi.Lifecycle.ReturnValue> {
-        return runGet(request, h, this.jwtAuthenticator, (userId: string, id: string) =>
-            this.getCategoryTypeByIdUseCase.execute({ userId, id })
+        return runGet(request, h, this.jwtAuthenticator, (_userId: string, id: string) =>
+            this.getCategoryTypeByIdUseCase.execute({ id })
         );
     }
 

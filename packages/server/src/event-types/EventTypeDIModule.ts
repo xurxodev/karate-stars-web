@@ -26,8 +26,7 @@ export function initializeEventTypes() {
         GetEventTypesUseCase,
         () =>
             new GetEventTypesUseCase(
-                di.get<EventTypeRepository>(eventTypeDIKeys.eventTypeRepository),
-                di.get<UserRepository>(appDIKeys.userRepository)
+                di.get<EventTypeRepository>(eventTypeDIKeys.eventTypeRepository)
             )
     );
 
@@ -35,8 +34,7 @@ export function initializeEventTypes() {
         GetEventTypeByIdUseCase,
         () =>
             new GetEventTypeByIdUseCase(
-                di.get<EventTypeRepository>(eventTypeDIKeys.eventTypeRepository),
-                di.get<UserRepository>(appDIKeys.userRepository)
+                di.get<EventTypeRepository>(eventTypeDIKeys.eventTypeRepository)
             )
     );
 

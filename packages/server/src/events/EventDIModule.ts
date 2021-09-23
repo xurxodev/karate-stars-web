@@ -26,20 +26,12 @@ export function initializeEvents() {
 
     di.bindLazySingleton(
         GetEventsUseCase,
-        () =>
-            new GetEventsUseCase(
-                di.get<EventRepository>(eventDIKeys.eventRepository),
-                di.get<UserRepository>(appDIKeys.userRepository)
-            )
+        () => new GetEventsUseCase(di.get<EventRepository>(eventDIKeys.eventRepository))
     );
 
     di.bindLazySingleton(
         GetEventByIdUseCase,
-        () =>
-            new GetEventByIdUseCase(
-                di.get<EventRepository>(eventDIKeys.eventRepository),
-                di.get<UserRepository>(appDIKeys.userRepository)
-            )
+        () => new GetEventByIdUseCase(di.get<EventRepository>(eventDIKeys.eventRepository))
     );
 
     di.bindLazySingleton(

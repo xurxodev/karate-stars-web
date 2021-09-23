@@ -22,14 +22,14 @@ export class EventTypeController {
         request: hapi.Request,
         h: hapi.ResponseToolkit
     ): Promise<hapi.Lifecycle.ReturnValue> {
-        return runGetAll(request, h, this.jwtAuthenticator, userId =>
-            this.getEventTypesUseCase.execute({ userId })
+        return runGetAll(request, h, this.jwtAuthenticator, _userId =>
+            this.getEventTypesUseCase.execute()
         );
     }
 
     async get(request: hapi.Request, h: hapi.ResponseToolkit): Promise<hapi.Lifecycle.ReturnValue> {
-        return runGet(request, h, this.jwtAuthenticator, (userId: string, id: string) =>
-            this.getEventTypeByIdUseCase.execute({ userId, id })
+        return runGet(request, h, this.jwtAuthenticator, (_userId: string, id: string) =>
+            this.getEventTypeByIdUseCase.execute({ id })
         );
     }
 
