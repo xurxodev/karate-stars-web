@@ -57,10 +57,32 @@ export default class SocialNewsInstagramDataSource implements SocialNewsReposito
     }
 
     async get_instagram_profile(username) {
-        const response = await fetch(
-            `https://www.instagram.com/${username}/channel/?__a=1`
-        ).then(response => response.json());
+        const response = await fetch(`https://www.instagram.com/${username}/channel/?__a=1`, {
+            headers: {
+                "User-Agent":
+                    "Instagram 85.0.0.21.100 Android (23/6.0.1; 538dpi; 1440x2560; LGE; LG-E425f; vee3e; en_US)",
+            },
+        }).then(response => response.json());
 
         return response;
     }
+
+    // async get_instagram_profile(username) {
+    //     const userInfoSource = await fetch(`https://www.instagram.com/${username}/`, {
+    //         headers: {
+    //             "User-Agent":
+    //                 "Instagram 85.0.0.21.100 Android (23/6.0.1; 538dpi; 1440x2560; LGE; LG-E425f; vee3e; en_US)",
+    //         },
+    //     }).then(response => response.text());
+
+    //     const maches = userInfoSource.match(
+    //         /<script type="text\/javascript">window\._sharedData = (.*)<\/script>/
+    //     );
+    //     const jsonObject = maches ? maches[1].slice(0, -1) : "";
+
+    //     debugger;
+    //     const userInfo = JSON.parse(jsonObject);
+
+    //     return userInfo.entry_data.ProfilePage[0];
+    // }
 }
