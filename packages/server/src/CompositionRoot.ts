@@ -5,7 +5,7 @@ import UserController from "./users/api/UserController";
 import SettingsMongoRepository from "./settings/data/SettingsMongoRepository";
 import GetSettingsUseCase from "./settings/domain/usecases/GetSettingsUseCase";
 import GetSocialNewsUseCase from "./socialnews/domain/usecases/GetSocialNewsUseCase";
-import SocialNewsTwitterRepository from "./socialnews/data/SocialNewsTwitterRepository";
+import SocialNewsWebRepository from "./socialnews/data/SocialNewsWebRepository";
 import CurrentNewsRSSRepository from "./currentnews/data/CurrentNewsRSSRepository";
 import CurrentNewsController from "./currentnews/api/CurrentNewsController";
 import NewsFeedMongoRepository from "./newsfeeds/data/NewsFeedMongoRepository";
@@ -29,6 +29,8 @@ import { initializeEventTypes } from "./event-types/EventTypeDIModule";
 import { initializeEvents } from "./events/EventDIModule";
 import { initializeCountries } from "./countries/CountryDIModule";
 import { initializeVideos } from "./videos/VideoDIModule";
+import SocialNewsTwitterDataSource from "./socialnews/data/SocialNewsTwitterDataSource";
+import SocialNewsInstagramDataSource from "./socialnews/data/SocialNewsInstagramDataSource";
 
 export const appDIKeys = {
     jwtAuthenticator: "jwtAuthenticator",
@@ -217,7 +219,10 @@ function initializeSocialNews() {
         const consumerkey = process.env.TWITTER_CONSUMER_KEY_PROP || "";
         const consumer_secret = process.env.TWITTER_CONSUMER_SECRET_PROP || "";
 
-        return new SocialNewsTwitterRepository(consumerkey, consumer_secret);
+        const twitter = new SocialNewsTwitterDataSource(consumerkey, consumer_secret);
+        const instagram = new SocialNewsInstagramDataSource();
+
+        return new SocialNewsWebRepository(twitter, instagram);
     });
 
     di.bindLazySingleton(

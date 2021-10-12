@@ -1,8 +1,8 @@
 import SocialNewsRepository from "../domain/boundaries/SocialNewsRepository";
-import { SocialNews } from "../../socialnews/domain/entities/SocialNews";
+import { SocialNews } from "../domain/entities/SocialNews";
 import Twit from "twit";
 
-export default class SocialNewsTwitterRepository implements SocialNewsRepository {
+export default class SocialNewsTwitterDataSource implements SocialNewsRepository {
     private twitterApiClient: Twit;
 
     constructor(twitterConcomerKey: string, twitterConcomerSecret: string) {

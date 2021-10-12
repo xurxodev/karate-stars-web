@@ -19,4 +19,4 @@ export interface SocialUser {
     userName: string;
 }
 
-export type Network = "twitter";
+export type Network = "twitter" | "instagram";
