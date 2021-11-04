@@ -137,11 +137,6 @@ export class Video extends Entity<VideoData> {
                 value: data.description,
             },
             {
-                property: "competitors" as const,
-                errors: validateRequired(data.competitors),
-                value: data.competitors,
-            },
-            {
                 property: "links" as const,
                 errors: validateRequired(data.links),
                 value: data.links,

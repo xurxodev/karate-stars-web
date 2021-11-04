@@ -188,7 +188,7 @@ const initialFieldsState = (
                     kind: "FormSingleFieldState",
                     label: "Competitors",
                     name: "competitors",
-                    required: true,
+                    required: false,
                     value: entity?.competitors || [],
                     selectOptions: competitorOptions,
                     multiple: true,
