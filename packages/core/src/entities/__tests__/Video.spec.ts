@@ -86,17 +86,6 @@ describe("Competitor", () => {
                 () => fail("should be error")
             );
         });
-        it("should return cannot be blank error for competitors", () => {
-            const result = Video.create({ ...videoRawData, competitors: [] });
-
-            result.fold(
-                errors =>
-                    expect(errors.find(error => error.property === "competitors")?.errors[0]).toBe(
-                        "field_cannot_be_blank"
-                    ),
-                () => fail("should be error")
-            );
-        });
         it("should return cannot be blank error for all social links for id", () => {
             const result = Video.create({
                 ...videoRawData,
