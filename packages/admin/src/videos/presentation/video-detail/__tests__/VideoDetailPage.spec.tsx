@@ -44,7 +44,7 @@ async function typeValidForm() {
 
     //Mirar algo de seleccionar especifico con react select y testing library!!!!!
     await tl.selectMultiOption(
-        "Competitors (*)",
+        "Competitors",
         `${data.competitors[1].firstName} ${data.competitors[1].lastName}`
     );
 
