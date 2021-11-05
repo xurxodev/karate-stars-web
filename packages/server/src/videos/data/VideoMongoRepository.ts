@@ -25,6 +25,7 @@ export default class VideoMongoRepository
             eventDate: modelDB.eventDate,
             createdDate: modelDB.createdDate,
             order: modelDB.order,
+            isLive: modelDB.isLive ?? false,
         }).get();
     }
 

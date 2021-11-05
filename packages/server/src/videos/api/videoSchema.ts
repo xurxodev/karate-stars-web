@@ -15,4 +15,5 @@ export const videoSchema = Joi.object({
     eventDate: Joi.date().iso(),
     createdDate: Joi.date().iso(),
     order: Joi.number(),
+    isLive: Joi.boolean(),
 });

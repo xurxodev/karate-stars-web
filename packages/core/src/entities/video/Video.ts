@@ -14,6 +14,7 @@ interface VideoObjectData extends EntityObjectData {
     eventDate: Date;
     createdDate: Date;
     order: number;
+    isLive: boolean;
 }
 
 export interface VideoData extends EntityData {
@@ -25,6 +26,7 @@ export interface VideoData extends EntityData {
     eventDate: Date;
     createdDate: Date;
     order: number;
+    isLive: boolean;
 }
 
 export type VideoValidationTypes = VideoData & VideoLinkData;
@@ -38,6 +40,7 @@ export class Video extends Entity<VideoData> {
     public readonly eventDate: Date;
     public readonly createdDate: Date;
     public readonly order: number;
+    public readonly isLive: boolean;
 
     private constructor(data: VideoObjectData) {
         super(data.id);
@@ -50,6 +53,7 @@ export class Video extends Entity<VideoData> {
         this.eventDate = data.eventDate;
         this.createdDate = data.createdDate;
         this.order = data.order;
+        this.isLive = data.isLive;
     }
 
     public static create(data: VideoData): Either<ValidationError<VideoValidationTypes>[], Video> {
@@ -78,6 +82,7 @@ export class Video extends Entity<VideoData> {
             eventDate: this.eventDate,
             createdDate: this.createdDate,
             order: this.order,
+            isLive: this.isLive,
         };
     }
 
@@ -167,6 +172,7 @@ export class Video extends Entity<VideoData> {
                     eventDate: data.eventDate,
                     createdDate: data.createdDate,
                     order: data.order,
+                    isLive: data.isLive,
                 })
             );
         } else {

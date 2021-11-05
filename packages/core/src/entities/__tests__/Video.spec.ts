@@ -19,6 +19,7 @@ const videoRawData: VideoData = {
     eventDate: new Date(),
     createdDate: new Date(),
     order: 4,
+    isLive: true,
 };
 
 describe("Competitor", () => {

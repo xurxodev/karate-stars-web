@@ -172,7 +172,17 @@ const initialFieldsState = (
                     required: true,
                     type: "date",
                     value: moment(entity?.eventDate).format("YYYY-MM-DD"),
-                    md: 6,
+                    md: 4,
+                    xs: 12,
+                },
+                {
+                    kind: "FormSingleFieldState",
+                    label: "Live",
+                    name: "isLive",
+                    type: "checkbox",
+                    required: false,
+                    value: entity?.isLive?.toString() || "",
+                    md: 4,
                     xs: 12,
                 },
                 {
@@ -181,7 +191,7 @@ const initialFieldsState = (
                     name: "order",
                     required: true,
                     value: entity?.order?.toString() || "",
-                    md: 6,
+                    md: 4,
                     xs: 12,
                 },
                 {
