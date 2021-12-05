@@ -7,7 +7,7 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@material-ui/styles": "^4.11.3",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "clsx": "^1.1.1",
     "karate-stars-core": "0.1.0",
     "mime-types": "^2.1.29",
