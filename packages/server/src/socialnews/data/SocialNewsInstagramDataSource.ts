@@ -1,8 +1,7 @@
 import SocialNewsRepository from "../domain/boundaries/SocialNewsRepository";
 import { SocialNews, SocialUser } from "../domain/entities/SocialNews";
-import fetch from "node-fetch";
 import { user, getUserMeta } from "instatouch";
-import { Post, PostCollector } from "instatouch/build/types";
+import { PostCollector } from "instatouch/build/types";
 //const instaTouch = require("instatouch");
 
 export default class SocialNewsInstagramDataSource implements SocialNewsRepository {
