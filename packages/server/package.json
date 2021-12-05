@@ -23,6 +23,7 @@
     "dotenv": "^8.1.0",
     "firebase-admin": "^9.4.2",
     "hapi-auth-jwt2": "^10.2.0",
+    "instatouch": "^2.3.12",
     "joi": "^17.4.0",
     "karate-stars-core": "0.1.0",
     "mime-types": "^2.1.27",
