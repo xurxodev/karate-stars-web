@@ -45,13 +45,10 @@ export default class SocialNewsInstagramDataSource implements SocialNewsReposito
             };
 
             const posts = await user(username, options);
-            console.log({ posts });
 
             const socialNews = posts.collector.map((media: PostCollector) =>
                 this.mapMedia(socialUser, media)
             );
-
-            console.log({ socialNews });
             return socialNews;
         } catch (error) {
             console.log(error);
@@ -73,7 +70,7 @@ export default class SocialNewsInstagramDataSource implements SocialNewsReposito
         return {
             network: "instagram",
             summary: {
-                title: media.text ?? "",
+                title: media.description ?? "",
                 image,
                 video,
                 date,
