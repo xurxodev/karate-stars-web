@@ -34,7 +34,7 @@ export default class SocialNewsInstagramDataSource implements SocialNewsReposito
         // );
 
         try {
-            const options = { count: 10, session: "sessionid=4565290142%3AiNbfZeKnoYDuhF%3A17" };
+            const options = { count: 50, session: "sessionid=4565290142%3AiNbfZeKnoYDuhF%3A17" };
 
             const userMeta = await getUserMeta(username, options);
             const socialUser = {
@@ -49,6 +49,8 @@ export default class SocialNewsInstagramDataSource implements SocialNewsReposito
             const socialNews = posts.collector.map((media: PostCollector) =>
                 this.mapMedia(socialUser, media)
             );
+
+            console.log({ socialNews: socialNews.length });
             return socialNews;
         } catch (error) {
             console.log(error);

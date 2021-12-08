@@ -7,6 +7,7 @@
   "author": "Jorge Sánchez <xurxosf@gmail.com>",
   "license": "GPL-3.0-or-later",
   "scripts": {
+    "import-news": "yarn build && node -r dotenv/config ./build/socialNewsImporter.js",
     "start": "node ./build/index.js",
     "build": "yarn clean && yarn tsc",
     "start-dev": "../../node_modules/nodemon/bin/nodemon.js -e ts  --exec \"yarn build-dev\"",

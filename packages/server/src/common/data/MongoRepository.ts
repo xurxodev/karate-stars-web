@@ -4,12 +4,8 @@ import { Collection } from "mongodb";
 import { MongoCollection } from "./Types";
 import { ResourceNotFoundError, UnexpectedError } from "../api/Errors";
 import { ActionResult } from "../api/ActionResult";
-import { EntityObjectData } from "karate-stars-core/build/entities/Entity";
 
-export default abstract class MongoRepository<
-    Entity extends EntityObjectData,
-    ModelDB extends MongoCollection
-> {
+export default abstract class MongoRepository<Entity, ModelDB extends MongoCollection> {
     constructor(private mongoConector: MongoConector, private collectionName: string) {}
 
     protected abstract mapToDomain(model: ModelDB): Entity;
@@ -81,6 +77,25 @@ export default abstract class MongoRepository<
             return Either.right({
                 ok: response.result.ok === 1,
                 count: response.result.ok === 1 ? 1 : 0,
+            });
+        } catch (error) {
+            return Either.left({ kind: "UnexpectedError", error });
+        }
+    }
+
+    async replaceAll(entities: Entity[]): Promise<Either<UnexpectedError, ActionResult>> {
+        try {
+            const collection = await this.collection();
+
+            const modelDBs = entities.map(entity => this.mapToDB(entity));
+
+            await collection.deleteMany({});
+
+            const response = await collection.insertMany(modelDBs);
+
+            return Either.right({
+                ok: response.result.ok === 1,
+                count: response.result.ok === 1 ? entities.length : 0,
             });
         } catch (error) {
             return Either.left({ kind: "UnexpectedError", error });
