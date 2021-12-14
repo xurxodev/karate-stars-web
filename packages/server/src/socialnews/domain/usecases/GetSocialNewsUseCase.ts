@@ -4,13 +4,10 @@ import { SocialNews } from "../entities/SocialNews";
 
 export default class GetSocialNewsUseCase {
     constructor(
-        private socialNewsRepository: SocialNewsRepository,
-        private settingsRepository: SettingsRepository
+        private socialNewsRepository: SocialNewsRepository
     ) {}
 
     public async execute(): Promise<SocialNews[]> {
-        const settings = await this.settingsRepository.get();
-
-        return this.socialNewsRepository.get(settings.socialNews.search);
+        return this.socialNewsRepository.get();
     }
 }

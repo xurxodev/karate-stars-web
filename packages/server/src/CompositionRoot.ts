@@ -5,7 +5,6 @@ import UserController from "./users/api/UserController";
 import SettingsMongoRepository from "./settings/data/SettingsMongoRepository";
 import GetSettingsUseCase from "./settings/domain/usecases/GetSettingsUseCase";
 import GetSocialNewsUseCase from "./socialnews/domain/usecases/GetSocialNewsUseCase";
-import SocialNewsWebRepository from "./socialnews/data/SocialNewsWebRepository";
 import CurrentNewsRSSRepository from "./currentnews/data/CurrentNewsRSSRepository";
 import CurrentNewsController from "./currentnews/api/CurrentNewsController";
 import NewsFeedMongoRepository from "./newsfeeds/data/NewsFeedMongoRepository";
@@ -29,8 +28,7 @@ import { initializeEventTypes } from "./event-types/EventTypeDIModule";
 import { initializeEvents } from "./events/EventDIModule";
 import { initializeCountries } from "./countries/CountryDIModule";
 import { initializeVideos } from "./videos/VideoDIModule";
-import SocialNewsTwitterDataSource from "./socialnews/data/SocialNewsTwitterDataSource";
-import SocialNewsInstagramDataSource from "./socialnews/data/SocialNewsInstagramDataSource";
+import SociaNewsMongoRepository from "./socialnews/data/SocialNewsMongoRepository";
 
 export const appDIKeys = {
     jwtAuthenticator: "jwtAuthenticator",
@@ -216,22 +214,12 @@ function initializeNewsFeeds() {
 
 function initializeSocialNews() {
     di.bindLazySingleton(appDIKeys.socialNewsRepository, () => {
-        const consumerkey = process.env.TWITTER_CONSUMER_KEY_PROP || "";
-        const consumer_secret = process.env.TWITTER_CONSUMER_SECRET_PROP || "";
-
-        const twitter = new SocialNewsTwitterDataSource(consumerkey, consumer_secret);
-        const instagram = new SocialNewsInstagramDataSource();
-
-        return new SocialNewsWebRepository(twitter, instagram);
+        return new SociaNewsMongoRepository(di.get(MongoConector));
     });
 
     di.bindLazySingleton(
         GetSocialNewsUseCase,
-        () =>
-            new GetSocialNewsUseCase(
-                di.get(appDIKeys.socialNewsRepository),
-                di.get(appDIKeys.settingsRepository)
-            )
+        () => new GetSocialNewsUseCase(di.get(appDIKeys.socialNewsRepository))
     );
 
     di.bindFactory(

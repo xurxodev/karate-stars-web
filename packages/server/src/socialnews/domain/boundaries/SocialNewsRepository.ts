@@ -4,7 +4,7 @@ import { UnexpectedError } from "../../../common/api/Errors";
 import { SocialNews } from "../entities/SocialNews";
 
 export default interface SocialNewsRepository<> {
-    get(search: string): Promise<SocialNews[]>;
+    get(): Promise<SocialNews[]>;
 }
 
 export interface SocialNewsWritableRepository<> {

@@ -1,61 +1,93 @@
-import SocialNewsRepository from "../domain/boundaries/SocialNewsRepository";
 import { SocialNews, SocialUser } from "../domain/entities/SocialNews";
-import { user, getUserMeta } from "instatouch";
-import { PostCollector } from "instatouch/build/types";
-//const instaTouch = require("instatouch");
+import { user, getUserMeta, hashtag } from "instatouch";
+import { Options, PostCollector } from "instatouch/build/types";
+import SocialNewsDataSource from "./SocialNewsDataSource";
 
-export default class SocialNewsInstagramDataSource implements SocialNewsRepository {
-    constructor() {}
+export default class SocialNewsInstagramDataSource implements SocialNewsDataSource {
+    private users: string[];
+    private sessionId: string;
 
-    public async get(): Promise<SocialNews[]> {
+    constructor() {
+        const envUsers = process.env.INSTAGRAM_USERS;
+        this.sessionId = process.env.INSTAGRAM_SESSIONID || "";
+
+        this.users = envUsers ? envUsers.split(";") : ["worldkaratefederation", "karatestarsapp"];
+    }
+
+    public async get(_search: string): Promise<SocialNews[]> {
         try {
-            const socialNewsWKF = await this.getSocialNewsBy("worldkaratefederation");
-            const socialNewsKarateStarsApp = await this.getSocialNewsBy("karatestarsapp");
+            const options: Options = {
+                count: 50,
+                session: `sessionid=${this.sessionId}`,
+            };
 
-            return [...socialNewsWKF, ...socialNewsKarateStarsApp];
+            const byUser = (
+                await Promise.all(
+                    this.users.map(async user => this.getSocialNewsByUser(user, options))
+                )
+            ).flat();
+
+            //By tag is not possible extract user image and username
+            // const byTag = await this.getSocialNewsByHashtag(
+            //     search.replace("#", "").toLowerCase(),
+            //     options
+            // );
+
+            //const news = [...byUser, ...byTag];
+
+            //return this.removeDuplicates(news);
+
+            return byUser;
         } catch (error) {
-            console.log(error);
+            console.log(`Instagram error: ${error}`);
             return [];
         }
     }
 
-    public async getSocialNewsBy(username: string): Promise<SocialNews[]> {
-        // const profile = await this.get_instagram_profile(username);
+    public async getSocialNewsByUser(username: string, options: Options): Promise<SocialNews[]> {
+        const socialUser = await this.getSocialUser(username, options);
 
-        // const socialUser = {
-        //     name: profile.graphql.user.full_name,
-        //     userName: profile.graphql.user.username,
-        //     image: profile.graphql.user.profile_pic_url,
-        //     url: `https://www.instagram.com/${profile.graphql.user.username}`,
-        // };
+        const posts = await user(username, options);
 
-        // const socialNews = profile.graphql.user.edge_owner_to_timeline_media.edges.map(
-        //     (media: any) => this.mapMedia(socialUser, media)
-        // );
+        const socialNews = posts.collector.map((media: PostCollector) =>
+            this.mapMedia(socialUser, media)
+        );
 
-        try {
-            const options = { count: 50, session: "sessionid=4565290142%3AiNbfZeKnoYDuhF%3A17" };
+        console.log({ username, count: socialNews.length });
 
-            const userMeta = await getUserMeta(username, options);
-            const socialUser = {
-                name: userMeta.graphql.user.full_name,
-                userName: userMeta.graphql.user.username,
-                image: userMeta.graphql.user.profile_pic_url,
-                url: `https://www.instagram.com/${userMeta.graphql.user.username}`,
-            };
+        return socialNews;
+    }
 
-            const posts = await user(username, options);
+    public async getSocialNewsByHashtag(tag: string, options: Options): Promise<SocialNews[]> {
+        const posts = await hashtag(tag.replace("#", ""), options);
 
-            const socialNews = posts.collector.map((media: PostCollector) =>
-                this.mapMedia(socialUser, media)
-            );
+        const userNames: string[] = posts.collector.reduce((acc, post) => {
+            return post.owner !== undefined ? [...acc, post.owner.id] : acc;
+        }, [] as string[]);
 
-            console.log({ socialNews: socialNews.length });
-            return socialNews;
-        } catch (error) {
-            console.log(error);
-            return [];
-        }
+        console.log({ userNames });
+
+        const socialUsers = (
+            await Promise.all(
+                userNames.map(async userName => this.getSocialUser(userName, options))
+            )
+        ).flat();
+
+        console.log({ socialUsers });
+
+        const socialNews = posts.collector.reduce((acc, post) => {
+            const socialUser = socialUsers.find(user => user.userName === post.owner?.username);
+
+            if (socialUser === undefined) return acc;
+
+            const socialNews = this.mapMedia(socialUser, post);
+
+            return [...acc, socialNews];
+        }, [] as SocialNews[]);
+
+        console.log({ tag: tag, count: socialNews.length });
+
+        return socialNews;
     }
 
     private mapMedia(socialUser: SocialUser, media: PostCollector): SocialNews {
@@ -82,33 +114,20 @@ export default class SocialNewsInstagramDataSource implements SocialNewsReposito
         };
     }
 
-    // async get_instagram_profile(username) {
-    //     const response = await fetch(`https://www.instagram.com/${username}/channel/?__a=1`, {
-    //         headers: {
-    //             "User-Agent":
-    //                 "Instagram 85.0.0.21.100 Android (23/6.0.1; 538dpi; 1440x2560; LGE; LG-E425f; vee3e; en_US)",
-    //         },
-    //     }).then(response => response.json());
+    private removeDuplicates(sumSocialNews: SocialNews[]): SocialNews[] {
+        const uniq = new Set(sumSocialNews.map(e => JSON.stringify(e)));
 
-    //     return response;
-    // }
+        return Array.from(uniq).map(e => JSON.parse(e));
+    }
 
-    // async get_instagram_profile(username) {
-    //     const userInfoSource = await fetch(`https://www.instagram.com/${username}/`, {
-    //         headers: {
-    //             "User-Agent":
-    //                 "Instagram 85.0.0.21.100 Android (23/6.0.1; 538dpi; 1440x2560; LGE; LG-E425f; vee3e; en_US)",
-    //         },
-    //     }).then(response => response.text());
-
-    //     const maches = userInfoSource.match(
-    //         /<script type="text\/javascript">window\._sharedData = (.*)<\/script>/
-    //     );
-    //     const jsonObject = maches ? maches[1].slice(0, -1) : "";
-
-    //     debugger;
-    //     const userInfo = JSON.parse(jsonObject);
-
-    //     return userInfo.entry_data.ProfilePage[0];
-    // }
+    async getSocialUser(username: string, options: Options): Promise<SocialUser> {
+        const userMeta = await getUserMeta(username, options);
+        const socialUser = {
+            name: userMeta.graphql.user.full_name,
+            userName: userMeta.graphql.user.username,
+            image: userMeta.graphql.user.profile_pic_url,
+            url: `https://www.instagram.com/${userMeta.graphql.user.username}`,
+        };
+        return socialUser;
+    }
 }

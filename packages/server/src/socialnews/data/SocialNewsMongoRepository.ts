@@ -2,16 +2,22 @@ import { MongoConector } from "../../common/data/MongoConector";
 import { MongoCollection } from "../../common/data/Types";
 import MongoRepository from "../../common/data/MongoRepository";
 import { SocialNews } from "../domain/entities/SocialNews";
-import { SocialNewsWritableRepository } from "../domain/boundaries/SocialNewsRepository";
+import SocialNewsRepository, {
+    SocialNewsWritableRepository,
+} from "../domain/boundaries/SocialNewsRepository";
 import { Id } from "karate-stars-core";
 
 type SocialNewsDB = SocialNews & MongoCollection & { createdDate: Date };
 
 export default class SociaNewsMongoRepository
     extends MongoRepository<SocialNews, SocialNewsDB>
-    implements SocialNewsWritableRepository {
+    implements SocialNewsWritableRepository, SocialNewsRepository {
     constructor(mongoConector: MongoConector) {
         super(mongoConector, "socialNews");
+    }
+
+    get(): Promise<SocialNews[]> {
+        return super.getAll();
     }
 
     protected mapToDomain(modelDB: SocialNewsDB): SocialNews {

@@ -1,8 +1,8 @@
-import SocialNewsRepository from "../domain/boundaries/SocialNewsRepository";
 import { SocialNews } from "../domain/entities/SocialNews";
 import Twit from "twit";
+import SocialNewsDataSource from "./SocialNewsDataSource";
 
-export default class SocialNewsTwitterDataSource implements SocialNewsRepository {
+export default class SocialNewsTwitterDataSource implements SocialNewsDataSource {
     private twitterApiClient: Twit;
 
     constructor(twitterConcomerKey: string, twitterConcomerSecret: string) {
@@ -25,9 +25,20 @@ export default class SocialNewsTwitterDataSource implements SocialNewsRepository
                     const socialNewsList = listTweets.map((tweet: any) => this.mapTweet(tweet));
                     const socialNewsSearch = searchTweets.map((tweet: any) => this.mapTweet(tweet));
 
+                    console.log({ source: "Twitter List", count: socialNewsList.length });
+                    console.log({
+                        source: `Twitter search ${search}`,
+                        count: socialNewsSearch.length,
+                    });
+
                     const sumSocialNews = [...socialNewsList, ...socialNewsSearch];
 
                     const uniqueSocialNews = this.removeDuplicates(sumSocialNews);
+
+                    console.log({
+                        source: "Twitter unique tweets",
+                        count: uniqueSocialNews.length,
+                    });
 
                     uniqueSocialNews.sort(
                         (a: SocialNews, b: SocialNews) =>
@@ -37,8 +48,8 @@ export default class SocialNewsTwitterDataSource implements SocialNewsRepository
                     resolve(uniqueSocialNews);
                 })
                 .catch(err => {
-                    reject(err);
-                    console.log(err);
+                    console.log(`Twitter error: ${err}`);
+                    return [];
                 });
         });
     }
