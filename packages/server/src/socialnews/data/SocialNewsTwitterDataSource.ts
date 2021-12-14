@@ -15,7 +15,7 @@ export default class SocialNewsTwitterDataSource implements SocialNewsDataSource
     }
 
     public get(search: string): Promise<SocialNews[]> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, _reject) => {
             Promise.all([this.getSocialNewsFromList(), this.getSocialNewsFromSearch(search)])
                 .then(async ([listResult, searchResult]) => {
                     const listTweets: any = listResult.data;
