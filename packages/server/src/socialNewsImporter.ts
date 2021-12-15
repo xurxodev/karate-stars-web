@@ -17,7 +17,7 @@ if (!mongoConnection) {
 
 const mongoConector = new MongoConector(mongoConnection);
 
-const envSocialMedias = (process.env.SOCIAL_MEDIAS || "").split(",");
+const envSocialMedias = process.env.SOCIAL_MEDIAS?.split(",") ?? [];
 
 const socialMediasFactory: Record<string, () => SocialNewsDataSource> = {
     instagram: getInstagramDataSource,
@@ -38,6 +38,8 @@ async function execute() {
             })
         )
     ).flat();
+
+    console.log(`Total news ${news.length}`);
 
     const orderedNews = news.sort(
         (a: SocialNews, b: SocialNews) => Date.parse(b.summary.date) - Date.parse(a.summary.date)

@@ -11,7 +11,7 @@ export default class SocialNewsInstagramDataSource implements SocialNewsDataSour
         const envUsers = process.env.INSTAGRAM_USERS;
         this.sessionId = process.env.INSTAGRAM_SESSIONID || "";
 
-        this.users = envUsers ? envUsers.split(";") : ["worldkaratefederation", "karatestarsapp"];
+        this.users = envUsers ? envUsers.split(",") : ["worldkaratefederation", "karatestarsapp"];
     }
 
     public async get(_search: string): Promise<SocialNews[]> {
