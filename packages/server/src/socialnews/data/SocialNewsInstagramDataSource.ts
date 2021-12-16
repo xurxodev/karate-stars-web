@@ -2,6 +2,7 @@ import { SocialNews, SocialUser } from "../domain/entities/SocialNews";
 import { user, getUserMeta, hashtag } from "instatouch";
 import { Options, PostCollector } from "instatouch/build/types";
 import SocialNewsDataSource from "./SocialNewsDataSource";
+import moment from "moment";
 
 export default class SocialNewsInstagramDataSource implements SocialNewsDataSource {
     private users: string[];
@@ -27,6 +28,10 @@ export default class SocialNewsInstagramDataSource implements SocialNewsDataSour
                 )
             ).flat();
 
+            const news = byUser.filter(n => moment(new Date()).diff(n.summary.date, "days") <= 30);
+
+            console.log({ totalInstagram: news.length });
+
             //By tag is not possible extract user image and username
             // const byTag = await this.getSocialNewsByHashtag(
             //     search.replace("#", "").toLowerCase(),
@@ -37,7 +42,7 @@ export default class SocialNewsInstagramDataSource implements SocialNewsDataSour
 
             //return this.removeDuplicates(news);
 
-            return byUser;
+            return news;
         } catch (error) {
             console.log(`Instagram error: ${error}`);
             return [];
