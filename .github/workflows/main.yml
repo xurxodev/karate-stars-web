@@ -19,7 +19,7 @@ jobs:
             - name: Setup Node
               uses: actions/setup-node@v1
               with:
-                  node-version: "12.x"
+                  node-version: "14.x"
 
             - name: Install dependencies
               run: yarn install --frozen-lockfile --silent
@@ -39,7 +39,7 @@ jobs:
             - name: Setup Node
               uses: actions/setup-node@v1
               with:
-                  node-version: "12.x"
+                  node-version: "14.x"
 
             - name: Run cypress tests
               uses: cypress-io/github-action@v2
