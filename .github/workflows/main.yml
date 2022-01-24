@@ -38,6 +38,9 @@ jobs:
               with:
                   node-version: "14.x"
 
+            - name: Install yarn
+              run: npm install -g yarn
+
             - name: Run cypress tests
               uses: cypress-io/github-action@v2
               with:
