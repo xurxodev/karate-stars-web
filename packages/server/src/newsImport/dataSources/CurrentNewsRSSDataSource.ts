@@ -1,28 +1,23 @@
 import { NewsFeed } from "karate-stars-core";
 import Parser from "rss-parser";
-import CurrentNewsRepository from "../domain/boundaries/CurrentNewsRepository";
-import { CurrentNews } from "../domain/entities/CurrentNews";
+import { CurrentNews } from "../../currentnews/domain/entities/CurrentNews";
+import CurrentNewsDataSource from "../importers/currentNewsImporter";
 
-export default class CurrentNewsRSSRepository implements CurrentNewsRepository {
+export default class CurrentNewsRSSDataSource implements CurrentNewsDataSource {
     public parser = new Parser();
 
-    public get(feeds: NewsFeed[]): Promise<CurrentNews[]> {
-        return new Promise((resolve, reject) => {
-            Promise.all(feeds.map(feed => this.getNewsFromFeed(feed)))
-                .then((res: any[]) => {
-                    const mergedSocialNews = [].concat(...res);
+    public async get(feeds: NewsFeed[]): Promise<CurrentNews[]> {
+        try {
+            const news = (await Promise.all(feeds.map(feed => this.getNewsFromFeed(feed)))).flat();
+            const lastMonthCurrentNews = news.filter((sn: any) =>
+                this.isLastMonth(Date.parse(sn.summary.date))
+            );
 
-                    resolve(
-                        mergedSocialNews.filter((sn: any) =>
-                            this.isLastMonth(Date.parse(sn.summary.date))
-                        )
-                    );
-                })
-                .catch(err => {
-                    reject(err);
-                    console.log(err);
-                });
-        });
+            return lastMonthCurrentNews;
+        } catch (error) {
+            console.log(`current news error: ${error}`);
+            return [];
+        }
     }
 
     public isLastMonth(newsDate: number): boolean {

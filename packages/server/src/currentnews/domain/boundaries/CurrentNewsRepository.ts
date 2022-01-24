@@ -1,6 +1,12 @@
-import { NewsFeed } from "karate-stars-core";
+import { Either, NewsFeed } from "karate-stars-core";
+import { ActionResult } from "../../../common/api/ActionResult";
+import { UnexpectedError } from "../../../common/api/Errors";
 import { CurrentNews } from "../entities/CurrentNews";
 
-export default interface CurrentNewsRepository {
+export interface CurrentNewsRepository {
     get(feeds: NewsFeed[]): Promise<CurrentNews[]>;
+}
+
+export interface CurrentNewsWritableRepository<> {
+    replaceAll(entities: CurrentNews[]): Promise<Either<UnexpectedError, ActionResult>>;
 }

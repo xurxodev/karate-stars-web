@@ -1,6 +1,6 @@
-import { SocialNews } from "../domain/entities/SocialNews";
 import Twit from "twit";
-import SocialNewsDataSource from "./SocialNewsDataSource";
+import { SocialNews } from "../../socialnews/domain/entities/SocialNews";
+import SocialNewsDataSource from "../importers/socialNewsImporter";
 
 export default class SocialNewsTwitterDataSource implements SocialNewsDataSource {
     private twitterApiClient: Twit;

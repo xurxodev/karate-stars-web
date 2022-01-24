@@ -1,8 +1,9 @@
-import { SocialNews, SocialUser } from "../domain/entities/SocialNews";
 import { user, getUserMeta, hashtag } from "instatouch";
 import { Options, PostCollector } from "instatouch/build/types";
-import SocialNewsDataSource from "./SocialNewsDataSource";
+
 import moment from "moment";
+import { SocialNews, SocialUser } from "../../socialnews/domain/entities/SocialNews";
+import SocialNewsDataSource from "../importers/socialNewsImporter";
 
 export default class SocialNewsInstagramDataSource implements SocialNewsDataSource {
     private users: string[];

@@ -1,5 +1,5 @@
 import NewsFeedRepository from "../../../newsfeeds/domain/boundaries/NewsFeedRepository";
-import CurrentNewsRepository from "../boundaries/CurrentNewsRepository";
+import { CurrentNewsRepository } from "../boundaries/CurrentNewsRepository";
 import { CurrentNews } from "../entities/CurrentNews";
 
 export default class GetCurrentNewsUseCase {
