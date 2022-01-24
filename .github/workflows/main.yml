@@ -22,7 +22,7 @@ jobs:
                   node-version: "14.x"
 
             - name: Install dependencies
-              run: yarn install --frozen-lockfile --silent
+              run: yarn install --frozen-lockfile --silent && yarn core build
 
             - name: Run jest tests
               run: yarn test
@@ -46,6 +46,6 @@ jobs:
               with:
                   browser: chrome
                   headless: true
-                  install-command: yarn install --frozen-lockfile --silent
+                  install-command: yarn install --frozen-lockfile --silent && yarn core build
                   start: yarn start
-                  wait-on: "localhost:8000/admin"
+                  wait-on: "http://localhost:8000/admin"
