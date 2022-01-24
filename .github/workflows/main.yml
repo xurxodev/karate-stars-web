@@ -38,14 +38,11 @@ jobs:
               with:
                   node-version: "14.x"
 
-            - name: Install yarn
-              run: npm install -g yarn
-
             - name: Run cypress tests
               uses: cypress-io/github-action@v2
               with:
                   browser: chrome
                   headless: true
-                  install-command: yarn install --frozen-lockfile --silent
-                  start: yarn core build && yarn start
+                  install-command: yarn install --frozen-lockfile --silent && yarn build
+                  start: yarn start
                   wait-on: "http://localhost:8000/admin"
