@@ -42,11 +42,12 @@ jobs:
               uses: cypress-io/github-action@v2
               env:
                   CYPRESS_BASE_URL: http://localhost:8000/admin
-                  MONGO_DB_CONNECTION: ${{ secrets.MONGO_DB_CONNECTION }}
+                  CYPRESS_API_URL: http://localhost:8000/api/v1
+                  CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
+                  CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
                   JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
-                  API_URL: ${{ secrets.API_URL }}
-                  USERNAME: ${{ secrets.USERNAME }}
-                  PASSWORD: ${{ secrets.PASSWORD }}
+                  MONGO_DB_CONNECTION: ${{ secrets.MONGO_DB_CONNECTION }}
+
               with:
                   browser: chrome
                   headless: true
