@@ -45,6 +45,10 @@ jobs:
                   CYPRESS_API_URL: http://localhost:8000/api/v1
                   CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
                   CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
+                  FIREBASE_BUCKET_NAME: ${{ secrets.FIREBASE_BUCKET_NAME }}
+                  FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+                  FIREBASE_CLIENT_EMAIL: ${{ secrets.CYPRESS_PASSWORD }}
+                  FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
                   JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
                   MONGO_DB_CONNECTION: ${{ secrets.MONGO_DB_CONNECTION }}
 
