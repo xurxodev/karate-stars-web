@@ -52,3 +52,5 @@ jobs:
                   headless: true
                   start: yarn start
                   wait-on: "http://localhost:8000/admin"
+                  config-file: packages/admin/cypress.json
+                  command: yarn admin cy:run
