@@ -13,9 +13,6 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v2
 
-            - name: Install apt libraries
-              run: sudo apt install gettext -y
-
             - name: Setup Node
               uses: actions/setup-node@v1
               with:
@@ -43,6 +40,6 @@ jobs:
               with:
                   browser: chrome
                   headless: true
-                  install-command: yarn install --frozen-lockfile --silent && yarn build
+                  install-command: yarn --frozen-lockfile --silent && yarn build
                   start: yarn start
                   wait-on: "http://localhost:8000/admin"
