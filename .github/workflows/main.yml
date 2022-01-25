@@ -35,6 +35,9 @@ jobs:
               with:
                   node-version: "14.x"
 
+            - name: Install dependencies
+              run: yarn install --frozen-lockfile --silent && yarn core build
+
             - name: Run cypress tests
               uses: cypress-io/github-action@v2
               env:
@@ -42,8 +45,5 @@ jobs:
               with:
                   browser: chrome
                   headless: true
-                  install-command: |
-                      yarn --frozen-lockfile --silent
-                      yarn build
                   start: yarn start
                   wait-on: "http://localhost:8000/admin"
