@@ -42,10 +42,10 @@ describe("Video detail page", () => {
         cy.findByLabelText("Description (*)").clear().type("Final Female Kata");
         cy.findByLabelText("Event Date (*)").clear().type("2021-05-08");
         cy.findByLabelText("Order (*)").type("0");
-        cy.findByLabelText("Competitors (*)").focus().click({ force: true });
+        cy.findByLabelText("Competitors").focus().click({ force: true });
         cy.findByText("Sandra Sanchez Jaime").click();
 
-        cy.findByLabelText("Competitors (*)").focus().click({ force: true });
+        cy.findByLabelText("Competitors").focus().click({ force: true });
         cy.findByText("Kiyou Shimizu").click();
 
         typeValidLinkForm();
