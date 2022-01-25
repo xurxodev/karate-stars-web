@@ -37,6 +37,7 @@ jobs:
 
             - name: Run cypress tests
               uses: cypress-io/github-action@v2
+              env: CYPRESS_BASE_URL:http://localhost:8000/admin
               with:
                   browser: chrome
                   headless: true
