@@ -40,6 +40,8 @@ jobs:
               with:
                   browser: chrome
                   headless: true
-                  install-command: yarn --frozen-lockfile --silent && yarn build
+                  install-command: |
+                      yarn --frozen-lockfile --silent
+                      yarn build
                   start: yarn start
                   wait-on: "http://localhost:8000/admin"
