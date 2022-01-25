@@ -51,6 +51,7 @@ jobs:
                   FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
                   JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
                   MONGO_DB_CONNECTION: ${{ secrets.MONGO_DB_CONNECTION }}
+                  REACT_APP_FCM_API_TOKEN: ${{ secrets.REACT_APP_FCM_API_TOKEN }}
 
               with:
                   browser: chrome
