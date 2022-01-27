@@ -32,7 +32,11 @@ export default class CurrentNewsRSSDataSource implements CurrentNewsDataSource {
             rss = await this.parser.parseURL(feed.url.value);
 
             if (rss && rss.items) {
-                return rss?.items?.map((item: any) => this.mapItem(item, feed)) ?? [];
+                return (
+                    rss?.items
+                        ?.filter(item => item.link)
+                        .map((item: any) => this.mapItem(item, feed)) ?? []
+                );
             } else {
                 console.log(`There are not rss items to parse in ${feed.url}`);
                 return [];
