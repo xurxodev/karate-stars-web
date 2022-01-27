@@ -1,4 +1,4 @@
-import { Either } from "../../../build";
+import { Either } from "../Either";
 
 describe("Either", () => {
     describe("isLeft and isRight", () => {

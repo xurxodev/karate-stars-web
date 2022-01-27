@@ -1,7 +1,7 @@
 import { Id, NewsFeed, NewsFeedData } from "karate-stars-core";
 import { commonCRUDTests } from "../../../common/api/testUtils/crud.spec";
 import { ServerDataCreator, TestDataCreator } from "../../../common/api/testUtils/DataCreator";
-import { appDIKeys } from "../../../CompositionRoot";
+import { newsFeedDIKeys } from "../../NewsFeedsDIModule";
 
 const entities = [
     NewsFeed.create({
@@ -25,7 +25,7 @@ const entities = [
 ];
 
 const principalDataCreator: ServerDataCreator<NewsFeedData, NewsFeed> = {
-    repositoryKey: appDIKeys.newsFeedRepository,
+    repositoryKey: newsFeedDIKeys.newsFeedRepository,
     items: () => {
         return entities;
     },
