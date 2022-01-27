@@ -120,7 +120,6 @@ function initSendPushNotifications() {
     );
 
     const fcmApiToken = process.env.REACT_APP_FCM_API_TOKEN || "";
-    console.log({ fcmApiToken });
 
     di.bindLazySingleton(
         appDIKeys.pushNotificationRepository,
