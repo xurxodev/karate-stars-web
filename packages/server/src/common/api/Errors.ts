@@ -2,7 +2,7 @@ import { ValidationError } from "karate-stars-core";
 
 export type UnexpectedError = {
     kind: "UnexpectedError";
-    error: Error;
+    error: unknown;
 };
 
 export type ResourceNotFoundError = {

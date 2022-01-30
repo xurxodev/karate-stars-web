@@ -177,7 +177,7 @@ function handleFailure<TData>(error: UseCaseErrors<TData>): hapi.Lifecycle.Retur
         }
         case "UnexpectedError": {
             console.log({ error });
-            return boom.internal(error.error.message);
+            return boom.internal((error.error as Error).message);
         }
     }
 }
