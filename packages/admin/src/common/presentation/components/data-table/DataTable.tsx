@@ -270,7 +270,7 @@ export default function DataTable<T extends IdentifiableObject>({
                     <TablePagination
                         component="div"
                         count={pagination.total}
-                        onChangePage={handlePageChange}
+                        onPageChange={handlePageChange}
                         onChangeRowsPerPage={handleRowsPerPageChange}
                         page={pagination.page}
                         rowsPerPage={pagination.pageSize}

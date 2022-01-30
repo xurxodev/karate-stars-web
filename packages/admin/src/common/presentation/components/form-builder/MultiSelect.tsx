@@ -1,5 +1,5 @@
 import React from "react";
-import Select, { StylesConfig, ValueType } from "react-select";
+import Select, { OnChangeValue, StylesConfig } from "react-select";
 
 type Option = {
     label: string;
@@ -27,7 +27,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options, name, values, label,
         }),
     };
 
-    const handleMultiChange = (value: ValueType<Option, IsMulti>) => {
+    const handleMultiChange = (value: OnChangeValue<Option, IsMulti>) => {
         onChange(value.map(value => value.value));
     };
 
@@ -50,12 +50,12 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options, name, values, label,
                 classNamePrefix="select"
                 styles={customStyles}
                 onChange={handleMultiChange}
-                textFieldProps={{
-                    label,
-                    InputLabelProps: {
-                        shrink: true,
-                    },
-                }}
+                // textFieldProps={{
+                //     label,
+                //     InputLabelProps: {
+                //         shrink: true,
+                //     },
+                // }}
             />
         </div>
     );
