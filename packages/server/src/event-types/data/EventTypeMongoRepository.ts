@@ -9,7 +9,8 @@ type EventTypeDB = Omit<EventTypeData, "id"> & MongoCollection;
 
 export default class EventTypeMongoRepository
     extends MongoRepository<EventType, EventTypeDB>
-    implements EventTypeRepository {
+    implements EventTypeRepository
+{
     constructor(mongoConector: MongoConector) {
         super(mongoConector, "eventTypes");
     }

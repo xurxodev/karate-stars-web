@@ -121,8 +121,8 @@ function mapColumns<T extends IdentifiableObject>(fields: ListField<T>[]): Table
                     <img
                         width={field.type === "image" ? "150" : "60"}
                         style={{ borderRadius: "5%" }}
-                        src={(row[field.name] as unknown) as string}
-                        alt={field.alt ? ((row[field.alt] as unknown) as string) : undefined}
+                        src={row[field.name] as unknown as string}
+                        alt={field.alt ? (row[field.alt] as unknown as string) : undefined}
                     />
                 );
 
@@ -134,8 +134,8 @@ function mapColumns<T extends IdentifiableObject>(fields: ListField<T>[]): Table
             case "avatar": {
                 const avatar = (row: T) => (
                     <Avatar
-                        src={(row[field.name] as unknown) as string}
-                        alt={field.alt ? ((row[field.alt] as unknown) as string) : undefined}
+                        src={row[field.name] as unknown as string}
+                        alt={field.alt ? (row[field.alt] as unknown as string) : undefined}
                     />
                 );
 
@@ -146,7 +146,7 @@ function mapColumns<T extends IdentifiableObject>(fields: ListField<T>[]): Table
             }
             case "url": {
                 const link = (row: T) => {
-                    const url = (row[field.name] as unknown) as string;
+                    const url = row[field.name] as unknown as string;
                     return (
                         <a href={url} target="_blank" rel="noreferrer noopener">
                             {url}

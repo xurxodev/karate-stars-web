@@ -9,7 +9,8 @@ type VideoDB = Omit<VideoData, "id"> & MongoCollection;
 
 export default class VideoMongoRepository
     extends MongoRepository<Video, VideoDB>
-    implements VideoRepository {
+    implements VideoRepository
+{
     constructor(mongoConector: MongoConector) {
         super(mongoConector, "videos");
     }

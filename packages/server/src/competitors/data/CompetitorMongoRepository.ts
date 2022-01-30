@@ -9,7 +9,8 @@ type CompetitorDB = Omit<CompetitorData, "id"> & MongoCollection;
 
 export default class CompetitorMongoRepository
     extends MongoRepository<Competitor, CompetitorDB>
-    implements CompetitorRepository {
+    implements CompetitorRepository
+{
     constructor(mongoConector: MongoConector) {
         super(mongoConector, "competitors");
     }

@@ -59,7 +59,7 @@ export async function runPost<TData, TValidation>(
 ): Promise<hapi.Lifecycle.ReturnValue> {
     const { userId } = jwtAuthenticator.decodeTokenData(request.headers.authorization);
 
-    const payload = (request.payload as unknown) as TData;
+    const payload = request.payload as unknown as TData;
 
     if (payload) {
         const result = await action(userId, payload);
@@ -85,7 +85,7 @@ export async function runPut<TData, TValidation>(
 ): Promise<hapi.Lifecycle.ReturnValue> {
     const { userId } = jwtAuthenticator.decodeTokenData(request.headers.authorization);
 
-    const payload = (request.payload as unknown) as TData;
+    const payload = request.payload as unknown as TData;
     const id = request.params.id;
 
     if (payload) {

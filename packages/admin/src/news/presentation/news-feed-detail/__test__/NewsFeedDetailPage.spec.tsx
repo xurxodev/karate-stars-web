@@ -27,8 +27,7 @@ const dataCreator = {
             name: "WKF News Center",
             language: "en",
             type: "rss" as RssType,
-            image:
-                "https://storage.googleapis.com/karatestars-1261.appspot.com/feeds/YHv96B5LZXn.png",
+            image: "https://storage.googleapis.com/karatestars-1261.appspot.com/feeds/YHv96B5LZXn.png",
             url: "http://fetchrss.com/rss/59baa0d28a93f8a1048b4567777611407.xml",
         };
     },

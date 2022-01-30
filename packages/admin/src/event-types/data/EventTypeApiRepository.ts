@@ -6,7 +6,8 @@ import { TokenStorage } from "../../common/data/TokenLocalStorage";
 
 class EventTypeApiRepository
     extends ApiRepository<EventType, EventTypeData>
-    implements EventTypeRepository {
+    implements EventTypeRepository
+{
     constructor(axiosInstance: AxiosInstance, tokenStorage: TokenStorage) {
         super(axiosInstance, tokenStorage, "event-types");
     }

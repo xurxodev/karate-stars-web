@@ -6,7 +6,8 @@ import { TokenStorage } from "../../common/data/TokenLocalStorage";
 
 class CountryApiRepository
     extends ApiRepository<Country, CountryData>
-    implements CountryRepository {
+    implements CountryRepository
+{
     constructor(axiosInstance: AxiosInstance, tokenStorage: TokenStorage) {
         super(axiosInstance, tokenStorage, "countries");
     }

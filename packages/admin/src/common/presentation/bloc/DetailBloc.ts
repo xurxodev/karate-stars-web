@@ -92,8 +92,9 @@ export default abstract class DetailBloc<TData> extends Bloc<DetailPageState> {
                     return {
                         ...section,
                         fields: section.fields.map(field => {
-                            const fieldErrors = errors?.find(error => error.property === name)
-                                ?.errors;
+                            const fieldErrors = errors?.find(
+                                error => error.property === name
+                            )?.errors;
 
                             return field.name === name
                                 ? {

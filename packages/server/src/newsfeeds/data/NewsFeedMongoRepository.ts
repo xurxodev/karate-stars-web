@@ -9,7 +9,8 @@ type NewsFeedDB = Omit<NewsFeedData, "id"> & MongoCollection;
 
 export default class NewsFeedMongoRepository
     extends MongoRepository<NewsFeed, NewsFeedDB>
-    implements NewsFeedRepository {
+    implements NewsFeedRepository
+{
     constructor(mongoConector: MongoConector) {
         super(mongoConector, "newsFeeds");
     }

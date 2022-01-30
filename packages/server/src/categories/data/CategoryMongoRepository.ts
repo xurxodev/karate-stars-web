@@ -9,7 +9,8 @@ type CategoryDB = Omit<CategoryData, "id"> & MongoCollection;
 
 export default class CategoryTypeMongoRepository
     extends MongoRepository<Category, CategoryDB>
-    implements CategoryRepository {
+    implements CategoryRepository
+{
     constructor(mongoConector: MongoConector) {
         super(mongoConector, "categories");
     }

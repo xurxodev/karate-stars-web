@@ -12,7 +12,8 @@ type CurrentNewsDB = CurrentNews & MongoCollection & { createdDate: Date };
 
 export default class CurrentNewsMongoRepository
     extends MongoRepository<CurrentNews, CurrentNewsDB>
-    implements CurrentNewsWritableRepository, CurrentNewsRepository {
+    implements CurrentNewsWritableRepository, CurrentNewsRepository
+{
     constructor(mongoConector: MongoConector) {
         super(mongoConector, "currentNews");
     }

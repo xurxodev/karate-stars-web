@@ -55,7 +55,8 @@ function initApp() {
             baseURL: "/api/v1/",
         });
 
-        const isoDateFormat = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/;
+        const isoDateFormat =
+            /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/;
 
         const isIsoDateString = (value: any) => {
             return value && typeof value === "string" && isoDateFormat.test(value);

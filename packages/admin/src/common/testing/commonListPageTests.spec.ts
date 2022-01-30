@@ -48,7 +48,7 @@ export const commonListPageTests = <TData extends EntityData>(
 
             render(component);
 
-            const searchTerm = (items[12][verifiableFields[0]] as unknown) as string;
+            const searchTerm = items[12][verifiableFields[0]] as unknown as string;
 
             await tl.searchAndVerifyAsync(searchTerm);
         });

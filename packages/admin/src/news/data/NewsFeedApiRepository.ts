@@ -6,7 +6,8 @@ import { TokenStorage } from "../../common/data/TokenLocalStorage";
 
 class NewsFeedApiRepository
     extends ApiRepository<NewsFeed, NewsFeedData>
-    implements NewsFeedRepository {
+    implements NewsFeedRepository
+{
     constructor(axiosInstance: AxiosInstance, tokenStorage: TokenStorage) {
         super(axiosInstance, tokenStorage, "/news-feeds");
     }

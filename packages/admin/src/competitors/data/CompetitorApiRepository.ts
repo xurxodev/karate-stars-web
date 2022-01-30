@@ -6,7 +6,8 @@ import { TokenStorage } from "../../common/data/TokenLocalStorage";
 
 class CompetitorApiRepository
     extends ApiRepository<Competitor, CompetitorData>
-    implements CompetitorRepository {
+    implements CompetitorRepository
+{
     constructor(axiosInstance: AxiosInstance, tokenStorage: TokenStorage) {
         super(axiosInstance, tokenStorage, "competitors");
     }

@@ -9,7 +9,8 @@ type CountryDB = Omit<CountryData, "id"> & MongoCollection;
 
 export default class CountryMongoRepository
     extends MongoRepository<Country, CountryDB>
-    implements CountryRepository {
+    implements CountryRepository
+{
     constructor(mongoConector: MongoConector) {
         super(mongoConector, "countries");
     }

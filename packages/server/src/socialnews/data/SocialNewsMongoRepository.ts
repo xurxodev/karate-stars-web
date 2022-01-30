@@ -11,7 +11,8 @@ type SocialNewsDB = SocialNews & MongoCollection & { createdDate: Date };
 
 export default class SociaNewsMongoRepository
     extends MongoRepository<SocialNews, SocialNewsDB>
-    implements SocialNewsWritableRepository, SocialNewsRepository {
+    implements SocialNewsWritableRepository, SocialNewsRepository
+{
     constructor(mongoConector: MongoConector) {
         super(mongoConector, "socialNews");
     }

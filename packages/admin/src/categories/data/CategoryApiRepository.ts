@@ -6,7 +6,8 @@ import { TokenStorage } from "../../common/data/TokenLocalStorage";
 
 class CategoryApiRepository
     extends ApiRepository<Category, CategoryData>
-    implements CategoryRepository {
+    implements CategoryRepository
+{
     constructor(axiosInstance: AxiosInstance, tokenStorage: TokenStorage) {
         super(axiosInstance, tokenStorage, "categories");
     }
