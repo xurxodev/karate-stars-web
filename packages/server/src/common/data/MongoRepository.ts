@@ -1,6 +1,6 @@
 import { Either, Id } from "karate-stars-core";
 import { MongoConector } from "./MongoConector";
-import { Collection, ObjectId } from "mongodb";
+import { Collection } from "mongodb";
 import { MongoCollection } from "./Types";
 import { ResourceNotFoundError, UnexpectedError } from "../api/Errors";
 import { ActionResult } from "../api/ActionResult";
@@ -127,30 +127,6 @@ export default abstract class MongoRepository<Entity, ModelDB extends MongoColle
         } catch (error) {
             return Either.left({ kind: "UnexpectedError", error });
         }
-    }
-
-    protected generateObjectId(id: string): ObjectId {
-        var hex, i;
-
-        var result = "";
-        for (i = 0; i < id.length; i++) {
-            hex = id.charCodeAt(i).toString(16);
-            result += ("000" + hex).slice(-4);
-        }
-
-        return new ObjectId(result);
-    }
-
-    protected extractId(id: ObjectId): string {
-        const idhex = id.toHexString();
-        var j;
-        var hexes = idhex.match(/.{1,4}/g) || [];
-        var back = "";
-        for (j = 0; j < hexes.length; j++) {
-            back += String.fromCharCode(parseInt(hexes[j], 16));
-        }
-
-        return back;
     }
 
     private async collection(): Promise<Collection> {

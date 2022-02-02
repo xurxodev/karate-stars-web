@@ -5,7 +5,9 @@ import * as inert from "@hapi/inert";
 import * as CompositionRoot from "./CompositionRoot";
 import * as http from "http";
 import { appDIKeys } from "./CompositionRoot";
-import _newrelic from "newrelic"
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import _newrelic from "newrelic";
 
 export interface TokenData {
     userId: string;
