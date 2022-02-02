@@ -48,10 +48,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         textTransform: "none",
         letterSpacing: 0,
         width: "100%",
-        fontWeight: theme.typography.fontWeightMedium,
+        //fontWeight: theme.typography.fontWeightMedium,
     },
     logoutIcon: {
-        // color: theme.palette.icon,
         width: 24,
         height: 24,
         display: "flex",

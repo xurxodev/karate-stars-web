@@ -46,10 +46,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         textTransform: "none",
         letterSpacing: 0,
         width: "100%",
-        fontWeight: theme.typography.fontWeightMedium,
+        //fontWeight: theme.typography.fontWeightMedium,
     },
     icon: {
-        // color: theme.palette.icon,
         width: 24,
         height: 24,
         display: "flex",
@@ -58,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     active: {
         color: theme.palette.primary.main,
-        fontWeight: theme.typography.fontWeightMedium,
+        //fontWeight: theme.typography.fontWeightMedium,
         "& $icon": {
             color: theme.palette.primary.main,
         },
