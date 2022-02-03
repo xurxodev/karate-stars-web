@@ -2,9 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./app/App";
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import _newrelic from "newrelic";
-
 //import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(

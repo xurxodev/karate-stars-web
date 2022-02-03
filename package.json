@@ -23,11 +23,7 @@
       "pre-push": "yarn prettify && yarn lint && yarn test"
     }
   },
-  "dependencies": {
-    "newrelic": "^8.7.1"
-  },
   "devDependencies": {
-    "@types/newrelic": "^7.0.3",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "concurrently": "^7.0.0",
