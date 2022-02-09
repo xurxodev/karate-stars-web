@@ -48,20 +48,26 @@
         {
             "id": "CYrgQdA0ZZm",
             "name": "World Championships Maastricht 1984",
-            "year": 1984,
-            "typeId": "Jr6N73CZWtE"
+            "typeId": "Jr6N73CZWtE",
+            "startDate": "1984-11-25T00:00:00Z",
+            "endDate": "1984-11-25T00:00:00Z",
+            "url": "https://en.wikipedia.org/wiki/1984_World_Karate_Championships"
         },
         {
             "id": "QaFq0Lf2YDR",
             "name": "uropean Championships Titograd 1989",
-            "year": 1989,
-            "typeId": "FEJ08kkHhqi"
+            "typeId": "FEJ08kkHhqi",
+            "startDate": "1989-05-02T00:00:00Z",
+            "endDate": "1989-05-04T00:00:00Z",
+            "url": "https://en.wikipedia.org/wiki/1989_European_Karate_Championships"
         },
         {
             "id": "aSustSmDT6m",
             "name": "Karate1 Series A Guadalajara 2018",
-            "year": 2018,
-            "typeId": "ff0tTiLsK9J"
+            "typeId": "ff0tTiLsK9J",
+            "startDate": "2018-02-09T00:00:00Z",
+            "endDate": "2018-02-11T00:00:00Z",
+            "url": "https://www.sportdata.org/wkf/set-online/veranstaltung_info_main.php?active_menu=calendar&vernr=162"
         }
     ]
 }

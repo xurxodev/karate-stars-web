@@ -5,7 +5,7 @@ import { commonListPageTests } from "../../../../common/testing/commonListPageTe
 
 import EventListPage from "../EventListPage";
 
-const verifiableFields: (keyof EventData)[] = ["id", "name", "year"];
+const verifiableFields: (keyof EventData)[] = ["id", "name"];
 
 const dataListCreator = {
     givenADataList: (count: number): EventData[] => {
@@ -16,11 +16,13 @@ const dataListCreator = {
                 return {
                     id: Id.generateId().value,
                     name: `name ${code}`,
-                    year: +("20" + code),
                     typeId: Id.generateId().value,
+                    startDate: new Date(+("20" + code), 1, 1),
+                    endDate: new Date(+("20" + code), 1, 1),
+                    url: "http://example.com/" + code,
                 };
             })
-            .sort((a, b) => b.year - a.year);
+            .sort((a, b) => b.startDate.getFullYear() - a.startDate.getFullYear());
 
         return dataList;
     },

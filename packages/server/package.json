@@ -15,7 +15,11 @@
     "start-debug": "yarn build && node -r dotenv/config --inspect ./build/index.js",
     "tsc": "tsc --build",
     "clean": "rm -rf build",
-    "test": "jest"
+    "test": "jest",
+    "migrate:create": "sh -c 'ts-node  -r dotenv/config ../../node_modules/.bin/migrate-mongo create $0 -f migrate-mongo-config.js' ",
+    "migrate:status": "ts-node  -r dotenv/config ../../node_modules/.bin/migrate-mongo status -f migrate-mongo-config.js",
+    "migrate:undo-last": "ts-node  -r dotenv/config ../../node_modules/.bin/migrate-mongo down -f migrate-mongo-config.js",
+    "migrate": "ts-node -r dotenv/config ../../node_modules/.bin/migrate-mongo up -f migrate-mongo-config.js"
   },
   "dependencies": {
     "@hapi/boom": "^9.1.4",
@@ -46,9 +50,11 @@
     "@types/twit": "^2.2.30",
     "@types/uuid": "^8.3.4",
     "jest": "^26.6.0",
+    "migrate-mongo": "^8.2.3",
     "nodemon": "^2.0.15",
     "supertest": "^6.2.2",
-    "ts-jest": "^26.5.3"
+    "ts-jest": "^26.5.3",
+    "ts-node": "10.4.0"
   },
   "engines": {
     "node": "14.x"

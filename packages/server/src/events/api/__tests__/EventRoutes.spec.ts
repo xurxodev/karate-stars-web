@@ -16,7 +16,13 @@ import { competitorDIKeys } from "../../../competitors/CompetitorDIModule";
 const entities = {
     competitors: data.competitors.map(data => Competitor.create(data as CompetitorData).get()),
     eventTypes: data.eventTypes.map(data => EventType.create(data).get()),
-    events: data.events.map(data => Event.create(data).get()),
+    events: data.events.map(event =>
+        Event.create({
+            ...event,
+            startDate: new Date(event.startDate),
+            endDate: new Date(event.endDate),
+        }).get()
+    ),
 };
 
 const principalDataCreator: ServerDataCreator<EventData, Event> = {

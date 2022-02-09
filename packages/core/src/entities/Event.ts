@@ -2,31 +2,40 @@ import { Either } from "../types/Either";
 import { ValidationError } from "../types/Errors";
 import { validateRequired } from "../utils/validations";
 import { Id } from "../value-objects/Id";
+import { Url } from "../value-objects/Url";
 import { Entity, EntityObjectData, EntityData } from "./Entity";
 
 interface EventObjectData extends EntityObjectData {
     name: string;
-    year: number;
     typeId: Id;
+    startDate: Date;
+    endDate: Date;
+    url?: Url;
 }
 
 export interface EventData extends EntityData {
     name: string;
-    year: number;
     typeId: string;
+    startDate: Date;
+    endDate: Date;
+    url?: string;
 }
 
 export class Event extends Entity<EventData> implements EventObjectData {
     public readonly name: string;
-    public readonly year: number;
     public readonly typeId: Id;
+    public readonly startDate: Date;
+    public readonly endDate: Date;
+    public readonly url: Url;
 
     private constructor(data: EventObjectData) {
         super(data.id);
 
         this.name = data.name;
-        this.year = data.year;
         this.typeId = data.typeId;
+        this.startDate = data.startDate;
+        this.endDate = data.endDate;
+        this.url = data.url;
     }
 
     public static create(data: EventData): Either<ValidationError<EventData>[], Event> {
@@ -47,14 +56,17 @@ export class Event extends Entity<EventData> implements EventObjectData {
         return {
             id: this.id.value,
             name: this.name,
-            year: this.year,
             typeId: this.typeId.value,
+            startDate: this.startDate,
+            endDate: this.endDate,
+            url: this.url?.value,
         };
     }
 
     private static validateAndCreate(data: EventData): Either<ValidationError<EventData>[], Event> {
         const idResult = Id.createExisted(data.id);
         const typeIdResult = Id.createExisted(data.typeId);
+        const urlResult = data.url ? Url.create(data.url) : undefined;
 
         const errors = [
             {
@@ -66,7 +78,6 @@ export class Event extends Entity<EventData> implements EventObjectData {
                 value: data.id,
             },
             { property: "name" as const, errors: validateRequired(data.name), value: data.name },
-            { property: "year" as const, errors: validateRequired(data.year), value: data.year },
             {
                 property: "typeId" as const,
                 errors: typeIdResult.fold(
@@ -74,6 +85,26 @@ export class Event extends Entity<EventData> implements EventObjectData {
                     () => []
                 ),
                 value: data.typeId,
+            },
+            {
+                property: "startDate" as const,
+                errors: validateRequired(data.startDate),
+                value: data.startDate,
+            },
+            {
+                property: "endDate" as const,
+                errors: validateRequired(data.endDate),
+                value: data.endDate,
+            },
+            {
+                property: "url" as const,
+                errors: urlResult
+                    ? urlResult.fold(
+                          errors => errors,
+                          () => []
+                      )
+                    : [],
+                value: data.url,
             },
         ]
             .map(error => ({ ...error, type: Event.name }))
@@ -84,8 +115,10 @@ export class Event extends Entity<EventData> implements EventObjectData {
                 new Event({
                     id: idResult.get(),
                     name: data.name,
-                    year: data.year,
                     typeId: typeIdResult.get(),
+                    startDate: data.startDate,
+                    endDate: data.endDate,
+                    url: data.url ? urlResult.get() : undefined,
                 })
             );
         } else {

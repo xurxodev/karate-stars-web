@@ -24,6 +24,7 @@ const dataCreator = {
             eventDate: new Date(video.eventDate),
             createdDate: new Date(video.createdDate),
             links: video.links.map(link => ({ ...link, type: link.type } as VideoLinkData)),
+            isLive: false,
         };
     },
 };

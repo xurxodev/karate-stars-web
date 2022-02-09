@@ -1,4 +1,5 @@
 import { Icon } from "@material-ui/core";
+import moment from "moment";
 import { ReactNode } from "react";
 import { TableColumn } from "./DataTable";
 
@@ -8,6 +9,8 @@ function defaultFormatter(value: any): ReactNode {
         return null;
     } else if (typeof value === "boolean") {
         return value ? <Icon>done</Icon> : "";
+    } else if (isValidDate(value)) {
+        return moment(value).format("YYYY-MM-DD");
     } else {
         return value;
     }
@@ -39,12 +42,12 @@ export function formatRowValue<T>(
 }
 
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-// function isValidDate(value: any): boolean {
-//     if (moment.isDate(value) || moment.isMoment(value)) return true;
+function isValidDate(value: any): boolean {
+    if (moment.isDate(value) || moment.isMoment(value)) return true;
 
-//     const date = moment(value, moment.ISO_8601, true);
-//     const { format } = date.creationData();
+    const date = moment(value, moment.ISO_8601, true);
+    const { format } = date.creationData();
 
-//     // Avoid dubious positives by skipping strings that do not contain at least year, month and day
-//     return format !== "YYYY" && format !== "YYYY-MM" && date.isValid();
-// }
+    // Avoid dubious positives by skipping strings that do not contain at least year, month and day
+    return format !== "YYYY" && format !== "YYYY-MM" && date.isValid();
+}

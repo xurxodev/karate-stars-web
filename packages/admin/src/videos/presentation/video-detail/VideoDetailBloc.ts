@@ -181,7 +181,7 @@ const initialFieldsState = (
                     name: "isLive",
                     type: "checkbox",
                     required: false,
-                    value: entity?.isLive?.toString() || "",
+                    value: entity?.isLive?.toString() || false,
                     md: 4,
                     xs: 12,
                 },

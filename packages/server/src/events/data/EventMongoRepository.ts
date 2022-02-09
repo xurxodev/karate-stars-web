@@ -19,10 +19,10 @@ export default class EventMongoRepository
         const events = await super.getAll();
 
         const orderedEvents = events.sort((a, b) => {
-            if (a.year > b.year) {
+            if (a.startDate.getFullYear() > b.startDate.getFullYear()) {
                 return -1;
             }
-            if (a.year < b.year) {
+            if (a.startDate.getFullYear() < b.startDate.getFullYear()) {
                 return 1;
             }
             // a must be equal to b
@@ -36,8 +36,10 @@ export default class EventMongoRepository
         return Event.create({
             id: modelDB._id,
             name: modelDB.name,
-            year: modelDB.year,
             typeId: modelDB.typeId,
+            startDate: modelDB.startDate,
+            endDate: modelDB.endDate,
+            url: modelDB.url,
         }).get();
     }
 

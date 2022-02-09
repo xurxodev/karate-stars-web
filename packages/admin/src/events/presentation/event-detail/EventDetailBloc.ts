@@ -9,6 +9,7 @@ import DetailBloc from "../../../common/presentation/bloc/DetailBloc";
 import GetEventByIdUseCase from "../../domain/GetEventByIdUseCase";
 import SaveEventUseCase from "../../domain/SaveEventUseCase";
 import GetEventTypesUseCase from "../../../event-types/domain/GetEventTypesUseCase";
+import moment from "moment";
 
 class EventDetailBloc extends DetailBloc<EventData> {
     constructor(
@@ -72,22 +73,40 @@ const initialFieldsState = (
                 },
                 {
                     kind: "FormSingleFieldState",
-                    label: "Year",
-                    name: "year",
-                    required: true,
-                    value: entity?.year.toString(),
-                    md: 6,
-                    xs: 12,
-                },
-                {
-                    kind: "FormSingleFieldState",
                     label: "Type",
                     name: "typeId",
                     required: true,
                     value: entity?.typeId ?? typeOptions[0].id,
                     selectOptions: typeOptions,
-                    md: 6,
+                    md: 4,
                     xs: 12,
+                },
+                {
+                    kind: "FormSingleFieldState",
+                    label: "Start date",
+                    name: "startDate",
+                    required: true,
+                    type: "date",
+                    value: moment(entity?.startDate).format("YYYY-MM-DD"),
+                    md: 4,
+                    xs: 12,
+                },
+                {
+                    kind: "FormSingleFieldState",
+                    label: "End date",
+                    name: "endDate",
+                    required: true,
+                    type: "date",
+                    value: moment(entity?.endDate).format("YYYY-MM-DD"),
+                    md: 4,
+                    xs: 12,
+                },
+                {
+                    kind: "FormSingleFieldState",
+                    name: "url",
+                    label: "Url",
+                    value: entity?.url,
+                    required: false,
                 },
             ],
         },

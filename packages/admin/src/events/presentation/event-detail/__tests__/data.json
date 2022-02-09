@@ -2,9 +2,11 @@
     "events": [
         {
             "id": "CYrgQdA0ZZm",
+            "endDate": "1984-11-25T00:00:00Z",
             "name": "World Championships Maastricht 1984",
-            "year": 1984,
-            "typeId": "Jr6N73CZWtE"
+            "startDate": "1984-11-21T00:00:00Z",
+            "typeId": "Jr6N73CZWtE",
+            "url": "https://en.wikipedia.org/wiki/1984_World_Karate_Championships"
         }
     ],
     "eventTypes": [

@@ -17,7 +17,11 @@ import { givenADependencies } from "../../../../common/testing/scenarios/Generic
 
 const dataCreator = {
     givenAItem: (): EventData => {
-        return data.events[0];
+        return {
+            ...data.events[0],
+            startDate: new Date(data.events[0].startDate),
+            endDate: new Date(data.events[0].endDate),
+        };
     },
 };
 
@@ -28,10 +32,15 @@ const dependenciesCreators = [
     },
 ];
 
-function typeValidForm() {
+async function typeValidForm() {
     tl.typeByLabelText("Name (*)", "Example Example");
-    tl.typeByLabelText("Year (*)", "2010");
     tl.selectOption("Type (*)", data.eventTypes[1].id);
+    tl.typeByLabelText("Start date (*)", "2014-11-08");
+    tl.typeByLabelText("End date (*)", "2014-11-08");
+    tl.typeByLabelText(
+        "Url",
+        "https://www.sportdata.org/wkf/set-online/veranstaltung_info_main.php?active_menu=calendar&vernr=570"
+    );
 }
 
 const component = <EventDetailPage />;

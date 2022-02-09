@@ -55,15 +55,19 @@
     "events": [
         {
             "id": "CYrgQdA0ZZm",
-            "name": "World Championships Bremen 2014",
-            "year": 2014,
-            "typeId": "Jr6N73CZWtE"
+            "name": "World Championships Maastricht 1984",
+            "typeId": "Jr6N73CZWtE",
+            "startDate": "1984-11-25T00:00:00Z",
+            "endDate": "1984-11-25T00:00:00Z",
+            "url": "https://en.wikipedia.org/wiki/1984_World_Karate_Championships"
         },
         {
             "id": "QaFq0Lf2YDR",
-            "name": "European Championships Montpellier 2016",
-            "year": 2016,
-            "typeId": "FEJ08kkHhqi"
+            "name": "uropean Championships Titograd 1989",
+            "typeId": "FEJ08kkHhqi",
+            "startDate": "1989-05-02T00:00:00Z",
+            "endDate": "1989-05-04T00:00:00Z",
+            "url": "https://en.wikipedia.org/wiki/1989_European_Karate_Championships"
         }
     ]
 }

@@ -38,7 +38,7 @@ class EventListBloc extends ListBloc<EventData> {
                     fields: fields,
                     selectedItems: [],
                     pagination: { ...defaultPagination, total: items.length },
-                    sorting: { field: "year", order: "desc" },
+                    sorting: { field: "startDate", order: "desc" },
                     actions: this.actions,
                 })
         );
@@ -50,5 +50,6 @@ export default EventListBloc;
 const fields: ListField<EventData>[] = [
     { name: "id", text: "Id", type: "text" },
     { name: "name", text: "Name", type: "text" },
-    { name: "year", text: "Year", type: "text" },
+    { name: "startDate", text: "Start date", type: "text" },
+    { name: "endDate", text: "End date", type: "text" },
 ];

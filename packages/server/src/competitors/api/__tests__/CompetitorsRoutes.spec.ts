@@ -27,7 +27,13 @@ import data from "./data.json";
 const entities = {
     competitors: data.competitors.map(data => Competitor.create(data as CompetitorData).get()),
     categories: data.categories.map(data => Category.create(data).get()),
-    events: data.events.map(data => Event.create(data).get()),
+    events: data.events.map(event =>
+        Event.create({
+            ...event,
+            startDate: new Date(event.startDate),
+            endDate: new Date(event.endDate),
+        }).get()
+    ),
     countries: data.countries.map(data => Country.create(data).get()),
     videos: data.videos.map(data =>
         Video.create({

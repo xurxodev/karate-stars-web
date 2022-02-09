@@ -35,8 +35,12 @@ export class GetCompetitorByIdUseCase {
         return {
             ...data,
             achievements: data.achievements.sort((a, b) => {
-                const yearEventA = events.find(event => event.id.value === a.eventId)?.year || 0;
-                const yearEventB = events.find(event => event.id.value === b.eventId)?.year || 0;
+                const yearEventA =
+                    events.find(event => event.id.value === a.eventId)?.startDate.getFullYear() ||
+                    0;
+                const yearEventB =
+                    events.find(event => event.id.value === b.eventId)?.startDate.getFullYear() ||
+                    0;
 
                 if (yearEventA > yearEventB) {
                     return -1;

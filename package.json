@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "yarn core build && yarn admin build && yarn server build",
-    "start": "yarn server start",
+    "start": "yarn server migrate && yarn server start",
     "start-dev": "concurrently --kill-others-on-fail \"yarn core start-dev\"  \"yarn server start-dev\" \"yarn admin start-dev\"",
     "lint": "eslint packages/*/src --ext ts,tsx",
     "test": "yarn core test && yarn admin test && yarn server test",

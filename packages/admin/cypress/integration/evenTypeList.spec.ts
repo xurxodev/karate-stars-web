@@ -1,7 +1,7 @@
-describe("Event Types page", () => {
+describe("Events page", () => {
     beforeEach(() => {
         cy.login();
-        cy.visit("#/events");
+        cy.visit("#/event-types");
     });
 
     it("should show rows", () => {
@@ -9,7 +9,7 @@ describe("Event Types page", () => {
     });
 
     it("should search by text", () => {
-        cy.findByPlaceholderText("Search ...").type("World Championships Granada 1992");
+        cy.findByPlaceholderText("Search ...").type("World Championships");
         cy.findAllByRole("row").should("have.length", 2);
     });
 });
