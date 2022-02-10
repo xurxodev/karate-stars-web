@@ -39,9 +39,9 @@ describe("event detail page", () => {
     function typeValidForm() {
         cy.findByLabelText("Name (*)").clear().type("Olympic Games Tokyo 2020");
         cy.findByLabelText("Type (*)").select("Z8JRebUhjRB");
-        cy.findByLabelText("Start Date (*)").clear().type("2021-05-06");
-        cy.findByLabelText("end Date (*)").clear().type("2021-05-08");
-        cy.findByLabelText("Url (*)")
+        cy.findByLabelText("Start date (*)").clear().type("2021-05-06");
+        cy.findByLabelText("End date (*)").clear().type("2021-05-08");
+        cy.findByLabelText("Url")
             .clear()
             .type("https://olympics.com/es/olympic-games/tokyo-2020/results/karate");
         cy.findByRole("button", { name: /accept/i }).click();
