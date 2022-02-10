@@ -16,12 +16,8 @@
     "prettify": "prettier \"packages/**/src/**/*.{js,jsx,json,css,ts,tsx}\" --write",
     "core": "yarn workspace karate-stars-core",
     "admin": "yarn workspace karate-stars-admin",
-    "server": "yarn workspace karate-stars-server"
-  },
-  "husky": {
-    "hooks": {
-      "pre-push": "yarn prettify && yarn lint && yarn test"
-    }
+    "server": "yarn workspace karate-stars-server",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.33.0",
@@ -34,7 +30,7 @@
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-prettier": "^3.4.1",
-    "husky": "^4.2.5",
+    "husky": "^7.0.0",
     "prettier": "^2.5.1",
     "typescript": "4.4.4",
     "wait-on": "^6.0.0"
