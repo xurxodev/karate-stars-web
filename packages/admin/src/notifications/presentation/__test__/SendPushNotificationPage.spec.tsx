@@ -82,7 +82,7 @@ describe("Send push page", () => {
 
             render(<SendUrlNotificationPage />);
 
-            userEvent.selectOptions(screen.getByLabelText("Topic (*)"), "debugurlnews");
+            userEvent.selectOptions(screen.getByLabelText("Topic (*)"), "debug_url_notification");
             userEvent.type(screen.getByLabelText("Url (*)"), "http://karatestarsapp.com/");
             userEvent.type(screen.getByLabelText("Title (*)"), "Karate stars news");
             userEvent.type(
@@ -99,7 +99,7 @@ describe("Send push page", () => {
 
             render(<SendUrlNotificationPage />);
 
-            userEvent.selectOptions(screen.getByLabelText("Topic (*)"), "debugurlnews");
+            userEvent.selectOptions(screen.getByLabelText("Topic (*)"), "debug_url_notification");
             userEvent.type(screen.getByLabelText("Url (*)"), "http://karatestarsapp.com/");
             userEvent.type(screen.getByLabelText("Title (*)"), "Karate stars news");
             userEvent.type(
@@ -119,7 +119,7 @@ describe("Send push page", () => {
 
             render(<SendUrlNotificationPage />);
 
-            userEvent.selectOptions(screen.getByLabelText("Topic (*)"), "debugurlnews");
+            userEvent.selectOptions(screen.getByLabelText("Topic (*)"), "debug_url_notification");
             userEvent.type(screen.getByLabelText("Url (*)"), "http://karatestarsapp.com/");
             userEvent.type(screen.getByLabelText("Title (*)"), "Karate stars news");
             userEvent.type(

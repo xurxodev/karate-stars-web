@@ -24,13 +24,18 @@ const dataListCreator = {
                 description: `description ${code}`,
                 subtitle: `subtitle ${code}`,
                 competitors: ["tjZtIOHwzVJ"],
-                eventDate: new Date(),
-                createdDate: new Date(),
+                eventDate: new Date(2022, 1, index),
+                createdDate: new Date(2022, 1, index),
                 order: index,
+                isLive: false,
             };
         });
 
-        return dataList;
+        return dataList.sort((a, b) => {
+            // Turn your strings into dates, and then subtract them
+            // to get a value that is either negative, positive, or zero.
+            return new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime();
+        });
     },
 };
 
