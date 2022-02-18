@@ -75,6 +75,17 @@ export const pages: Record<string, PageConfig> = {
         generateUrl: (params: DetailPageParams) =>
             `/news-feeds/${params.action}${params.id ? "/" + params.id : ""}`,
     },
-    sendPushNotification: { title: "Send news", path: "/send-push-notification" },
+    sendUrlPushNotification: {
+        title: "Send url notification",
+        path: "/send-url-push-notification",
+    },
+    sendCompetitorPushNotification: {
+        title: "Send competitor notification",
+        path: "/send-competitor-push-notification",
+    },
+    sendVideoPushNotification: {
+        title: "Send video notification",
+        path: "/send-video-push-notification",
+    },
     notFound: { title: "Not found", path: "/not-found" },
 };

@@ -1,25 +1,18 @@
-import { PushNotification } from "./PushNotification";
+import { Notification, NotificationData, NotificationObjectData } from "./Notification";
 import { Url, Either, ValidationError } from "karate-stars-core";
-import { validateRequired } from "karate-stars-core";
 
-export interface NotificationUrlData {
-    topic: string;
-    title: string;
-    description: string;
+export interface NotificationUrlObjectData extends NotificationObjectData {
     url: Url;
 }
 
-export interface NotificationUrlInput {
-    topic: string;
-    title: string;
-    description: string;
+export interface NotificationUrlData extends NotificationData {
     url: string;
 }
 
-export class UrlNotification extends PushNotification {
+export class UrlNotification extends Notification {
     public readonly url: Url;
 
-    private constructor({ topic, title, description, url }: NotificationUrlData) {
+    private constructor({ topic, title, description, url }: NotificationUrlObjectData) {
         super({ title, description, topic });
         this.url = url;
     }
@@ -29,17 +22,11 @@ export class UrlNotification extends PushNotification {
         title,
         description,
         url,
-    }: NotificationUrlInput): Either<ValidationError<UrlNotification>[], UrlNotification> {
+    }: NotificationUrlData): Either<ValidationError<UrlNotification>[], UrlNotification> {
         const urlValue = Url.create(url);
 
         const errors: ValidationError<UrlNotification>[] = [
-            { property: "topic" as const, errors: validateRequired(topic), value: topic },
-            { property: "title" as const, errors: validateRequired(title), value: title },
-            {
-                property: "description" as const,
-                errors: validateRequired(description),
-                value: description,
-            },
+            ...super.validateBase({ topic, title, description }),
             {
                 property: "url" as const,
                 errors: urlValue.fold(

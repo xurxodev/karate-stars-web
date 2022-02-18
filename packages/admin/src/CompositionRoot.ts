@@ -6,7 +6,7 @@ import { TokenLocalStorage } from "./common/data/TokenLocalStorage";
 import GetCurrentUserUseCase from "./user/domain/GetCurrentUserUseCase";
 import AppBloc from "./app/AppBloc";
 import RemoveCurrentUserUseCase from "./user/domain/RemoveCurrentUserUseCase";
-import SendPushNotificationBloc from "./notifications/presentation/SendPushNotificationBloc";
+import SendUrlNotificationBloc from "./notifications/presentation/SendUrlNotificationBloc";
 import FcmPushNotificationRepository from "./notifications/data/FcmPushNotificationRepository";
 import SendPushNotificationUseCase from "./notifications/domain/SendPushNotificationUseCase";
 import { DependencyLocator } from "karate-stars-core";
@@ -19,6 +19,10 @@ import { initEventTypes } from "./event-types/EventTypeDIModule";
 import { initCategoryTypes } from "./category-types/CategoryTypeDIModule";
 import { initCategories } from "./categories/CategoryDIModule";
 import { initCountries } from "./countries/CountryDIModule";
+import SendCompetitorNotificationBloc from "./notifications/presentation/SendCompetitorNotificationBloc";
+import SendVideoNotificationBloc from "./notifications/presentation/SendVideoNotificationBloc";
+import GetCompetitorsUseCase from "./competitors/domain/GetCompetitorsUseCase";
+import GetVideosUseCase from "./videos/domain/GetVideosUseCase";
 
 export const appDIKeys = {
     axiosInstanceAPI: "axiosInstanceAPI",
@@ -133,7 +137,25 @@ function initSendPushNotifications() {
     );
 
     di.bindFactory(
-        SendPushNotificationBloc,
-        () => new SendPushNotificationBloc(di.get(SendPushNotificationUseCase))
+        SendUrlNotificationBloc,
+        () => new SendUrlNotificationBloc(di.get(SendPushNotificationUseCase))
+    );
+
+    di.bindFactory(
+        SendCompetitorNotificationBloc,
+        () =>
+            new SendCompetitorNotificationBloc(
+                di.get(SendPushNotificationUseCase),
+                di.get(GetCompetitorsUseCase)
+            )
+    );
+
+    di.bindFactory(
+        SendVideoNotificationBloc,
+        () =>
+            new SendVideoNotificationBloc(
+                di.get(SendPushNotificationUseCase),
+                di.get(GetVideosUseCase)
+            )
     );
 }

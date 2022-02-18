@@ -15,6 +15,23 @@ export default class CompetitorMongoRepository
         super(mongoConector, "competitors");
     }
 
+    async getAll(): Promise<Competitor[]> {
+        const competitors = await super.getAll();
+
+        const orderedCompetitors = competitors.sort((a: Competitor, b: Competitor) => {
+            if (a.lastName > b.lastName) {
+                return 1;
+            }
+            if (a.lastName < b.lastName) {
+                return -1;
+            }
+            // a must be equal to b
+            return 0;
+        });
+
+        return orderedCompetitors;
+    }
+
     protected mapToDomain(modelDB: CompetitorDB): Competitor {
         return Competitor.create({
             id: modelDB._id,

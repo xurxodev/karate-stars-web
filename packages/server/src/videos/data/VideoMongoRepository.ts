@@ -15,6 +15,23 @@ export default class VideoMongoRepository
         super(mongoConector, "videos");
     }
 
+    async getAll(): Promise<Video[]> {
+        const videos = await super.getAll();
+
+        const orderedVideos = videos.sort((a: Video, b: Video) => {
+            if (a.eventDate.getFullYear() > b.eventDate.getFullYear()) {
+                return -1;
+            }
+            if (a.eventDate.getFullYear() < b.eventDate.getFullYear()) {
+                return 1;
+            }
+            // a must be equal to b
+            return 0;
+        });
+
+        return orderedVideos;
+    }
+
     protected mapToDomain(modelDB: VideoDB): Video {
         return Video.create({
             id: modelDB._id,

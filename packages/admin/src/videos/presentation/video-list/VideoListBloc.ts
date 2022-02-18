@@ -46,7 +46,7 @@ class VideoListBloc extends ListBloc<VideoState> {
                     fields: fields,
                     selectedItems: [],
                     pagination: { ...defaultPagination, total: items.length },
-                    sorting: { field: "title", order: "asc" },
+                    sorting: { field: "eventDate", order: "desc" },
                     actions: this.actions,
                 })
         );

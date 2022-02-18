@@ -3,8 +3,11 @@ import { makeStyles } from "@material-ui/styles";
 import { Divider, Drawer, Theme, Button, colors, Hidden } from "@material-ui/core";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import PeopleIcon from "@material-ui/icons/People";
+import DescriptionOutlinedIcon from "@material-ui/icons/DescriptionOutlined";
+import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import Notifications from "@material-ui/icons/Notifications";
 import VideoLibrary from "@material-ui/icons/VideoLibrary";
+import VideoLibraryOutlined from "@material-ui/icons/VideoLibraryOutlined";
 import InputIcon from "@material-ui/icons/Input";
 import EventNoteIcon from "@material-ui/icons/EventNote";
 import EmojiEventsIcon from "@material-ui/icons/EmojiEvents";
@@ -163,8 +166,20 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
                 {
                     kind: "MenuLeaf",
                     level: 0,
-                    ...pages.sendPushNotification,
-                    icon: <Description />,
+                    ...pages.sendUrlPushNotification,
+                    icon: <DescriptionOutlinedIcon />,
+                },
+                {
+                    kind: "MenuLeaf",
+                    level: 0,
+                    ...pages.sendCompetitorPushNotification,
+                    icon: <PeopleOutlineIcon />,
+                },
+                {
+                    kind: "MenuLeaf",
+                    level: 0,
+                    ...pages.sendVideoPushNotification,
+                    icon: <VideoLibraryOutlined />,
                 },
             ],
         },

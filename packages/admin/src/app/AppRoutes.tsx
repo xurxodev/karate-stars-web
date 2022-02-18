@@ -3,7 +3,7 @@ import { Switch, Redirect, Route, HashRouter } from "react-router-dom";
 import LoginPage from "../user/presentation/LoginPage";
 import DashboardPage from "../dashboard/presentation/DashboardPage";
 import NewsFeedDetailPage from "../news/presentation/news-feed-detail/NewsFeedDetailPage";
-import SendPushNotificationPage from "../notifications/presentation/SendPushNotificationPage";
+import SendUrlNotificationPage from "../notifications/presentation/SendUrlNotificationPage";
 import NotFoundPage from "../common/presentation/pages/NotFoundPage";
 import PrivateRoute from "../common/presentation/components/private-route/PrivateRoute";
 import NewsFeedListPage from "../news/presentation/news-feed-list/NewsFeedListPage";
@@ -22,6 +22,8 @@ import CategoryDetailPage from "../categories/presentation/category-detail/Categ
 import CategoryListPage from "../categories/presentation/category-list/CategoryListPage";
 import CountryDetailPage from "../countries/presentation/country-detail/CountryDetailPage";
 import CountryListPage from "../countries/presentation/country-list/CountryListPage";
+import SendCompetitorNotificationPage from "../notifications/presentation/SendCompetitorNotificationPage";
+import SendVideoNotificationPage from "../notifications/presentation/SendVideoNotificationPage";
 
 export const AppRoutes: React.FC = () => {
     return (
@@ -58,8 +60,16 @@ export const AppRoutes: React.FC = () => {
                 <PrivateRoute path={pages.newsFeedDetail.path} component={NewsFeedDetailPage} />
                 <PrivateRoute path={pages.newsFeedList.path} component={NewsFeedListPage} />
                 <PrivateRoute
-                    path={pages.sendPushNotification.path}
-                    component={SendPushNotificationPage}
+                    path={pages.sendUrlPushNotification.path}
+                    component={SendUrlNotificationPage}
+                />
+                <PrivateRoute
+                    path={pages.sendCompetitorPushNotification.path}
+                    component={SendCompetitorNotificationPage}
+                />
+                <PrivateRoute
+                    path={pages.sendVideoPushNotification.path}
+                    component={SendVideoNotificationPage}
                 />
                 <Route path={pages.notFound.path} component={NotFoundPage} />
 

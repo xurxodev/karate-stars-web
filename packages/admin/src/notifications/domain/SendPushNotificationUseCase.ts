@@ -1,6 +1,6 @@
 import { PushNotificationRepository, SendPushNotificationSuccess } from "./Boundaries";
 import { SendPushNotificationError } from "./Errors";
-import { UrlNotification } from "./entities/UrlNotification";
+import { Notification } from "./entities/Notification";
 import { Either } from "karate-stars-core";
 
 export default class SendPushNotificationUseCase {
@@ -11,7 +11,7 @@ export default class SendPushNotificationUseCase {
     }
 
     execute(
-        notification: UrlNotification
+        notification: Notification
     ): Promise<Either<SendPushNotificationError, SendPushNotificationSuccess>> {
         return this.pushNotificationRepository.send(notification);
     }
