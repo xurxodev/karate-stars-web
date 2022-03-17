@@ -73,7 +73,7 @@ export default class SocialNewsTwitterDataSource implements SocialNewsDataSource
 
         const video = this.getVideo(tweet);
 
-        const url = `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id}`;
+        const url = `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
 
         return {
             network: "twitter",
