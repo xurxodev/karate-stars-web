@@ -57,7 +57,7 @@ const renderDetailPageToEdit = (endpoint: string, id: string, page: React.ReactE
     const history = H.createMemoryHistory();
     history.push(`${endpoint}/${id}`);
 
-    customRender(<Route path={`/${endpoint}/:id`}>{page}</Route>, {
+    return customRender(<Route path={`/${endpoint}/:id`}>{page}</Route>, {
         history,
     });
 };
@@ -71,7 +71,6 @@ async function verifyTextExistsAsync(text: string) {
 }
 
 async function verifyAlertAsync(text: string, exact?: boolean) {
-    // await screen.findByRole("alert", { name: text, exact });
     await screen.findByText(text, { exact });
 }
 
@@ -84,28 +83,39 @@ function verifyValueInField(label: string | RegExp, value: string) {
     expect(input.value).toEqual(value);
 }
 
-async function verifyTableIsEmptyAsync() {
-    const rows = await screen.findAllByRole("row");
-    expect(rows.length).toBe(1);
+async function verifyTableIsEmptyAsync(container: HTMLElement) {
+    //const rows = await screen.findAllByRole("row");
+    await waitFor(() => {
+        const rows = Array.from(container.querySelectorAll("tr"));
+
+        expect(rows.length).toBe(1);
+    });
 }
 
-async function verifyTableRowsCountAsync(count: number) {
-    const pageRows = await screen.findAllByRole("row");
+async function verifyTableRowsCountAsync(container: HTMLElement, count: number) {
+    //const pageRows = await screen.findAllByRole("row");
+    const pageRows = Array.from(container.querySelectorAll("tr"));
 
     pageRows.shift();
 
     expect(pageRows.length).toBe(count);
 }
 
-async function verifyTableRowsAsync<T>(dataRows: T[], fields: Array<keyof T>, pageSize = 10) {
+async function verifyTableRowsAsync<T>(
+    container: HTMLElement,
+    dataRows: T[],
+    fields: Array<keyof T>,
+    pageSize = 10
+) {
     const dataRowsPages = arr.chunk(dataRows, pageSize);
 
     for (const dataRowsPage of dataRowsPages) {
         const waitText = (dataRowsPage[0][fields[0]] as any).toString();
-        //console.log({ waitText });
+
         await screen.findByText(waitText);
 
-        const pageRows = await screen.findAllByRole("row");
+        //const pageRows = await screen.findAllByRole("row");
+        const pageRows = Array.from(container.querySelectorAll("tr"));
 
         pageRows.shift();
 
@@ -118,10 +128,6 @@ async function verifyTableRowsAsync<T>(dataRows: T[], fields: Array<keyof T>, pa
             fields.forEach(field => {
                 const text = item[field] as any;
 
-                // if (field == "name") {
-                //     console.log({ text });
-                // }
-
                 expect(rowScope.getByText(text)).toBeInTheDocument();
             });
         });
@@ -129,21 +135,24 @@ async function verifyTableRowsAsync<T>(dataRows: T[], fields: Array<keyof T>, pa
         const isLastPage = dataRowsPages.indexOf(dataRowsPage) === dataRowsPages.length - 1;
 
         if (!isLastPage) {
-            //console.log("click on next");
-            userEvent.click(screen.getByRole("button", { name: /next page/i }));
+            //userEvent.click(screen.getByRole("button", { name: /next page/i }));
+            userEvent.click(screen.getByTitle(/next page/i));
         }
     }
 }
 
-async function searchAndVerifyAsync(search: string) {
+async function searchAndVerifyAsync(container: HTMLElement, search: string) {
     await typeByPlaceholderTextAsync("Search ...", search);
 
-    const table = await screen.findByRole("table");
+    //const table = await screen.findByRole("table");
+    const table = await container.querySelector("table");
 
-    const tableScope = within(table);
-    await tableScope.findByText(search);
+    if (table) {
+        const tableScope = within(table);
+        await tableScope.findByText(search);
 
-    await verifyTableRowsCountAsync(1);
+        await verifyTableRowsCountAsync(table, 1);
+    }
 }
 
 async function verifyValueInFieldAsync(label: string | RegExp, value: string) {
@@ -200,31 +209,58 @@ async function selectMultiOption(label: string | RegExp, text: string) {
     userEvent.click(element);
 }
 
-function clickOnAccept() {
-    userEvent.click(screen.getByRole("button", { name: /accept/i }));
+function clickOnSubmit(text: RegExp | number | string = /accept/i) {
+    //userEvent.click(screen.getByRole("button", { name: /accept/ }));
+    userEvent.click(screen.getByText(text));
+}
+
+async function verifyPageIsReadyAsync() {
+    await waitFor(() => {
+        expect(screen.getByText(/accept/i)).toBeInTheDocument();
+    });
+}
+
+async function verifySubmitIsEnabledAsync(text: RegExp | number | string = /accept/i) {
+    // await waitFor(() => expect(screen.getByRole("button", { name: /accept/ })).toBeEnabled(), {
+    //     timeout: 10000,
+    // });
+    await waitFor(() => expect(screen.getByText(text).parentNode).toBeEnabled(), {
+        timeout: 10000,
+    });
+}
+
+async function verifySubmitIsDisabledAsync(text: RegExp | number | string = /accept/i) {
+    // await waitFor(() => expect(screen.getByRole("button", { name: /accept/ })).toBeDisabled(), {
+    //     timeout: 10000,
+    // });
+    await waitFor(() => expect(screen.getByText(text).parentNode).toBeDisabled(), {
+        timeout: 10000,
+    });
 }
 
 function clickOnButtonByLabelTextAndScope(
-    label: string | RegExp,
+    text: RegExp | number | string = /ok/i,
     scope: BoundFunctions<typeof queries>
 ) {
-    const regex = new RegExp(label, "i");
-    userEvent.click(scope.getByRole("button", { name: regex }));
+    //const regex = new RegExp(label, "i");
+    userEvent.click(scope.getByText(text));
 }
 
 function clickOnButtonByLabel(label: string | RegExp) {
-    const regex = new RegExp(label, "i");
-    userEvent.click(screen.getByRole("button", { name: regex }));
+    // const regex = new RegExp(label, "i");
+    // userEvent.click(screen.getByRole("button", { name: regex }));
+    userEvent.click(screen.getByLabelText(label));
 }
 
 function clickOnAdd() {
-    userEvent.click(screen.getByRole("button", { name: /add/i }));
+    //userEvent.click(screen.getByRole("button", { name: /add/i }));
+    userEvent.click(screen.getByTestId("add"));
 }
 
 export const tl = {
     clear,
     clickByLabelText,
-    clickOnAccept,
+    clickOnSubmit,
     clickOnButtonByLabel,
     clickOnButtonByLabelTextAndScope,
     clickOnAdd,
@@ -232,6 +268,9 @@ export const tl = {
     selectOption,
     selectOptionByLabelTextAndScope,
     verifyAlertAsync,
+    verifySubmitIsEnabledAsync,
+    verifySubmitIsDisabledAsync,
+    verifyPageIsReadyAsync,
     verifyTableIsEmptyAsync,
     verifyTableRowsAsync,
     verifyTableRowsCountAsync,

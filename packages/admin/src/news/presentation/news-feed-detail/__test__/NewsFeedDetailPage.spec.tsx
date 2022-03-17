@@ -4,7 +4,6 @@ import "@testing-library/jest-dom/extend-expect";
 import {
     render,
     tl,
-    screen,
     renderDetailPageToEdit,
 } from "../../../../common/testing/testing_library/custom";
 import NewsFeedDetailPage from "../NewsFeedDetailPage";
@@ -13,7 +12,7 @@ import { commonDetailPageTests } from "../../../../common/testing/commonDetailPa
 import * as mockServerTest from "../../../../common/testing/mockServerTest";
 import { givenAValidAuthenticatedUser } from "../../../../common/testing/scenarios/UserTestScenarios";
 
-function typeValidForm() {
+async function typeValidForm() {
     tl.typeByLabelText("Name (*)", "Xurxo dev");
     tl.typeByLabelText("Url (*)", "https://xurxodev.com/");
     tl.typeByLabelText("Language (*)", "es");
@@ -158,11 +157,11 @@ function givenAItem(): NewsFeedData {
 async function renderComponentToCreate() {
     render(component);
 
-    await screen.findByRole("button", { name: "Accept" });
+    await tl.verifyPageIsReadyAsync();
 }
 
 async function renderComponentToEdit(id: string) {
     renderDetailPageToEdit(endpoint, id, component);
 
-    await screen.findByRole("button", { name: "Accept" });
+    await tl.verifyPageIsReadyAsync();
 }

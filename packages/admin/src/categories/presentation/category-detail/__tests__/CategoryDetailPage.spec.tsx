@@ -4,7 +4,6 @@ import "@testing-library/jest-dom/extend-expect";
 import {
     render,
     tl,
-    screen,
     renderDetailPageToEdit,
 } from "../../../../common/testing/testing_library/custom";
 import CategoryDetailPage from "../CategoryDetailPage";
@@ -28,7 +27,7 @@ const dependenciesCreators = [
     },
 ];
 
-function typeValidForm() {
+async function typeValidForm() {
     tl.typeByLabelText("Name (*)", "Example Example");
     tl.selectOption("Type (*)", data.categoryTypes[1].id);
 }
@@ -106,11 +105,11 @@ function givenAItem(): CategoryData {
 async function renderComponentToCreate() {
     render(component);
 
-    await screen.findByRole("button", { name: "Accept" });
+    await tl.verifyPageIsReadyAsync();
 }
 
 async function renderComponentToEdit(id: string) {
     renderDetailPageToEdit(endpoint, id, component);
 
-    await screen.findByRole("button", { name: "Accept" });
+    await tl.verifyPageIsReadyAsync();
 }

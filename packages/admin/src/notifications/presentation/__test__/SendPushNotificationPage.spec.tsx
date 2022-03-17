@@ -1,10 +1,12 @@
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
-import { render, screen } from "../../../common/testing/testing_library/custom";
+import { render, screen, tl } from "../../../common/testing/testing_library/custom";
 import SendUrlNotificationPage from "../SendUrlNotificationPage";
 import { givenAValidAuthenticatedUser } from "../../../common/testing/scenarios/UserTestScenarios";
 import userEvent from "@testing-library/user-event";
 import * as mockServerTest from "../../../common/testing/mockServerTest";
+
+const sumbit = /^send$/i;
 
 beforeEach(() => givenAValidAuthenticatedUser());
 
@@ -13,9 +15,9 @@ describe("Send push page", () => {
         it("should be disabled the first time", async () => {
             render(<SendUrlNotificationPage />);
 
-            expect(screen.getByRole("button", { name: "Send" })).toBeDisabled();
+            await tl.verifySubmitIsDisabledAsync(sumbit);
         });
-        it("should be enabled after type url, title and description", () => {
+        it("should be enabled after type url, title and description", async () => {
             render(<SendUrlNotificationPage />);
 
             userEvent.type(screen.getByLabelText("Url (*)"), "http://karatestarsapp.com/");
@@ -25,7 +27,7 @@ describe("Send push page", () => {
                 "The best karate app of the world!!"
             );
 
-            expect(screen.getByRole("button", { name: "Send" })).toBeEnabled();
+            await tl.verifySubmitIsEnabledAsync(sumbit);
         });
     });
     describe("validation messages", () => {
@@ -90,11 +92,11 @@ describe("Send push page", () => {
                 "The best karate app of the world!!"
             );
 
-            userEvent.click(screen.getByRole("button", { name: "Send" }));
+            tl.clickOnSubmit(sumbit);
 
             await screen.findByText("Invalid credentials");
         });
-        it("should show generic error if an error has ocurred in the server", async () => {
+        it("should show generic error if an error has ocurred in åthe server", async () => {
             givenANotificationPushErrorServerResponse(500);
 
             render(<SendUrlNotificationPage />);
@@ -107,7 +109,7 @@ describe("Send push page", () => {
                 "The best karate app of the world!!"
             );
 
-            userEvent.click(screen.getByRole("button", { name: "Send" }));
+            tl.clickOnSubmit(sumbit);
 
             await screen.findByText(
                 "Sorry, an error has ocurred in the server. Please try later again"
@@ -127,7 +129,7 @@ describe("Send push page", () => {
                 "The best karate app of the world!!"
             );
 
-            userEvent.click(screen.getByRole("button", { name: "Send" }));
+            tl.clickOnSubmit(sumbit);
 
             await screen.findByText("Push notification sent successfully");
         });

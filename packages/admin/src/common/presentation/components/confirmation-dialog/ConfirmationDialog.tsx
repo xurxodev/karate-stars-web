@@ -31,8 +31,8 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
     onInfoAction,
     isOpen = false,
     children,
-    cancelText = "Cancel",
-    saveText = "OK",
+    cancelText = "cancel",
+    saveText = "ok",
     infoActionText = "Info",
     disableSave = false,
     ...other

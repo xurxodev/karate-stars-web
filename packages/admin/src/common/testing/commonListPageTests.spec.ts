@@ -23,16 +23,16 @@ export const commonListPageTests = <TData extends EntityData>(
         it("should does not render any rows", async () => {
             givenADataList(0);
 
-            render(component);
+            const { container } = render(component);
 
-            await tl.verifyTableIsEmptyAsync();
+            await tl.verifyTableIsEmptyAsync(container);
         });
         it("should render expected rows ", async () => {
             const items = givenADataList(13);
 
-            render(component);
+            const { container } = render(component);
 
-            await tl.verifyTableRowsAsync(items, verifiableFields);
+            await tl.verifyTableRowsAsync(container, items, verifiableFields);
         });
         it("should render expected error message ", async () => {
             givenAErrorServerResponse();
@@ -46,11 +46,11 @@ export const commonListPageTests = <TData extends EntityData>(
         it("should render expected row after search", async () => {
             const items = givenADataList(15);
 
-            render(component);
+            const { container } = render(component);
 
             const searchTerm = items[12][verifiableFields[0]] as unknown as string;
 
-            await tl.searchAndVerifyAsync(searchTerm);
+            await tl.searchAndVerifyAsync(container, searchTerm);
         });
     });
 

@@ -5,7 +5,6 @@ import {
     tl,
     screen,
     renderDetailPageToEdit,
-    waitFor,
     within,
 } from "../../../../common/testing/testing_library/custom";
 import { AchievementData, CompetitorData, SocialLinkData } from "karate-stars-core";
@@ -57,9 +56,7 @@ async function typeValidForm() {
     await typeValidAchievementForm();
     await typeValidLinkForm();
 
-    await waitFor(() => expect(screen.getByRole("button", { name: "Accept" })).toBeEnabled(), {
-        timeout: 10000,
-    });
+    await tl.verifySubmitIsEnabledAsync();
 }
 
 async function typeValidLinkForm() {
@@ -207,11 +204,11 @@ function givenAItem(): CompetitorData {
 async function renderComponentToCreate() {
     render(component);
 
-    await screen.findByRole("button", { name: "Accept" });
+    await tl.verifyPageIsReadyAsync();
 }
 
 async function renderComponentToEdit(id: string) {
     renderDetailPageToEdit(endpoint, id, component);
 
-    await screen.findByRole("button", { name: "Accept" });
+    await tl.verifyPageIsReadyAsync();
 }

@@ -4,7 +4,6 @@ import "@testing-library/jest-dom/extend-expect";
 import {
     render,
     tl,
-    screen,
     renderDetailPageToEdit,
 } from "../../../../common/testing/testing_library/custom";
 import EventDetailPage from "../EventDetailPage";
@@ -116,11 +115,11 @@ function givenAItem(): EventData {
 async function renderComponentToCreate() {
     render(component);
 
-    await screen.findByRole("button", { name: "Accept" });
+    await tl.verifyPageIsReadyAsync();
 }
 
 async function renderComponentToEdit(id: string) {
     renderDetailPageToEdit(endpoint, id, component);
 
-    await screen.findByRole("button", { name: "Accept" });
+    await tl.verifyPageIsReadyAsync();
 }

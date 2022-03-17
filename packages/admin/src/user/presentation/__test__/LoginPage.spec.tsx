@@ -1,25 +1,28 @@
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
-import { render, screen } from "../../../common/testing/testing_library/custom";
+import { render, screen, tl } from "../../../common/testing/testing_library/custom";
 import * as mockServerTest from "../../../common/testing/mockServerTest";
 import userEvent from "@testing-library/user-event";
 import LoginPage from "../LoginPage";
 import RedirectTester from "../../../common/testing/testing_library/RedirectTester";
 import { pages } from "../../../common/presentation/PageRoutes";
 
+const submit = /sign in/i;
+
 describe("Login Page", () => {
     describe("Sign in button", () => {
-        it("should be disabled the first time", () => {
+        it("should be disabled the first time", async () => {
             render(<LoginPage />);
-            expect(screen.getByRole("button", { name: "Sign In" })).toBeDisabled();
+
+            await tl.verifySubmitIsDisabledAsync(submit);
         });
-        it("should be enabled after type email and password", () => {
+        it("should be enabled after type email and password", async () => {
             render(<LoginPage />);
 
             userEvent.type(screen.getByLabelText("Email"), "example@gmail.com");
             userEvent.type(screen.getByLabelText("Password"), "password");
 
-            expect(screen.getByRole("button", { name: "Sign In" })).toBeEnabled();
+            await tl.verifySubmitIsEnabledAsync(submit);
         });
     });
     describe("validation messages", () => {
@@ -65,7 +68,7 @@ describe("Login Page", () => {
             userEvent.type(screen.getByLabelText("Email"), "example@gmail.com");
             userEvent.type(screen.getByLabelText("Password"), "password");
 
-            userEvent.click(screen.getByRole("button", { name: "Sign In" }));
+            tl.clickOnSubmit(submit);
 
             await screen.findByText("Invalid credentials");
         });
@@ -77,7 +80,7 @@ describe("Login Page", () => {
             userEvent.type(screen.getByLabelText("Email"), "example@gmail.com");
             userEvent.type(screen.getByLabelText("Password"), "password");
 
-            userEvent.click(screen.getByRole("button", { name: "Sign In" }));
+            tl.clickOnSubmit(submit);
 
             await screen.findByText(
                 "Sorry, an error has ocurred in the server. Please try later again"
@@ -96,7 +99,7 @@ describe("Login Page", () => {
             userEvent.type(screen.getByLabelText("Email"), "example@gmail.com");
             userEvent.type(screen.getByLabelText("Password"), "password");
 
-            userEvent.click(screen.getByRole("button", { name: "Sign In" }));
+            tl.clickOnSubmit(submit);
 
             screen.findByText(pages.dashboard.path);
         });

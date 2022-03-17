@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom/extend-expect";
 import { EntityData } from "karate-stars-core";
 import { Method } from "./mockServerTest";
-import { render, tl, screen, renderDetailPageToEdit, waitFor } from "./testing_library/custom";
+import { render, tl, renderDetailPageToEdit } from "./testing_library/custom";
 import * as mockServerTest from "./mockServerTest";
 import { givenAValidAuthenticatedUser } from "./scenarios/UserTestScenarios";
 import { DependenciesCreator, givenADependencies } from "./scenarios/GenericScenarios";
@@ -31,45 +31,53 @@ export const commonDetailPageTests = <TData extends EntityData>(
                 it("should be disabled the first time", async () => {
                     await renderComponentToCreate();
 
-                    expect(screen.getByRole("button", { name: "Accept" })).toBeDisabled();
+                    await tl.verifySubmitIsDisabledAsync();
                 });
                 it("should be enabled after type required fields", async () => {
                     await renderComponentToCreate();
 
                     await typeValidForm();
 
-                    await waitFor(
-                        () => expect(screen.getByRole("button", { name: "Accept" })).toBeEnabled(),
-                        {
-                            timeout: 10000,
-                        }
-                    );
+                    await tl.verifySubmitIsEnabledAsync();
                 });
             });
             describe("After submit", () => {
                 it("should show invalid crentials message if the server response is unauthorized", async () => {
                     givenAErrorServerResponse("get", `${apiEndpoint}/:id`, 401);
+
                     await renderComponentToCreate();
+
                     await typeValidForm();
-                    tl.clickOnAccept();
+
+                    tl.clickOnSubmit();
                     await tl.verifyTextExistsAsync("Invalid credentials");
                 });
                 it("should show generic error if the server response is error", async () => {
                     givenAErrorServerResponse("get", `${apiEndpoint}/:id`, 404);
+
                     givenAErrorServerResponse("post", apiEndpoint, 500);
+
                     await renderComponentToCreate();
+
                     await typeValidForm();
-                    tl.clickOnAccept();
+
+                    tl.clickOnSubmit();
+
                     await tl.verifyTextExistsAsync(
                         "Sorry, an error has ocurred in the server. Please try later again"
                     );
                 });
                 it("should show success if the server response is success", async () => {
                     givenAErrorServerResponse("get", `${apiEndpoint}/:id`, 404);
+
                     givenASuccessServerResponse();
+
                     await renderComponentToCreate();
+
                     await typeValidForm();
-                    tl.clickOnAccept();
+
+                    tl.clickOnSubmit();
+
                     await tl.verifyAlertAsync("saved!", false);
                 });
             });
@@ -83,22 +91,26 @@ export const commonDetailPageTests = <TData extends EntityData>(
                 it("should be disabled the first time", async () => {
                     await renderComponentToEdit(item.id);
 
-                    expect(screen.getByRole("button", { name: "Accept" })).toBeDisabled();
+                    await tl.verifySubmitIsDisabledAsync();
                 });
                 it("should be enabled after type required field", async () => {
                     await renderComponentToEdit(item.id);
 
                     await typeValidForm();
 
-                    expect(screen.getByRole("button", { name: "Accept" })).toBeEnabled();
+                    await tl.verifySubmitIsEnabledAsync();
                 });
             });
             describe("After submit", () => {
                 it("should show invalid crentials message if the server response is unauthorized", async () => {
                     await renderComponentToEdit(item.id);
+
                     await typeValidForm();
+
                     givenAErrorServerResponse("get", `${apiEndpoint}/:id`, 401);
-                    tl.clickOnAccept();
+
+                    tl.clickOnSubmit();
+
                     await tl.verifyTextExistsAsync("Invalid credentials");
                 });
                 it("should show generic error if the server response is error", async () => {
@@ -107,17 +119,22 @@ export const commonDetailPageTests = <TData extends EntityData>(
                     await typeValidForm();
 
                     givenAErrorServerResponse("put", `${apiEndpoint}/${item.id}`, 500);
-                    tl.clickOnAccept();
+
+                    tl.clickOnSubmit();
+
                     await tl.verifyTextExistsAsync(
                         "Sorry, an error has ocurred in the server. Please try later again"
                     );
                 });
                 it("should show success if the server response is success", async () => {
                     await renderComponentToEdit(item.id);
+
                     await typeValidForm();
 
                     givenASuccessServerResponse("put", `${apiEndpoint}/${item.id}`);
-                    tl.clickOnAccept();
+
+                    tl.clickOnSubmit();
+
                     await tl.verifyAlertAsync("saved!", false);
                 });
             });
@@ -127,13 +144,13 @@ export const commonDetailPageTests = <TData extends EntityData>(
     async function renderComponentToCreate() {
         render(component);
 
-        await screen.findByRole("button", { name: "Accept" });
+        await tl.verifyPageIsReadyAsync();
     }
 
     async function renderComponentToEdit(id: string) {
         renderDetailPageToEdit(endpoint, id, component);
 
-        await screen.findByRole("button", { name: "Accept" });
+        await tl.verifyPageIsReadyAsync();
     }
 
     function givenAErrorServerResponse(method: Method, endpoint: string, httpStatusCode: number) {
