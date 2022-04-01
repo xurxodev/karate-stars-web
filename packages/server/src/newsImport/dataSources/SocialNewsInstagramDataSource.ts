@@ -33,16 +33,6 @@ export default class SocialNewsInstagramDataSource implements SocialNewsDataSour
 
             console.log({ totalInstagram: news.length });
 
-            //By tag is not possible extract user image and username
-            // const byTag = await this.getSocialNewsByHashtag(
-            //     search.replace("#", "").toLowerCase(),
-            //     options
-            // );
-
-            //const news = [...byUser, ...byTag];
-
-            //return this.removeDuplicates(news);
-
             return news;
         } catch (error) {
             console.log(`Instagram error: ${error}`);
@@ -118,12 +108,6 @@ export default class SocialNewsInstagramDataSource implements SocialNewsDataSour
             },
             user: socialUser,
         };
-    }
-
-    private removeDuplicates(sumSocialNews: SocialNews[]): SocialNews[] {
-        const uniq = new Set(sumSocialNews.map(e => JSON.stringify(e)));
-
-        return Array.from(uniq).map(e => JSON.parse(e));
     }
 
     async getSocialUser(username: string, options: Options): Promise<SocialUser> {

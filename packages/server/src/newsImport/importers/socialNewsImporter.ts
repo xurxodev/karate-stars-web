@@ -5,6 +5,7 @@ import { MongoConector } from "../../common/data/MongoConector";
 import SettingsMongoRepository from "../../settings/data/SettingsMongoRepository";
 import SociaNewsMongoRepository from "../../socialnews/data/SocialNewsMongoRepository";
 import { SocialNews } from "../../socialnews/domain/entities/SocialNews";
+import SocialNewsInstagramDirectDataSource from "../dataSources/SocialNewsInstagramDirectDataSource";
 import SocialNewsInstagramDataSource from "../dataSources/SocialNewsInstagramDataSource";
 import SocialNewsTwitterDataSource from "../dataSources/SocialNewsTwitterDataSource";
 import { NewsImporter } from "../importNews";
@@ -77,7 +78,8 @@ export class SocialNewsImporter implements NewsImporter {
     }
 
     private getInstagramDataSource(): SocialNewsDataSource {
-        return new SocialNewsInstagramDataSource();
+        //return new SocialNewsInstagramDataSource();
+        return new SocialNewsInstagramDirectDataSource();
     }
 
     private async saveSocialNews(
