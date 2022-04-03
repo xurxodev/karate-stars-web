@@ -24,7 +24,7 @@ export default class SocialNewsInstagramDirectDataSource implements SocialNewsDa
             //const news = [];
             console.log({ totalInstagram: news.length });
 
-            return [];
+            return news;
         } catch (error) {
             console.log(`Instagram error: ${error}`);
             return [];
