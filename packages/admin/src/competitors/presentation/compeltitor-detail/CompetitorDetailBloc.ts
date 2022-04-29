@@ -166,7 +166,7 @@ class CompetitorDetailBloc extends DetailBloc<CompetitorState> {
                         kind: "FormSingleFieldState",
                         name: "id",
                         label: "Id",
-                        value: socialLink?.id,
+                        value: socialLink?.id ?? Id.generateId().value,
                         hide: true,
                     },
                     {
@@ -196,7 +196,7 @@ class CompetitorDetailBloc extends DetailBloc<CompetitorState> {
                         kind: "FormSingleFieldState",
                         name: "id",
                         label: "Id",
-                        value: achievement?.id,
+                        value: achievement?.id ?? Id.generateId().value,
                         hide: true,
                     },
                     {

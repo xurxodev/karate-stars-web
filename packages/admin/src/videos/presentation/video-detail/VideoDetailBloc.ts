@@ -5,7 +5,15 @@ import {
     FormChildrenState,
     formChildrenStatetoData,
 } from "../../../common/presentation/state/FormState";
-import { Video, VideoData, Either, CompetitorData, VideoLink } from "karate-stars-core";
+import {
+    Video,
+    VideoData,
+    Either,
+    CompetitorData,
+    VideoLink,
+    Id,
+    VideoLinkData,
+} from "karate-stars-core";
 import { DataError } from "../../../common/domain/Errors";
 import DetailBloc, { ValidationBlocError } from "../../../common/presentation/bloc/DetailBloc";
 import GetVideoByIdUseCase from "../../domain/GetVideoByIdUseCase";
@@ -14,7 +22,15 @@ import GetCompetitorsUseCase from "../../../competitors/domain/GetCompetitorsUse
 import moment from "moment";
 import { basicActions } from "../../../common/presentation/bloc/basicActions";
 
-class VideoDetailBloc extends DetailBloc<VideoData> {
+export interface VideoLinkState extends VideoLinkData {
+    videoLinkId: string;
+}
+
+type VideoState = Omit<VideoData, "links"> & {
+    links: VideoLinkState[];
+};
+
+class VideoDetailBloc extends DetailBloc<VideoState> {
     private competitors: CompetitorData[] = [];
 
     constructor(
@@ -33,14 +49,24 @@ class VideoDetailBloc extends DetailBloc<VideoData> {
         super.init(id);
     }
 
-    protected getItem(id: string): Promise<Either<DataError, VideoData>> {
-        return this.getVideoByIdUseCase.execute(id);
+    protected async getItem(id: string): Promise<Either<DataError, VideoState>> {
+        const videoResult = await this.getVideoByIdUseCase.execute(id);
+
+        return videoResult.map((data: VideoData) => {
+            return this.mapDataToState(data);
+        });
     }
-    protected async mapItemToFormSectionsState(item?: VideoData): Promise<FormSectionState[]> {
+
+    protected async mapItemToFormSectionsState(item?: VideoState): Promise<FormSectionState[]> {
         return initialFieldsState(this.competitors, item);
     }
-    protected saveItem(item: VideoData): Promise<Either<DataError, true>> {
-        return this.saveVideoUseCase.execute(Video.create(item).get());
+    protected saveItem(item: VideoState): Promise<Either<DataError, true>> {
+        const videoData = {
+            ...item,
+            links: item.links.map(link => ({ id: link.videoLinkId, type: link.type })),
+        };
+
+        return this.saveVideoUseCase.execute(Video.create(videoData).get());
     }
 
     protected validateFormState(state: FormState): ValidationBlocError[] | null {
@@ -54,7 +80,7 @@ class VideoDetailBloc extends DetailBloc<VideoData> {
     }
 
     protected validateChildrenFormState(
-        field: keyof VideoData,
+        field: keyof VideoState,
         state: FormChildrenState
     ): ValidationBlocError[] | null {
         if (field === "links") {
@@ -71,11 +97,19 @@ class VideoDetailBloc extends DetailBloc<VideoData> {
     }
 
     protected async mapItemToFormChildrenState(
-        field: keyof VideoData,
+        field: keyof VideoState,
         childrenId?: string,
-        item?: VideoData
+        item?: VideoState
     ): Promise<FormChildrenState> {
         return initialChildrenFormState(field, childrenId, item);
+    }
+
+    private mapDataToState(data: VideoData): VideoState {
+        const links = data.links.map(
+            link => ({ ...link, videoLinkId: link.id, id: Id.generateId().value } as VideoLinkState)
+        );
+
+        return { ...data, links };
     }
 }
 
@@ -87,9 +121,9 @@ const linkTypeOptions = [
 ];
 
 const initialChildrenFormState = (
-    field: keyof VideoData,
+    field: keyof VideoState,
     childrenId?: string,
-    item?: VideoData
+    item?: VideoState
 ): FormChildrenState => {
     if (field === "links") {
         const videoLink = item?.links.find(link => link.id === childrenId);
@@ -101,7 +135,15 @@ const initialChildrenFormState = (
                     kind: "FormSingleFieldState",
                     name: "id",
                     label: "Id",
-                    value: videoLink?.id,
+                    value: videoLink?.id ?? Id.generateId().value,
+                    required: true,
+                    hide: true,
+                },
+                {
+                    kind: "FormSingleFieldState",
+                    name: "videoLinkId",
+                    label: "Id",
+                    value: videoLink?.videoLinkId,
                     required: true,
                 },
                 {
@@ -121,7 +163,7 @@ const initialChildrenFormState = (
 
 const initialFieldsState = (
     competitors: CompetitorData[],
-    entity?: VideoData
+    entity?: VideoState
 ): FormSectionState[] => {
     const competitorOptions = competitors.map(competitor => ({
         id: competitor.id,
@@ -210,7 +252,7 @@ const initialFieldsState = (
                     required: true,
                     list: {
                         fields: [
-                            { name: "id", text: "Id", type: "text" },
+                            { name: "videoLinkId", text: "Id", type: "text" },
                             { name: "type", text: "Type", type: "text" },
                         ],
                         items: entity?.links || [],
