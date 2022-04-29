@@ -10,13 +10,13 @@ import {
     ListSorting,
     SortDirection,
 } from "../state/ListState";
-import { basicActions, deleteAction, editAction } from "./basicActions";
+import { basicActions, deleteAction, duplicateAction, editAction } from "./basicActions";
 
 export const defaultPagination = { pageSizeOptions: [5, 10, 25], pageSize: 10, page: 0, total: 0 };
 
 abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListPageState<S>> {
     items: S[] = [];
-    actions: ListAction[] = basicActions;
+    actions: ListAction[] = [...basicActions, duplicateAction];
 
     abstract confirmDelete(): Promise<void>;
 

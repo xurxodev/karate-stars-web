@@ -5,13 +5,16 @@ import { DetailPageConfig, pages } from "../../../common/presentation/PageRoutes
 import GetVideosUseCase from "../../domain/GetVideosUseCase";
 import DeleteVideoUseCase from "../../domain/DeleteVideoUseCase";
 import moment from "moment";
+import { duplicateAction } from "../../../common/presentation/bloc/basicActions";
+import DuplicateVideoUseCase from "../../domain/DuplicateVideoUseCase";
 
 type VideoState = Omit<VideoData, "eventDate"> & { eventDate: string };
 
 class VideoListBloc extends ListBloc<VideoState> {
     constructor(
         private getVideosUseCase: GetVideosUseCase,
-        private deleteCompetitorUseCase: DeleteVideoUseCase
+        private deleteCompetitorUseCase: DeleteVideoUseCase,
+        private duplicateVideoUseCase: DuplicateVideoUseCase
     ) {
         super(pages.videoDetail as DetailPageConfig);
 
@@ -29,6 +32,28 @@ class VideoListBloc extends ListBloc<VideoState> {
                 () => this.loadData()
             );
         }
+    }
+
+    public actionItemClick(actionName: string, id: string): void {
+        switch (actionName) {
+            case duplicateAction.name: {
+                this.duplicate(id);
+                break;
+            }
+            default: {
+                super.actionItemClick(actionName, id);
+                break;
+            }
+        }
+    }
+
+    async duplicate(id: string) {
+        const response = await this.duplicateVideoUseCase.execute(id);
+
+        response.fold(
+            async error => this.changeState({ ...this.handleError(error) }),
+            () => this.loadData()
+        );
     }
 
     private async loadData() {

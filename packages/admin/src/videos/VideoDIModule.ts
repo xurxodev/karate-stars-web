@@ -3,6 +3,7 @@ import { di, appDIKeys } from "../CompositionRoot";
 import VideoApiRepository from "./data/VideoApiRepository";
 import { VideoRepository } from "./domain/Boundaries";
 import DeleteVideoUseCase from "./domain/DeleteVideoUseCase";
+import DuplicateVideoUseCase from "./domain/DuplicateVideoUseCase";
 import GetVideoByIdUseCase from "./domain/GetVideoByIdUseCase";
 import GetVideosUseCase from "./domain/GetVideosUseCase";
 import SaveVideoUseCase from "./domain/SaveVideoUseCase";
@@ -43,9 +44,19 @@ export function initVideos() {
         () => new DeleteVideoUseCase(di.get<VideoRepository>(videoDIKeys.videoRepository))
     );
 
+    di.bindLazySingleton(
+        DuplicateVideoUseCase,
+        () => new DuplicateVideoUseCase(di.get<VideoRepository>(videoDIKeys.videoRepository))
+    );
+
     di.bindFactory(
         VideoListBloc,
-        () => new VideoListBloc(di.get(GetVideosUseCase), di.get(DeleteVideoUseCase))
+        () =>
+            new VideoListBloc(
+                di.get(GetVideosUseCase),
+                di.get(DeleteVideoUseCase),
+                di.get(DuplicateVideoUseCase)
+            )
     );
 
     di.bindFactory(
