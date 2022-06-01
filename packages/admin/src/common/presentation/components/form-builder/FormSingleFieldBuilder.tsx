@@ -14,6 +14,7 @@ import {
     FormControlLabel,
 } from "@material-ui/core";
 import MultiSelect from "./MultiSelect";
+import TagsTextField from "./TagsTextField";
 
 interface FormFieldBuilderProps {
     field: FormSingleFieldState;
@@ -144,6 +145,13 @@ const FormSingleFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handle
                             name={field.name}
                             label={field.label.concat(field.required ? " (*)" : "")}
                             options={options}
+                            onChange={handleMultiChange}
+                        />
+                    ) : field.multiple && !options && Array.isArray(field.value) ? (
+                        <TagsTextField
+                            values={field.value || []}
+                            name={field.name}
+                            label={field.label.concat(field.required ? " (*)" : "")}
                             onChange={handleMultiChange}
                         />
                     ) : (

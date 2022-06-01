@@ -27,15 +27,26 @@ export default class CurrentNewsRSSDataSource implements CurrentNewsDataSource {
     }
 
     private async getNewsFromFeed(feed: NewsFeed): Promise<any[]> {
+        //const categories = ["Actualités", "France Karaté", "Karaté"];
+
         let rss: any;
         try {
             rss = await this.parser.parseURL(feed.url.value);
 
-            if (rss && rss.items) {
+            const items = rss?.items.filter(
+                item =>
+                    !feed.categories ||
+                    feed.categories.length === 0 ||
+                    (feed.categories.length > 0 &&
+                        item.categories?.some(
+                            cat => feed.categories && feed.categories.includes(cat)
+                        ))
+            );
+
+            if (items) {
                 return (
-                    rss?.items
-                        ?.filter(item => item.link)
-                        .map((item: any) => this.mapItem(item, feed)) ?? []
+                    items?.filter(item => item.link).map((item: any) => this.mapItem(item, feed)) ??
+                    []
                 );
             } else {
                 console.log(`There are not rss items to parse in ${feed.url}`);

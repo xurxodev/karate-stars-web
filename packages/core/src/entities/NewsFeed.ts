@@ -13,6 +13,7 @@ interface NewsFeedObjectData extends EntityObjectData {
     type: RssType;
     image?: Url;
     url: Url;
+    categories?: string[];
 }
 
 export interface NewsFeedData extends EntityData {
@@ -21,6 +22,7 @@ export interface NewsFeedData extends EntityData {
     type: RssType;
     image?: string;
     url: string;
+    categories?: string[];
 }
 
 export class NewsFeed extends Entity<NewsFeedData> {
@@ -29,6 +31,7 @@ export class NewsFeed extends Entity<NewsFeedData> {
     public readonly type: RssType;
     public readonly image?: Url;
     public readonly url: Url;
+    public readonly categories?: string[];
 
     private constructor(data: NewsFeedObjectData) {
         super(data.id);
@@ -38,6 +41,7 @@ export class NewsFeed extends Entity<NewsFeedData> {
         this.language = data.language;
         this.type = data.type;
         this.image = data.image;
+        this.categories = data.categories;
     }
 
     public static create(data: NewsFeedData): Either<ValidationError<NewsFeedData>[], NewsFeed> {
@@ -62,6 +66,7 @@ export class NewsFeed extends Entity<NewsFeedData> {
             type: this.type,
             image: this.image?.value,
             url: this.url.value,
+            categories: this.categories,
         };
     }
 
@@ -119,6 +124,7 @@ export class NewsFeed extends Entity<NewsFeedData> {
                     type: data.type,
                     url: urlResult.get(),
                     image: data.image ? imageResult.get() : undefined,
+                    categories: data.categories,
                 })
             );
         } else {

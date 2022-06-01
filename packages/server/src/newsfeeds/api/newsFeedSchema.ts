@@ -7,4 +7,5 @@ export const newsFeedSchema = Joi.object({
     type: Joi.string().valid("rss", "atom"),
     image: Joi.string(),
     url: Joi.string(),
+    categories: Joi.array().items(Joi.string()),
 });

@@ -16,14 +16,17 @@ export default class NewsFeedMongoRepository
     }
 
     protected mapToDomain(modelDB: NewsFeedDB): NewsFeed {
-        return NewsFeed.create({
+        const feed = NewsFeed.create({
             id: modelDB._id,
             name: modelDB.name,
             language: modelDB.language,
             type: modelDB.type,
             image: modelDB.image,
             url: modelDB.url,
+            categories: modelDB.categories,
         }).get();
+
+        return feed;
     }
 
     protected mapToDB(entity: NewsFeed): NewsFeedDB {

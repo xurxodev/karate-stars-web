@@ -66,6 +66,8 @@ const initialFieldsState = (newsFeed?: NewsFeedData): FormSectionState[] => {
                     name: "name",
                     required: true,
                     value: newsFeed?.name,
+                    md: 6,
+                    xs: 12,
                 },
                 {
                     kind: "FormSingleFieldState",
@@ -73,6 +75,8 @@ const initialFieldsState = (newsFeed?: NewsFeedData): FormSectionState[] => {
                     name: "url",
                     required: true,
                     value: newsFeed?.url,
+                    md: 6,
+                    xs: 12,
                 },
                 {
                     kind: "FormSingleFieldState",
@@ -95,6 +99,14 @@ const initialFieldsState = (newsFeed?: NewsFeedData): FormSectionState[] => {
                     md: 6,
                     xs: 12,
                     required: true,
+                },
+                {
+                    kind: "FormSingleFieldState",
+                    label: "Categories",
+                    name: "categories",
+                    required: false,
+                    value: newsFeed?.categories || [],
+                    multiple: true,
                 },
             ],
         },
