@@ -19,10 +19,10 @@ export default class VideoMongoRepository
         const videos = await super.getAll();
 
         const orderedVideos = videos.sort((a: Video, b: Video) => {
-            if (a.eventDate.getFullYear() > b.eventDate.getFullYear()) {
+            if (a.eventDate > b.eventDate) {
                 return -1;
             }
-            if (a.eventDate.getFullYear() < b.eventDate.getFullYear()) {
+            if (a.eventDate < b.eventDate) {
                 return 1;
             }
             // a must be equal to b
