@@ -50,4 +50,6 @@ export default CategoryListBloc;
 const fields: ListField<CategoryData>[] = [
     { name: "id", text: "Id", type: "text" },
     { name: "name", text: "Name", type: "text" },
+    { name: "wkfId", text: "Wkf Id", type: "text" },
+    { name: "paraKarate", text: "ParaKarate", type: "boolean", searchable: false },
 ];

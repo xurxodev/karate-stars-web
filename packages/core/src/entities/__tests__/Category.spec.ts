@@ -4,6 +4,8 @@ const categoryRawData = {
     id: "CYrgQdA0ZZm",
     name: "Female Kumite Open",
     typeId: "Gps5nVcCdjV",
+    wkfId: null,
+    paraKarate: false,
 };
 
 describe("Category", () => {

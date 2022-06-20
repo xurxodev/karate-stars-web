@@ -7,22 +7,30 @@ import { Entity, EntityObjectData, EntityData } from "./Entity";
 interface CategoryObjectData extends EntityObjectData {
     name: string;
     typeId: Id;
+    wkfId: string | null;
+    paraKarate: boolean;
 }
 
 export interface CategoryData extends EntityData {
     name: string;
     typeId: string;
+    wkfId: string | null;
+    paraKarate: boolean;
 }
 
 export class Category extends Entity<CategoryData> {
     public readonly name: string;
     public readonly typeId: Id;
+    public readonly wkfId: string | null;
+    public readonly paraKarate: boolean;
 
     private constructor(data: CategoryObjectData) {
         super(data.id);
 
         this.name = data.name;
         this.typeId = data.typeId;
+        this.wkfId = data.wkfId;
+        this.paraKarate = data.paraKarate;
     }
 
     public static create(data: CategoryData): Either<ValidationError<CategoryData>[], Category> {
@@ -44,6 +52,8 @@ export class Category extends Entity<CategoryData> {
             id: this.id.value,
             name: this.name,
             typeId: this.typeId.value,
+            wkfId: this.wkfId,
+            paraKarate: this.paraKarate,
         };
     }
 
@@ -77,7 +87,13 @@ export class Category extends Entity<CategoryData> {
 
         if (errors.length === 0) {
             return Either.right(
-                new Category({ id: idResult.get(), name: data.name, typeId: typeIdResult.get() })
+                new Category({
+                    id: idResult.get(),
+                    name: data.name,
+                    typeId: typeIdResult.get(),
+                    wkfId: data.wkfId === "" || !data.wkfId ? null : data.wkfId,
+                    paraKarate: data.paraKarate,
+                })
             );
         } else {
             return Either.left(errors);

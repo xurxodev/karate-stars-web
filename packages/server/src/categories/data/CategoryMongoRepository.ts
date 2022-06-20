@@ -37,6 +37,8 @@ export default class CategoryTypeMongoRepository
             id: modelDB._id,
             name: modelDB.name,
             typeId: modelDB.typeId,
+            wkfId: modelDB.wkfId,
+            paraKarate: modelDB.paraKarate,
         }).get();
     }
 

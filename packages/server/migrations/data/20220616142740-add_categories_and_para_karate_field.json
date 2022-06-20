@@ -1,0 +1,570 @@
+[
+    {
+        "_id": "SOYfK0FNhnA",
+        "name": "Female Kumite Open",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": null,
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "G2HnSRl0vft",
+        "name": "Male Team Kata",
+        "typeId": "qWPs4i1e78g",
+        "wkfId": null,
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "wZgo8Vp77gR",
+        "name": "Female Kumite -50 Kg",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": "491",
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "KqVrbhbJ72W",
+        "name": "Male Kata",
+        "typeId": "qWPs4i1e78g",
+        "wkfId": "489",
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "X3WKhryS14n",
+        "name": "Male Kumite Open",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": null,
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "ZISRr1y7tX9",
+        "name": "Male Kumite -65 Kg",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": null,
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "wa8Xgi22vUo",
+        "name": "Male Kumite -67 Kg",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": "522",
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "XJewUnAs3h8",
+        "name": "Female Kumite 68+ Kg",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": "523",
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "RlhZWCJJwr9",
+        "name": "Female Team Kata",
+        "typeId": "qWPs4i1e78g",
+        "wkfId": null,
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "pE9CTlKk3p0",
+        "name": "Male Kumite 84+ Kg",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": "520",
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "DDexNXai9Cn",
+        "name": "Male Kumite -80 Kg",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": null,
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "qtYzfVYc50L",
+        "name": "Female Kumite -61 Kg",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": "525",
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "RmxFRJsT8Lc",
+        "name": "Female Kumite -53 Kg",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": null,
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "QihGhQpPpiI",
+        "name": "Male Team Kumite",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": null,
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "sl51SV7E7UF",
+        "name": "Male Kumite -70 Kg",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": "616",
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "wWlucgUSXDG",
+        "name": "Female Kumite -60 Kg",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": "620",
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "yWjCZGmwVa4",
+        "name": "Female Kumite -55 Kg",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": "492",
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "kY6eNgWEXbw",
+        "name": "Female Team Kumite",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": null,
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "xVfJZTnAFUe",
+        "name": "Male Kumite -84 Kg",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": "521",
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "kMe2wqSvf2O",
+        "name": "Male Kumite -60 Kg",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": "487",
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "vBqpirnDr9q",
+        "name": "Female Kumite -68 Kg",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": "524",
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "RCDcw0osHXz",
+        "name": "Female Kumite 60+ Kg",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": "621",
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "uAwCwvaoUgg",
+        "name": "Female Kata",
+        "typeId": "qWPs4i1e78g",
+        "wkfId": "490",
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "Pw4ZqwmVlBy",
+        "name": "Male Kumite -75 Kg",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": "488",
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "OjP1mOQC5Ow",
+        "name": "Male Kumite 80+ Kg",
+        "typeId": "Gps5nVcCdjV",
+        "wkfId": "618",
+        "paraKarate": false,
+        "new": false
+    },
+    {
+        "_id": "Xmnjvq0mdDI",
+        "wkfId": "727",
+        "name": "PARA Blind/visually impaired male",
+        "typeId": "qWPs4i1e78g",
+        "paraKarate": true,
+        "new": true
+    },
+    {
+        "_id": "y8jGNlqeQsc",
+        "wkfId": "724",
+        "name": "PARA Intellectually impaired female",
+        "typeId": "qWPs4i1e78g",
+        "paraKarate": true,
+        "new": true
+    },
+    {
+        "_id": "mMpT1kz0VWi",
+        "wkfId": "725",
+        "name": "PARA Intellectually impaired male",
+        "typeId": "qWPs4i1e78g",
+        "paraKarate": true,
+        "new": true
+    },
+    {
+        "_id": "E03yVkTwIja",
+        "wkfId": "722",
+        "name": "PARA Wheelchair user male",
+        "typeId": "qWPs4i1e78g",
+        "paraKarate": true,
+        "new": true
+    },
+    {
+        "_id": "KSFnGULfORI",
+        "wkfId": "626",
+        "name": "U21 Kumite Female -50 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "qhv3itgGF7J",
+        "wkfId": "627",
+        "name": "U21 Kumite Female -55 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "dRWUj3CsDTp",
+        "wkfId": "628",
+        "name": "U21 Kumite Female -61 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "Y2fr0IQfeuG",
+        "wkfId": "629",
+        "name": "U21 Kumite Female -68 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "dGYhLRiN6GO",
+        "wkfId": "630",
+        "name": "U21 Kumite Female 68+ kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "sQGQGEzSyyh",
+        "wkfId": "719",
+        "name": "U21 Kumite Male -55kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "b6rPfvAbXRM",
+        "wkfId": "631",
+        "name": "U21 Kumite Male -60 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "PxltLgEfzoU",
+        "wkfId": "632",
+        "name": "U21 Kumite Male -67 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "tG8K0y8p5Oo",
+        "wkfId": "633",
+        "name": "U21 Kumite Male -75 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "StEKlylVjwJ",
+        "wkfId": "634",
+        "name": "U21 Kumite Male -84 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "pqeURcUDAzj",
+        "wkfId": "635",
+        "name": "U21 Kumite Male 84+ kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "cjOJNYrbwwa",
+        "wkfId": "527",
+        "name": "Under 21 Kata Female",
+        "typeId": "qWPs4i1e78g",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "iq8MIa2mIQ4",
+        "wkfId": "526",
+        "name": "Under 21 Kata Male",
+        "typeId": "qWPs4i1e78g",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "vEDAwJF5RnZ",
+        "wkfId": "504",
+        "name": "Junior Kata Female",
+        "typeId": "qWPs4i1e78g",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "kTmU4XUh7tV",
+        "wkfId": "503",
+        "name": "Junior Kata Male",
+        "typeId": "qWPs4i1e78g",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "tSsHMvLTGnZ",
+        "wkfId": "510",
+        "name": "Junior Kumite Female -48 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "Mo8l32IRg22",
+        "wkfId": "511",
+        "name": "Junior Kumite Female -53 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "qTqhaOBk8dz",
+        "wkfId": "512",
+        "name": "Junior Kumite Female -59 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "R8TMhPcNykH",
+        "wkfId": "513",
+        "name": "Junior Kumite Female 59+ kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "Y7QgA6MG902",
+        "wkfId": "505",
+        "name": "Junior Kumite Male -55 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "N4yApST4WHK",
+        "wkfId": "506",
+        "name": "Junior Kumite Male -61 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "fS0NDfXes0t",
+        "wkfId": "507",
+        "name": "Junior Kumite Male -68 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "HvtxDhLD9mt",
+        "wkfId": "508",
+        "name": "Junior Kumite Male -76 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "iYGB5pBJkeq",
+        "wkfId": "509",
+        "name": "Junior Kumite Male 76+ kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "Iw2DoanKm9v",
+        "wkfId": "494",
+        "name": "Cadet Kata Female",
+        "typeId": "qWPs4i1e78g",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "V83IThX1nUK",
+        "wkfId": "493",
+        "name": "Cadet Kata Male",
+        "typeId": "qWPs4i1e78g",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "UDzU7vR7f5d",
+        "wkfId": "500",
+        "name": "Cadet Kumite Female -47 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "WLGaDXVqMMq",
+        "wkfId": "501",
+        "name": "Cadet Kumite Female -54 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "hFYEGOPUado",
+        "wkfId": "502",
+        "name": "Cadet Kumite Female 54+ kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "CGIStvIfXeW",
+        "wkfId": "495",
+        "name": "Cadet Kumite Male -52 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "UahjbfogIwY",
+        "wkfId": "496",
+        "name": "Cadet Kumite Male -57 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "LcjAUXFdx8g",
+        "wkfId": "497",
+        "name": "Cadet Kumite Male -63 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "al3crY4XtHt",
+        "wkfId": "498",
+        "name": "Cadet Kumite Male -70 kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "We81KFRdTzD",
+        "wkfId": "499",
+        "name": "Cadet Kumite Male 70+ kg",
+        "typeId": "Gps5nVcCdjV",
+        "paraKarate": false,
+        "new": true
+    },
+    {
+        "_id": "X4CZx1DLFPc",
+        "wkfId": "705",
+        "name": "BLIND/VISUALLY IMPAIRED FEMALE K10",
+        "typeId": "qWPs4i1e78g",
+        "paraKarate": true,
+        "new": true
+    },
+    {
+        "_id": "TmnEeLzo5ZC",
+        "wkfId": "699",
+        "name": "BLIND/VISUALLY IMPAIRED MALE K10",
+        "typeId": "qWPs4i1e78g",
+        "paraKarate": true,
+        "new": true
+    },
+    {
+        "_id": "Ww8ykIAZY3h",
+        "wkfId": "701",
+        "name": "INTELLECTUALLY IMPAIRED FEMALE K21",
+        "typeId": "qWPs4i1e78g",
+        "paraKarate": true,
+        "new": true
+    },
+    {
+        "_id": "ZAktwZxGwHY",
+        "wkfId": "706",
+        "name": "INTELLECTUALLY IMPAIRED FEMALE K22",
+        "typeId": "qWPs4i1e78g",
+        "paraKarate": true,
+        "new": true
+    },
+    {
+        "_id": "GQThKRR8qip",
+        "wkfId": "703",
+        "name": "INTELLECTUALLY IMPAIRED MALE K21",
+        "typeId": "qWPs4i1e78g",
+        "paraKarate": true,
+        "new": true
+    },
+    {
+        "_id": "A9kQFRo6Qr6",
+        "wkfId": "704",
+        "name": "INTELLECTUALLY IMPAIRED MALE K22",
+        "typeId": "qWPs4i1e78g",
+        "paraKarate": true,
+        "new": true
+    },
+    {
+        "_id": "SHFBkhRQpIV",
+        "wkfId": "700",
+        "name": "WHEELCHAIR USER FEMALE K30",
+        "typeId": "qWPs4i1e78g",
+        "paraKarate": true,
+        "new": true
+    },
+    {
+        "_id": "huMeQfwXAT4",
+        "wkfId": "702",
+        "name": "WHEELCHAIR USER MALE K30",
+        "typeId": "qWPs4i1e78g",
+        "paraKarate": true,
+        "new": true
+    }
+]
