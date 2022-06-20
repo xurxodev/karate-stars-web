@@ -186,10 +186,11 @@ abstract class ListBloc<S extends IdentifiableObject> extends Bloc<ListPageState
             searchableFields.some(field => {
                 return (
                     !search ||
-                    (item[field.name] as any)
-                        .toString()
-                        .toLowerCase()
-                        .includes(search.toLocaleLowerCase())
+                    (item[field.name] &&
+                        (item[field.name] as any)
+                            .toString()
+                            .toLowerCase()
+                            .includes(search.toLocaleLowerCase()))
                 );
             })
         );
