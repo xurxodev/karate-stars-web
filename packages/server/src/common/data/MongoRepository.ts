@@ -1,6 +1,6 @@
 import { Either, Id } from "karate-stars-core";
 import { MongoConector } from "./MongoConector";
-import { Collection, ObjectId } from "mongodb";
+import { Collection } from "mongodb";
 import { MongoCollection } from "./Types";
 import { ResourceNotFoundError, UnexpectedError } from "../api/Errors";
 import { ActionResult } from "../api/ActionResult";
