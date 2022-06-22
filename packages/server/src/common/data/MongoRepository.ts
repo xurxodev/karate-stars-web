@@ -1,6 +1,6 @@
 import { Either, Id } from "karate-stars-core";
 import { MongoConector } from "./MongoConector";
-import { Collection } from "mongodb";
+import { Collection, ObjectId } from "mongodb";
 import { MongoCollection } from "./Types";
 import { ResourceNotFoundError, UnexpectedError } from "../api/Errors";
 import { ActionResult } from "../api/ActionResult";
@@ -110,21 +110,16 @@ export default abstract class MongoRepository<Entity, ModelDB extends MongoColle
 
             await collection.deleteMany({});
 
-            const results = await Promise.all(
-                modelDBs.map(modelDB =>
-                    collection.updateOne(
-                        { _id: modelDB._id },
-                        { $set: { ...modelDB } },
-                        { upsert: true }
-                    )
-                )
-            );
+            const models = modelDBs.map(modelDB => modelDB as any);
+
+            const results = await collection.insertMany(models);
 
             return Either.right({
                 ok: true,
-                count: results.length,
+                count: results.insertedCount,
             });
         } catch (error) {
+            console.log(JSON.stringify(error));
             return Either.left({ kind: "UnexpectedError", error });
         }
     }

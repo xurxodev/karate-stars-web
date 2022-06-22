@@ -7,7 +7,7 @@ import CategoryRepository from "../domain/boundaries/CategoryRepository";
 
 type CategoryDB = Omit<CategoryData, "id"> & MongoCollection;
 
-export default class CategoryTypeMongoRepository
+export default class CategoryMongoRepository
     extends MongoRepository<Category, CategoryDB>
     implements CategoryRepository
 {
