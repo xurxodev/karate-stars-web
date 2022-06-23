@@ -17,8 +17,24 @@ export default class RankingEntryMongoRepository
         super(mongoConector, "rankingEntries");
     }
 
-    get(): Promise<RankingEntry[]> {
-        return super.getAll();
+    async get(rankingId: Id, categoryId: Id): Promise<RankingEntry[]> {
+        try {
+            const collection = await this.collection();
+
+            const cursor = collection.find<RankingEntryDB>({
+                rankingId: rankingId.value,
+                categoryId: categoryId.value,
+            });
+
+            const modelDBList = await cursor.toArray();
+
+            cursor.close();
+
+            return modelDBList.map(modelDB => this.mapToDomain(modelDB));
+        } catch (error) {
+            console.log({ error });
+            return [];
+        }
     }
 
     protected mapToDomain(modelDB: RankingEntryDB): RankingEntry {

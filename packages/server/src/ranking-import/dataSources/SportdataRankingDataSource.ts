@@ -112,7 +112,7 @@ export default class SportdataRankingDataSource implements RankingDataSource {
     private mapItemToRankingEntry(entry: any, rankingId: string, categoryId: string): RankingEntry {
         return {
             rankingId,
-            rank: entry.Rank,
+            rank: +entry.Rank,
             country: entry.Country,
             countryCode: entry.CountryCode,
             club: entry.Club,
@@ -121,7 +121,7 @@ export default class SportdataRankingDataSource implements RankingDataSource {
             lastName: entry.Lastname,
             wkfId: entry.WKFID,
             photo: entry.PHOTO,
-            totalPoints: entry.TotalPoints,
+            totalPoints: +entry.TotalPoints,
             continentalCode: entry.ContinentCode,
             categoryId,
             categoryWkfId: entry.CATID,

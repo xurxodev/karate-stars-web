@@ -124,7 +124,7 @@ export default abstract class MongoRepository<Entity, ModelDB extends MongoColle
         }
     }
 
-    private async collection(): Promise<Collection> {
+    protected async collection(): Promise<Collection> {
         const db = await this.mongoConector.db();
 
         return db.collection(this.collectionName);

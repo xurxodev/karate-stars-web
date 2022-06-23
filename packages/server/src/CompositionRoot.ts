@@ -17,6 +17,7 @@ import { initializeVideos } from "./videos/VideoDIModule";
 import { initializeCurrentNews } from "./currentnews/CurrentNewsDIModule";
 import { initializeSocialNews } from "./socialnews/SocialNewsDIModule";
 import { initializeNewsFeeds } from "./newsfeeds/NewsFeedsDIModule";
+import { initializeRankings } from "./ranking/RankingDIModule";
 
 export const appDIKeys = {
     jwtAuthenticator: "jwtAuthenticator",
@@ -41,6 +42,7 @@ export function init() {
     initializeSocialNews();
     initializeCurrentNews();
     initializeVideos();
+    initializeRankings();
 }
 
 export function reset() {

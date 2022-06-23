@@ -12,6 +12,8 @@ import userRoutes from "./users/api/UserRoutes";
 import videoRoutes from "./videos/api/VideoRoutes";
 import eventTypeRoutes from "./event-types/api/EventTypeRoutes";
 import eventRoutes from "./events/api/EventRoutes";
+import rankingRoutes from "./ranking/api/RankingRoutes";
+import rankingEntriesRoutes from "./ranking/api/RankingEntriesRoutes";
 
 const initializeRoutes = (server: hapi.Server) => {
     const apiPrefix = "/api/v1";
@@ -56,6 +58,8 @@ const initializeRoutes = (server: hapi.Server) => {
         ...userRoutes(apiPrefix),
         ...socialNewsRoutes(apiPrefix),
         ...currentNewsRoutes(apiPrefix),
+        ...rankingRoutes(apiPrefix),
+        ...rankingEntriesRoutes(apiPrefix),
     ];
 
     allRoutes.forEach(route => {

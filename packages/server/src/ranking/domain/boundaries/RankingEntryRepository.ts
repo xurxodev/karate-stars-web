@@ -1,10 +1,10 @@
-import { Either } from "karate-stars-core";
+import { Either, Id } from "karate-stars-core";
 import { ActionResult } from "../../../common/api/ActionResult";
 import { UnexpectedError } from "../../../common/api/Errors";
 import { RankingEntry } from "../entities/RankingEntry";
 
 export default interface RankingEntryReadableRepository {
-    get(): Promise<RankingEntry[]>;
+    get(rankingId: Id, categoryId: Id): Promise<RankingEntry[]>;
 }
 
 export interface RankingEntryWritableRepository {

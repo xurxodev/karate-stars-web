@@ -7,7 +7,7 @@ import RankingRepository from "../domain/boundaries/RankingRepository";
 type RankingDB = Omit<Ranking, "id"> & MongoCollection;
 
 interface RankingFilters {
-    toImport?: true;
+    toImport?: boolean;
 }
 
 export default class RankingMongoRepository

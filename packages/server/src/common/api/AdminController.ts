@@ -151,7 +151,7 @@ export async function runDelete<TValidation>(
     );
 }
 
-function handleFailure<TData>(error: UseCaseErrors<TData>): hapi.Lifecycle.ReturnValue {
+export function handleFailure<TData>(error: UseCaseErrors<TData>): hapi.Lifecycle.ReturnValue {
     switch (error.kind) {
         case "Unauthorized": {
             return boom.unauthorized(error.message);
