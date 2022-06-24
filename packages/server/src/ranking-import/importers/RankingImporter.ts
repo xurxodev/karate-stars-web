@@ -1,9 +1,7 @@
-import { Category } from "karate-stars-core";
+import { Category, Ranking, RankingEntry } from "karate-stars-core";
 import CategoryMongoRepository from "../../categories/data/CategoryMongoRepository";
 import { MongoConector } from "../../common/data/MongoConector";
 import SportdataRankingDataSource from "../dataSources/SportdataRankingDataSource";
-import { Ranking } from "../../ranking/domain/entities/Ranking";
-import { RankingEntry } from "../../ranking/domain/entities/RankingEntry";
 import RankingMongoRepository from "../../ranking/data/RankingMongoRepository";
 import RankingEntryMongoRepository from "../../ranking/data/RankingEntryMongoRepository";
 

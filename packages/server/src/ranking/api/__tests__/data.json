@@ -1,56 +1,113 @@
 {
-    "competitors": [
+    "rankings": [
         {
-            "id": "iuPYGqss3Hv",
-            "firstName": "Iryna",
-            "lastName": "Zaretska",
-            "wkfId": "AZE2043",
-            "biography": "Iryna Zaretska (4 March 1996 in Ukraine) is a Ukrainian and Azerbaijani karateka. \nShe won for Ukraine a bronze medal in kumite less than 68 at the 2014 Karate World Championships in Bremen, then for Azerbaijan the gold medal in the same category at the 2015 European Games in Baku and in QihGhQpPpiI at the 2016 European Karate Championships in Montpellier. \nShe is a gold medalist at the 2017 Islamic Solidarity Games in Baku and a silver medalist at the 2018 Karate European Championships in Novi Sad. \nShe was proclaimed World Champion in November 2018 in Madrid.",
-            "countryId": "uIaQv0JlN5n",
-            "categoryId": "wZgo8Vp77gR",
-            "mainImage": "http://www.karatestarsapp.com/app/images/iryna_zaretska.jpg",
-            "isActive": true,
-            "isLegend": false,
-            "links": [
-                {
-                    "url": "https://twitter.com/IrynaZaretska",
-                    "type": "twitter"
-                },
-                {
-                    "url": "https://www.facebook.com/iryna.zaretska.3",
-                    "type": "facebook"
-                },
-                {
-                    "url": "https://www.instagram.com/irynazaretska",
-                    "type": "instagram"
-                }
-            ],
-            "achievements": [
-                {
-                    "eventId": "CYrgQdA0ZZm",
-                    "categoryId": "wZgo8Vp77gR",
-                    "position": 3
-                },
-                {
-                    "eventId": "QaFq0Lf2YDR",
-                    "categoryId": "wZgo8Vp77gR",
-                    "position": 1
-                }
+            "id": "vnsabLUirBx",
+            "name": "WKF Ranking",
+            "webUrl": null,
+            "apiUrl": "http://setopen.sportdata.org/wkfranking/ranking_main_xml.php",
+            "categoryParameter": "ranking_category_id",
+            "categories": [
+                "X4CZx1DLFPc",
+                "TmnEeLzo5ZC",
+                "Iw2DoanKm9v",
+                "V83IThX1nUK",
+                "UDzU7vR7f5d",
+                "WLGaDXVqMMq",
+                "hFYEGOPUado",
+                "CGIStvIfXeW",
+                "UahjbfogIwY",
+                "LcjAUXFdx8g",
+                "al3crY4XtHt",
+                "We81KFRdTzD",
+                "uAwCwvaoUgg",
+                "wZgo8Vp77gR",
+                "yWjCZGmwVa4",
+                "qtYzfVYc50L",
+                "vBqpirnDr9q",
+                "XJewUnAs3h8",
+                "Ww8ykIAZY3h",
+                "ZAktwZxGwHY",
+                "GQThKRR8qip",
+                "A9kQFRo6Qr6",
+                "vEDAwJF5RnZ",
+                "kTmU4XUh7tV",
+                "tSsHMvLTGnZ",
+                "Mo8l32IRg22",
+                "qTqhaOBk8dz",
+                "R8TMhPcNykH",
+                "Y7QgA6MG902",
+                "N4yApST4WHK",
+                "fS0NDfXes0t",
+                "HvtxDhLD9mt",
+                "iYGB5pBJkeq",
+                "KqVrbhbJ72W",
+                "kMe2wqSvf2O",
+                "wa8Xgi22vUo",
+                "Pw4ZqwmVlBy",
+                "xVfJZTnAFUe",
+                "pE9CTlKk3p0",
+                "Xmnjvq0mdDI",
+                "y8jGNlqeQsc",
+                "mMpT1kz0VWi",
+                "E03yVkTwIja",
+                "KSFnGULfORI",
+                "qhv3itgGF7J",
+                "dRWUj3CsDTp",
+                "Y2fr0IQfeuG",
+                "dGYhLRiN6GO",
+                "sQGQGEzSyyh",
+                "b6rPfvAbXRM",
+                "PxltLgEfzoU",
+                "tG8K0y8p5Oo",
+                "StEKlylVjwJ",
+                "pqeURcUDAzj",
+                "cjOJNYrbwwa",
+                "iq8MIa2mIQ4",
+                "SHFBkhRQpIV",
+                "huMeQfwXAT4"
             ]
-        }
-    ],
-    "countries": [
-        {
-            "id": "uIaQv0JlN5n",
-            "iso2": "az",
-            "name": "Azerbaijan",
-            "image": "http://www.karatestarsapp.com/app/flags/az.png"
         },
         {
-            "id": "AsfJyc10miO",
-            "iso2": "eg",
-            "name": "Egypt",
-            "image": "http://www.karatestarsapp.com/app/flags/eg.png"
+            "id": "K6MwDuZ5r1X",
+            "name": "European Games 2023 Standings",
+            "webUrl": "http://setopen.sportdata.org/wkfranking/standing_egpoland2023.php",
+            "apiUrl": null,
+            "categoryParameter": null,
+            "categories": []
+        }
+    ],
+    "rankingEntries": [
+        {
+            "id": "ZRNgvdxBmQv",
+            "rankingId": "vnsabLUirBx",
+            "rank": 1,
+            "country": "ITALY",
+            "countryCode": "ITA",
+            "name": "ANGELO CRESCENZO",
+            "firstName": "ANGELO",
+            "lastName": "ITA266",
+            "wkfId": "ITA266",
+            "photo": "https://www.sportdata.org/wkf/competitor_pics/17611.jpg",
+            "totalPoints": 6142.5,
+            "continentalCode": "EKF",
+            "categoryId": "kMe2wqSvf2O",
+            "categoryWkfId": "487"
+        },
+        {
+            "id": "jx3afWRcx6d",
+            "rankingId": "vnsabLUirBx",
+            "rank": 2,
+            "country": "TURKEY",
+            "countryCode": "TUR",
+            "name": "ERAY SAMDAN",
+            "firstName": "ERAY",
+            "lastName": "TUR632",
+            "wkfId": "TUR632",
+            "photo": "https://www.sportdata.org/wkf/competitor_pics/9716.jpg",
+            "totalPoints": 5182.5,
+            "continentalCode": "EKF",
+            "categoryId": "kMe2wqSvf2O",
+            "categoryWkfId": "487"
         }
     ]
 }

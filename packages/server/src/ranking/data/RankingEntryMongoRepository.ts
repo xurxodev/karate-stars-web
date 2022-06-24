@@ -1,13 +1,13 @@
 import { MongoConector } from "../../common/data/MongoConector";
 import { MongoCollection } from "../../common/data/Types";
 import MongoRepository from "../../common/data/MongoRepository";
-import { Id } from "karate-stars-core";
+import { Id, RankingEntry, RankingEntryData } from "karate-stars-core";
 import RankingEntryReadableRepository, {
     RankingEntryWritableRepository,
 } from "../domain/boundaries/RankingEntryRepository";
-import { RankingEntry } from "../domain/entities/RankingEntry";
+import { renameProp } from "../../common/data/utils";
 
-type RankingEntryDB = RankingEntry & MongoCollection & { createdDate: Date };
+type RankingEntryDB = RankingEntryData & MongoCollection & { createdDate: Date };
 
 export default class RankingEntryMongoRepository
     extends MongoRepository<RankingEntry, RankingEntryDB>
@@ -38,12 +38,12 @@ export default class RankingEntryMongoRepository
     }
 
     protected mapToDomain(modelDB: RankingEntryDB): RankingEntry {
-        return {
+        return RankingEntry.create({
+            id: modelDB._id,
             rankingId: modelDB.rankingId,
             rank: modelDB.rank,
             country: modelDB.country,
             countryCode: modelDB.countryCode,
-            club: modelDB.club,
             name: modelDB.name,
             firstName: modelDB.firstName,
             lastName: modelDB.wkfId,
@@ -53,12 +53,12 @@ export default class RankingEntryMongoRepository
             continentalCode: modelDB.continentalCode,
             categoryId: modelDB.categoryId,
             categoryWkfId: modelDB.categoryWkfId,
-        };
+        }).get();
     }
 
     protected mapToDB(entity: RankingEntry): RankingEntryDB {
-        const rawData = { ...entity, _id: Id.generateId().value, createdDate: new Date() };
+        const rawData = { ...entity.toData(), createdDate: new Date() };
 
-        return rawData;
+        return renameProp("id", "_id", rawData) as RankingEntryDB;
     }
 }

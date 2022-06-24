@@ -1,8 +1,6 @@
-import { Either, Id } from "karate-stars-core";
+import { Either, Id, RankingEntryData } from "karate-stars-core";
 import { ResourceNotFoundError } from "../../../common/api/Errors";
 import RankingEntryRepository from "../boundaries/RankingEntryRepository";
-
-import { RankingEntry } from "../entities/RankingEntry";
 
 export interface GetRankingEntriesArgs {
     rankingId: string;
@@ -17,7 +15,7 @@ export class GetRankingEntriesUseCase {
     public async execute({
         rankingId,
         categoryId,
-    }: GetRankingEntriesArgs): Promise<Either<GetRankingEntriesdError, RankingEntry[]>> {
+    }: GetRankingEntriesArgs): Promise<Either<GetRankingEntriesdError, RankingEntryData[]>> {
         const ranking = Id.createExisted(rankingId);
         const category = Id.createExisted(categoryId);
 
@@ -29,7 +27,7 @@ export class GetRankingEntriesUseCase {
         } else {
             const rankings = await this.rankingEntryRepository.get(ranking.get(), category.get());
 
-            return Either.right(rankings);
+            return Either.right(rankings.map(ranking => ranking.toData()));
         }
     }
 }

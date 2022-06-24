@@ -9,7 +9,6 @@ interface RankingEntryObjectData extends EntityObjectData {
     rank: number;
     country: string;
     countryCode: string;
-    club: string;
     name: string;
     firstName: string;
     lastName: string;
@@ -27,12 +26,11 @@ export interface RankingEntryData extends EntityData {
     rank: number;
     country: string;
     countryCode: string;
-    club: string;
     name: string;
     firstName: string;
     lastName: string;
     wkfId: string;
-    photo: string;
+    photo: string | null;
     totalPoints: number;
     continentalCode: string;
     categoryId: string;
@@ -44,7 +42,6 @@ export class RankingEntry extends Entity<RankingEntryData> implements RankingEnt
     public readonly rank: number;
     public readonly country: string;
     public readonly countryCode: string;
-    public readonly club: string;
     public readonly name: string;
     public readonly firstName: string;
     public readonly lastName: string;
@@ -63,7 +60,6 @@ export class RankingEntry extends Entity<RankingEntryData> implements RankingEnt
         this.rank = data.rank;
         this.country = data.country;
         this.countryCode = data.countryCode;
-        this.club = data.club;
         this.name = data.name;
         this.firstName = data.firstName;
         this.lastName = data.lastName;
@@ -78,7 +74,7 @@ export class RankingEntry extends Entity<RankingEntryData> implements RankingEnt
 
     public static create(
         data: RankingEntryData
-    ): Either<ValidationError<RankingEntryData>[], Event> {
+    ): Either<ValidationError<RankingEntryData>[], RankingEntry> {
         const finalId = !data.id ? Id.generateId().value : data.id;
 
         return this.validateAndCreate({ ...data, id: finalId });
@@ -86,7 +82,7 @@ export class RankingEntry extends Entity<RankingEntryData> implements RankingEnt
 
     public update(
         dataToUpdate: Partial<Omit<RankingEntryData, "id">>
-    ): Either<ValidationError<RankingEntryData>[], Event> {
+    ): Either<ValidationError<RankingEntryData>[], RankingEntry> {
         const newData = { ...this.toData(), ...dataToUpdate };
 
         return RankingEntry.validateAndCreate(newData);
@@ -99,7 +95,6 @@ export class RankingEntry extends Entity<RankingEntryData> implements RankingEnt
             rank: this.rank,
             country: this.country,
             countryCode: this.countryCode,
-            club: this.club,
             name: this.name,
             firstName: this.firstName,
             lastName: this.lastName,
@@ -114,7 +109,7 @@ export class RankingEntry extends Entity<RankingEntryData> implements RankingEnt
 
     private static validateAndCreate(
         data: RankingEntryData
-    ): Either<ValidationError<RankingEntryData>[], Event> {
+    ): Either<ValidationError<RankingEntryData>[], RankingEntry> {
         const idResult = Id.createExisted(data.id);
         const rankingIdResult = Id.createExisted(data.rankingId);
         const categoryIdResult = Id.createExisted(data.categoryId);
@@ -155,7 +150,6 @@ export class RankingEntry extends Entity<RankingEntryData> implements RankingEnt
                 errors: validateRequired(data.countryCode),
                 value: data.countryCode,
             },
-            { property: "club" as const, errors: validateRequired(data.club), value: data.club },
             { property: "name" as const, errors: validateRequired(data.name), value: data.name },
             {
                 property: "firstName" as const,
@@ -168,7 +162,6 @@ export class RankingEntry extends Entity<RankingEntryData> implements RankingEnt
                 value: data.lastName,
             },
             { property: "wkfId" as const, errors: validateRequired(data.wkfId), value: data.wkfId },
-            { property: "photo" as const, errors: validateRequired(data.photo), value: data.photo },
             {
                 property: "totalPoints" as const,
                 errors: validateRequired(data.totalPoints),
@@ -196,7 +189,6 @@ export class RankingEntry extends Entity<RankingEntryData> implements RankingEnt
                     rank: data.rank,
                     country: data.country,
                     countryCode: data.countryCode,
-                    club: data.club,
                     name: data.name,
                     firstName: data.firstName,
                     lastName: data.lastName,

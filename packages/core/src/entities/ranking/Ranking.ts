@@ -1,9 +1,9 @@
-import { Category } from "..";
 import { Either } from "../../types/Either";
 import { ValidationError } from "../../types/Errors";
 import { validateRequired } from "../../utils/validations";
 import { Id } from "../../value-objects/Id";
 import { Url } from "../../value-objects/Url";
+import { Category } from "../Category";
 import { Entity, EntityData, EntityObjectData } from "../Entity";
 
 interface RankingObjectData extends EntityObjectData {
@@ -39,7 +39,7 @@ export class Ranking extends Entity<RankingData> implements RankingObjectData {
         this.categories = data.categories;
     }
 
-    public static create(data: RankingData): Either<ValidationError<RankingData>[], Event> {
+    public static create(data: RankingData): Either<ValidationError<RankingData>[], Ranking> {
         const finalId = !data.id ? Id.generateId().value : data.id;
 
         return this.validateAndCreate({ ...data, id: finalId });
@@ -47,7 +47,7 @@ export class Ranking extends Entity<RankingData> implements RankingObjectData {
 
     public update(
         dataToUpdate: Partial<Omit<RankingData, "id">>
-    ): Either<ValidationError<RankingData>[], Event> {
+    ): Either<ValidationError<RankingData>[], Ranking> {
         const newData = { ...this.toData(), ...dataToUpdate };
 
         return Ranking.validateAndCreate(newData);
@@ -57,8 +57,8 @@ export class Ranking extends Entity<RankingData> implements RankingObjectData {
         return {
             id: this.id.value,
             name: this.name,
-            webUrl: this.webUrl.value,
-            apiUrl: this.apiUrl.value,
+            webUrl: this.webUrl ? this.webUrl.value : null,
+            apiUrl: this.apiUrl ? this.apiUrl.value : null,
             categoryParameter: this.categoryParameter,
             categories: this.categories.map(cat => cat.value),
         };
@@ -66,14 +66,15 @@ export class Ranking extends Entity<RankingData> implements RankingObjectData {
 
     private static validateAndCreate(
         data: RankingData
-    ): Either<ValidationError<RankingData>[], Event> {
+    ): Either<ValidationError<RankingData>[], Ranking> {
         const idResult = Id.createExisted(data.id);
         const webUrlResult = data.webUrl ? Url.create(data.webUrl) : undefined;
         const apiUrlResult = data.apiUrl ? Url.create(data.apiUrl) : undefined;
 
-        const categoryResults = data.categories
-            ? data.categories.map(id => Id.createExisted(id))
-            : undefined;
+        const categoryResults =
+            data.categories && data.categories.length > 0
+                ? data.categories.map(id => Id.createExisted(id))
+                : undefined;
 
         const categoryErrors = categoryResults
             ? categoryResults.map(categoryResult => {
@@ -133,7 +134,7 @@ export class Ranking extends Entity<RankingData> implements RankingObjectData {
                     webUrl: webUrlResult ? webUrlResult.get() : null,
                     apiUrl: apiUrlResult ? apiUrlResult.get() : null,
                     categoryParameter: data.categoryParameter,
-                    categories: categoryResults.map(result => result.get()),
+                    categories: categoryResults ? categoryResults.map(result => result.get()) : [],
                 })
             );
         } else {

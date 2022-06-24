@@ -1,10 +1,11 @@
 import { MongoConector } from "../../common/data/MongoConector";
 import { MongoCollection } from "../../common/data/Types";
 import MongoRepository from "../../common/data/MongoRepository";
-import { Ranking } from "../domain/entities/Ranking";
 import RankingRepository from "../domain/boundaries/RankingRepository";
+import { Ranking, RankingData } from "karate-stars-core";
+import { renameProp } from "../../common/data/utils";
 
-type RankingDB = Omit<Ranking, "id"> & MongoCollection;
+type RankingDB = Omit<RankingData, "id"> & MongoCollection;
 
 interface RankingFilters {
     toImport?: boolean;
@@ -27,19 +28,19 @@ export default class RankingMongoRepository
     }
 
     protected mapToDomain(modelDB: RankingDB): Ranking {
-        return {
+        return Ranking.create({
             id: modelDB._id,
             name: modelDB.name,
             webUrl: modelDB.webUrl,
             apiUrl: modelDB.apiUrl,
             categoryParameter: modelDB.categoryParameter,
             categories: modelDB.categories,
-        };
+        }).get();
     }
 
     protected mapToDB(entity: Ranking): RankingDB {
-        const rawData = { ...entity, _id: entity.id };
+        const rawData = entity.toData();
 
-        return rawData;
+        return renameProp("id", "_id", rawData) as RankingDB;
     }
 }

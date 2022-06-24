@@ -6,7 +6,6 @@ const rankingEntryData = {
     rank: 1,
     country: "AZERBAIJAN",
     countryCode: "AZE",
-    club: "AZERBAIJAN",
     name: "EMILIYA MITLINOVA",
     firstName: "EMILIYA",
     lastName: "MITLINOVA",
@@ -83,17 +82,6 @@ describe("RankingEntry", () => {
                 () => fail("should be error")
             );
         });
-        it("should return cannot be blank error for club", () => {
-            const result = RankingEntry.create({ ...rankingEntryData, club: "" });
-
-            result.fold(
-                errors =>
-                    expect(errors.find(error => error.property === "club")?.errors[0]).toBe(
-                        "field_cannot_be_blank"
-                    ),
-                () => fail("should be error")
-            );
-        });
         it("should return cannot be blank error for name", () => {
             const result = RankingEntry.create({ ...rankingEntryData, name: "" });
 
@@ -133,17 +121,6 @@ describe("RankingEntry", () => {
             result.fold(
                 errors =>
                     expect(errors.find(error => error.property === "wkfId")?.errors[0]).toBe(
-                        "field_cannot_be_blank"
-                    ),
-                () => fail("should be error")
-            );
-        });
-        it("should return cannot be blank error for photo", () => {
-            const result = RankingEntry.create({ ...rankingEntryData, photo: "" });
-
-            result.fold(
-                errors =>
-                    expect(errors.find(error => error.property === "photo")?.errors[0]).toBe(
                         "field_cannot_be_blank"
                     ),
                 () => fail("should be error")

@@ -10,7 +10,10 @@ export class RankingEntryController {
         private getRankingEntriesUseCase: GetRankingEntriesUseCase
     ) {}
 
-    async get(request: hapi.Request, h: hapi.ResponseToolkit): Promise<hapi.Lifecycle.ReturnValue> {
+    async get(
+        request: hapi.Request,
+        _h: hapi.ResponseToolkit
+    ): Promise<hapi.Lifecycle.ReturnValue> {
         const rankingId = request.query.rankingId;
         const categoryId = request.query.categoryId;
 

@@ -1,10 +1,8 @@
 import axios from "axios";
 import Parser from "rss-parser";
-import { Ranking } from "../../ranking/domain/entities/Ranking";
-import { RankingEntry } from "../../ranking/domain/entities/RankingEntry";
 import RankingDataSource from "../importers/RankingImporter";
 import convert from "xml2js";
-import { Category } from "karate-stars-core";
+import { Category, Id, Ranking, RankingEntry, Url } from "karate-stars-core";
 
 export default class SportdataRankingDataSource implements RankingDataSource {
     public parser = new Parser();
@@ -40,7 +38,9 @@ export default class SportdataRankingDataSource implements RankingDataSource {
             const entries = (
                 await Promise.all(
                     ranking.categories.map(catId => {
-                        const category = categories.find(category => category.id.value === catId);
+                        const category = categories.find(
+                            category => category.id.value === catId.value
+                        );
 
                         if (!category) {
                             console.log(`category ${catId} not found`);
@@ -56,7 +56,7 @@ export default class SportdataRankingDataSource implements RankingDataSource {
                             ranking.id,
                             apiUrl,
                             categoryParameter,
-                            category.id.value,
+                            category.id,
                             category.wkfId
                         );
                     })
@@ -71,14 +71,14 @@ export default class SportdataRankingDataSource implements RankingDataSource {
     }
 
     private async getRankingEntriesByCategory(
-        rankingId: string,
-        apiUrl: string,
+        rankingId: Id,
+        apiUrl: Url,
         categoryParameter: string,
-        categoryId: string,
+        categoryId: Id,
         categoryWkfId: string
     ): Promise<RankingEntry[]> {
         try {
-            const response = await axios.get(apiUrl, {
+            const response = await axios.get(apiUrl.value, {
                 params: {
                     [categoryParameter]: categoryWkfId,
                 },
@@ -93,11 +93,7 @@ export default class SportdataRankingDataSource implements RankingDataSource {
         }
     }
 
-    private mapResponseToRankingEntries(
-        data: any,
-        rankingId: string,
-        categoryId: string
-    ): RankingEntry[] {
+    private mapResponseToRankingEntries(data: any, rankingId: Id, categoryId: Id): RankingEntry[] {
         if (Array.isArray(data.Filereport.RankingEntry)) {
             return data.Filereport.RankingEntry.map((item: any) => {
                 return this.mapItemToRankingEntry(item, rankingId, categoryId);
@@ -109,13 +105,13 @@ export default class SportdataRankingDataSource implements RankingDataSource {
         }
     }
 
-    private mapItemToRankingEntry(entry: any, rankingId: string, categoryId: string): RankingEntry {
-        return {
-            rankingId,
+    private mapItemToRankingEntry(entry: any, rankingId: Id, categoryId: Id): RankingEntry {
+        return RankingEntry.create({
+            id: Id.generateId().value,
+            rankingId: rankingId.value,
             rank: +entry.Rank,
             country: entry.Country,
             countryCode: entry.CountryCode,
-            club: entry.Club,
             name: entry.Name,
             firstName: entry.Firstname,
             lastName: entry.Lastname,
@@ -123,8 +119,8 @@ export default class SportdataRankingDataSource implements RankingDataSource {
             photo: entry.PHOTO,
             totalPoints: +entry.TotalPoints,
             continentalCode: entry.ContinentCode,
-            categoryId,
+            categoryId: categoryId.value,
             categoryWkfId: entry.CATID,
-        };
+        }).get();
     }
 }
