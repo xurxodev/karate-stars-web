@@ -6,6 +6,7 @@ const categoryRawData = {
     typeId: "Gps5nVcCdjV",
     wkfId: null,
     paraKarate: false,
+    main: true,
 };
 
 describe("Category", () => {

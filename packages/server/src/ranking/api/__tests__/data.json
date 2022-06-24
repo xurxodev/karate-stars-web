@@ -2,10 +2,7 @@
     "rankings": [
         {
             "id": "vnsabLUirBx",
-            "name": "WKF Ranking",
-            "webUrl": null,
             "apiUrl": "http://setopen.sportdata.org/wkfranking/ranking_main_xml.php",
-            "categoryParameter": "ranking_category_id",
             "categories": [
                 "X4CZx1DLFPc",
                 "TmnEeLzo5ZC",
@@ -65,15 +62,20 @@
                 "iq8MIa2mIQ4",
                 "SHFBkhRQpIV",
                 "huMeQfwXAT4"
-            ]
+            ],
+            "categoryParameter": "ranking_category_id",
+            "image": "https://en.wikipedia.org/wiki/World_Karate_Federation",
+            "name": "WKF Ranking",
+            "webUrl": null
         },
         {
             "id": "K6MwDuZ5r1X",
-            "name": "European Games 2023 Standings",
-            "webUrl": "http://setopen.sportdata.org/wkfranking/standing_egpoland2023.php",
             "apiUrl": null,
+            "categories": [],
             "categoryParameter": null,
-            "categories": []
+            "image": "https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/European_Games_logo.svg/400px-European_Games_logo.svg.png",
+            "name": "European Games 2023 Standings",
+            "webUrl": "http://setopen.sportdata.org/wkfranking/standing_egpoland2023.php"
         }
     ],
     "rankingEntries": [

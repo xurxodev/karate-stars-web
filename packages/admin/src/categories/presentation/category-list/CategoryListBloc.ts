@@ -52,4 +52,5 @@ const fields: ListField<CategoryData>[] = [
     { name: "name", text: "Name", type: "text" },
     { name: "wkfId", text: "Wkf Id", type: "text" },
     { name: "paraKarate", text: "ParaKarate", type: "boolean", searchable: false },
+    { name: "main", text: "Main", type: "boolean", searchable: false },
 ];

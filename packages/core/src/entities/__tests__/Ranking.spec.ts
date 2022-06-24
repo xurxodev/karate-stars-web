@@ -65,6 +65,7 @@ const rankingWithApiUrlRawData: RankingData = {
     ],
     categoryParameter: "ranking_category_id",
     name: "WKF Ranking",
+    image: "https://en.wikipedia.org/wiki/World_Karate_Federation",
     webUrl: null,
 };
 
@@ -74,6 +75,7 @@ const rankingWithoutApiUrlRawData: RankingData = {
     categories: [],
     categoryParameter: null,
     name: "European Games 2023 Standings",
+    image: "https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/European_Games_logo.svg/400px-European_Games_logo.svg.png",
     webUrl: "http://setopen.sportdata.org/wkfranking/standing_egpoland2023.php",
 };
 
@@ -93,6 +95,17 @@ describe("Ranking", () => {
             result.fold(
                 () => fail("should be success"),
                 feed => expect(feed).toBeTruthy()
+            );
+        });
+        it("should return invalid field error for image", () => {
+            const result = Ranking.create({ ...rankingWithApiUrlRawData, image: "wrong_url" });
+
+            result.fold(
+                errors =>
+                    expect(errors.find(error => error.property === "image")?.errors[0]).toBe(
+                        "invalid_field"
+                    ),
+                () => fail("should be error")
             );
         });
         it("should return invalid field error for id", () => {

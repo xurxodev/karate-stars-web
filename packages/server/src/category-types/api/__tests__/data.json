@@ -5,14 +5,16 @@
             "name": "Female Kumite -68 Kg",
             "typeId": "Gps5nVcCdjV",
             "wkfId": "888",
-            "paraKarate": false
+            "paraKarate": false,
+            "main": true
         },
         {
             "id": "kMe2wqSvf2O",
             "name": "Female Kumite -61 Kg",
             "typeId": "Gps5nVcCdjV",
             "wkfId": "999",
-            "paraKarate": false
+            "paraKarate": false,
+            "main": true
         }
     ],
     "categoryTypes": [

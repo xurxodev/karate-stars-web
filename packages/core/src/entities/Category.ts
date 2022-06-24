@@ -9,6 +9,7 @@ interface CategoryObjectData extends EntityObjectData {
     typeId: Id;
     wkfId: string | null;
     paraKarate: boolean;
+    main: boolean;
 }
 
 export interface CategoryData extends EntityData {
@@ -16,6 +17,7 @@ export interface CategoryData extends EntityData {
     typeId: string;
     wkfId: string | null;
     paraKarate: boolean;
+    main: boolean;
 }
 
 export class Category extends Entity<CategoryData> {
@@ -23,6 +25,7 @@ export class Category extends Entity<CategoryData> {
     public readonly typeId: Id;
     public readonly wkfId: string | null;
     public readonly paraKarate: boolean;
+    public readonly main: boolean;
 
     private constructor(data: CategoryObjectData) {
         super(data.id);
@@ -31,6 +34,7 @@ export class Category extends Entity<CategoryData> {
         this.typeId = data.typeId;
         this.wkfId = data.wkfId;
         this.paraKarate = data.paraKarate;
+        this.main = data.main;
     }
 
     public static create(data: CategoryData): Either<ValidationError<CategoryData>[], Category> {
@@ -54,6 +58,7 @@ export class Category extends Entity<CategoryData> {
             typeId: this.typeId.value,
             wkfId: this.wkfId,
             paraKarate: this.paraKarate,
+            main: this.main,
         };
     }
 
@@ -93,6 +98,7 @@ export class Category extends Entity<CategoryData> {
                     typeId: typeIdResult.get(),
                     wkfId: data.wkfId === "" || !data.wkfId ? null : data.wkfId,
                     paraKarate: data.paraKarate,
+                    main: data.main,
                 })
             );
         } else {

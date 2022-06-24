@@ -31,6 +31,7 @@ export default class RankingMongoRepository
         return Ranking.create({
             id: modelDB._id,
             name: modelDB.name,
+            image: modelDB.image,
             webUrl: modelDB.webUrl,
             apiUrl: modelDB.apiUrl,
             categoryParameter: modelDB.categoryParameter,

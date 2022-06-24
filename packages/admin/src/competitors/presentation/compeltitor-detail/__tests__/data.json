@@ -30,12 +30,16 @@
         {
             "id": "kMe2wqSvf2O",
             "name": "Female Kumite -61 Kg",
-            "typeId": "Gps5nVcCdjV"
+            "typeId": "Gps5nVcCdjV",
+            "paraKarate": false,
+            "main": true
         },
         {
             "id": "wZgo8Vp77gR",
             "name": "Female Kumite -68 Kg",
-            "typeId": "Gps5nVcCdjV"
+            "typeId": "Gps5nVcCdjV",
+            "paraKarate": false,
+            "main": true
         }
     ],
     "countries": [

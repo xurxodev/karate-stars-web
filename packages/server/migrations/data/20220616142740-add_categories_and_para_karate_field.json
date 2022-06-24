@@ -5,6 +5,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": null,
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -13,6 +14,7 @@
         "typeId": "qWPs4i1e78g",
         "wkfId": null,
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -21,6 +23,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": "491",
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -29,6 +32,7 @@
         "typeId": "qWPs4i1e78g",
         "wkfId": "489",
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -37,6 +41,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": null,
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -45,6 +50,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": null,
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -53,6 +59,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": "522",
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -61,6 +68,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": "523",
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -69,6 +77,7 @@
         "typeId": "qWPs4i1e78g",
         "wkfId": null,
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -77,6 +86,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": "520",
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -85,6 +95,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": null,
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -93,6 +104,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": "525",
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -101,6 +113,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": null,
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -109,6 +122,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": null,
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -117,6 +131,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": "616",
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -125,6 +140,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": "620",
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -133,6 +149,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": "492",
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -141,6 +158,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": null,
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -149,6 +167,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": "521",
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -157,6 +176,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": "487",
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -165,6 +185,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": "524",
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -173,6 +194,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": "621",
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -181,6 +203,7 @@
         "typeId": "qWPs4i1e78g",
         "wkfId": "490",
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -189,6 +212,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": "488",
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -197,6 +221,7 @@
         "typeId": "Gps5nVcCdjV",
         "wkfId": "618",
         "paraKarate": false,
+        "main": true,
         "new": false
     },
     {
@@ -205,6 +230,7 @@
         "name": "PARA Blind/visually impaired male",
         "typeId": "qWPs4i1e78g",
         "paraKarate": true,
+        "main": false,
         "new": true
     },
     {
@@ -213,6 +239,7 @@
         "name": "PARA Intellectually impaired female",
         "typeId": "qWPs4i1e78g",
         "paraKarate": true,
+        "main": false,
         "new": true
     },
     {
@@ -221,6 +248,7 @@
         "name": "PARA Intellectually impaired male",
         "typeId": "qWPs4i1e78g",
         "paraKarate": true,
+        "main": false,
         "new": true
     },
     {
@@ -229,6 +257,7 @@
         "name": "PARA Wheelchair user male",
         "typeId": "qWPs4i1e78g",
         "paraKarate": true,
+        "main": false,
         "new": true
     },
     {
@@ -237,6 +266,7 @@
         "name": "U21 Kumite Female -50 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -245,6 +275,7 @@
         "name": "U21 Kumite Female -55 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -253,6 +284,7 @@
         "name": "U21 Kumite Female -61 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -261,6 +293,7 @@
         "name": "U21 Kumite Female -68 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -269,6 +302,7 @@
         "name": "U21 Kumite Female 68+ kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -277,6 +311,7 @@
         "name": "U21 Kumite Male -55kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -285,6 +320,7 @@
         "name": "U21 Kumite Male -60 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -293,6 +329,7 @@
         "name": "U21 Kumite Male -67 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -301,6 +338,7 @@
         "name": "U21 Kumite Male -75 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -309,6 +347,7 @@
         "name": "U21 Kumite Male -84 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -317,6 +356,7 @@
         "name": "U21 Kumite Male 84+ kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -325,6 +365,7 @@
         "name": "Under 21 Kata Female",
         "typeId": "qWPs4i1e78g",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -333,6 +374,7 @@
         "name": "Under 21 Kata Male",
         "typeId": "qWPs4i1e78g",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -341,6 +383,7 @@
         "name": "Junior Kata Female",
         "typeId": "qWPs4i1e78g",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -349,6 +392,7 @@
         "name": "Junior Kata Male",
         "typeId": "qWPs4i1e78g",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -357,6 +401,7 @@
         "name": "Junior Kumite Female -48 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -365,6 +410,7 @@
         "name": "Junior Kumite Female -53 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -373,6 +419,7 @@
         "name": "Junior Kumite Female -59 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -381,6 +428,7 @@
         "name": "Junior Kumite Female 59+ kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -389,6 +437,7 @@
         "name": "Junior Kumite Male -55 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -397,6 +446,7 @@
         "name": "Junior Kumite Male -61 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -405,6 +455,7 @@
         "name": "Junior Kumite Male -68 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -413,6 +464,7 @@
         "name": "Junior Kumite Male -76 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -421,6 +473,7 @@
         "name": "Junior Kumite Male 76+ kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -429,6 +482,7 @@
         "name": "Cadet Kata Female",
         "typeId": "qWPs4i1e78g",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -437,6 +491,7 @@
         "name": "Cadet Kata Male",
         "typeId": "qWPs4i1e78g",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -445,6 +500,7 @@
         "name": "Cadet Kumite Female -47 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -453,6 +509,7 @@
         "name": "Cadet Kumite Female -54 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -461,6 +518,7 @@
         "name": "Cadet Kumite Female 54+ kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -469,6 +527,7 @@
         "name": "Cadet Kumite Male -52 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -477,6 +536,7 @@
         "name": "Cadet Kumite Male -57 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -485,6 +545,7 @@
         "name": "Cadet Kumite Male -63 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -493,6 +554,7 @@
         "name": "Cadet Kumite Male -70 kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -501,6 +563,7 @@
         "name": "Cadet Kumite Male 70+ kg",
         "typeId": "Gps5nVcCdjV",
         "paraKarate": false,
+        "main": false,
         "new": true
     },
     {
@@ -509,6 +572,7 @@
         "name": "BLIND/VISUALLY IMPAIRED FEMALE K10",
         "typeId": "qWPs4i1e78g",
         "paraKarate": true,
+        "main": false,
         "new": true
     },
     {
@@ -517,6 +581,7 @@
         "name": "BLIND/VISUALLY IMPAIRED MALE K10",
         "typeId": "qWPs4i1e78g",
         "paraKarate": true,
+        "main": false,
         "new": true
     },
     {
@@ -525,6 +590,7 @@
         "name": "INTELLECTUALLY IMPAIRED FEMALE K21",
         "typeId": "qWPs4i1e78g",
         "paraKarate": true,
+        "main": false,
         "new": true
     },
     {
@@ -533,6 +599,7 @@
         "name": "INTELLECTUALLY IMPAIRED FEMALE K22",
         "typeId": "qWPs4i1e78g",
         "paraKarate": true,
+        "main": false,
         "new": true
     },
     {
@@ -541,6 +608,7 @@
         "name": "INTELLECTUALLY IMPAIRED MALE K21",
         "typeId": "qWPs4i1e78g",
         "paraKarate": true,
+        "main": false,
         "new": true
     },
     {
@@ -549,6 +617,7 @@
         "name": "INTELLECTUALLY IMPAIRED MALE K22",
         "typeId": "qWPs4i1e78g",
         "paraKarate": true,
+        "main": false,
         "new": true
     },
     {
@@ -557,6 +626,7 @@
         "name": "WHEELCHAIR USER FEMALE K30",
         "typeId": "qWPs4i1e78g",
         "paraKarate": true,
+        "main": false,
         "new": true
     },
     {
@@ -565,6 +635,7 @@
         "name": "WHEELCHAIR USER MALE K30",
         "typeId": "qWPs4i1e78g",
         "paraKarate": true,
+        "main": false,
         "new": true
     }
 ]

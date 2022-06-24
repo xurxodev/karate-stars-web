@@ -13,6 +13,7 @@ type NewCategory = {
     typeId: string;
     paraKarate: boolean;
     wkfId: string | null;
+    main: boolean;
     new: boolean;
 };
 
@@ -24,7 +25,20 @@ export async function up(db: Db) {
 
     await Promise.all(
         newCategories.map(cat =>
-            collection.updateOne({ _id: cat._id }, { $set: { ...cat } }, { upsert: true })
+            collection.updateOne(
+                { _id: cat._id },
+                {
+                    $set: {
+                        _id: cat._id,
+                        name: cat.name,
+                        typeId: cat.typeId,
+                        paraKarate: cat.paraKarate,
+                        wkfId: cat.wkfId,
+                        main: cat.main,
+                    },
+                },
+                { upsert: true }
+            )
         )
     );
 }

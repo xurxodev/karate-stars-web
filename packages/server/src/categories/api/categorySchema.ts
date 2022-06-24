@@ -6,4 +6,5 @@ export const categorySchema = Joi.object({
     typeId: Joi.string(),
     wkfId: Joi.string().allow(null),
     paraKarate: Joi.boolean(),
+    main: Joi.boolean(),
 });
