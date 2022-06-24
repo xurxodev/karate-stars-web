@@ -1,10 +1,7 @@
 import { Id, RankingEntry, RankingEntryData } from "karate-stars-core";
 import { ServerDataCreator } from "../../../common/api/testUtils/DataCreator";
 import data from "./data.json";
-import {
-    givenThereAreAnUserInServer,
-    givenThereAreAPrincipalAndRestItemsInServer,
-} from "../../../common/api/testUtils/ScenariosFactory";
+import { givenThereAreAnUserInServer } from "../../../common/api/testUtils/ScenariosFactory";
 import { generateToken, initServer } from "../../../common/api/testUtils/serverTest";
 import request from "supertest";
 import { jsonParser } from "../../../common/api/testUtils/jsonParser";
