@@ -9,7 +9,7 @@ import { Entity, EntityData, EntityObjectData } from "../Entity";
 interface RankingObjectData extends EntityObjectData {
     name: string;
     image: Url;
-    webUrl: Url | null;
+    webUrl: Url;
     apiUrl: Url | null;
     categoryParameter: string | null;
     categories: Id[];
@@ -18,7 +18,7 @@ interface RankingObjectData extends EntityObjectData {
 export interface RankingData extends EntityData {
     name: string;
     image: string;
-    webUrl: string | null;
+    webUrl: string;
     apiUrl: string | null;
     categoryParameter: string | null;
     categories: string[];
@@ -27,7 +27,7 @@ export interface RankingData extends EntityData {
 export class Ranking extends Entity<RankingData> implements RankingObjectData {
     public readonly name: string;
     public readonly image: Url;
-    public readonly webUrl: Url | null;
+    public readonly webUrl: Url;
     public readonly apiUrl: Url | null;
     public readonly categoryParameter: string | null;
     public readonly categories: Id[];
@@ -73,7 +73,7 @@ export class Ranking extends Entity<RankingData> implements RankingObjectData {
         data: RankingData
     ): Either<ValidationError<RankingData>[], Ranking> {
         const idResult = Id.createExisted(data.id);
-        const webUrlResult = data.webUrl ? Url.create(data.webUrl) : undefined;
+        const webUrlResult = Url.create(data.webUrl);
         const apiUrlResult = data.apiUrl ? Url.create(data.apiUrl) : undefined;
         const imageResult = Url.create(data.image, true);
 
@@ -108,12 +108,10 @@ export class Ranking extends Entity<RankingData> implements RankingObjectData {
             { property: "name" as const, errors: validateRequired(data.name), value: data.name },
             {
                 property: "webUrl" as const,
-                errors: webUrlResult
-                    ? webUrlResult.fold(
-                          errors => errors,
-                          () => []
-                      )
-                    : [],
+                errors: webUrlResult.fold(
+                    errors => errors,
+                    () => []
+                ),
                 value: data.webUrl,
             },
             {
@@ -148,7 +146,7 @@ export class Ranking extends Entity<RankingData> implements RankingObjectData {
                     id: idResult.get(),
                     name: data.name,
                     image: imageResult.get(),
-                    webUrl: webUrlResult ? webUrlResult.get() : null,
+                    webUrl: webUrlResult.get(),
                     apiUrl: apiUrlResult ? apiUrlResult.get() : null,
                     categoryParameter: data.categoryParameter,
                     categories: categoryResults ? categoryResults.map(result => result.get()) : [],

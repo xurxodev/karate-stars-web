@@ -66,7 +66,7 @@ const rankingWithApiUrlRawData: RankingData = {
     categoryParameter: "ranking_category_id",
     name: "WKF Ranking",
     image: "https://en.wikipedia.org/wiki/World_Karate_Federation",
-    webUrl: null,
+    webUrl: "http://setopen.sportdata.org/wkfranking/ranking_main.php",
 };
 
 const rankingWithoutApiUrlRawData: RankingData = {

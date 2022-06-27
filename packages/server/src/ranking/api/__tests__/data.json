@@ -66,7 +66,7 @@
             "categoryParameter": "ranking_category_id",
             "image": "https://en.wikipedia.org/wiki/World_Karate_Federation",
             "name": "WKF Ranking",
-            "webUrl": null
+            "webUrl": "http://setopen.sportdata.org/wkfranking/ranking_main.php"
         },
         {
             "id": "K6MwDuZ5r1X",
