@@ -1,6 +1,7 @@
 import React from "react";
 import {
     BoundFunctions,
+    fireEvent,
     queries,
     render,
     RenderOptions,
@@ -191,21 +192,25 @@ async function typeByPlaceholderTextAsync(placeholder: string, text: string) {
     userEvent.type(element, text);
 }
 
-function selectOptionByLabelTextAndScope(
+async function selectOptionByLabelTextAndScope(
     label: string | RegExp,
     text: string,
     scope: BoundFunctions<typeof queries>
 ) {
-    userEvent.selectOptions(scope.getByLabelText(label), text);
+    userEvent.click(scope.getByLabelText(label));
+    userEvent.click(scope.getByText(text));
 }
 
 function selectOption(label: string | RegExp, text: string) {
-    userEvent.selectOptions(screen.getByLabelText(label), text);
+    userEvent.click(screen.getByLabelText(label));
+    userEvent.click(screen.getByText(text));
 }
 
-async function selectMultiOption(label: string | RegExp, text: string) {
+async function selectOptionAsync(label: string | RegExp, text: string) {
     userEvent.click(screen.getByLabelText(label));
+
     const element = await screen.findByText(text);
+
     userEvent.click(element);
 }
 
@@ -283,7 +288,7 @@ export const tl = {
     typeByLabelText,
     typeByLabelTextAndScope,
     typeByPlaceholderTextAsync,
-    selectMultiOption,
+    selectOptionAsync,
 };
 
 /* eslint-enable react/display-name */

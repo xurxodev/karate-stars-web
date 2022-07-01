@@ -5,7 +5,8 @@
             "name": "Female Kumite -68 Kg",
             "typeId": "Gps5nVcCdjV",
             "paraKarate": false,
-            "main": true
+            "main": true,
+            "wkfId": "AA"
         }
     ],
     "categoryTypes": [

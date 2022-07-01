@@ -43,10 +43,10 @@ describe("Video detail page", () => {
         cy.findByLabelText("Event Date (*)").clear().type("2021-05-08");
         cy.findByLabelText("Order (*)").type("0");
         cy.findByLabelText("Competitors").focus().click({ force: true });
-        cy.findByText("Sandra Sanchez Jaime").click();
+        cy.findByText("Wayne Otto").click();
 
         cy.findByLabelText("Competitors").focus().click({ force: true });
-        cy.findByText("Kiyou Shimizu").click();
+        cy.findByText("Sara Cardin").click();
 
         typeValidLinkForm();
 
@@ -61,7 +61,9 @@ describe("Video detail page", () => {
         cy.findByRole("button", { name: /add/i }).click();
 
         cy.findByLabelText("Id (*)").type("qE18hRFs8V7");
-        cy.findByLabelText("Type (*)").select("youtube");
+
+        cy.findByLabelText("Type (*)").click();
+        cy.findByText("Youtube").click();
 
         cy.findByRole("button", { name: /ok/i }).click();
     }

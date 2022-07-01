@@ -42,7 +42,9 @@ describe("News Feeds page", () => {
             .clear()
             .type("http://fetchrss.com/rss/59baa0d28a93f8a1048b4567777611407.xml");
         cy.findByLabelText("Language (*)").clear().type("en");
-        cy.findByLabelText("Type (*)").select("RSS");
+
+        cy.findByLabelText("Type (*)").click();
+        cy.findByText("RSS").click();
 
         cy.findByRole("button", { name: /accept/i }).click();
 

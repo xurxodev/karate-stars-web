@@ -13,8 +13,13 @@ import {
     Checkbox,
     FormControlLabel,
 } from "@material-ui/core";
-import MultiSelect from "./MultiSelect";
 import TagsTextField from "./TagsTextField";
+import { Autocomplete } from "@material-ui/lab";
+
+type Option = {
+    label: string;
+    value: string;
+};
 
 interface FormFieldBuilderProps {
     field: FormSingleFieldState;
@@ -67,6 +72,18 @@ const FormSingleFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handle
         handleFieldChange(field.name, value);
     }, []);
 
+    const handleAutoCompleteChange = (
+        _event: React.ChangeEvent<any>,
+        value: Option | Option[] | null
+    ) => {
+        if (Array.isArray(value)) {
+            const values = value.map(value => value.value);
+            handleFieldChange(field.name, values);
+        } else {
+            handleFieldChange(field.name, value?.value ?? "");
+        }
+    };
+
     const options = useMemo(
         () =>
             field.selectOptions
@@ -75,8 +92,20 @@ const FormSingleFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handle
                       label: option.name,
                   }))
                 : undefined,
-        []
+        [field.selectOptions]
     );
+
+    const selectedOptions = useMemo(() => {
+        const value = field.value;
+        return Array.isArray(value) && value
+            ? options?.filter(option => value.includes(option.value))
+            : [];
+    }, [options, field.value]);
+
+    const selectedOption = useMemo(() => {
+        const value = field.value as string | undefined;
+        return options?.find(option => value === option.value) ?? null;
+    }, [options, field.value]);
 
     switch (field.type) {
         case "file": {
@@ -140,12 +169,44 @@ const FormSingleFieldBuilder: React.FC<FormFieldBuilderProps> = ({ field, handle
             return (
                 <Grid item md={field.md || defaultColumnValue} xs={field.xs || defaultColumnValue}>
                     {field.multiple && options && Array.isArray(field.value) ? (
-                        <MultiSelect
-                            values={field.value || []}
-                            name={field.name}
-                            label={field.label.concat(field.required ? " (*)" : "")}
+                        <Autocomplete
+                            style={{ marginTop: 16 }}
+                            aria-labelledby={field.label.concat(field.required ? " (*)" : "")}
+                            multiple
+                            disablePortal
+                            fullWidth={true}
+                            getOptionLabel={option => option.label}
+                            id={field.name}
                             options={options}
-                            onChange={handleMultiChange}
+                            value={selectedOptions}
+                            renderInput={params => (
+                                <TextField
+                                    {...params}
+                                    label={field.label.concat(field.required ? " (*)" : "")}
+                                    variant="outlined"
+                                />
+                            )}
+                            onChange={handleAutoCompleteChange}
+                        />
+                    ) : !field.multiple && options ? (
+                        <Autocomplete
+                            style={{ marginTop: 16 }}
+                            aria-labelledby={field.label.concat(field.required ? " (*)" : "")}
+                            multiple={field.multiple}
+                            disablePortal
+                            fullWidth={true}
+                            getOptionLabel={option => option.label}
+                            id={field.name}
+                            options={options}
+                            value={selectedOption}
+                            renderInput={params => (
+                                <TextField
+                                    {...params}
+                                    label={field.label.concat(field.required ? " (*)" : "")}
+                                    variant="outlined"
+                                />
+                            )}
+                            onChange={handleAutoCompleteChange}
                         />
                     ) : field.multiple && !options && Array.isArray(field.value) ? (
                         <TagsTextField

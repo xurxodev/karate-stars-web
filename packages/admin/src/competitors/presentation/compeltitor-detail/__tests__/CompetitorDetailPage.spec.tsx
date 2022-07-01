@@ -47,8 +47,8 @@ async function typeValidForm() {
     tl.typeByLabelText("First Name (*)", "Giana");
     tl.typeByLabelText("Last Name (*)", "Lotfy");
     tl.typeByLabelText("WKF Id (*)", "EGY253");
-    tl.selectOption("Country (*)", "AsfJyc10miO");
-    tl.selectOption("Category (*)", "wZgo8Vp77gR");
+    tl.selectOption("Country (*)", "Egypt");
+    tl.selectOption("Category (*)", "Female Kumite -68 Kg");
     tl.clickByLabelText("Active");
     tl.clickByLabelText("Legend");
     tl.typeByLabelText("Biography (*)", "Example example");

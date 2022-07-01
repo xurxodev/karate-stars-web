@@ -42,8 +42,7 @@ async function typeValidForm() {
     tl.typeByLabelText("Event Date (*)", "2014-11-08");
     tl.typeByLabelText("Order (*)", "0");
 
-    //Mirar algo de seleccionar especifico con react select y testing library!!!!!
-    await tl.selectMultiOption(
+    tl.selectOption(
         "Competitors",
         `${data.competitors[1].firstName} ${data.competitors[1].lastName}`
     );
@@ -62,7 +61,7 @@ async function typeValidLinkForm() {
     const dialogScope = within(linkDialog);
 
     tl.typeByLabelText("Id (*)", "example");
-    tl.selectOption("Type (*)", "youtube");
+    tl.selectOption("Type (*)", "Youtube");
 
     tl.clickOnButtonByLabelTextAndScope("ok", dialogScope);
 

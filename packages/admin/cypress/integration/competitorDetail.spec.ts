@@ -21,9 +21,9 @@ describe("Competitor detail page", () => {
     describe("Edit", () => {
         beforeEach(() => {
             cy.login();
-            cy.visit("#/competitors/edit/tjZtIOHwzVJ");
+            cy.visit("#/competitors/edit/QXTeZyHqzgn");
 
-            cy.intercept("PUT", "/api/v1/competitors/tjZtIOHwzVJ", {
+            cy.intercept("PUT", "/api/v1/competitors/QXTeZyHqzgn", {
                 statusCode: 200,
                 body: {
                     ok: true,
@@ -40,8 +40,13 @@ describe("Competitor detail page", () => {
         cy.findByLabelText("First Name (*)").clear().type("Rafael");
         cy.findByLabelText("Last Name (*)").clear().type("Aghayev");
         cy.findByLabelText("WKF Id (*)").clear().type("AZE133");
-        cy.findByLabelText("Country (*)").select("Azerbaijan");
-        cy.findByLabelText("Category (*)").select("Male Kumite -75 Kg");
+
+        cy.findByLabelText("Country (*)").click();
+        cy.findByText("Azerbaijan").click();
+
+        cy.findByLabelText("Category (*)").click();
+        cy.findByText("Male Kumite -75 Kg").click();
+
         cy.findByLabelText("Active").click();
         cy.findByLabelText("Legend").click();
         cy.findByLabelText("Biography (*)")
@@ -62,7 +67,9 @@ describe("Competitor detail page", () => {
         cy.findByRole("button", { name: /add link/i }).click();
 
         cy.findByLabelText("Url (*)").type("https://aghayev.com");
-        cy.findByLabelText("Type (*)").select("web");
+
+        cy.findByLabelText("Type (*)").click();
+        cy.findByText("web").click();
 
         cy.findByRole("button", { name: /ok/i }).click();
     }
@@ -72,7 +79,8 @@ describe("Competitor detail page", () => {
 
         cy.findByLabelText("Position (*)").type("1");
         //cy.findByLabelText("Achievement Category (*)").select("Male Kumite -70 Kg");
-        cy.findByLabelText("Event (*)").select("World Championships Tampere 2006");
+        cy.findByLabelText("Event (*)").click();
+        cy.findByText("World Championships Tampere 2006").click();
 
         cy.findByRole("button", { name: /ok/i }).click();
     }

@@ -38,7 +38,9 @@ describe("Category detail page", () => {
 
     function typeValidForm() {
         cy.findByLabelText("Name (*)").clear().type("Female Kata");
-        cy.findByLabelText("Type (*)").select("qWPs4i1e78g");
+
+        cy.findByLabelText("Type (*)").click();
+        cy.findByText("Kata").click();
 
         cy.findByRole("button", { name: /accept/i }).click();
         cy.findByText("Category saved!");

@@ -33,7 +33,7 @@ const dependenciesCreators = [
 
 async function typeValidForm() {
     tl.typeByLabelText("Name (*)", "Example Example");
-    tl.selectOption("Type (*)", data.eventTypes[1].id);
+    tl.selectOption("Type (*)", data.eventTypes[1].name);
     tl.typeByLabelText("Start date (*)", "2014-11-08");
     tl.typeByLabelText("End date (*)", "2014-11-08");
     tl.typeByLabelText(
@@ -74,8 +74,10 @@ describe(`${endpoint} detail page`, () => {
             it("should have he expected values to load", async () => {
                 await renderComponentToEdit(item.id);
 
+                const type = data.eventTypes.find(t => (t.id = item.typeId))?.name ?? "";
+
                 tl.verifyValueInField("Name (*)", item.name);
-                tl.verifyValueInField("Type (*)", item.typeId);
+                tl.verifyValueInField("Type (*)", type);
             });
         });
         describe("validation messages", () => {

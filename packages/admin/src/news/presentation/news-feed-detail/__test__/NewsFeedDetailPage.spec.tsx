@@ -16,7 +16,7 @@ async function typeValidForm() {
     tl.typeByLabelText("Name (*)", "Xurxo dev");
     tl.typeByLabelText("Url (*)", "https://xurxodev.com/");
     tl.typeByLabelText("Language (*)", "es");
-    tl.selectOption("Type (*)", "rss");
+    tl.selectOption("Type (*)", "RSS");
 }
 
 const dataCreator = {
@@ -94,7 +94,7 @@ describe(`${endpoint} detail page`, () => {
                 tl.verifyValueInField("Name (*)", item.name);
                 tl.verifyValueInField("Url (*)", item.url);
                 tl.verifyValueInField("Language (*)", item.language);
-                tl.verifyValueInField("Type (*)", item.type);
+                tl.verifyValueInField("Type (*)", item.type.toUpperCase());
             });
         });
         describe("validation messages", () => {
