@@ -24,6 +24,7 @@ import CountryDetailPage from "../countries/presentation/country-detail/CountryD
 import CountryListPage from "../countries/presentation/country-list/CountryListPage";
 import SendCompetitorNotificationPage from "../notifications/presentation/SendCompetitorNotificationPage";
 import SendVideoNotificationPage from "../notifications/presentation/SendVideoNotificationPage";
+import SendRankingNotificationPage from "../notifications/presentation/SendRankingNotificationPage";
 
 export const AppRoutes: React.FC = () => {
     return (
@@ -70,6 +71,11 @@ export const AppRoutes: React.FC = () => {
                 <PrivateRoute
                     path={pages.sendVideoPushNotification.path}
                     component={SendVideoNotificationPage}
+                />
+
+                <PrivateRoute
+                    path={pages.sendRankingPushNotification.path}
+                    component={SendRankingNotificationPage}
                 />
                 <Route path={pages.notFound.path} component={NotFoundPage} />
 

@@ -8,6 +8,7 @@ import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import Notifications from "@material-ui/icons/Notifications";
 import VideoLibrary from "@material-ui/icons/VideoLibrary";
 import VideoLibraryOutlined from "@material-ui/icons/VideoLibraryOutlined";
+import EqualizerOutlinedIcon from "@material-ui/icons/EqualizerOutlined";
 import InputIcon from "@material-ui/icons/Input";
 import EventNoteIcon from "@material-ui/icons/EventNote";
 import EmojiEventsIcon from "@material-ui/icons/EmojiEvents";
@@ -180,6 +181,12 @@ const Sidebar: React.FC<SidebarProps> = ({ open, variant, onClose }) => {
                     level: 0,
                     ...pages.sendVideoPushNotification,
                     icon: <VideoLibraryOutlined />,
+                },
+                {
+                    kind: "MenuLeaf",
+                    level: 0,
+                    ...pages.sendRankingPushNotification,
+                    icon: <EqualizerOutlinedIcon />,
                 },
             ],
         },

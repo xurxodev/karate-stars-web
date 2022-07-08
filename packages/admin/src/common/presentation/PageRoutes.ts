@@ -87,5 +87,9 @@ export const pages: Record<string, PageConfig> = {
         title: "Send video notification",
         path: "/send-video-push-notification",
     },
+    sendRankingPushNotification: {
+        title: "Send ranking notification",
+        path: "/send-ranking-push-notification",
+    },
     notFound: { title: "Not found", path: "/not-found" },
 };

@@ -6,6 +6,7 @@ import { Either } from "karate-stars-core";
 import { UrlNotification } from "../domain/entities/UrlNotification";
 import { CompetitorNotification } from "../domain/entities/CompetitorNotification";
 import { VideoNotification } from "../domain/entities/VideoNotification";
+import { RankingNotification } from "../domain/entities/RankingNotification";
 
 class FcmPushNotificationRepository implements PushNotificationRepository {
     constructor(private axiosInstance: AxiosInstance, private fcmApiToken: string) {}
@@ -20,6 +21,8 @@ class FcmPushNotificationRepository implements PushNotificationRepository {
                 await this.sendCompetitorNotification(notification);
             } else if (notification instanceof VideoNotification) {
                 await this.sendVideoNotification(notification);
+            } else if (notification instanceof RankingNotification) {
+                await this.sendRankingNotification(notification);
             } else {
                 return Either.left({
                     kind: "UnexpectedError",
@@ -78,6 +81,25 @@ class FcmPushNotificationRepository implements PushNotificationRepository {
                 to: `/topics/${notification.topic}`,
                 data: {
                     videoId: notification.videoId.value,
+                },
+                notification: {
+                    title: notification.title,
+                    body: notification.description,
+                },
+            },
+            { headers: { authorization: `key=${this.fcmApiToken}` } }
+        );
+
+        return Either.right(true);
+    }
+
+    private async sendRankingNotification(notification: RankingNotification) {
+        await this.axiosInstance.post(
+            "/send",
+            {
+                to: `/topics/${notification.topic}`,
+                data: {
+                    rankingId: notification.rankingId.value,
                 },
                 notification: {
                     title: notification.title,

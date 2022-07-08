@@ -23,6 +23,9 @@ import SendCompetitorNotificationBloc from "./notifications/presentation/SendCom
 import SendVideoNotificationBloc from "./notifications/presentation/SendVideoNotificationBloc";
 import GetCompetitorsUseCase from "./competitors/domain/GetCompetitorsUseCase";
 import GetVideosUseCase from "./videos/domain/GetVideosUseCase";
+import { initRankings } from "./rankings/RankingDIModule";
+import SendRankingNotificationBloc from "./notifications/presentation/SendRankingNotificationBloc";
+import GetRankingsUseCase from "./rankings/domain/GetRankingsUseCase";
 
 export const appDIKeys = {
     axiosInstanceAPI: "axiosInstanceAPI",
@@ -46,6 +49,7 @@ export function init() {
     initCompetitors();
     initSendPushNotifications();
     initVideos();
+    initRankings();
 }
 
 export function reset() {
@@ -156,6 +160,15 @@ function initSendPushNotifications() {
             new SendVideoNotificationBloc(
                 di.get(SendPushNotificationUseCase),
                 di.get(GetVideosUseCase)
+            )
+    );
+
+    di.bindFactory(
+        SendRankingNotificationBloc,
+        () =>
+            new SendRankingNotificationBloc(
+                di.get(SendPushNotificationUseCase),
+                di.get(GetRankingsUseCase)
             )
     );
 }

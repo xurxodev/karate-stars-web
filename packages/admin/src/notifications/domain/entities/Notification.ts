@@ -3,10 +3,12 @@ import { validateRequired, ValidationError } from "karate-stars-core";
 export const COMPETITOR_NEWS_TOPIC = "competitor_notification";
 export const VIDEO_NEWS_TOPIC = "video_notification";
 export const URL_NEWS_TOPIC = "url_notification";
+export const RANKING_NEWS_TOPIC = "ranking_notification";
 
 export const DEBUG_COMPETITOR_NEWS_TOPIC = "debug_competitor_notification";
 export const DEBUG_VIDEO_NEWS_TOPIC = "debug_video_notification";
 export const DEBUG_URL_NEWS_TOPIC = "debug_url_notification";
+export const DEBUG_RANKING_NEWS_TOPIC = "debug_ranking_notification";
 
 export interface NotificationObjectData {
     title: string;
