@@ -28,9 +28,13 @@ export default class RankingEntryMongoRepository
 
             const modelDBList = await cursor.toArray();
 
+            const orderedEntries = modelDBList.sort((a, b) => {
+                return a.rank - b.rank;
+            });
+
             cursor.close();
 
-            return modelDBList.map(modelDB => this.mapToDomain(modelDB));
+            return orderedEntries.map(modelDB => this.mapToDomain(modelDB));
         } catch (error) {
             console.log({ error });
             return [];
